@@ -20,7 +20,8 @@
       "Bash(.venv/Scripts/python.exe:*)",
       "Bash(npx next build)",
       "Bash(git check-ignore:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat\\(scaffold\\): set up monorepo with worker/ and web/ projects\n\n- Create Python worker with uv, FastAPI, SQLAlchemy async, Alembic, APScheduler\n- Scaffold Next.js 16 frontend with TypeScript, Tailwind, Neon driver\n- Add config \\(Pydantic Settings\\), db engine, Dockerfile, .env.example\n- Create package stubs for exchange, indicators, scoring, agents, pipeline\n\nSession: docs/sessions/2026-02-04-1811-session.md\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
