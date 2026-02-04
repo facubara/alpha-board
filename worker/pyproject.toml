@@ -1,0 +1,53 @@
+[project]
+name = "alpha-worker"
+version = "0.1.0"
+description = "Alpha Board — Crypto market analytics pipeline & AI trading agents"
+requires-python = ">=3.12"
+dependencies = [
+    # Database
+    "sqlalchemy[asyncio]>=2.0",
+    "psycopg[binary]>=3.1",
+    "alembic>=1.13",
+    # Data & Indicators
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "pandas-ta>=0.3",
+    # HTTP & APIs
+    "httpx>=0.27",
+    "anthropic>=0.40",
+    # Server & Scheduling
+    "fastapi>=0.115",
+    "uvicorn>=0.32",
+    "apscheduler>=3.10",
+    # Config & Utils
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "httpx",  # for FastAPI TestClient
+    "ruff>=0.8",
+]
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
