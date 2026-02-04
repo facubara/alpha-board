@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\\\Users\\\\Facundo\\\\Desktop\\\\alpha-board\")",
+      "Bash(dir:*)",
+      "Bash(del \"C:\\\\Users\\\\Facundo\\\\Desktop\\\\alpha-board\\\\skills\\\\create-skill\\\\create-skill.md\")",
+      "Bash(npx skills add:*)",
+      "Bash(ls -la \"C:\\\\Users\\\\Facundo\\\\Desktop\\\\alpha-board\\\\.claude\\\\skills\"\" 2>/dev/null; ls -la \"C:UsersFacundoDesktopalpha-board.claude\"\")",
+      "Bash(claude mcp add:*)"
+    ]
+  }
+}
