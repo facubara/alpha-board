@@ -5,10 +5,11 @@
  *
  * Table row for a single ranked symbol.
  * Per DESIGN_SYSTEM.md:
- * - Row height: 40px
+ * - Row height: 40px (48px on mobile for touch)
  * - Cell padding: 8px horizontal
  * - Hover: bg-elevated
  * - Expandable with chevron icon
+ * - Responsive: score bar hidden on small screens
  */
 
 import { useState } from "react";
@@ -25,6 +26,15 @@ interface RankingRowProps {
   className?: string;
 }
 
+/**
+ * Get score text color based on value.
+ */
+function getScoreColor(score: number): string {
+  if (score < 0.4) return "text-bearish";
+  if (score > 0.6) return "text-bullish";
+  return "text-muted";
+}
+
 export function RankingRow({ snapshot, className }: RankingRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -33,7 +43,7 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
       {/* Main row */}
       <TableRow
         className={cn(
-          "h-10 cursor-pointer transition-colors-fast hover:bg-[var(--bg-elevated)]",
+          "h-10 cursor-pointer transition-colors-fast hover:bg-[var(--bg-elevated)] sm:h-10",
           isExpanded && "bg-[var(--bg-surface)]",
           className
         )}
@@ -47,11 +57,20 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
 
         {/* Symbol */}
         <TableCell className="w-28 font-mono text-sm font-semibold text-primary">
-          {snapshot.symbol}
+          <span className="block">{snapshot.symbol}</span>
+          {/* Mobile: show score inline below symbol */}
+          <span
+            className={cn(
+              "block text-xs font-medium sm:hidden",
+              getScoreColor(snapshot.bullishScore)
+            )}
+          >
+            {snapshot.bullishScore.toFixed(3)}
+          </span>
         </TableCell>
 
-        {/* Score bar + value */}
-        <TableCell className="w-44">
+        {/* Score bar + value (hidden on mobile) */}
+        <TableCell className="hidden w-44 sm:table-cell">
           <ScoreBar score={snapshot.bullishScore} />
         </TableCell>
 
@@ -60,8 +79,8 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
           {snapshot.confidence}%
         </TableCell>
 
-        {/* Highlights */}
-        <TableCell className="hidden md:table-cell">
+        {/* Highlights (hidden on mobile and tablet) */}
+        <TableCell className="hidden lg:table-cell">
           <HighlightChips highlights={snapshot.highlights} max={3} />
         </TableCell>
 
@@ -80,6 +99,12 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
       {isExpanded && (
         <TableRow className="bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
           <TableCell colSpan={6} className="px-4 py-0">
+            {/* Mobile: show highlights in expanded view */}
+            {snapshot.highlights.length > 0 && (
+              <div className="border-b border-[var(--border-subtle)] py-2 lg:hidden">
+                <HighlightChips highlights={snapshot.highlights} max={4} />
+              </div>
+            )}
             <IndicatorBreakdown signals={snapshot.indicatorSignals} />
           </TableCell>
         </TableRow>

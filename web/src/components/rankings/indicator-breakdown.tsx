@@ -5,10 +5,13 @@
  * Per DESIGN_SYSTEM.md:
  * - Shows mini score bar per indicator
  * - Signal value displayed as +0.XX or -0.XX
+ * - Sentiment badge (bullish/neutral/bearish)
  * - Description text in text-muted
+ * - Responsive grid layout
  */
 
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import type { IndicatorSignal } from "@/lib/types";
 
 interface IndicatorBreakdownProps {
@@ -32,6 +35,21 @@ function getSignalTextColor(signal: number): string {
   if (signal < -0.2) return "text-bearish";
   if (signal > 0.2) return "text-bullish";
   return "text-muted";
+}
+
+/**
+ * Get badge styling based on label.
+ */
+function getBadgeStyles(label: "bullish" | "bearish" | "neutral"): string {
+  switch (label) {
+    case "bullish":
+      return "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]";
+    case "bearish":
+      return "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]";
+    case "neutral":
+    default:
+      return "bg-[var(--bg-muted)] text-[var(--text-secondary)] hover:bg-[var(--bg-muted)]";
+  }
 }
 
 /**
@@ -59,15 +77,27 @@ export function IndicatorBreakdown({
       {signals.map((indicator) => (
         <div
           key={indicator.name}
-          className="grid grid-cols-[140px_120px_60px_1fr] items-center gap-4 text-sm"
+          className="grid grid-cols-[1fr] gap-2 text-sm sm:grid-cols-[120px_100px_50px_70px_1fr] sm:items-center sm:gap-4"
         >
           {/* Indicator name */}
-          <span className="text-secondary truncate">
-            {indicator.displayName}
-          </span>
+          <div className="flex items-center justify-between sm:block">
+            <span className="truncate text-secondary">
+              {indicator.displayName}
+            </span>
+            {/* Mobile: show badge inline */}
+            <Badge
+              variant="secondary"
+              className={cn(
+                "ml-2 text-[10px] uppercase sm:hidden",
+                getBadgeStyles(indicator.label)
+              )}
+            >
+              {indicator.label}
+            </Badge>
+          </div>
 
-          {/* Mini score bar (signal normalized to 0-1 for display) */}
-          <div className="flex items-center gap-2">
+          {/* Mini score bar (signal normalized for display) */}
+          <div className="hidden items-center gap-2 sm:flex">
             <div className="relative h-1 w-16 overflow-hidden rounded-full bg-[var(--bg-muted)]">
               {/* Center line at 50% representing 0 */}
               <div className="absolute left-1/2 top-0 h-full w-px bg-[var(--border-default)]" />
@@ -102,17 +132,66 @@ export function IndicatorBreakdown({
           {/* Signal value */}
           <span
             className={cn(
-              "font-mono text-xs font-medium tabular-nums",
+              "hidden font-mono text-xs font-medium tabular-nums sm:block",
               getSignalTextColor(indicator.signal)
             )}
           >
             {formatSignal(indicator.signal)}
           </span>
 
+          {/* Sentiment badge (desktop only) */}
+          <Badge
+            variant="secondary"
+            className={cn(
+              "hidden w-fit text-[10px] uppercase sm:inline-flex",
+              getBadgeStyles(indicator.label)
+            )}
+          >
+            {indicator.label}
+          </Badge>
+
           {/* Description */}
           <span className="truncate text-xs text-muted">
             {indicator.description}
           </span>
+
+          {/* Mobile: show bar and value */}
+          <div className="flex items-center gap-3 sm:hidden">
+            <div className="relative h-1 w-20 overflow-hidden rounded-full bg-[var(--bg-muted)]">
+              <div className="absolute left-1/2 top-0 h-full w-px bg-[var(--border-default)]" />
+              {indicator.signal >= 0 ? (
+                <div
+                  className={cn(
+                    "absolute top-0 h-full rounded-r-full",
+                    getSignalColor(indicator.signal)
+                  )}
+                  style={{
+                    left: "50%",
+                    width: `${Math.abs(indicator.signal) * 50}%`,
+                  }}
+                />
+              ) : (
+                <div
+                  className={cn(
+                    "absolute top-0 h-full rounded-l-full",
+                    getSignalColor(indicator.signal)
+                  )}
+                  style={{
+                    right: "50%",
+                    width: `${Math.abs(indicator.signal) * 50}%`,
+                  }}
+                />
+              )}
+            </div>
+            <span
+              className={cn(
+                "font-mono text-xs font-medium tabular-nums",
+                getSignalTextColor(indicator.signal)
+              )}
+            >
+              {formatSignal(indicator.signal)}
+            </span>
+          </div>
         </div>
       ))}
     </div>
