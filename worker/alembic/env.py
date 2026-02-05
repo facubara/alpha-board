@@ -1,11 +1,16 @@
 import asyncio
+import sys
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from src.config import settings
-from src.models.db import *  # noqa: F401, F403 — ensure all models are imported
+from src.models import Base  # Import Base to get metadata
+
+# Fix Windows event loop compatibility with psycopg async
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # Alembic Config object
 config = context.config
@@ -13,18 +18,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Import Base metadata for autogenerate support
-from sqlalchemy.orm import DeclarativeBase
-
-
-# We'll import the actual Base from models once it exists (Phase 2).
-# For now, use a placeholder that will be replaced.
-try:
-    from src.models.db import Base
-
-    target_metadata = Base.metadata
-except ImportError:
-    target_metadata = None
+target_metadata = Base.metadata
 
 
 def _get_url() -> str:
