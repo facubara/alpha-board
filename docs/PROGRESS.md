@@ -1,7 +1,7 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-05 18:00
-**Current Phase:** Phase 8 (Rankings UI Polish)
+**Last Updated:** 2026-02-05 18:45
+**Current Phase:** Phase 9 (Agent Core)
 
 ---
 
@@ -16,7 +16,7 @@
 | 5 | Scoring | Done | `03caeb6` | 2026-02-05 |
 | 6 | Pipeline | Done | `26679ef` | 2026-02-05 |
 | 7 | Rankings UI Core | Done | `f8d285b` | 2026-02-05 |
-| 8 | Rankings UI Polish | Pending | — | — |
+| 8 | Rankings UI Polish | Done | `86aa811` | 2026-02-05 |
 | 9 | Agent Core | Pending | — | — |
 | 10 | Agent Learning | Pending | — | — |
 | 11 | Agent Leaderboard | Pending | — | — |
@@ -24,7 +24,7 @@
 | 13 | Deployment | Pending | — | — |
 | 14 | Testing & Polish | Pending | — | — |
 
-**Progress: 7/14 phases complete (50%)**
+**Progress: 8/14 phases complete (57%)**
 
 ---
 
@@ -33,7 +33,7 @@
 | Stage | Phases | Status |
 |-------|--------|--------|
 | A: Foundation | 1-6 | 6/6 complete |
-| B: Rankings Frontend | 7-8 | 1/2 complete |
+| B: Rankings Frontend | 7-8 | 2/2 complete |
 | C: Agent Backend | 9-10 | 0/2 complete |
 | D: Agent Frontend | 11-12 | 0/2 complete |
 | E: Deployment | 13-14 | 0/2 complete |
@@ -49,7 +49,7 @@
 - [x] **Can score and rank symbols** — Phase 5
 - [x] **Rankings backend live** — Phase 6
 - [x] **Rankings frontend MVP** — Phase 7
-- [ ] **Rankings frontend complete** — Phase 8
+- [x] **Rankings frontend complete** — Phase 8
 - [ ] **Agents making decisions** — Phase 9
 - [ ] **Agents evolving autonomously** — Phase 10
 - [ ] **Agent frontend MVP** — Phase 11
@@ -85,6 +85,8 @@
 | 7 | Color mode | Dark-only (e-ink aesthetic) |
 | 7 | Design system | E-ink inspired (monochrome, compact) |
 | 7 | Component library | shadcn/ui |
+| 8 | ISR revalidation | 60 seconds |
+| 8 | Sort default | Rank ascending |
 
 ---
 
@@ -102,6 +104,7 @@
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-05 18:30 | Phase 8 | Rankings UI Polish |
 | 2026-02-05 17:30 | Phase 7 | Rankings UI Core |
 | 2026-02-05 17:00 | Phase 6 | Pipeline Orchestration |
 | 2026-02-05 16:15 | Phase 5 | Scoring & Ranking |
