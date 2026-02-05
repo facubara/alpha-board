@@ -7,6 +7,7 @@ class Settings(BaseSettings):
 
     # Binance
     binance_base_url: str = "https://api.binance.com"
+    min_volume_usd: float = 1_000_000  # Minimum 24h volume for symbol inclusion
 
     # Anthropic
     anthropic_api_key: str = ""
