@@ -63,13 +63,25 @@ Update the "Commit Message" section in the session file.
 - Exclude any files flagged in the security check
 - Show the user what will be staged before proceeding
 
-### 6. Commit
+### 6. Update Progress File
+
+Update `docs/PROGRESS.md` with:
+- Update "Last Updated" timestamp
+- Update "Current Phase" to next pending phase
+- If a phase was completed, mark it as "Done" with commit hash and date
+- Update milestone checkboxes
+- Update test counts if tests were added
+- Add any new decisions to "Key Decisions Made"
+- Add this session to "Recent Sessions" (keep last 5)
+
+### 7. Commit
 
 - Execute the commit with the generated message
 - Use HEREDOC format for the commit message
+- Include `docs/PROGRESS.md` in the commit
 - Report the commit hash
 
-### 7. Report
+### 8. Report
 
 Show the user:
 - What was committed (file list)
