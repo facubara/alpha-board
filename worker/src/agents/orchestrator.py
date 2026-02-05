@@ -4,6 +4,8 @@ Handles:
 - Running all agents for a timeframe
 - Decision logging
 - Token usage tracking
+- Memory generation after trades
+- Evolution triggering
 - Integration with pipeline
 """
 
@@ -21,6 +23,7 @@ from src.models.db import (
     AgentDecision,
     AgentPrompt,
     AgentTokenUsage,
+    AgentTrade,
 )
 from src.agents.schemas import (
     ActionType,
@@ -30,6 +33,8 @@ from src.agents.schemas import (
 from src.agents.context import ContextBuilder
 from src.agents.executor import AgentExecutor
 from src.agents.portfolio import PortfolioManager
+from src.agents.memory import MemoryManager
+from src.agents.evolution import EvolutionManager
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +47,8 @@ class AgentOrchestrator:
         self.context_builder = ContextBuilder(session)
         self.executor = AgentExecutor()
         self.portfolio_manager = PortfolioManager(session)
+        self.memory_manager = MemoryManager(session)
+        self.evolution_manager = EvolutionManager(session)
 
     async def run_cycle(
         self,
@@ -71,6 +78,8 @@ class AgentOrchestrator:
             "agents_processed": 0,
             "decisions": [],
             "executions": [],
+            "memories_generated": 0,
+            "evolutions_triggered": 0,
             "errors": [],
             "total_tokens": {"input": 0, "output": 0},
             "total_cost_usd": Decimal("0.00"),
@@ -86,6 +95,12 @@ class AgentOrchestrator:
 
                 if agent_result.get("execution"):
                     results["executions"].append(agent_result["execution"])
+
+                if agent_result.get("memory_generated"):
+                    results["memories_generated"] += 1
+
+                if agent_result.get("evolution_triggered"):
+                    results["evolutions_triggered"] += 1
 
                 results["total_tokens"]["input"] += agent_result["decision"].input_tokens
                 results["total_tokens"]["output"] += agent_result["decision"].output_tokens
@@ -107,6 +122,8 @@ class AgentOrchestrator:
             f"Agent cycle for {timeframe} complete: "
             f"{results['agents_processed']} agents, "
             f"{len(results['executions'])} executions, "
+            f"{results['memories_generated']} memories, "
+            f"{results['evolutions_triggered']} evolutions, "
             f"{len(results['errors'])} errors, "
             f"${results['total_cost_usd']:.4f} cost, "
             f"{elapsed:.1f}s elapsed"
@@ -132,16 +149,29 @@ class AgentOrchestrator:
         """
         logger.debug(f"Processing agent {agent.name}")
 
+        result = {
+            "decision": None,
+            "execution": None,
+            "memory_generated": False,
+            "evolution_triggered": False,
+        }
+
         # First, check stop loss / take profit
+        closed_trades: list[AgentTrade] = []
         if candle_data:
             sl_tp_results = await self.portfolio_manager.check_stop_loss_take_profit(
                 agent.id, candle_data
             )
-            for result in sl_tp_results:
+            for sl_tp_result in sl_tp_results:
                 logger.info(
-                    f"Agent {agent.name}: {result.action.value} {result.symbol} "
-                    f"({result.details.get('exit_reason')})"
+                    f"Agent {agent.name}: {sl_tp_result.action.value} {sl_tp_result.symbol} "
+                    f"({sl_tp_result.details.get('exit_reason')})"
                 )
+                # Get the trade that was just closed
+                if sl_tp_result.trade_id:
+                    trade = await self._get_trade(sl_tp_result.trade_id)
+                    if trade:
+                        closed_trades.append(trade)
 
         # Update unrealized PnL
         await self.portfolio_manager.update_unrealized_pnl(agent.id, current_prices)
@@ -176,7 +206,7 @@ class AgentOrchestrator:
             decision.estimated_cost_usd,
         )
 
-        result = {"decision": decision, "execution": None}
+        result["decision"] = decision
 
         # Execute action if not hold
         if decision.action.action != ActionType.HOLD:
@@ -187,6 +217,34 @@ class AgentOrchestrator:
                 decision_record.id if decision_record else None,
             )
             result["execution"] = execution
+
+            # If we closed a position, add to closed_trades for memory generation
+            if execution and execution.success and execution.trade_id:
+                trade = await self._get_trade(execution.trade_id)
+                if trade:
+                    closed_trades.append(trade)
+
+        # Generate memory for any closed trades
+        for trade in closed_trades:
+            memory = await self.memory_manager.generate_memory(agent, trade)
+            if memory:
+                result["memory_generated"] = True
+                logger.debug(f"Generated memory for agent {agent.name}: {memory.lesson[:50]}...")
+
+        # Check if evolution should be triggered
+        if closed_trades:
+            should_evolve = await self.evolution_manager.check_evolution_trigger(agent.id)
+            if should_evolve:
+                # First check for auto-revert
+                reverted = await self.evolution_manager.check_auto_revert(agent.id)
+                if not reverted:
+                    # Trigger evolution
+                    new_prompt = await self.evolution_manager.trigger_evolution(agent.id)
+                    if new_prompt:
+                        result["evolution_triggered"] = True
+                        logger.info(
+                            f"Agent {agent.name} evolved to prompt v{new_prompt.version}"
+                        )
 
         return result
 
@@ -270,6 +328,13 @@ class AgentOrchestrator:
             )
         )
         return list(result.scalars().all())
+
+    async def _get_trade(self, trade_id: int) -> AgentTrade | None:
+        """Get a trade by ID."""
+        result = await self.session.execute(
+            select(AgentTrade).where(AgentTrade.id == trade_id)
+        )
+        return result.scalar_one_or_none()
 
     async def _get_active_prompt(self, agent_id: int) -> AgentPrompt | None:
         """Get the active prompt for an agent."""

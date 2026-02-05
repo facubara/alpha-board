@@ -1,7 +1,7 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-05 19:30
-**Current Phase:** Phase 10 (Agent Learning)
+**Last Updated:** 2026-02-05 20:30
+**Current Phase:** Phase 11 (Agent Leaderboard)
 
 ---
 
@@ -18,13 +18,13 @@
 | 7 | Rankings UI Core | Done | `f8d285b` | 2026-02-05 |
 | 8 | Rankings UI Polish | Done | `86aa811` | 2026-02-05 |
 | 9 | Agent Core | Done | `55f827c` | 2026-02-05 |
-| 10 | Agent Learning | Pending | — | — |
+| 10 | Agent Learning | Done | `0557b62` | 2026-02-05 |
 | 11 | Agent Leaderboard | Pending | — | — |
 | 12 | Agent Detail | Pending | — | — |
 | 13 | Deployment | Pending | — | — |
 | 14 | Testing & Polish | Pending | — | — |
 
-**Progress: 9/14 phases complete (64%)**
+**Progress: 10/14 phases complete (71%)**
 
 ---
 
@@ -34,7 +34,7 @@
 |-------|--------|--------|
 | A: Foundation | 1-6 | 6/6 complete |
 | B: Rankings Frontend | 7-8 | 2/2 complete |
-| C: Agent Backend | 9-10 | 1/2 complete |
+| C: Agent Backend | 9-10 | 2/2 complete |
 | D: Agent Frontend | 11-12 | 0/2 complete |
 | E: Deployment | 13-14 | 0/2 complete |
 
@@ -51,7 +51,7 @@
 - [x] **Rankings frontend MVP** — Phase 7
 - [x] **Rankings frontend complete** — Phase 8
 - [x] **Agents making decisions** — Phase 9
-- [ ] **Agents evolving autonomously** — Phase 10
+- [x] **Agents evolving autonomously** — Phase 10
 - [ ] **Agent frontend MVP** — Phase 11
 - [ ] **Agent frontend complete** — Phase 12
 - [ ] **Live in production** — Phase 13
@@ -68,7 +68,8 @@
 | Scoring | 23 | Pass |
 | Pipeline | 17 | Pass |
 | Agents | 27 | Pass |
-| **Total** | **124** | **Pass** |
+| Evolution | 21 | Pass |
+| **Total** | **145** | **Pass** |
 
 ---
 
@@ -92,6 +93,9 @@
 | 9 | Max concurrent positions | 5 per agent |
 | 9 | Trading fee | 0.1% per trade |
 | 9 | Multiple positions per symbol | No (1 per symbol per agent) |
+| 10 | Memory model | scan_model (Haiku) for cost efficiency |
+| 10 | Auto-revert threshold | 20% PnL drop after evolution |
+| 10 | Evolution trigger | Per-agent configurable (default 10 trades) |
 
 ---
 
@@ -100,7 +104,6 @@
 | Decision | Options | Resolve In |
 |----------|---------|------------|
 | Chart library | Recharts, Chart.js, SVG | Phase 12 |
-| Per-agent cost ceiling | Yes vs No | Phase 10 |
 
 ---
 
@@ -108,6 +111,7 @@
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-05 20:00 | Phase 10 | Agent Learning & Evolution |
 | 2026-02-05 19:00 | Phase 9 | Agent Core |
 | 2026-02-05 18:30 | Phase 8 | Rankings UI Polish |
 | 2026-02-05 17:30 | Phase 7 | Rankings UI Core |

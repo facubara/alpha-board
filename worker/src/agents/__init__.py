@@ -24,6 +24,8 @@ from src.agents.context import ContextBuilder
 from src.agents.executor import AgentExecutor, estimate_cost
 from src.agents.portfolio import PortfolioManager
 from src.agents.orchestrator import AgentOrchestrator
+from src.agents.memory import MemoryManager
+from src.agents.evolution import EvolutionManager
 
 __all__ = [
     # Schemas
@@ -42,6 +44,8 @@ __all__ = [
     "AgentExecutor",
     "PortfolioManager",
     "AgentOrchestrator",
+    "MemoryManager",
+    "EvolutionManager",
     # Functions
     "estimate_cost",
 ]
