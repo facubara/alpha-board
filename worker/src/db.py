@@ -1,6 +1,13 @@
+import asyncio
+import sys
+
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from src.config import settings
+
+# Fix Windows event loop compatibility with psycopg async
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # Convert postgresql:// to postgresql+psycopg:// for async driver
 _url = settings.database_url
