@@ -61,7 +61,18 @@ export async function getTimeframeRankings(
     confidence: Number(row.confidence),
     rank: Number(row.rank),
     highlights: (row.highlights as Highlight[]) || [],
-    indicatorSignals: (row.indicator_signals as IndicatorSignal[]) || [],
+    indicatorSignals: row.indicator_signals
+      ? Object.entries(row.indicator_signals as Record<string, Record<string, unknown>>).map(
+          ([name, data]) => ({
+            name,
+            displayName: name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+            signal: Number(data.signal ?? 0),
+            label: (data.label as IndicatorSignal["label"]) ?? "neutral",
+            description: String(data.label ?? "neutral"),
+            rawValues: (data.raw as Record<string, number>) ?? {},
+          })
+        )
+      : [],
     computedAt: (row.computed_at as Date).toISOString(),
     runId: row.run_id as string,
   }));

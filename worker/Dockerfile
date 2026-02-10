@@ -18,6 +18,8 @@ COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /app .
 
+ENV PYTHONPATH=/app
+
 EXPOSE 8000
 
 CMD ["sh", "-c", "alembic upgrade head && python -m src.main"]

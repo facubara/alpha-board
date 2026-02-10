@@ -43,7 +43,7 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
       {/* Main row */}
       <TableRow
         className={cn(
-          "h-10 cursor-pointer transition-colors-fast hover:bg-[var(--bg-elevated)] sm:h-10",
+          "group/row h-10 cursor-pointer transition-colors-fast hover:bg-[var(--bg-elevated)] sm:h-10",
           isExpanded && "bg-[var(--bg-surface)]",
           className
         )}
@@ -57,7 +57,21 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
 
         {/* Symbol */}
         <TableCell className="w-28 font-mono text-sm font-semibold text-primary">
-          <span className="block">{snapshot.symbol}</span>
+          <span className="flex items-center gap-1.5">
+            {snapshot.symbol}
+            <a
+              href={`https://www.binance.com/en/trade/${snapshot.baseAsset}_${snapshot.quoteAsset}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-[#F0B90B] transition-transform hover:scale-125"
+              title={`Trade ${snapshot.baseAsset}/${snapshot.quoteAsset} on Binance`}
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M16 4l4 4-4 4-4-4zm8 8l4 4-4 4-4-4zm-16 0l4 4-4 4-4-4zm8 8l4 4-4 4-4-4z" />
+              </svg>
+            </a>
+          </span>
           {/* Mobile: show score inline below symbol */}
           <span
             className={cn(

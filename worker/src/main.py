@@ -54,12 +54,7 @@ async def scheduled_check():
         last_run = last_runs.get(timeframe)
 
         # Check if this timeframe is due
-        if last_run is None:
-            # First run, check if we're at a cadence boundary
-            minutes_since_midnight = now.hour * 60 + now.minute
-            if minutes_since_midnight % cadence != 0:
-                continue
-        else:
+        if last_run is not None:
             elapsed = (now - last_run).total_seconds() / 60
             if elapsed < cadence:
                 continue

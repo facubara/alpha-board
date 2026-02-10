@@ -11,7 +11,7 @@ dependencies = [
     # Data & Indicators
     "pandas>=2.2",
     "numpy>=1.26",
-    "pandas-ta>=0.3",
+    "pandas-ta>=0.4.67b0",
     # HTTP & APIs
     "httpx>=0.27",
     "anthropic>=0.40",
