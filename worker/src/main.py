@@ -1,21 +1,26 @@
 """Alpha Worker entrypoint with FastAPI and APScheduler.
 
 Provides:
-- /health — Health check endpoint
+- /health — Health check endpoint (detailed, for Fly.io checks)
 - /status — Scheduler status and job list
 - /trigger/{timeframe} — Manual pipeline trigger
 - Scheduled pipeline runs based on timeframe cadence
+- Daily retention cleanup for old partitions
 """
 
 import logging
-from datetime import datetime, timezone
+import time
+from datetime import datetime, timedelta, timezone
 
 import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 from fastapi import FastAPI, HTTPException
+from sqlalchemy import text
 
 from src.config import settings
+from src.db import engine
 from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner
 
 logging.basicConfig(
@@ -30,8 +35,10 @@ scheduler = AsyncIOScheduler()
 # Pipeline runner instance
 runner = PipelineRunner(min_volume_usd=settings.min_volume_usd)
 
-# Track last run times for each timeframe
+# Track last run times and results for each timeframe
 last_runs: dict[str, datetime] = {}
+last_results: dict[str, dict] = {}
+start_time = time.monotonic()
 
 
 async def scheduled_check():
@@ -63,12 +70,14 @@ async def scheduled_check():
             result = await runner.run(timeframe)
             if result["status"] == "completed":
                 last_runs[timeframe] = now
+                last_results[timeframe] = result
                 logger.info(
                     f"Completed {timeframe}: {result.get('symbols', 0)} symbols"
                 )
             elif result["status"] == "skipped":
                 logger.info(f"Skipped {timeframe}: {result.get('reason')}")
             else:
+                last_results[timeframe] = result
                 logger.error(f"Failed {timeframe}: {result.get('error')}")
         except Exception as e:
             logger.exception(f"Error running pipeline for {timeframe}: {e}")
@@ -76,8 +85,52 @@ async def scheduled_check():
 
 @app.get("/health")
 async def health():
-    """Health check endpoint."""
-    return {"status": "ok"}
+    """Health check with detailed status for monitoring."""
+    uptime_seconds = int(time.monotonic() - start_time)
+
+    # Quick DB connectivity check
+    db_status = "ok"
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+    except Exception:
+        db_status = "error"
+
+    # Agent stats
+    agent_stats = {}
+    try:
+        async with engine.connect() as conn:
+            row = await conn.execute(
+                text(
+                    "SELECT "
+                    "COUNT(*) FILTER (WHERE status = 'active') as active, "
+                    "COUNT(*) FILTER (WHERE status = 'paused') as paused "
+                    "FROM agents"
+                )
+            )
+            r = row.first()
+            if r:
+                agent_stats = {"active": r[0], "paused": r[1]}
+
+            pos_row = await conn.execute(text("SELECT COUNT(*) FROM agent_positions"))
+            p = pos_row.scalar()
+            agent_stats["open_positions"] = p or 0
+    except Exception:
+        pass
+
+    return {
+        "status": "ok" if db_status == "ok" else "degraded",
+        "uptime_seconds": uptime_seconds,
+        "db_connection": db_status,
+        "last_runs": {
+            tf: {
+                "finished_at": str(last_runs[tf]) if tf in last_runs else None,
+                "symbols": last_results.get(tf, {}).get("symbols"),
+            }
+            for tf in TIMEFRAME_CONFIG
+        },
+        "agents": agent_stats,
+    }
 
 
 @app.get("/status")
@@ -129,6 +182,73 @@ async def trigger(timeframe: str):
     return result
 
 
+async def retention_cleanup():
+    """Drop snapshot/decision partitions older than 90 days and create future partitions.
+
+    Runs daily at 03:00 UTC.
+    """
+    logger.info("Running retention cleanup")
+    now = datetime.now(timezone.utc)
+    cutoff = now - timedelta(days=90)
+
+    async with engine.begin() as conn:
+        # Find and drop old partitions for snapshots and agent_decisions
+        for base_table in ("snapshots", "agent_decisions"):
+            # List partitions by querying pg_inherits
+            result = await conn.execute(
+                text(
+                    "SELECT c.relname FROM pg_inherits i "
+                    "JOIN pg_class c ON c.oid = i.inhrelid "
+                    "JOIN pg_class p ON p.oid = i.inhparent "
+                    f"WHERE p.relname = '{base_table}' "
+                    "ORDER BY c.relname"
+                )
+            )
+            for row in result:
+                partition_name = row[0]
+                # Extract year_month from partition name like snapshots_2026_02
+                parts = partition_name.rsplit("_", 2)
+                if len(parts) >= 3:
+                    try:
+                        year = int(parts[-2])
+                        month = int(parts[-1])
+                        partition_date = datetime(year, month, 1, tzinfo=timezone.utc)
+                        if partition_date < cutoff.replace(day=1):
+                            logger.info(f"Dropping old partition: {partition_name}")
+                            await conn.execute(
+                                text(f"DROP TABLE IF EXISTS {partition_name}")
+                            )
+                    except (ValueError, IndexError):
+                        continue
+
+        # Create partitions for the next 2 months
+        for months_ahead in range(1, 3):
+            future = now + timedelta(days=30 * months_ahead)
+            year = future.year
+            month = future.month
+            next_month = month + 1
+            next_year = year
+            if next_month > 12:
+                next_month = 1
+                next_year = year + 1
+
+            for base_table in ("snapshots", "agent_decisions"):
+                partition_name = f"{base_table}_{year}_{month:02d}"
+                try:
+                    await conn.execute(
+                        text(
+                            f"CREATE TABLE IF NOT EXISTS {partition_name} "
+                            f"PARTITION OF {base_table} "
+                            f"FOR VALUES FROM ('{year}-{month:02d}-01') "
+                            f"TO ('{next_year}-{next_month:02d}-01')"
+                        )
+                    )
+                except Exception:
+                    pass  # Partition may already exist
+
+    logger.info("Retention cleanup completed")
+
+
 @app.on_event("startup")
 async def on_startup():
     """Start the scheduler on app startup."""
@@ -140,8 +260,18 @@ async def on_startup():
         name="Pipeline timeframe check",
         replace_existing=True,
     )
+
+    # Add retention cleanup (daily at 03:00 UTC)
+    scheduler.add_job(
+        retention_cleanup,
+        trigger=CronTrigger(hour=3, minute=0),
+        id="retention_cleanup",
+        name="Retention cleanup (90-day partitions)",
+        replace_existing=True,
+    )
+
     scheduler.start()
-    logger.info("Scheduler started with 5-minute check interval")
+    logger.info("Scheduler started with 5-minute check interval + daily cleanup")
 
 
 @app.on_event("shutdown")

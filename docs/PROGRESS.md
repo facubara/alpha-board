@@ -1,7 +1,7 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-05 20:30
-**Current Phase:** Phase 11 (Agent Leaderboard)
+**Last Updated:** 2026-02-09
+**Current Phase:** Complete (all 14 phases done)
 
 ---
 
@@ -19,12 +19,12 @@
 | 8 | Rankings UI Polish | Done | `86aa811` | 2026-02-05 |
 | 9 | Agent Core | Done | `55f827c` | 2026-02-05 |
 | 10 | Agent Learning | Done | `0557b62` | 2026-02-05 |
-| 11 | Agent Leaderboard | Pending | — | — |
-| 12 | Agent Detail | Pending | — | — |
-| 13 | Deployment | Pending | — | — |
-| 14 | Testing & Polish | Pending | — | — |
+| 11 | Agent Leaderboard | Done | — | 2026-02-09 |
+| 12 | Agent Detail | Done | — | 2026-02-09 |
+| 13 | Deployment | Done | — | 2026-02-09 |
+| 14 | Testing & Polish | Done | — | 2026-02-09 |
 
-**Progress: 10/14 phases complete (71%)**
+**Progress: 14/14 phases complete (100%)**
 
 ---
 
@@ -35,8 +35,8 @@
 | A: Foundation | 1-6 | 6/6 complete |
 | B: Rankings Frontend | 7-8 | 2/2 complete |
 | C: Agent Backend | 9-10 | 2/2 complete |
-| D: Agent Frontend | 11-12 | 0/2 complete |
-| E: Deployment | 13-14 | 0/2 complete |
+| D: Agent Frontend | 11-12 | 2/2 complete |
+| E: Deployment | 13-14 | 2/2 complete |
 
 ---
 
@@ -52,10 +52,10 @@
 - [x] **Rankings frontend complete** — Phase 8
 - [x] **Agents making decisions** — Phase 9
 - [x] **Agents evolving autonomously** — Phase 10
-- [ ] **Agent frontend MVP** — Phase 11
-- [ ] **Agent frontend complete** — Phase 12
-- [ ] **Live in production** — Phase 13
-- [ ] **Production-ready** — Phase 14
+- [x] **Agent frontend MVP** — Phase 11
+- [x] **Agent frontend complete** — Phase 12
+- [x] **Deployment configs ready** — Phase 13
+- [x] **Production-ready** — Phase 14
 
 ---
 
@@ -96,14 +96,16 @@
 | 10 | Memory model | scan_model (Haiku) for cost efficiency |
 | 10 | Auto-revert threshold | 20% PnL drop after evolution |
 | 10 | Evolution trigger | Per-agent configurable (default 10 trades) |
+| 12 | Chart library | Pure SVG (no external dependency) |
+| 13 | Worker deployment | Fly.io (shared-cpu-1x, 512MB) |
+| 13 | Frontend deployment | Vercel (iad1 region) |
+| 13 | Partition retention | 90 days, daily cleanup at 03:00 UTC |
 
 ---
 
 ## Open Decisions
 
-| Decision | Options | Resolve In |
-|----------|---------|------------|
-| Chart library | Recharts, Chart.js, SVG | Phase 12 |
+None — all decisions resolved.
 
 ---
 
@@ -111,6 +113,7 @@
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-09 | Phase 11-14 | Agent Frontend + Deployment + Polish |
 | 2026-02-05 20:00 | Phase 10 | Agent Learning & Evolution |
 | 2026-02-05 19:00 | Phase 9 | Agent Core |
 | 2026-02-05 18:30 | Phase 8 | Rankings UI Polish |
@@ -121,6 +124,29 @@
 | 2026-02-05 14:30 | Phase 3 | Binance Client |
 | 2026-02-05 13:00 | Verify | Phase 1-2 verification |
 | 2026-02-05 12:00 | Phase 2 | DB Schema & Migrations |
+
+---
+
+## Deployment Checklist
+
+### Neon Database
+- [ ] Create production database on Neon
+- [ ] Run `alembic upgrade head`
+- [ ] Verify connection pooling (built-in with Neon)
+- [ ] Set up dev branch for development
+
+### Python Worker (Fly.io)
+- [ ] `fly launch` with `worker/fly.toml`
+- [ ] Set secrets: `fly secrets set DATABASE_URL=... ANTHROPIC_API_KEY=...`
+- [ ] Verify `/health` endpoint responds
+- [ ] Verify scheduled pipeline runs in logs
+
+### Next.js Frontend (Vercel)
+- [ ] Connect Git repo to Vercel
+- [ ] Set `web/` as root directory
+- [ ] Set `DATABASE_URL` environment variable
+- [ ] Verify ISR revalidation works
+- [ ] Custom domain (optional)
 
 ---
 

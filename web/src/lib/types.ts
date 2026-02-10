@@ -119,3 +119,177 @@ export interface Indicator {
   isActive: boolean;
   config: Record<string, unknown>;
 }
+
+// =============================================================================
+// Agent Types
+// =============================================================================
+
+export type StrategyArchetype =
+  | "momentum"
+  | "mean_reversion"
+  | "breakout"
+  | "swing";
+
+export const STRATEGY_ARCHETYPES: StrategyArchetype[] = [
+  "momentum",
+  "mean_reversion",
+  "breakout",
+  "swing",
+];
+
+export const STRATEGY_ARCHETYPE_LABELS: Record<StrategyArchetype, string> = {
+  momentum: "Momentum",
+  mean_reversion: "Mean Reversion",
+  breakout: "Breakout",
+  swing: "Swing",
+};
+
+export type AgentTimeframe = Timeframe | "cross";
+
+export const AGENT_TIMEFRAMES: AgentTimeframe[] = [
+  "15m",
+  "30m",
+  "1h",
+  "4h",
+  "1d",
+  "1w",
+  "cross",
+];
+
+export const AGENT_TIMEFRAME_LABELS: Record<AgentTimeframe, string> = {
+  "15m": "15m",
+  "30m": "30m",
+  "1h": "1h",
+  "4h": "4h",
+  "1d": "1d",
+  "1w": "1w",
+  cross: "Cross-TF",
+};
+
+export type AgentStatus = "active" | "paused";
+
+// =============================================================================
+// Agent Detail Types
+// =============================================================================
+
+export interface AgentDetail {
+  id: number;
+  name: string;
+  displayName: string;
+  strategyArchetype: StrategyArchetype;
+  timeframe: AgentTimeframe;
+  scanModel: string;
+  tradeModel: string;
+  evolutionModel: string;
+  status: AgentStatus;
+  initialBalance: number;
+  cashBalance: number;
+  totalEquity: number;
+  totalRealizedPnl: number;
+  totalFeesPaid: number;
+  totalPnl: number;
+  tradeCount: number;
+  wins: number;
+  winRate: number;
+  totalTokenCost: number;
+  openPositions: number;
+  createdAt: string;
+}
+
+export interface AgentTrade {
+  id: number;
+  agentId: number;
+  symbol: string;
+  direction: "long" | "short";
+  entryPrice: number;
+  exitPrice: number;
+  positionSize: number;
+  pnl: number;
+  fees: number;
+  exitReason: "agent_decision" | "stop_loss" | "take_profit";
+  openedAt: string;
+  closedAt: string;
+  durationMinutes: number;
+  reasoningSummary: string | null;
+}
+
+export interface AgentDecision {
+  id: number;
+  agentId: number;
+  action: string;
+  symbol: string | null;
+  reasoningFull: string;
+  reasoningSummary: string;
+  actionParams: Record<string, unknown> | null;
+  modelUsed: string;
+  inputTokens: number;
+  outputTokens: number;
+  estimatedCostUsd: number;
+  promptVersion: number;
+  decidedAt: string;
+}
+
+export interface AgentPromptVersion {
+  id: number;
+  agentId: number;
+  version: number;
+  systemPrompt: string;
+  source: "initial" | "auto" | "human";
+  diffFromPrevious: string | null;
+  performanceAtChange: {
+    pnl?: number;
+    win_rate?: number;
+    trades?: number;
+    drawdown?: number;
+  } | null;
+  createdAt: string;
+  isActive: boolean;
+}
+
+export interface AgentPosition {
+  id: number;
+  agentId: number;
+  symbol: string;
+  direction: "long" | "short";
+  entryPrice: number;
+  positionSize: number;
+  stopLoss: number | null;
+  takeProfit: number | null;
+  openedAt: string;
+  unrealizedPnl: number;
+}
+
+export interface AgentTokenUsageSummary {
+  model: string;
+  taskType: "scan" | "trade" | "evolution";
+  inputTokens: number;
+  outputTokens: number;
+  estimatedCostUsd: number;
+}
+
+// =============================================================================
+// Agent Leaderboard
+// =============================================================================
+
+export interface AgentLeaderboardRow {
+  id: number;
+  name: string;
+  displayName: string;
+  strategyArchetype: StrategyArchetype;
+  timeframe: AgentTimeframe;
+  scanModel: string;
+  tradeModel: string;
+  evolutionModel: string;
+  status: AgentStatus;
+  initialBalance: number;
+  cashBalance: number;
+  totalEquity: number;
+  totalRealizedPnl: number;
+  totalFeesPaid: number;
+  totalPnl: number;
+  tradeCount: number;
+  wins: number;
+  winRate: number;
+  totalTokenCost: number;
+  openPositions: number;
+}
