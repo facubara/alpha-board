@@ -19,7 +19,9 @@ from apscheduler.triggers.interval import IntervalTrigger
 from fastapi import FastAPI, HTTPException
 from sqlalchemy import text
 
+from src.agents.context import ContextBuilder
 from src.agents.orchestrator import AgentOrchestrator
+from src.agents.rule_executor import RuleBasedExecutor
 from src.config import settings
 from src.db import async_session, engine
 from src.notifications.digest import send_daily_digest_job
@@ -179,6 +181,217 @@ async def trigger(timeframe: str):
         last_runs[timeframe] = datetime.now(timezone.utc)
 
     return result
+
+
+@app.get("/debug/agents/{timeframe}")
+async def debug_agents(timeframe: str):
+    """Diagnostic endpoint for agent execution.
+
+    Runs a dry-run analysis showing:
+    - Which agents are found for the timeframe
+    - What rankings/indicators they see
+    - Which rule thresholds pass or fail
+    - The final decision and reasoning
+
+    No trades are executed — this is read-only.
+    """
+    from decimal import Decimal
+    from sqlalchemy import select, func
+    from src.models.db import Agent, AgentPortfolio, Snapshot, Symbol
+
+    valid_timeframes = list(TIMEFRAME_CONFIG.keys()) + ["cross"]
+    if timeframe not in valid_timeframes:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid timeframe. Must be one of: {valid_timeframes}",
+        )
+
+    diagnostics: dict = {
+        "timeframe": timeframe,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "agents": [],
+        "errors": [],
+    }
+
+    try:
+        async with async_session() as session:
+            # 1. Find active agents
+            result = await session.execute(
+                select(Agent).where(
+                    Agent.timeframe == timeframe,
+                    Agent.status == "active",
+                )
+            )
+            agents = list(result.scalars().all())
+            diagnostics["agents_found"] = len(agents)
+
+            if not agents:
+                diagnostics["summary"] = f"No active agents for timeframe '{timeframe}'"
+                return diagnostics
+
+            # 2. Check latest rankings availability
+            if timeframe != "cross":
+                subquery = (
+                    select(func.max(Snapshot.computed_at))
+                    .where(Snapshot.timeframe == timeframe)
+                    .scalar_subquery()
+                )
+                snap_result = await session.execute(
+                    select(func.count()).select_from(Snapshot).where(
+                        Snapshot.timeframe == timeframe,
+                        Snapshot.computed_at == subquery,
+                    )
+                )
+                ranking_count = snap_result.scalar() or 0
+
+                # Get the latest computed_at
+                time_result = await session.execute(
+                    select(func.max(Snapshot.computed_at)).where(
+                        Snapshot.timeframe == timeframe
+                    )
+                )
+                latest_computed = time_result.scalar()
+
+                diagnostics["rankings"] = {
+                    "count": ranking_count,
+                    "latest_computed_at": latest_computed.isoformat() if latest_computed else None,
+                    "age_minutes": round(
+                        (datetime.now(timezone.utc) - latest_computed).total_seconds() / 60, 1
+                    ) if latest_computed else None,
+                }
+
+                if ranking_count == 0:
+                    diagnostics["summary"] = (
+                        "No ranking snapshots found — pipeline may not have run yet for this timeframe"
+                    )
+                    return diagnostics
+
+            # 3. Build context and dry-run each agent
+            context_builder = ContextBuilder(session)
+            rule_executor = RuleBasedExecutor()
+
+            for agent in agents:
+                agent_diag: dict = {
+                    "id": agent.id,
+                    "name": agent.name,
+                    "display_name": agent.display_name,
+                    "engine": agent.engine,
+                    "strategy_archetype": agent.strategy_archetype,
+                    "last_cycle_at": agent.last_cycle_at.isoformat() if agent.last_cycle_at else None,
+                }
+
+                try:
+                    # Portfolio state
+                    port_result = await session.execute(
+                        select(AgentPortfolio).where(AgentPortfolio.agent_id == agent.id)
+                    )
+                    portfolio = port_result.scalar_one_or_none()
+                    agent_diag["portfolio"] = {
+                        "cash_balance": float(portfolio.cash_balance) if portfolio else None,
+                        "total_equity": float(portfolio.total_equity) if portfolio else None,
+                        "open_positions": None,
+                    }
+
+                    # Build full context (same as real orchestrator)
+                    context = await context_builder.build(agent, {})
+
+                    agent_diag["portfolio"]["open_positions"] = context.portfolio.position_count
+                    agent_diag["portfolio"]["can_open_new"] = (
+                        context.portfolio.position_count < 5
+                        and context.portfolio.available_for_new_position > 0
+                    )
+                    agent_diag["portfolio"]["available_for_new_position"] = float(
+                        context.portfolio.available_for_new_position
+                    )
+                    agent_diag["rankings_received"] = len(context.primary_timeframe_rankings)
+
+                    # Show top 5 ranked symbols with key indicator values
+                    top_symbols = []
+                    for r in context.primary_timeframe_rankings[:5]:
+                        sym_info: dict = {
+                            "symbol": r.symbol,
+                            "rank": r.rank,
+                            "bullish_score": r.bullish_score,
+                            "confidence": r.confidence,
+                            "indicators": {},
+                        }
+
+                        # Extract key indicator values for diagnosis
+                        for ind_name in [
+                            "rsi_14", "macd_12_26_9", "adx_14", "obv",
+                            "ema_20", "ema_50", "ema_200",
+                            "bb_20", "atr_14",
+                        ]:
+                            ind = None
+                            for sig in r.indicator_signals:
+                                if isinstance(sig, dict) and sig.get("name") == ind_name:
+                                    ind = sig
+                                    break
+                            if ind:
+                                sym_info["indicators"][ind_name] = {
+                                    "signal": ind.get("signal"),
+                                    "label": ind.get("label"),
+                                    "raw": ind.get("rawValues") or ind.get("raw"),
+                                }
+
+                        top_symbols.append(sym_info)
+
+                    agent_diag["top_symbols"] = top_symbols
+
+                    # Run strategy evaluation (dry run)
+                    if agent.engine == "rule":
+                        try:
+                            decision = await rule_executor.decide(
+                                context=context,
+                                agent_name=agent.name,
+                                strategy_archetype=agent.strategy_archetype,
+                                prompt_version=1,
+                            )
+                            agent_diag["decision"] = {
+                                "action": decision.action.action.value,
+                                "symbol": decision.action.symbol,
+                                "position_size_pct": decision.action.position_size_pct,
+                                "stop_loss_pct": decision.action.stop_loss_pct,
+                                "take_profit_pct": decision.action.take_profit_pct,
+                                "confidence": decision.action.confidence,
+                                "reasoning": decision.reasoning_summary,
+                            }
+                        except Exception as e:
+                            agent_diag["decision"] = {"error": str(e)}
+                    else:
+                        agent_diag["decision"] = {
+                            "note": "LLM agent — skipping dry-run to avoid API cost"
+                        }
+
+                except Exception as e:
+                    agent_diag["error"] = str(e)
+
+                diagnostics["agents"].append(agent_diag)
+
+            # Summary
+            decisions = [
+                a.get("decision", {}).get("action")
+                for a in diagnostics["agents"]
+                if a.get("decision", {}).get("action")
+            ]
+            diagnostics["summary"] = {
+                "total_agents": len(agents),
+                "decisions": {
+                    "hold": decisions.count("hold"),
+                    "open_long": decisions.count("open_long"),
+                    "open_short": decisions.count("open_short"),
+                    "close": decisions.count("close"),
+                },
+                "agents_with_errors": sum(
+                    1 for a in diagnostics["agents"] if "error" in a
+                ),
+            }
+
+    except Exception as e:
+        diagnostics["errors"].append(str(e))
+        logger.exception(f"Debug agents failed for {timeframe}: {e}")
+
+    return diagnostics
 
 
 async def retention_cleanup():
