@@ -8,6 +8,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/auth/auth-provider";
 import {
   Table,
   TableBody,
@@ -45,33 +46,36 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
   const [evolutionModel, setEvolutionModel] = useState(agent.evolutionModel);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const { requireAuth } = useAuth();
 
   const isDirty =
     scanModel !== agent.scanModel ||
     tradeModel !== agent.tradeModel ||
     evolutionModel !== agent.evolutionModel;
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!isDirty || saving) return;
-    setSaving(true);
-    setSaved(false);
-    try {
-      const res = await fetch(`/api/agents/${agent.id}/models`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          scan_model: scanModel,
-          trade_model: tradeModel,
-          evolution_model: evolutionModel,
-        }),
-      });
-      if (res.ok) {
-        setSaved(true);
-        setTimeout(() => setSaved(false), 3000);
+    requireAuth(async () => {
+      setSaving(true);
+      setSaved(false);
+      try {
+        const res = await fetch(`/api/agents/${agent.id}/models`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            scan_model: scanModel,
+            trade_model: tradeModel,
+            evolution_model: evolutionModel,
+          }),
+        });
+        if (res.ok) {
+          setSaved(true);
+          setTimeout(() => setSaved(false), 3000);
+        }
+      } finally {
+        setSaving(false);
       }
-    } finally {
-      setSaving(false);
-    }
+    });
   };
 
   const totalCost = tokenUsage.reduce((s, u) => s + u.estimatedCostUsd, 0);

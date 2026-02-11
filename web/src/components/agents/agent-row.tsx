@@ -15,6 +15,7 @@ import { useState } from "react";
 import { Pause, Play } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/auth/auth-provider";
 import { TableCell, TableRow } from "@/components/ui/table";
 import type { AgentLeaderboardRow, AgentTimeframe } from "@/lib/types";
 import {
@@ -75,24 +76,27 @@ function getHealthStatus(
 export function AgentRow({ agent }: AgentRowProps) {
   const [status, setStatus] = useState(agent.status);
   const [toggling, setToggling] = useState(false);
+  const { requireAuth } = useAuth();
 
   const handleToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (toggling) return;
 
-    setToggling(true);
-    try {
-      const res = await fetch(`/api/agents/${agent.id}/status`, {
-        method: "POST",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setStatus(data.status);
+    requireAuth(async () => {
+      setToggling(true);
+      try {
+        const res = await fetch(`/api/agents/${agent.id}/status`, {
+          method: "POST",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setStatus(data.status);
+        }
+      } finally {
+        setToggling(false);
       }
-    } finally {
-      setToggling(false);
-    }
+    });
   };
 
   const isPaused = status === "paused";

@@ -9,6 +9,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/auth/auth-provider";
 import { Textarea } from "@/components/ui/textarea";
 import type { AgentPromptVersion } from "@/lib/types";
 
@@ -21,27 +22,30 @@ export function PromptEditor({ agentId, activePrompt }: PromptEditorProps) {
   const [value, setValue] = useState(activePrompt?.systemPrompt ?? "");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const { requireAuth } = useAuth();
 
   const isDirty = value !== (activePrompt?.systemPrompt ?? "");
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!isDirty || saving) return;
 
-    setSaving(true);
-    setSaved(false);
-    try {
-      const res = await fetch(`/api/agents/${agentId}/prompt`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ system_prompt: value }),
-      });
-      if (res.ok) {
-        setSaved(true);
-        setTimeout(() => setSaved(false), 3000);
+    requireAuth(async () => {
+      setSaving(true);
+      setSaved(false);
+      try {
+        const res = await fetch(`/api/agents/${agentId}/prompt`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ system_prompt: value }),
+        });
+        if (res.ok) {
+          setSaved(true);
+          setTimeout(() => setSaved(false), 3000);
+        }
+      } finally {
+        setSaving(false);
       }
-    } finally {
-      setSaving(false);
-    }
+    });
   };
 
   return (

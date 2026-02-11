@@ -14,6 +14,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { ChevronUp, ChevronDown, PauseCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/auth/auth-provider";
 import {
   Table,
   TableBody,
@@ -63,27 +64,30 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [pausingLlm, setPausingLlm] = useState(false);
   const [pauseLlmResult, setPauseLlmResult] = useState<string | null>(null);
+  const { requireAuth } = useAuth();
 
-  const handlePauseAllLlm = useCallback(async () => {
+  const handlePauseAllLlm = useCallback(() => {
     if (pausingLlm) return;
-    setPausingLlm(true);
-    setPauseLlmResult(null);
-    try {
-      const res = await fetch("/api/agents/pause-llm", { method: "POST" });
-      if (res.ok) {
-        const data = await res.json();
-        setPauseLlmResult(`${data.paused} LLM agent${data.paused !== 1 ? "s" : ""} paused`);
-        // Reload to reflect updated statuses
-        setTimeout(() => window.location.reload(), 1500);
-      } else {
+    requireAuth(async () => {
+      setPausingLlm(true);
+      setPauseLlmResult(null);
+      try {
+        const res = await fetch("/api/agents/pause-llm", { method: "POST" });
+        if (res.ok) {
+          const data = await res.json();
+          setPauseLlmResult(`${data.paused} LLM agent${data.paused !== 1 ? "s" : ""} paused`);
+          // Reload to reflect updated statuses
+          setTimeout(() => window.location.reload(), 1500);
+        } else {
+          setPauseLlmResult("Failed to pause");
+        }
+      } catch {
         setPauseLlmResult("Failed to pause");
+      } finally {
+        setPausingLlm(false);
       }
-    } catch {
-      setPauseLlmResult("Failed to pause");
-    } finally {
-      setPausingLlm(false);
-    }
-  }, [pausingLlm]);
+    });
+  }, [pausingLlm, requireAuth]);
 
   const filtered = useMemo(() => {
     let result = [...agents];
