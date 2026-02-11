@@ -59,8 +59,8 @@ class Symbol(Base):
     __tablename__ = "symbols"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    symbol: Mapped[str] = mapped_column(String(20), unique=True, nullable=False)
-    base_asset: Mapped[str] = mapped_column(String(10), nullable=False)
+    symbol: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
+    base_asset: Mapped[str] = mapped_column(String(20), nullable=False)
     quote_asset: Mapped[str] = mapped_column(String(10), nullable=False, default="USDT")
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     last_seen_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
