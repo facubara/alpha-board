@@ -72,21 +72,29 @@ export function AgentRow({ agent }: AgentRowProps) {
         isPaused && "opacity-50"
       )}
     >
-      {/* Agent name + archetype */}
-      <TableCell className="max-w-[200px]">
+      {/* Agent name + archetype + engine */}
+      <TableCell className="max-w-[240px]">
         <Link
           href={`/agents/${agent.id}`}
           className="group block"
         >
-          <span className="block truncate text-sm font-semibold text-primary transition-colors-fast group-hover:text-[var(--bullish-strong)]">
-            {agent.displayName}
-          </span>
-          <span className="block text-xs text-muted">
-            {STRATEGY_ARCHETYPE_LABELS[agent.strategyArchetype]}
-            {" · "}
-            <span className={agent.engine === "rule" ? "font-medium text-primary" : ""}>
-              {agent.engine === "rule" ? "Rule" : "LLM"}
+          <span className="flex items-center gap-1.5">
+            <span
+              className={cn(
+                "inline-flex shrink-0 items-center rounded px-1 py-0.5 font-mono text-[10px] font-bold leading-none",
+                agent.engine === "rule"
+                  ? "bg-[var(--bullish-subtle)] text-bullish"
+                  : "bg-[var(--bg-muted)] text-secondary"
+              )}
+            >
+              {agent.engine === "rule" ? "RULE" : "LLM"}
             </span>
+            <span className="truncate text-sm font-semibold text-primary transition-colors-fast group-hover:text-[var(--bullish-strong)]">
+              {agent.displayName}
+            </span>
+          </span>
+          <span className="mt-0.5 block text-xs text-muted">
+            {STRATEGY_ARCHETYPE_LABELS[agent.strategyArchetype]}
           </span>
         </Link>
       </TableCell>

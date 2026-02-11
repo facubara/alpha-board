@@ -51,9 +51,21 @@ export function AgentDetail({
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-primary">
-            {agent.displayName}
-          </h1>
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                "inline-flex shrink-0 items-center rounded px-1.5 py-0.5 font-mono text-xs font-bold",
+                agent.engine === "rule"
+                  ? "bg-[var(--bullish-subtle)] text-bullish"
+                  : "bg-[var(--bg-muted)] text-secondary"
+              )}
+            >
+              {agent.engine === "rule" ? "RULE" : "LLM"}
+            </span>
+            <h1 className="text-xl font-semibold text-primary">
+              {agent.displayName}
+            </h1>
+          </div>
           <div className="mt-1 flex items-center gap-2">
             <span className="rounded bg-[var(--bg-muted)] px-2 py-0.5 text-xs font-medium text-secondary">
               {STRATEGY_ARCHETYPE_LABELS[agent.strategyArchetype]}
@@ -70,9 +82,6 @@ export function AgentDetail({
               )}
             >
               {agent.status}
-            </span>
-            <span className="rounded bg-[var(--bg-muted)] px-1.5 py-0.5 text-xs font-medium text-secondary">
-              {agent.engine === "rule" ? "Rule-Based" : "LLM"}
             </span>
           </div>
         </div>
