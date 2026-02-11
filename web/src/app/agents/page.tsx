@@ -4,7 +4,7 @@ import { AgentLeaderboard } from "@/components/agents";
 /**
  * Agents Leaderboard Page (Server Component)
  *
- * Fetches all 28 agents with performance metrics.
+ * Fetches all agents with performance metrics.
  * ISR: Revalidates every 60 seconds to stay current with agent decisions.
  */
 
@@ -19,7 +19,7 @@ export default async function AgentsPage() {
       <div>
         <h1 className="text-xl font-semibold text-primary">Agent Arena</h1>
         <p className="mt-1 text-sm text-secondary">
-          28 AI trading agents competing in simulated markets
+          {agents.length} AI trading agents competing in simulated markets
         </p>
       </div>
 

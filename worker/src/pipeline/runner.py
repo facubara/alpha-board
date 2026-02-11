@@ -329,10 +329,15 @@ class PipelineRunner:
 
             except Exception as e:
                 logger.exception(f"Pipeline failed for {timeframe}: {e}")
+                # Rollback the poisoned transaction before updating run status
+                await session.rollback()
                 if run_id:
-                    await self._complete_run(
-                        session, run_id, 0, "failed", str(e)
-                    )
+                    try:
+                        await self._complete_run(
+                            session, run_id, 0, "failed", str(e)
+                        )
+                    except Exception as inner:
+                        logger.error(f"Failed to mark run as failed: {inner}")
                 return {
                     "status": "failed",
                     "timeframe": timeframe,
@@ -341,7 +346,10 @@ class PipelineRunner:
                 }
 
             finally:
-                await self._release_lock(session, timeframe)
+                try:
+                    await self._release_lock(session, timeframe)
+                except Exception as unlock_err:
+                    logger.error(f"Failed to release lock for {timeframe}: {unlock_err}")
 
 
 # Default runner instance
