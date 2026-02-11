@@ -247,6 +247,16 @@ class ContextBuilder:
 
         rankings: list[RankingContext] = []
         for snap, sym in rows:
+            # Convert indicator_signals from dict-keyed format to list format
+            raw_signals = snap.indicator_signals or {}
+            if isinstance(raw_signals, dict):
+                signals_list = [
+                    {"name": name, **data}
+                    for name, data in raw_signals.items()
+                ]
+            else:
+                signals_list = raw_signals
+
             rankings.append(
                 RankingContext(
                     symbol=sym.symbol,
@@ -254,7 +264,7 @@ class ContextBuilder:
                     bullish_score=float(snap.bullish_score),
                     confidence=snap.confidence,
                     highlights=snap.highlights or [],
-                    indicator_signals=snap.indicator_signals or [],
+                    indicator_signals=signals_list,
                 )
             )
 
