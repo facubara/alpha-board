@@ -446,6 +446,20 @@ export async function updateAgentModels(
 }
 
 /**
+ * Pause all LLM-engine agents that are currently active.
+ * Returns the count of agents that were paused.
+ */
+export async function pauseAllLlmAgents(): Promise<number> {
+  const rows = await sql`
+    UPDATE agents
+    SET status = 'paused'
+    WHERE engine = 'llm' AND status = 'active'
+    RETURNING id
+  `;
+  return rows.length;
+}
+
+/**
  * Toggle an agent's status between active and paused.
  */
 export async function toggleAgentStatus(

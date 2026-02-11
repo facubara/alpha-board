@@ -11,8 +11,8 @@
  * - E-ink aesthetic, no decoration
  */
 
-import { useState, useMemo } from "react";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { useState, useMemo, useCallback } from "react";
+import { ChevronUp, ChevronDown, PauseCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Table,
@@ -61,6 +61,29 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   const [engineFilter, setEngineFilter] = useState<AgentEngine | "all">("all");
   const [sortField, setSortField] = useState<SortField>("pnl");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [pausingLlm, setPausingLlm] = useState(false);
+  const [pauseLlmResult, setPauseLlmResult] = useState<string | null>(null);
+
+  const handlePauseAllLlm = useCallback(async () => {
+    if (pausingLlm) return;
+    setPausingLlm(true);
+    setPauseLlmResult(null);
+    try {
+      const res = await fetch("/api/agents/pause-llm", { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        setPauseLlmResult(`${data.paused} LLM agent${data.paused !== 1 ? "s" : ""} paused`);
+        // Reload to reflect updated statuses
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        setPauseLlmResult("Failed to pause");
+      }
+    } catch {
+      setPauseLlmResult("Failed to pause");
+    } finally {
+      setPausingLlm(false);
+    }
+  }, [pausingLlm]);
 
   const filtered = useMemo(() => {
     let result = [...agents];
@@ -186,6 +209,28 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
               {AGENT_ENGINE_LABELS[eng]}
             </FilterButton>
           ))}
+        </div>
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Pause All LLM */}
+        <div className="flex items-center gap-2">
+          {pauseLlmResult && (
+            <span className="text-xs text-secondary">{pauseLlmResult}</span>
+          )}
+          <button
+            onClick={handlePauseAllLlm}
+            disabled={pausingLlm}
+            className={cn(
+              "flex items-center gap-1.5 rounded-md border border-[var(--border-default)] px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+              "text-bearish hover:bg-[var(--bearish-subtle)]",
+              pausingLlm && "opacity-50"
+            )}
+          >
+            <PauseCircle className="h-3.5 w-3.5" />
+            {pausingLlm ? "Pausing..." : "Pause All LLM"}
+          </button>
         </div>
       </div>
 
