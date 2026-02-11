@@ -170,7 +170,7 @@ export function AgentRow({ agent }: AgentRowProps) {
 
       {/* Token Cost */}
       <TableCell className="hidden text-right font-mono text-sm tabular-nums text-muted lg:table-cell">
-        {formatUsd(agent.totalTokenCost)}
+        {agent.engine === "rule" ? "—" : formatUsd(agent.totalTokenCost)}
       </TableCell>
 
       {/* Status toggle */}

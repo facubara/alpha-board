@@ -67,7 +67,7 @@ export function AgentOverview({
     { label: "Equity", value: formatUsd(agent.totalEquity), color: "text-primary" },
     { label: "Cash", value: formatUsd(agent.cashBalance), color: "text-secondary" },
     { label: "Fees Paid", value: formatUsd(agent.totalFeesPaid), color: "text-muted" },
-    { label: "Token Cost", value: formatUsd(agent.totalTokenCost), color: "text-muted" },
+    { label: "Token Cost", value: agent.engine === "rule" ? "—" : formatUsd(agent.totalTokenCost), color: "text-muted" },
   ];
 
   return (
