@@ -32,6 +32,7 @@ from src.agents.schemas import (
 )
 from src.agents.context import ContextBuilder
 from src.agents.executor import AgentExecutor
+from src.agents.rule_executor import RuleBasedExecutor
 from src.agents.portfolio import PortfolioManager
 from src.agents.memory import MemoryManager
 from src.agents.evolution import EvolutionManager
@@ -46,6 +47,7 @@ class AgentOrchestrator:
         self.session = session
         self.context_builder = ContextBuilder(session)
         self.executor = AgentExecutor()
+        self.rule_executor = RuleBasedExecutor()
         self.portfolio_manager = PortfolioManager(session)
         self.memory_manager = MemoryManager(session)
         self.evolution_manager = EvolutionManager(session)
@@ -179,19 +181,25 @@ class AgentOrchestrator:
         # Build context
         context = await self.context_builder.build(agent, current_prices)
 
-        # Get active prompt
-        prompt = await self._get_active_prompt(agent.id)
-        if not prompt:
-            logger.warning(f"No active prompt for agent {agent.name}")
-            return {"decision": None, "execution": None}
-
-        # Execute decision
-        decision = await self.executor.decide(
-            context=context,
-            system_prompt=prompt.system_prompt,
-            model=agent.trade_model,
-            prompt_version=prompt.version,
-        )
+        # Execute decision — branch on engine type
+        if agent.engine == "rule":
+            decision = await self.rule_executor.decide(
+                context=context,
+                agent_name=agent.name,
+                strategy_archetype=agent.strategy_archetype,
+                prompt_version=1,
+            )
+        else:
+            prompt = await self._get_active_prompt(agent.id)
+            if not prompt:
+                logger.warning(f"No active prompt for agent {agent.name}")
+                return {"decision": None, "execution": None}
+            decision = await self.executor.decide(
+                context=context,
+                system_prompt=prompt.system_prompt,
+                model=agent.trade_model,
+                prompt_version=prompt.version,
+            )
 
         # Log decision to database
         decision_record = await self._log_decision(agent.id, decision)
@@ -199,7 +207,7 @@ class AgentOrchestrator:
         # Track token usage
         await self._track_token_usage(
             agent.id,
-            agent.trade_model,
+            decision.model_used,
             "trade",
             decision.input_tokens,
             decision.output_tokens,
@@ -224,27 +232,25 @@ class AgentOrchestrator:
                 if trade:
                     closed_trades.append(trade)
 
-        # Generate memory for any closed trades
-        for trade in closed_trades:
-            memory = await self.memory_manager.generate_memory(agent, trade)
-            if memory:
-                result["memory_generated"] = True
-                logger.debug(f"Generated memory for agent {agent.name}: {memory.lesson[:50]}...")
+        # Generate memory and check evolution (LLM agents only)
+        if agent.engine != "rule":
+            for trade in closed_trades:
+                memory = await self.memory_manager.generate_memory(agent, trade)
+                if memory:
+                    result["memory_generated"] = True
+                    logger.debug(f"Generated memory for agent {agent.name}: {memory.lesson[:50]}...")
 
-        # Check if evolution should be triggered
-        if closed_trades:
-            should_evolve = await self.evolution_manager.check_evolution_trigger(agent.id)
-            if should_evolve:
-                # First check for auto-revert
-                reverted = await self.evolution_manager.check_auto_revert(agent.id)
-                if not reverted:
-                    # Trigger evolution
-                    new_prompt = await self.evolution_manager.trigger_evolution(agent.id)
-                    if new_prompt:
-                        result["evolution_triggered"] = True
-                        logger.info(
-                            f"Agent {agent.name} evolved to prompt v{new_prompt.version}"
-                        )
+            if closed_trades:
+                should_evolve = await self.evolution_manager.check_evolution_trigger(agent.id)
+                if should_evolve:
+                    reverted = await self.evolution_manager.check_auto_revert(agent.id)
+                    if not reverted:
+                        new_prompt = await self.evolution_manager.trigger_evolution(agent.id)
+                        if new_prompt:
+                            result["evolution_triggered"] = True
+                            logger.info(
+                                f"Agent {agent.name} evolved to prompt v{new_prompt.version}"
+                            )
 
         return result
 

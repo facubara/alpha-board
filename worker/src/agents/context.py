@@ -314,4 +314,5 @@ class ContextBuilder:
             "bullish_confluence": bullish_confluence[:5],
             "bearish_confluence": bearish_confluence[:5],
             "timeframes_analyzed": len(timeframes),
+            "symbol_tf_scores": confluence_data,
         }

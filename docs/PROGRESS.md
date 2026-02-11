@@ -1,7 +1,7 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-09
-**Current Phase:** Complete (all 14 phases done)
+**Last Updated:** 2026-02-11
+**Current Phase:** Complete (all 14 phases done) + Rule-Based Agents feature
 
 ---
 
@@ -23,8 +23,9 @@
 | 12 | Agent Detail | Done | — | 2026-02-09 |
 | 13 | Deployment | Done | — | 2026-02-09 |
 | 14 | Testing & Polish | Done | — | 2026-02-09 |
+| 15 | Rule-Based Agents | Done | — | 2026-02-11 |
 
-**Progress: 14/14 phases complete (100%)**
+**Progress: 15/15 phases complete (100%)**
 
 ---
 
@@ -56,6 +57,7 @@
 - [x] **Agent frontend complete** — Phase 12
 - [x] **Deployment configs ready** — Phase 13
 - [x] **Production-ready** — Phase 14
+- [x] **Rule-based agents coexist with LLM agents** — Phase 15
 
 ---
 
@@ -100,6 +102,10 @@
 | 13 | Worker deployment | Fly.io (shared-cpu-1x, 512MB) |
 | 13 | Frontend deployment | Vercel (iad1 region) |
 | 13 | Partition retention | 90 days, daily cleanup at 03:00 UTC |
+| 15 | Engine distinction | `engine` column on agents table (llm/rule) |
+| 15 | Strategy pattern | ABC base class with per-archetype registry |
+| 15 | Rule agent naming | `rb-{archetype}-{tf}` prefix convention |
+| 15 | Skip memory/evolution | Guard in orchestrator for rule agents |
 
 ---
 
@@ -113,17 +119,11 @@ None — all decisions resolved.
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-11 14:00 | Phase 15 | Rule-Based Python Agents |
 | 2026-02-09 | Phase 11-14 | Agent Frontend + Deployment + Polish |
 | 2026-02-05 20:00 | Phase 10 | Agent Learning & Evolution |
 | 2026-02-05 19:00 | Phase 9 | Agent Core |
 | 2026-02-05 18:30 | Phase 8 | Rankings UI Polish |
-| 2026-02-05 17:30 | Phase 7 | Rankings UI Core |
-| 2026-02-05 17:00 | Phase 6 | Pipeline Orchestration |
-| 2026-02-05 16:15 | Phase 5 | Scoring & Ranking |
-| 2026-02-05 15:30 | Phase 4 | Indicator Engine |
-| 2026-02-05 14:30 | Phase 3 | Binance Client |
-| 2026-02-05 13:00 | Verify | Phase 1-2 verification |
-| 2026-02-05 12:00 | Phase 2 | DB Schema & Migrations |
 
 ---
 

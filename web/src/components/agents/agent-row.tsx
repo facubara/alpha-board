@@ -83,6 +83,10 @@ export function AgentRow({ agent }: AgentRowProps) {
           </span>
           <span className="block text-xs text-muted">
             {STRATEGY_ARCHETYPE_LABELS[agent.strategyArchetype]}
+            {" · "}
+            <span className={agent.engine === "rule" ? "font-medium text-primary" : ""}>
+              {agent.engine === "rule" ? "Rule" : "LLM"}
+            </span>
           </span>
         </Link>
       </TableCell>

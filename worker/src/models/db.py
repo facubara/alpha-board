@@ -170,6 +170,7 @@ class Agent(Base):
         String(50), nullable=False, default="claude-opus-4-5-20251101"
     )
     status: Mapped[str] = mapped_column(String(10), nullable=False, default="active")
+    engine: Mapped[str] = mapped_column(String(10), nullable=False, default="llm")
     initial_balance: Mapped[Decimal] = mapped_column(
         Numeric(12, 2), nullable=False, default=Decimal("10000.00")
     )

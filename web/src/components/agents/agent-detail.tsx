@@ -71,6 +71,9 @@ export function AgentDetail({
             >
               {agent.status}
             </span>
+            <span className="rounded bg-[var(--bg-muted)] px-1.5 py-0.5 text-xs font-medium text-secondary">
+              {agent.engine === "rule" ? "Rule-Based" : "LLM"}
+            </span>
           </div>
         </div>
 
@@ -129,14 +132,16 @@ export function AgentDetail({
             value="prompt"
             className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary"
           >
-            Prompt
+            {agent.engine === "rule" ? "Rules" : "Prompt"}
           </TabsTrigger>
-          <TabsTrigger
-            value="config"
-            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary"
-          >
-            Config
-          </TabsTrigger>
+          {agent.engine !== "rule" && (
+            <TabsTrigger
+              value="config"
+              className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary"
+            >
+              Config
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="overview" className="pt-4">

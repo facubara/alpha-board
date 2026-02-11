@@ -166,6 +166,15 @@ export const AGENT_TIMEFRAME_LABELS: Record<AgentTimeframe, string> = {
   cross: "Cross-TF",
 };
 
+export type AgentEngine = "llm" | "rule";
+
+export const AGENT_ENGINES: AgentEngine[] = ["llm", "rule"];
+
+export const AGENT_ENGINE_LABELS: Record<AgentEngine, string> = {
+  llm: "LLM",
+  rule: "Rule",
+};
+
 export type AgentStatus = "active" | "paused";
 
 // =============================================================================
@@ -178,6 +187,7 @@ export interface AgentDetail {
   displayName: string;
   strategyArchetype: StrategyArchetype;
   timeframe: AgentTimeframe;
+  engine: AgentEngine;
   scanModel: string;
   tradeModel: string;
   evolutionModel: string;
@@ -277,6 +287,7 @@ export interface AgentLeaderboardRow {
   displayName: string;
   strategyArchetype: StrategyArchetype;
   timeframe: AgentTimeframe;
+  engine: AgentEngine;
   scanModel: string;
   tradeModel: string;
   evolutionModel: string;

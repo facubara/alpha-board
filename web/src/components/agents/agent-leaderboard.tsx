@@ -22,11 +22,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type {
+  AgentEngine,
   AgentLeaderboardRow,
   AgentTimeframe,
   StrategyArchetype,
 } from "@/lib/types";
 import {
+  AGENT_ENGINES,
+  AGENT_ENGINE_LABELS,
   AGENT_TIMEFRAMES,
   AGENT_TIMEFRAME_LABELS,
   STRATEGY_ARCHETYPES,
@@ -55,6 +58,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   const [archetypeFilter, setArchetypeFilter] = useState<
     StrategyArchetype | "all"
   >("all");
+  const [engineFilter, setEngineFilter] = useState<AgentEngine | "all">("all");
   const [sortField, setSortField] = useState<SortField>("pnl");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
@@ -66,6 +70,9 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     }
     if (archetypeFilter !== "all") {
       result = result.filter((a) => a.strategyArchetype === archetypeFilter);
+    }
+    if (engineFilter !== "all") {
+      result = result.filter((a) => a.engine === engineFilter);
     }
 
     result.sort((a, b) => {
@@ -94,7 +101,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     });
 
     return result;
-  }, [agents, timeframeFilter, archetypeFilter, sortField, sortDirection]);
+  }, [agents, timeframeFilter, archetypeFilter, engineFilter, sortField, sortDirection]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -158,10 +165,32 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
             </FilterButton>
           ))}
         </div>
+
+        {/* Divider */}
+        <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
+
+        {/* Engine filter */}
+        <div className="flex items-center gap-1">
+          <FilterButton
+            active={engineFilter === "all"}
+            onClick={() => setEngineFilter("all")}
+          >
+            All
+          </FilterButton>
+          {AGENT_ENGINES.map((eng) => (
+            <FilterButton
+              key={eng}
+              active={engineFilter === eng}
+              onClick={() => setEngineFilter(eng)}
+            >
+              {AGENT_ENGINE_LABELS[eng]}
+            </FilterButton>
+          ))}
+        </div>
       </div>
 
       {/* Results count */}
-      {(timeframeFilter !== "all" || archetypeFilter !== "all") && (
+      {(timeframeFilter !== "all" || archetypeFilter !== "all" || engineFilter !== "all") && (
         <p className="text-xs text-secondary">
           {filtered.length} of {agents.length} agents
         </p>
