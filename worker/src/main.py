@@ -41,41 +41,28 @@ last_results: dict[str, dict] = {}
 start_time = time.monotonic()
 
 
-async def scheduled_check():
-    """Check which timeframes are due and run their pipelines.
+async def run_timeframe_pipeline(timeframe: str):
+    """Run the pipeline for a single timeframe.
 
-    This runs every 5 minutes and checks each timeframe's cadence.
+    Each timeframe runs as an independent scheduler job so that slow or
+    failing timeframes never block the others.
     """
-    now = datetime.now(timezone.utc)
-    logger.debug(f"Scheduled check at {now}")
-
-    for timeframe, config in TIMEFRAME_CONFIG.items():
-        cadence = config["cadence_minutes"]
-        last_run = last_runs.get(timeframe)
-
-        # Check if this timeframe is due
-        if last_run is not None:
-            elapsed = (now - last_run).total_seconds() / 60
-            if elapsed < cadence:
-                continue
-
-        # Run pipeline for this timeframe
-        logger.info(f"Running scheduled pipeline for {timeframe}")
-        try:
-            result = await runner.run(timeframe)
-            if result["status"] == "completed":
-                last_runs[timeframe] = now
-                last_results[timeframe] = result
-                logger.info(
-                    f"Completed {timeframe}: {result.get('symbols', 0)} symbols"
-                )
-            elif result["status"] == "skipped":
-                logger.info(f"Skipped {timeframe}: {result.get('reason')}")
-            else:
-                last_results[timeframe] = result
-                logger.error(f"Failed {timeframe}: {result.get('error')}")
-        except Exception as e:
-            logger.exception(f"Error running pipeline for {timeframe}: {e}")
+    logger.info(f"Running pipeline for {timeframe}")
+    try:
+        result = await runner.run(timeframe)
+        if result["status"] == "completed":
+            last_runs[timeframe] = datetime.now(timezone.utc)
+            last_results[timeframe] = result
+            logger.info(
+                f"Completed {timeframe}: {result.get('symbols', 0)} symbols"
+            )
+        elif result["status"] == "skipped":
+            logger.info(f"Skipped {timeframe}: {result.get('reason')}")
+        else:
+            last_results[timeframe] = result
+            logger.error(f"Failed {timeframe}: {result.get('error')}")
+    except Exception as e:
+        logger.exception(f"Error running pipeline for {timeframe}: {e}")
 
 
 @app.get("/health")
@@ -247,14 +234,23 @@ async def retention_cleanup():
 @app.on_event("startup")
 async def on_startup():
     """Start the scheduler on app startup."""
-    # Add scheduled check job (runs every 5 minutes)
-    scheduler.add_job(
-        scheduled_check,
-        trigger=IntervalTrigger(minutes=5),
-        id="pipeline_check",
-        name="Pipeline timeframe check",
-        replace_existing=True,
-    )
+    # Schedule each timeframe as an independent job.
+    # This ensures slow/failing timeframes never block others.
+    # Stagger initial runs by 10s each to avoid Binance API rate limits on startup.
+    for i, (timeframe, config) in enumerate(TIMEFRAME_CONFIG.items()):
+        start_date = datetime.now(timezone.utc) + timedelta(seconds=i * 10)
+        scheduler.add_job(
+            run_timeframe_pipeline,
+            trigger=IntervalTrigger(
+                minutes=config["cadence_minutes"],
+                start_date=start_date,
+            ),
+            args=[timeframe],
+            id=f"pipeline_{timeframe}",
+            name=f"Pipeline {timeframe}",
+            replace_existing=True,
+            max_instances=1,
+        )
 
     # Add retention cleanup (daily at 03:00 UTC)
     scheduler.add_job(
@@ -266,7 +262,9 @@ async def on_startup():
     )
 
     scheduler.start()
-    logger.info("Scheduler started with 5-minute check interval + daily cleanup")
+    logger.info(
+        f"Scheduler started with {len(TIMEFRAME_CONFIG)} independent timeframe jobs + daily cleanup"
+    )
 
 
 @app.on_event("shutdown")
