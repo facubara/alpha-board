@@ -10,6 +10,7 @@ The PipelineRunner coordinates the full ranking pipeline:
 
 import logging
 from datetime import datetime, timezone
+from decimal import Decimal
 from uuid import UUID
 
 from sqlalchemy import select, text
@@ -312,6 +313,19 @@ class PipelineRunner:
                 # Complete run
                 await self._complete_run(session, run_id, len(snapshots), "completed")
 
+                # Extract current prices and candle data for agent orchestrator
+                current_prices = {}
+                candle_data = {}
+                for symbol, df in ohlcv_data.items():
+                    if len(df) > 0:
+                        last = df.iloc[-1]
+                        current_prices[symbol] = Decimal(str(last["close"]))
+                        candle_data[symbol] = {
+                            "high": Decimal(str(last["high"])),
+                            "low": Decimal(str(last["low"])),
+                            "close": Decimal(str(last["close"])),
+                        }
+
                 elapsed = (datetime.now(timezone.utc) - started_at).total_seconds()
                 logger.info(
                     f"Pipeline completed: {timeframe}, {len(snapshots)} symbols, "
@@ -325,6 +339,8 @@ class PipelineRunner:
                     "symbols": len(snapshots),
                     "errors": len(errors),
                     "elapsed_seconds": elapsed,
+                    "current_prices": current_prices,
+                    "candle_data": candle_data,
                 }
 
             except Exception as e:

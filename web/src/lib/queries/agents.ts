@@ -39,6 +39,7 @@ export async function getAgentLeaderboard(): Promise<AgentLeaderboardRow[]> {
       a.evolution_model,
       a.status,
       a.initial_balance,
+      a.last_cycle_at,
       p.cash_balance,
       p.total_equity,
       p.total_realized_pnl,
@@ -82,6 +83,9 @@ export async function getAgentLeaderboard(): Promise<AgentLeaderboardRow[]> {
       winRate: tradeCount > 0 ? wins / tradeCount : 0,
       totalTokenCost: Number(row.total_token_cost),
       openPositions: Number(row.open_positions),
+      lastCycleAt: row.last_cycle_at
+        ? (row.last_cycle_at as Date).toISOString()
+        : null,
     };
   });
 }
@@ -105,6 +109,7 @@ export async function getAgentDetail(
       a.evolution_model,
       a.status,
       a.initial_balance,
+      a.last_cycle_at,
       a.created_at,
       p.cash_balance,
       p.total_equity,
@@ -151,6 +156,9 @@ export async function getAgentDetail(
     winRate: tradeCount > 0 ? wins / tradeCount : 0,
     totalTokenCost: Number(row.total_token_cost),
     openPositions: Number(row.open_positions),
+    lastCycleAt: row.last_cycle_at
+      ? (row.last_cycle_at as Date).toISOString()
+      : null,
     createdAt: (row.created_at as Date).toISOString(),
   };
 }

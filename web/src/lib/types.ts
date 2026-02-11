@@ -203,6 +203,7 @@ export interface AgentDetail {
   winRate: number;
   totalTokenCost: number;
   openPositions: number;
+  lastCycleAt: string | null;
   createdAt: string;
 }
 
@@ -303,4 +304,5 @@ export interface AgentLeaderboardRow {
   winRate: number;
   totalTokenCost: number;
   openPositions: number;
+  lastCycleAt: string | null;
 }

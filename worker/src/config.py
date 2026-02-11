@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     worker_port: int = 8000
     log_level: str = "INFO"
 
+    # Telegram notifications
+    telegram_bot_token: str = ""
+    telegram_chat_id: str = ""
+
     # Feature flags
     agents_enabled: bool = True
     evolution_enabled: bool = True

@@ -17,13 +17,16 @@ from typing import Any
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.orm import selectinload
 
 from src.models.db import (
     Agent,
     AgentDecision,
+    AgentPortfolio,
     AgentPrompt,
     AgentTokenUsage,
     AgentTrade,
+    NotificationPreference,
 )
 from src.agents.schemas import (
     ActionType,
@@ -36,6 +39,13 @@ from src.agents.rule_executor import RuleBasedExecutor
 from src.agents.portfolio import PortfolioManager
 from src.agents.memory import MemoryManager
 from src.agents.evolution import EvolutionManager
+from src.notifications.equity import check_equity_alerts
+from src.notifications.models import (
+    EvolutionEvent,
+    TradeClosedEvent,
+    TradeOpenedEvent,
+)
+from src.notifications.service import NotificationService
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +61,7 @@ class AgentOrchestrator:
         self.portfolio_manager = PortfolioManager(session)
         self.memory_manager = MemoryManager(session)
         self.evolution_manager = EvolutionManager(session)
+        self.notification_service = NotificationService(session)
 
     async def run_cycle(
         self,
@@ -174,6 +185,7 @@ class AgentOrchestrator:
                     trade = await self._get_trade(sl_tp_result.trade_id)
                     if trade:
                         closed_trades.append(trade)
+                        await self._notify_trade_closed(agent, trade)
 
         # Update unrealized PnL
         await self.portfolio_manager.update_unrealized_pnl(agent.id, current_prices)
@@ -226,11 +238,21 @@ class AgentOrchestrator:
             )
             result["execution"] = execution
 
-            # If we closed a position, add to closed_trades for memory generation
-            if execution and execution.success and execution.trade_id:
-                trade = await self._get_trade(execution.trade_id)
-                if trade:
-                    closed_trades.append(trade)
+            if execution and execution.success:
+                # Notify trade opened
+                if decision.action.action in (ActionType.OPEN_LONG, ActionType.OPEN_SHORT):
+                    await self._notify_trade_opened(agent, decision, execution)
+
+                # If we closed a position, add to closed_trades for memory generation
+                if execution.trade_id:
+                    trade = await self._get_trade(execution.trade_id)
+                    if trade:
+                        closed_trades.append(trade)
+                        await self._notify_trade_closed(agent, trade)
+
+        # Check equity alerts after trades close
+        if closed_trades:
+            await self._check_equity_alerts(agent)
 
         # Generate memory and check evolution (LLM agents only)
         if agent.engine != "rule":
@@ -243,14 +265,28 @@ class AgentOrchestrator:
             if closed_trades:
                 should_evolve = await self.evolution_manager.check_evolution_trigger(agent.id)
                 if should_evolve:
+                    old_prompt = await self._get_active_prompt(agent.id)
+                    old_version = old_prompt.version if old_prompt else None
                     reverted = await self.evolution_manager.check_auto_revert(agent.id)
-                    if not reverted:
+                    if reverted:
+                        new_prompt = await self._get_active_prompt(agent.id)
+                        await self._notify_evolution(
+                            agent, "reverted", old_version,
+                            new_prompt.version if new_prompt else None,
+                        )
+                    else:
                         new_prompt = await self.evolution_manager.trigger_evolution(agent.id)
                         if new_prompt:
                             result["evolution_triggered"] = True
                             logger.info(
                                 f"Agent {agent.name} evolved to prompt v{new_prompt.version}"
                             )
+                            await self._notify_evolution(
+                                agent, "evolved", old_version, new_prompt.version,
+                            )
+
+        # Update health timestamp
+        agent.last_cycle_at = datetime.now(timezone.utc)
 
         return result
 
@@ -336,9 +372,11 @@ class AgentOrchestrator:
         return list(result.scalars().all())
 
     async def _get_trade(self, trade_id: int) -> AgentTrade | None:
-        """Get a trade by ID."""
+        """Get a trade by ID (with symbol eagerly loaded)."""
         result = await self.session.execute(
-            select(AgentTrade).where(AgentTrade.id == trade_id)
+            select(AgentTrade)
+            .options(selectinload(AgentTrade.symbol))
+            .where(AgentTrade.id == trade_id)
         )
         return result.scalar_one_or_none()
 
@@ -426,3 +464,92 @@ class AgentOrchestrator:
             },
         )
         await self.session.execute(stmt)
+
+    # =========================================================================
+    # Notification helpers (fire-and-forget, never propagate errors)
+    # =========================================================================
+
+    async def _notify_trade_opened(
+        self,
+        agent: Agent,
+        decision: AgentDecisionResult,
+        execution: ExecutionResult,
+    ) -> None:
+        try:
+            event = TradeOpenedEvent(
+                agent_name=agent.name,
+                engine=agent.engine,
+                agent_id=agent.id,
+                symbol=decision.action.symbol or "",
+                direction="long" if decision.action.action == ActionType.OPEN_LONG else "short",
+                entry_price=Decimal(str(execution.details.get("entry_price", 0))),
+                position_size=Decimal(str(execution.details.get("position_size", 0))),
+                stop_loss=Decimal(str(execution.details["stop_loss"])) if execution.details.get("stop_loss") else None,
+                take_profit=Decimal(str(execution.details["take_profit"])) if execution.details.get("take_profit") else None,
+                confidence=decision.action.confidence,
+            )
+            await self.notification_service.notify_trade_opened(event)
+        except Exception:
+            logger.debug(f"Failed to send trade opened notification for {agent.name}", exc_info=True)
+
+    async def _notify_trade_closed(self, agent: Agent, trade: AgentTrade) -> None:
+        try:
+            pnl_pct = float(trade.pnl / trade.position_size * 100) if trade.position_size else 0.0
+            event = TradeClosedEvent(
+                agent_name=agent.name,
+                engine=agent.engine,
+                agent_id=agent.id,
+                symbol=trade.symbol.symbol if trade.symbol else "UNKNOWN",
+                direction=trade.direction,
+                entry_price=trade.entry_price,
+                exit_price=trade.exit_price,
+                pnl=trade.pnl,
+                pnl_pct=pnl_pct,
+                position_size=trade.position_size,
+                duration_minutes=trade.duration_minutes,
+                exit_reason=trade.exit_reason,
+            )
+            await self.notification_service.notify_trade_closed(event)
+        except Exception:
+            logger.debug(f"Failed to send trade closed notification for {agent.name}", exc_info=True)
+
+    async def _check_equity_alerts(self, agent: Agent) -> None:
+        try:
+            result = await self.session.execute(
+                select(AgentPortfolio).where(AgentPortfolio.agent_id == agent.id)
+            )
+            portfolio = result.scalar_one_or_none()
+            if not portfolio:
+                return
+
+            prefs_result = await self.session.execute(
+                select(NotificationPreference).where(NotificationPreference.id == 1)
+            )
+            prefs = prefs_result.scalar_one_or_none()
+            threshold = prefs.drawdown_alert_threshold if prefs else Decimal("10.00")
+
+            alerts = check_equity_alerts(agent, portfolio, threshold)
+            for alert in alerts:
+                await self.notification_service.notify_equity_alert(alert)
+        except Exception:
+            logger.debug(f"Failed to check equity alerts for {agent.name}", exc_info=True)
+
+    async def _notify_evolution(
+        self,
+        agent: Agent,
+        event_type: str,
+        old_version: int | None,
+        new_version: int | None,
+    ) -> None:
+        try:
+            event = EvolutionEvent(
+                agent_name=agent.name,
+                engine=agent.engine,
+                agent_id=agent.id,
+                event_type=event_type,
+                old_version=old_version,
+                new_version=new_version,
+            )
+            await self.notification_service.notify_evolution(event)
+        except Exception:
+            logger.debug(f"Failed to send evolution notification for {agent.name}", exc_info=True)

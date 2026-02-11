@@ -19,8 +19,11 @@ from apscheduler.triggers.interval import IntervalTrigger
 from fastapi import FastAPI, HTTPException
 from sqlalchemy import text
 
+from src.agents.orchestrator import AgentOrchestrator
 from src.config import settings
-from src.db import engine
+from src.db import async_session, engine
+from src.notifications.digest import send_daily_digest_job
+from src.notifications.routes import router as notifications_router
 from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner
 
 logging.basicConfig(
@@ -30,6 +33,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Alpha Worker", version="0.1.0")
+app.include_router(notifications_router)
 scheduler = AsyncIOScheduler()
 
 # Pipeline runner instance
@@ -56,6 +60,19 @@ async def run_timeframe_pipeline(timeframe: str):
             logger.info(
                 f"Completed {timeframe}: {result.get('symbols', 0)} symbols"
             )
+
+            # Run agent cycle with market data from pipeline
+            if settings.agents_enabled:
+                current_prices = result.get("current_prices", {})
+                candle_data = result.get("candle_data", {})
+                if current_prices:
+                    try:
+                        async with async_session() as session:
+                            orchestrator = AgentOrchestrator(session)
+                            await orchestrator.run_cycle(timeframe, current_prices, candle_data)
+                    except Exception as e:
+                        logger.exception(f"Agent cycle failed for {timeframe}: {e}")
+
         elif result["status"] == "skipped":
             logger.info(f"Skipped {timeframe}: {result.get('reason')}")
         else:
@@ -261,9 +278,18 @@ async def on_startup():
         replace_existing=True,
     )
 
+    # Add daily digest notification (00:00 UTC)
+    scheduler.add_job(
+        send_daily_digest_job,
+        trigger=CronTrigger(hour=0, minute=0),
+        id="daily_digest",
+        name="Daily digest notification",
+        replace_existing=True,
+    )
+
     scheduler.start()
     logger.info(
-        f"Scheduler started with {len(TIMEFRAME_CONFIG)} independent timeframe jobs + daily cleanup"
+        f"Scheduler started with {len(TIMEFRAME_CONFIG)} independent timeframe jobs + daily cleanup + daily digest"
     )
 
 

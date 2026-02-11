@@ -16,7 +16,7 @@ import { Pause, Play } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { TableCell, TableRow } from "@/components/ui/table";
-import type { AgentLeaderboardRow } from "@/lib/types";
+import type { AgentLeaderboardRow, AgentTimeframe } from "@/lib/types";
 import {
   STRATEGY_ARCHETYPE_LABELS,
   AGENT_TIMEFRAME_LABELS,
@@ -38,6 +38,38 @@ function formatUsd(value: number): string {
 
 function formatPercent(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
+}
+
+/** Expected cadence thresholds in minutes per timeframe. */
+const CADENCE_THRESHOLDS: Record<string, { yellow: number; gray: number }> = {
+  "15m": { yellow: 10, gray: 20 },
+  "30m": { yellow: 20, gray: 40 },
+  "1h": { yellow: 30, gray: 60 },
+  "4h": { yellow: 120, gray: 240 },
+  "1d": { yellow: 480, gray: 960 },
+  "1w": { yellow: 2880, gray: 5760 },
+  cross: { yellow: 30, gray: 60 },
+};
+
+function getHealthStatus(
+  lastCycleAt: string | null,
+  timeframe: AgentTimeframe
+): { color: string; label: string } {
+  if (!lastCycleAt) {
+    return { color: "bg-[var(--text-muted)]", label: "Never processed" };
+  }
+
+  const ageMs = Date.now() - new Date(lastCycleAt).getTime();
+  const ageMinutes = ageMs / 60_000;
+  const thresholds = CADENCE_THRESHOLDS[timeframe] ?? { yellow: 30, gray: 60 };
+
+  if (ageMinutes <= thresholds.yellow) {
+    return { color: "bg-[var(--bullish-strong)]", label: `Active ${Math.round(ageMinutes)}m ago` };
+  }
+  if (ageMinutes <= thresholds.gray) {
+    return { color: "bg-yellow-500", label: `Stale ${Math.round(ageMinutes)}m ago` };
+  }
+  return { color: "bg-[var(--text-muted)]", label: `Inactive ${Math.round(ageMinutes)}m ago` };
 }
 
 export function AgentRow({ agent }: AgentRowProps) {
@@ -64,6 +96,7 @@ export function AgentRow({ agent }: AgentRowProps) {
   };
 
   const isPaused = status === "paused";
+  const health = getHealthStatus(agent.lastCycleAt, agent.timeframe);
 
   return (
     <TableRow
@@ -72,13 +105,17 @@ export function AgentRow({ agent }: AgentRowProps) {
         isPaused && "opacity-50"
       )}
     >
-      {/* Agent name + archetype + engine */}
+      {/* Agent name + archetype + engine + health dot */}
       <TableCell className="max-w-[240px]">
         <Link
           href={`/agents/${agent.id}`}
           className="group block"
         >
           <span className="flex items-center gap-1.5">
+            <span
+              className={cn("inline-block h-2 w-2 shrink-0 rounded-full", health.color)}
+              title={health.label}
+            />
             <span
               className={cn(
                 "inline-flex shrink-0 items-center rounded px-1 py-0.5 font-mono text-[10px] font-bold leading-none",

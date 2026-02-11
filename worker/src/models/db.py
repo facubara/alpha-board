@@ -175,6 +175,7 @@ class Agent(Base):
         Numeric(12, 2), nullable=False, default=Decimal("10000.00")
     )
     evolution_trade_threshold: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=10)
+    last_cycle_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
@@ -233,6 +234,12 @@ class AgentPortfolio(Base):
     )
     updated_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    peak_equity: Mapped[Decimal] = mapped_column(
+        Numeric(14, 2), nullable=False, default=Decimal("10000.00")
+    )
+    trough_equity: Mapped[Decimal] = mapped_column(
+        Numeric(14, 2), nullable=False, default=Decimal("10000.00")
     )
 
     # Relationships
@@ -381,3 +388,30 @@ class AgentTokenUsage(Base):
         ),
         Index("idx_agent_token_usage_agent_date", "agent_id", date.desc()),
     )
+
+
+# =============================================================================
+# Notification Tables
+# =============================================================================
+
+
+class NotificationPreference(Base):
+    """Single-row notification preferences for Telegram alerts."""
+
+    __tablename__ = "notification_preferences"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    engine_filter: Mapped[str] = mapped_column(String(10), nullable=False, default="all")
+    notify_trade_opened: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    notify_trade_closed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    notify_sl_tp: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    notify_daily_digest: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    notify_equity_alerts: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    notify_evolution: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    drawdown_alert_threshold: Mapped[Decimal] = mapped_column(
+        Numeric(5, 2), nullable=False, default=Decimal("10.00")
+    )
+    muted_agent_ids: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    quiet_hours_start: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    quiet_hours_end: Mapped[int | None] = mapped_column(Integer, nullable=True)
