@@ -87,6 +87,19 @@ class Ranker:
 
         return percentiles
 
+    @staticmethod
+    def _sanitize_for_json(obj: Any) -> Any:
+        """Replace NaN/Inf floats with None for valid JSON serialization."""
+        if isinstance(obj, float):
+            if obj != obj or obj == float("inf") or obj == float("-inf"):
+                return None
+            return obj
+        if isinstance(obj, dict):
+            return {k: Ranker._sanitize_for_json(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [Ranker._sanitize_for_json(v) for v in obj]
+        return obj
+
     def _extract_indicator_signals(
         self, indicators: dict[str, IndicatorOutput]
     ) -> dict[str, Any]:
@@ -107,7 +120,7 @@ class Ranker:
                 "strength": sig["strength"],
                 "weight": output["weight"],
                 "category": output["category"],
-                "raw": output["raw"],
+                "raw": self._sanitize_for_json(output["raw"]),
             }
         return signals
 
