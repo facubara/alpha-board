@@ -19,7 +19,7 @@ import {
 } from "@/lib/queries/analytics";
 import { AnalyticsDashboard } from "@/components/analytics/analytics-dashboard";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function AnalyticsPage() {
   const [
