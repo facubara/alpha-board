@@ -45,15 +45,40 @@ export async function GET(
     : timeframe === "1w" ? "1w"
     : "1h";
 
-  try {
-    const binanceUrl = `https://api.binance.com/api/v3/klines?symbol=${upperSymbol}&interval=${binanceInterval}&limit=${limit}`;
-    const res = await fetch(binanceUrl, { next: { revalidate: 0 } });
+  // Use data-api.binance.vision (public data endpoint, no geo-restrictions)
+  // with api.binance.com as fallback
+  const BINANCE_ENDPOINTS = [
+    "https://data-api.binance.vision",
+    "https://api3.binance.com",
+  ];
 
-    if (!res.ok) {
-      const text = await res.text();
+  try {
+    let res: Response | null = null;
+    let lastError = "";
+
+    for (const base of BINANCE_ENDPOINTS) {
+      const binanceUrl = `${base}/api/v3/klines?symbol=${upperSymbol}&interval=${binanceInterval}&limit=${limit}`;
+      const attempt = await fetch(binanceUrl, { next: { revalidate: 0 } });
+
+      if (attempt.ok) {
+        res = attempt;
+        break;
+      }
+
+      lastError = await attempt.text();
+      // If it's a client error like invalid symbol (4xx but not 403/451), don't retry
+      if (attempt.status >= 400 && attempt.status < 403) {
+        return NextResponse.json(
+          { error: `Binance API error: ${lastError}` },
+          { status: attempt.status }
+        );
+      }
+    }
+
+    if (!res) {
       return NextResponse.json(
-        { error: `Binance API error: ${text}` },
-        { status: res.status }
+        { error: `Binance API unavailable: ${lastError}` },
+        { status: 502 }
       );
     }
 
