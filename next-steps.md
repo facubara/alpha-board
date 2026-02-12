@@ -48,7 +48,7 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 
 ---
 
-## 4. Performance Dashboard / Analytics Page — `PENDING`
+## 4. Performance Dashboard / Analytics Page — `COMPLETED`
 
 **What:** A dedicated analytics page with aggregated metrics—total PnL over time, win-rate trends, drawdown charts, per-symbol hit rates, and token-cost breakdowns.
 
