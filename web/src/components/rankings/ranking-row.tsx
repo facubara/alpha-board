@@ -13,7 +13,8 @@
  */
 
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { TableCell, TableRow } from "@/components/ui/table";
 import type { RankingSnapshot } from "@/lib/types";
@@ -59,6 +60,14 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
         <TableCell className="w-28 font-mono text-sm font-semibold text-primary">
           <span className="flex items-center gap-1.5">
             {snapshot.symbol}
+            <Link
+              href={`/symbols/${snapshot.symbol}`}
+              onClick={(e) => e.stopPropagation()}
+              className="text-secondary transition-colors hover:text-primary"
+              title={`Chart for ${snapshot.symbol}`}
+            >
+              <TrendingUp className="h-3.5 w-3.5" />
+            </Link>
             <a
               href={`https://www.binance.com/en/trade/${snapshot.baseAsset}_${snapshot.quoteAsset}`}
               target="_blank"

@@ -26,6 +26,7 @@ import { ReasoningLog } from "./reasoning-log";
 import { PromptEditor } from "./prompt-editor";
 import { PromptHistory } from "./prompt-history";
 import { ModelConfig } from "./model-config";
+import { AgentChart } from "./agent-chart";
 
 interface AgentDetailProps {
   agent: AgentDetailType;
@@ -138,6 +139,12 @@ export function AgentDetail({
             Reasoning ({decisions.length})
           </TabsTrigger>
           <TabsTrigger
+            value="chart"
+            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary"
+          >
+            Chart
+          </TabsTrigger>
+          <TabsTrigger
             value="prompt"
             className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary"
           >
@@ -167,6 +174,10 @@ export function AgentDetail({
 
         <TabsContent value="reasoning" className="pt-4">
           <ReasoningLog decisions={decisions} />
+        </TabsContent>
+
+        <TabsContent value="chart" className="pt-4">
+          <AgentChart trades={trades} timeframe={agent.timeframe} />
         </TabsContent>
 
         <TabsContent value="prompt" className="space-y-6 pt-4">

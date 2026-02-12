@@ -438,3 +438,44 @@ export interface AgentDrawdown {
   totalEquity: number;
   drawdownPct: number;
 }
+
+// =============================================================================
+// Chart Types
+// =============================================================================
+
+export interface CandleData {
+  openTime: number; // Unix ms
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface IndicatorValues {
+  rsi: (number | null)[];
+  macd: (number | null)[];
+  macdSignal: (number | null)[];
+  macdHistogram: (number | null)[];
+  ema20: (number | null)[];
+  ema50: (number | null)[];
+  ema200: (number | null)[];
+  bbUpper: (number | null)[];
+  bbMiddle: (number | null)[];
+  bbLower: (number | null)[];
+}
+
+export interface ChartDataResponse {
+  symbol: string;
+  timeframe: Timeframe;
+  candles: CandleData[];
+  indicators: IndicatorValues;
+}
+
+export interface TradeMarker {
+  time: number; // Unix seconds
+  position: "aboveBar" | "belowBar";
+  color: string;
+  shape: "arrowUp" | "arrowDown";
+  text: string;
+}

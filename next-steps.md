@@ -62,7 +62,7 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 
 ---
 
-## 5. Advanced Charting (TradingView Lightweight Charts) — `PENDING`
+## 5. Advanced Charting (TradingView Lightweight Charts) — `COMPLETED`
 
 **What:** Embed interactive candlestick charts with indicator overlays on the rankings and agent detail pages.
 
