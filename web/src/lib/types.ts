@@ -351,3 +351,90 @@ export interface AgentLeaderboardRow {
   openPositions: number;
   lastCycleAt: string | null;
 }
+
+// =============================================================================
+// Analytics Types
+// =============================================================================
+
+export interface AnalyticsSummary {
+  totalPnl: number;
+  totalTrades: number;
+  totalWins: number;
+  totalFees: number;
+  totalTokenCost: number;
+  totalInitialBalance: number;
+  maxDrawdownPct: number;
+}
+
+export interface ArchetypeStats {
+  archetype: StrategyArchetype;
+  agentCount: number;
+  totalPnl: number;
+  tradeCount: number;
+  wins: number;
+  winRate: number;
+}
+
+export interface TimeframeStats {
+  timeframe: AgentTimeframe;
+  agentCount: number;
+  totalPnl: number;
+  tradeCount: number;
+  wins: number;
+  winRate: number;
+}
+
+export interface DailyPnl {
+  day: string;
+  dailyPnl: number;
+  cumulativePnl: number;
+  tradeCount: number;
+  wins: number;
+}
+
+export interface DailyArchetypePnl {
+  day: string;
+  archetype: StrategyArchetype;
+  dailyPnl: number;
+}
+
+export interface SymbolStats {
+  symbol: string;
+  tradeCount: number;
+  wins: number;
+  winRate: number;
+  totalPnl: number;
+  avgPnl: number;
+  totalFees: number;
+}
+
+export interface DailyTokenCost {
+  day: string;
+  dailyCost: number;
+  inputTokens: number;
+  outputTokens: number;
+}
+
+export interface ModelCostBreakdown {
+  model: string;
+  taskType: string;
+  inputTokens: number;
+  outputTokens: number;
+  totalCost: number;
+}
+
+export interface ArchetypeCost {
+  archetype: StrategyArchetype;
+  totalCost: number;
+  totalTokens: number;
+}
+
+export interface AgentDrawdown {
+  id: number;
+  displayName: string;
+  archetype: StrategyArchetype;
+  timeframe: AgentTimeframe;
+  peakEquity: number;
+  totalEquity: number;
+  drawdownPct: number;
+}

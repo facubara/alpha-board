@@ -69,6 +69,12 @@ export default function RootLayout({
                 >
                   Backtest
                 </Link>
+                <Link
+                  href="/analytics"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
+                >
+                  Analytics
+                </Link>
                 <HeaderAuth />
               </nav>
             </div>
