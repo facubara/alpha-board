@@ -70,3 +70,20 @@ class BaseRuleStrategy(ABC):
             context.portfolio.position_count < max_positions
             and context.portfolio.available_for_new_position > 0
         )
+
+    def _regime_allows_direction(self, context: AgentContext, direction: str) -> bool:
+        """Block longs in strong bear trend, shorts in strong bull trend.
+
+        Returns True if regime is unknown or confidence < 60.
+        """
+        regime = context.cross_timeframe_regime
+        if not regime or not regime.higher_tf_trend:
+            return True
+        if regime.higher_tf_confidence < 60:
+            return True
+
+        if direction == "long" and regime.higher_tf_trend == "bear":
+            return False
+        if direction == "short" and regime.higher_tf_trend == "bull":
+            return False
+        return True

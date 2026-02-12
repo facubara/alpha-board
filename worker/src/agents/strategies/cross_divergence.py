@@ -1,6 +1,7 @@
 """Rule-based Multi-TF Divergence strategy.
 
 Mirrors the LLM cross-divergence prompt from 003_seed_data.py.
+Enhanced to skip unreliable divergence signals in mixed regimes.
 """
 
 from src.agents.schemas import ActionType, AgentContext, TradeAction
@@ -21,6 +22,11 @@ class CrossDivergenceStrategy(BaseRuleStrategy):
         # 2. Can we open?
         if not self._can_open(context, max_positions=self.MAX_CONCURRENT):
             return self._hold(0.1)
+
+        # Skip divergence trades when higher TF trend is mixed (unreliable signal)
+        regime = context.cross_timeframe_regime
+        if regime and regime.higher_tf_trend == "mixed" and regime.higher_tf_confidence >= 60:
+            return self._hold(0.2)
 
         cf = context.cross_timeframe_confluence
         if not cf:
@@ -102,9 +108,14 @@ class CrossDivergenceStrategy(BaseRuleStrategy):
         return None
 
     def generate_reasoning(self, context: AgentContext, action: TradeAction) -> str:
+        regime = context.cross_timeframe_regime
+        regime_info = ""
+        if regime and regime.higher_tf_trend:
+            regime_info = f" [regime={regime.higher_tf_trend}]"
+
         if action.action == ActionType.HOLD:
-            return "CrossDivergence: no long/short-term divergence detected. Holding."
+            return f"CrossDivergence: no long/short-term divergence detected{regime_info}. Holding."
         if action.action == ActionType.CLOSE:
-            return f"CrossDivergence: closing {action.symbol} — divergence resolved or long-term turned against."
+            return f"CrossDivergence: closing {action.symbol} — divergence resolved or long-term turned against{regime_info}."
         direction = "LONG" if action.action == ActionType.OPEN_LONG else "SHORT"
-        return f"CrossDivergence: opening {direction} {action.symbol} — LT/ST timeframe divergence detected."
+        return f"CrossDivergence: opening {direction} {action.symbol} — LT/ST timeframe divergence detected{regime_info}."

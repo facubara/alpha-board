@@ -52,6 +52,7 @@ class MomentumStrategy(BaseRuleStrategy):
                 and pve50 > 0
                 and pve200 > 0
                 and obv_slope > 0
+                and self._regime_allows_direction(context, "long")
             ):
                 size = 0.15 if r.confidence >= 75 else 0.08
                 return TradeAction(
@@ -73,6 +74,7 @@ class MomentumStrategy(BaseRuleStrategy):
                 and minus_di > plus_di
                 and pve50 < 0
                 and pve200 < 0
+                and self._regime_allows_direction(context, "short")
             ):
                 size = 0.15 if r.confidence >= 75 else 0.08
                 return TradeAction(

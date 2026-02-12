@@ -145,6 +145,24 @@ class Snapshot(Base):
     )
 
 
+class TimeframeRegime(Base):
+    """Persisted regime classification per timeframe. One row per TF, upserted."""
+
+    __tablename__ = "timeframe_regimes"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    timeframe: Mapped[str] = mapped_column(String(10), unique=True, nullable=False)
+    regime: Mapped[str] = mapped_column(String(20), nullable=False)
+    confidence: Mapped[Decimal] = mapped_column(Numeric(5, 2), nullable=False)
+    avg_bullish_score: Mapped[Decimal | None] = mapped_column(Numeric(5, 3))
+    avg_adx: Mapped[Decimal | None] = mapped_column(Numeric(8, 2))
+    avg_bandwidth: Mapped[Decimal | None] = mapped_column(Numeric(8, 2))
+    symbols_analyzed: Mapped[int | None] = mapped_column(Integer)
+    computed_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
 # =============================================================================
 # Agent Tables
 # =============================================================================

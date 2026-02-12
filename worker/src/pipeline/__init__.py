@@ -4,6 +4,7 @@ Provides the PipelineRunner for executing the full ranking pipeline:
 fetch OHLCV → compute indicators → score → rank → persist.
 """
 
+from src.pipeline.regime import compute_and_persist_regime
 from src.pipeline.runner import (
     PIPELINE_LOCK_ID,
     TIMEFRAME_CONFIG,
@@ -16,4 +17,5 @@ __all__ = [
     "default_runner",
     "TIMEFRAME_CONFIG",
     "PIPELINE_LOCK_ID",
+    "compute_and_persist_regime",
 ]

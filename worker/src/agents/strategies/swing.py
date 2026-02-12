@@ -53,6 +53,7 @@ class SwingStrategy(BaseRuleStrategy):
                 and 40 <= rsi <= 55  # pulled back
                 and stoch_k < 50
                 and stoch_k > stoch_d  # turning up
+                and self._regime_allows_direction(context, "long")
             ):
                 size = 0.20 if r.confidence >= 70 else 0.12
                 return TradeAction(
@@ -74,6 +75,7 @@ class SwingStrategy(BaseRuleStrategy):
                 and 45 <= rsi <= 60  # rallied from oversold
                 and stoch_k > 50
                 and stoch_k < stoch_d  # turning down
+                and self._regime_allows_direction(context, "short")
             ):
                 size = 0.20 if r.confidence >= 70 else 0.12
                 return TradeAction(

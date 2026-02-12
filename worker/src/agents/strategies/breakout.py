@@ -49,6 +49,7 @@ class BreakoutStrategy(BaseRuleStrategy):
                 and obv_slope > 2.0  # volume spike
                 and adx < 25  # trend emerging, not mature
                 and 0.55 <= r.bullish_score <= 0.75
+                and self._regime_allows_direction(context, "long")
             ):
                 return TradeAction(
                     action=ActionType.OPEN_LONG,
@@ -68,6 +69,7 @@ class BreakoutStrategy(BaseRuleStrategy):
                 and plus_di is not None
                 and minus_di is not None
                 and minus_di > plus_di
+                and self._regime_allows_direction(context, "short")
             ):
                 return TradeAction(
                     action=ActionType.OPEN_SHORT,

@@ -179,6 +179,24 @@ class TimeframeContext(BaseModel):
     computed_at: datetime | None
 
 
+class RegimeLabel(BaseModel):
+    """Persisted regime classification for a single timeframe."""
+
+    timeframe: str
+    regime: str  # "trending_bull", "trending_bear", "ranging", "volatile"
+    confidence: float
+    avg_bullish_score: float
+    computed_at: datetime
+
+
+class CrossTimeframeContext(BaseModel):
+    """Aggregated regime data across all timeframes."""
+
+    regimes: dict[str, RegimeLabel]  # {tf: label}
+    higher_tf_trend: str | None = None  # "bull", "bear", "mixed", "ranging"
+    higher_tf_confidence: float = 0.0  # 0-100
+
+
 class AgentContext(BaseModel):
     """Full context passed to Claude for decision-making."""
 
@@ -195,6 +213,9 @@ class AgentContext(BaseModel):
     # Market data
     primary_timeframe_rankings: list[RankingContext]
     cross_timeframe_confluence: dict[str, Any] | None = None
+
+    # Regime context
+    cross_timeframe_regime: CrossTimeframeContext | None = None
 
     # Current prices for open positions
     current_prices: dict[str, Decimal]

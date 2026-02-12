@@ -23,13 +23,16 @@ from src.models.db import (
     AgentMemory,
     Snapshot,
     Symbol,
+    TimeframeRegime,
 )
 from src.agents.schemas import (
     AgentContext,
+    CrossTimeframeContext,
     PortfolioSummary,
     PositionInfo,
     PerformanceStats,
     RankingContext,
+    RegimeLabel,
     Direction,
 )
 
@@ -76,6 +79,9 @@ class ContextBuilder:
         # Build cross-timeframe confluence (optional enhancement)
         confluence = await self._get_cross_timeframe_confluence(agent.timeframe)
 
+        # Build regime context from persisted regime labels
+        regime_context = await self._get_regime_context(agent.timeframe)
+
         return AgentContext(
             agent_id=agent.id,
             agent_name=agent.name,
@@ -85,6 +91,7 @@ class ContextBuilder:
             performance=performance,
             primary_timeframe_rankings=rankings,
             cross_timeframe_confluence=confluence,
+            cross_timeframe_regime=regime_context,
             current_prices=current_prices,
             recent_memory=memory,
             context_built_at=datetime.now(timezone.utc),
@@ -281,6 +288,73 @@ class ContextBuilder:
         memories = result.scalars().all()
 
         return [m.lesson for m in memories]
+
+    async def _get_regime_context(
+        self, primary_timeframe: str
+    ) -> CrossTimeframeContext | None:
+        """Build cross-timeframe regime context from persisted regime labels.
+
+        Queries all rows from timeframe_regimes, builds RegimeLabel per TF,
+        and computes higher_tf_trend from 4h + 1d regimes.
+        """
+        try:
+            result = await self.session.execute(select(TimeframeRegime))
+            rows = result.scalars().all()
+
+            if not rows:
+                return None
+
+            regimes: dict[str, RegimeLabel] = {}
+            for row in rows:
+                regimes[row.timeframe] = RegimeLabel(
+                    timeframe=row.timeframe,
+                    regime=row.regime,
+                    confidence=float(row.confidence),
+                    avg_bullish_score=float(row.avg_bullish_score) if row.avg_bullish_score else 0.5,
+                    computed_at=row.computed_at,
+                )
+
+            # Compute higher_tf_trend from 4h + 1d regimes
+            higher_tf_trend = "ranging"
+            higher_tf_confidence = 0.0
+
+            regime_4h = regimes.get("4h")
+            regime_1d = regimes.get("1d")
+
+            if regime_4h and regime_1d:
+                r4h = regime_4h.regime
+                r1d = regime_1d.regime
+                avg_conf = (regime_4h.confidence + regime_1d.confidence) / 2
+
+                if "bull" in r4h and "bull" in r1d:
+                    higher_tf_trend = "bull"
+                    higher_tf_confidence = avg_conf
+                elif "bear" in r4h and "bear" in r1d:
+                    higher_tf_trend = "bear"
+                    higher_tf_confidence = avg_conf
+                elif r4h == "ranging" and r1d == "ranging":
+                    higher_tf_trend = "ranging"
+                    higher_tf_confidence = avg_conf
+                else:
+                    higher_tf_trend = "mixed"
+                    higher_tf_confidence = avg_conf * 0.5
+            elif regime_1d:
+                # Only 1d available
+                if "bull" in regime_1d.regime:
+                    higher_tf_trend = "bull"
+                elif "bear" in regime_1d.regime:
+                    higher_tf_trend = "bear"
+                else:
+                    higher_tf_trend = regime_1d.regime
+                higher_tf_confidence = regime_1d.confidence * 0.7
+
+            return CrossTimeframeContext(
+                regimes=regimes,
+                higher_tf_trend=higher_tf_trend,
+                higher_tf_confidence=higher_tf_confidence,
+            )
+        except Exception:
+            return None
 
     async def _get_cross_timeframe_confluence(
         self, primary_timeframe: str

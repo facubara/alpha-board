@@ -1,6 +1,7 @@
 """Rule-based Timeframe Cascade strategy.
 
 Mirrors the LLM cross-cascade prompt from 003_seed_data.py.
+Enhanced to use regime labels to confirm cascade setups.
 """
 
 from src.agents.schemas import ActionType, AgentContext, TradeAction
@@ -30,6 +31,11 @@ class CrossCascadeStrategy(BaseRuleStrategy):
         if not tf_scores:
             return self._hold(0.0)
 
+        # Check regime for cascade confirmation
+        regime = context.cross_timeframe_regime
+        regime_1w = regime.regimes.get("1w") if regime else None
+        regime_1d = regime.regimes.get("1d") if regime else None
+
         # 3. Scan for cascade setups
         for symbol, scores in tf_scores.items():
             if self._has_position(context, symbol):
@@ -50,24 +56,40 @@ class CrossCascadeStrategy(BaseRuleStrategy):
 
             # ── Long cascade: 1W bullish, 1D confirming, shorter not yet
             if w_score >= 0.60 and d_score >= 0.55 and shorter <= 0.50:
+                # Enhanced: confirm with regime labels if available
+                confidence = 0.65
+                if regime_1w and regime_1d:
+                    if "bull" in regime_1w.regime and "bull" in regime_1d.regime:
+                        confidence = 0.80  # Strong cascade confirmation
+                    elif "bear" in regime_1w.regime or "bear" in regime_1d.regime:
+                        continue  # Regime contradicts cascade, skip
+
                 return TradeAction(
                     action=ActionType.OPEN_LONG,
                     symbol=symbol,
                     position_size_pct=0.12,
                     stop_loss_pct=0.06,
                     take_profit_pct=0.10,
-                    confidence=0.65,
+                    confidence=confidence,
                 )
 
             # ── Short cascade: 1W bearish, 1D confirming, shorter not yet
             if w_score <= 0.40 and d_score <= 0.45 and shorter >= 0.50:
+                # Enhanced: confirm with regime labels if available
+                confidence = 0.65
+                if regime_1w and regime_1d:
+                    if "bear" in regime_1w.regime and "bear" in regime_1d.regime:
+                        confidence = 0.80  # Strong cascade confirmation
+                    elif "bull" in regime_1w.regime or "bull" in regime_1d.regime:
+                        continue  # Regime contradicts cascade, skip
+
                 return TradeAction(
                     action=ActionType.OPEN_SHORT,
                     symbol=symbol,
                     position_size_pct=0.12,
                     stop_loss_pct=0.06,
                     take_profit_pct=0.10,
-                    confidence=0.65,
+                    confidence=confidence,
                 )
 
         return self._hold(0.2)
@@ -101,9 +123,17 @@ class CrossCascadeStrategy(BaseRuleStrategy):
         return None
 
     def generate_reasoning(self, context: AgentContext, action: TradeAction) -> str:
+        regime = context.cross_timeframe_regime
+        regime_info = ""
+        if regime:
+            r1w = regime.regimes.get("1w")
+            r1d = regime.regimes.get("1d")
+            if r1w and r1d:
+                regime_info = f" [1W={r1w.regime}, 1D={r1d.regime}]"
+
         if action.action == ActionType.HOLD:
-            return "CrossCascade: no timeframe cascade pattern detected. Holding."
+            return f"CrossCascade: no timeframe cascade pattern detected{regime_info}. Holding."
         if action.action == ActionType.CLOSE:
-            return f"CrossCascade: closing {action.symbol} — cascade completed or 1W reverted."
+            return f"CrossCascade: closing {action.symbol} — cascade completed or 1W reverted{regime_info}."
         direction = "LONG" if action.action == ActionType.OPEN_LONG else "SHORT"
-        return f"CrossCascade: opening {direction} {action.symbol} — 1W/1D aligned, shorter TFs lagging."
+        return f"CrossCascade: opening {direction} {action.symbol} — 1W/1D aligned, shorter TFs lagging{regime_info}."

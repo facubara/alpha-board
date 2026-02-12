@@ -31,7 +31,7 @@ from src.events import event_bus
 from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, Snapshot, Symbol
 from src.notifications.digest import send_daily_digest_job
 from src.notifications.routes import router as notifications_router
-from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner
+from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner, compute_and_persist_regime
 from src.sse import router as sse_router
 
 logging.basicConfig(
@@ -268,6 +268,13 @@ async def run_timeframe_pipeline(timeframe: str):
                 f"Completed {timeframe}: {result.get('symbols', 0)} symbols"
             )
 
+            # Compute and persist regime for this timeframe
+            try:
+                async with async_session() as session:
+                    await compute_and_persist_regime(session, timeframe)
+            except Exception as e:
+                logger.exception(f"Regime computation failed for {timeframe}: {e}")
+
             # Run agent cycle with market data from pipeline
             if settings.agents_enabled:
                 current_prices = result.get("current_prices", {})
@@ -279,6 +286,14 @@ async def run_timeframe_pipeline(timeframe: str):
                             await orchestrator.run_cycle(timeframe, current_prices, candle_data)
                     except Exception as e:
                         logger.exception(f"Agent cycle failed for {timeframe}: {e}")
+
+                    # Run cross-TF agents after every pipeline cycle
+                    try:
+                        async with async_session() as session:
+                            cross_orchestrator = AgentOrchestrator(session)
+                            await cross_orchestrator.run_cycle("cross", current_prices, candle_data)
+                    except Exception as e:
+                        logger.exception(f"Cross-TF agent cycle failed after {timeframe}: {e}")
 
             # Broadcast updates to SSE subscribers
             await _broadcast_ranking_update(timeframe)

@@ -178,6 +178,22 @@ class AgentExecutor:
             bearish = ", ".join(cf.get("bearish_confluence", [])[:3]) or "None"
             confluence_str = f"Bullish confluence: {bullish}\nBearish confluence: {bearish}"
 
+        # Format regime context
+        regime_str = "No regime data available"
+        if context.cross_timeframe_regime:
+            regime = context.cross_timeframe_regime
+            regime_lines = []
+            for tf in ["15m", "30m", "1h", "4h", "1d", "1w"]:
+                label = regime.regimes.get(tf)
+                if label:
+                    regime_lines.append(
+                        f"  {tf}: {label.regime} (confidence={label.confidence:.0f}%, "
+                        f"avg_score={label.avg_bullish_score:.3f})"
+                    )
+            if regime_lines:
+                regime_str = "\n".join(regime_lines)
+            regime_str += f"\nHigher-TF trend: {regime.higher_tf_trend} (confidence={regime.higher_tf_confidence:.0f}%)"
+
         return f"""Current time: {context.context_built_at.isoformat()}
 Timeframe: {context.primary_timeframe}
 
@@ -200,6 +216,9 @@ Max drawdown: {context.performance.max_drawdown:.1%}
 
 === CROSS-TIMEFRAME CONFLUENCE ===
 {confluence_str}
+
+=== MARKET REGIME ===
+{regime_str}
 
 === RECENT LESSONS ===
 {memory_str}

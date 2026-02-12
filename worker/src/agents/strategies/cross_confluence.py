@@ -1,6 +1,7 @@
 """Rule-based Multi-TF Confluence strategy.
 
 Mirrors the LLM cross-confluence prompt from 003_seed_data.py.
+Enhanced to gate entries and scale position size by regime.
 """
 
 from src.agents.schemas import ActionType, AgentContext, TradeAction
@@ -26,14 +27,36 @@ class CrossConfluenceStrategy(BaseRuleStrategy):
         if not cf:
             return self._hold(0.0)
 
+        # Compute position size scaling based on regime
+        regime = context.cross_timeframe_regime
+        size_scale = 1.0
+        if regime and regime.higher_tf_trend and regime.higher_tf_confidence >= 60:
+            trend = regime.higher_tf_trend
+
         # 3. Long: symbol in bullish confluence (3+ TFs with score > 0.6)
         for symbol in cf.get("bullish_confluence", []):
             if self._has_position(context, symbol):
                 continue
+
+            # Gate: skip longs when higher TF is clearly bearish
+            if regime and regime.higher_tf_trend == "bear" and regime.higher_tf_confidence >= 60:
+                continue
+
+            # Scale position size by regime alignment
+            if regime and regime.higher_tf_trend == "bull" and regime.higher_tf_confidence >= 60:
+                size_scale = min(1.5, 1.0 + regime.higher_tf_confidence / 200)
+            elif regime and regime.higher_tf_trend == "mixed":
+                size_scale = 0.7
+            else:
+                size_scale = 1.0
+
+            base_size = 0.18
+            scaled_size = round(min(0.25, base_size * size_scale), 2)
+
             return TradeAction(
                 action=ActionType.OPEN_LONG,
                 symbol=symbol,
-                position_size_pct=0.18,
+                position_size_pct=scaled_size,
                 stop_loss_pct=0.06,
                 take_profit_pct=0.12,
                 confidence=0.8,
@@ -43,10 +66,26 @@ class CrossConfluenceStrategy(BaseRuleStrategy):
         for symbol in cf.get("bearish_confluence", []):
             if self._has_position(context, symbol):
                 continue
+
+            # Gate: skip shorts when higher TF is clearly bullish
+            if regime and regime.higher_tf_trend == "bull" and regime.higher_tf_confidence >= 60:
+                continue
+
+            # Scale position size by regime alignment
+            if regime and regime.higher_tf_trend == "bear" and regime.higher_tf_confidence >= 60:
+                size_scale = min(1.5, 1.0 + regime.higher_tf_confidence / 200)
+            elif regime and regime.higher_tf_trend == "mixed":
+                size_scale = 0.7
+            else:
+                size_scale = 1.0
+
+            base_size = 0.18
+            scaled_size = round(min(0.25, base_size * size_scale), 2)
+
             return TradeAction(
                 action=ActionType.OPEN_SHORT,
                 symbol=symbol,
-                position_size_pct=0.18,
+                position_size_pct=scaled_size,
                 stop_loss_pct=0.06,
                 take_profit_pct=0.12,
                 confidence=0.8,
@@ -71,9 +110,14 @@ class CrossConfluenceStrategy(BaseRuleStrategy):
         return None
 
     def generate_reasoning(self, context: AgentContext, action: TradeAction) -> str:
+        regime = context.cross_timeframe_regime
+        regime_info = ""
+        if regime and regime.higher_tf_trend:
+            regime_info = f" [regime={regime.higher_tf_trend}]"
+
         if action.action == ActionType.HOLD:
-            return "CrossConfluence: no multi-TF agreement found. Holding."
+            return f"CrossConfluence: no multi-TF agreement found{regime_info}. Holding."
         if action.action == ActionType.CLOSE:
-            return f"CrossConfluence: closing {action.symbol} — dropped from confluence list."
+            return f"CrossConfluence: closing {action.symbol} — dropped from confluence list{regime_info}."
         direction = "LONG" if action.action == ActionType.OPEN_LONG else "SHORT"
-        return f"CrossConfluence: opening {direction} {action.symbol} — 3+ timeframes aligned."
+        return f"CrossConfluence: opening {direction} {action.symbol} — 3+ timeframes aligned{regime_info}, size={action.position_size_pct}."

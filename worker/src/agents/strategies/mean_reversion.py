@@ -42,6 +42,7 @@ class MeanReversionStrategy(BaseRuleStrategy):
                 and stoch_k < 20
                 and stoch_k > stoch_d  # turning up
                 and 0.20 <= r.bullish_score <= 0.45
+                and self._regime_allows_direction(context, "long")
             ):
                 return TradeAction(
                     action=ActionType.OPEN_LONG,
@@ -58,6 +59,7 @@ class MeanReversionStrategy(BaseRuleStrategy):
                 and (rsi > 70 or pct_b > 0.95)  # overbought
                 and stoch_k > 80
                 and stoch_k < stoch_d  # turning down
+                and self._regime_allows_direction(context, "short")
             ):
                 return TradeAction(
                     action=ActionType.OPEN_SHORT,
