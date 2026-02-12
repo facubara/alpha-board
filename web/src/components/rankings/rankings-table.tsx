@@ -3,7 +3,7 @@
 /**
  * RankingsTable Component
  *
- * Main rankings table with timeframe switching, search, and sort.
+ * Main rankings table with timeframe switching, search, sort, and live SSE updates.
  * Per DESIGN_SYSTEM.md:
  * - Dense table layout (40px rows)
  * - Timeframe switching is instant (client-side only)
