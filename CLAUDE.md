@@ -39,6 +39,12 @@ When changes affect the worker (`worker/`), verify by hitting the relevant API e
 - **web/** — Next.js dashboard on Vercel (Neon Postgres, server components)
 - **Database** — Neon Postgres, shared by both. Migrations in `worker/alembic/versions/`
 
+## Next Steps Tracking
+
+The file `next-steps.md` in the project root lists upcoming features. Each feature heading includes a status tag: `PENDING`, `IN PROGRESS`, or `COMPLETED`.
+
+When a feature from `next-steps.md` is fully implemented and deployed, update its heading status from `PENDING` (or `IN PROGRESS`) to `COMPLETED`. Do this immediately after the work is done — do not ask, just update the file.
+
 ## Conventions
 
 - Commit messages follow conventional commits (`feat:`, `fix:`, `chore:`, etc.)

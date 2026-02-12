@@ -38,7 +38,15 @@
       "mcp__playwright__browser_type",
       "mcp__playwright__browser_press_key",
       "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_close"
+      "mcp__playwright__browser_close",
+      "Bash(wc:*)",
+      "Bash(npx vercel env:*)",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_network_requests",
+      "mcp__playwright__browser_evaluate",
+      "WebFetch(domain:alpha-board.com)",
+      "mcp__playwright__browser_run_code",
+      "Bash(python:*)"
     ]
   }
 }

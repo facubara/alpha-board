@@ -1,7 +1,7 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-11
-**Current Phase:** Complete (all 14 phases done) + Rule-Based Agents feature
+**Last Updated:** 2026-02-12
+**Current Phase:** Complete (all 15 phases done) + Post-launch features
 
 ---
 
@@ -58,6 +58,9 @@
 - [x] **Deployment configs ready** — Phase 13
 - [x] **Production-ready** — Phase 14
 - [x] **Rule-based agents coexist with LLM agents** — Phase 15
+- [x] **Real-Time Updates (SSE)** — Post-launch feature
+- [x] **Cross-Timeframe Agents** — Post-launch feature
+- [x] **Backtesting Framework** — Post-launch feature
 
 ---
 
@@ -109,6 +112,18 @@
 
 ---
 
+## Post-Launch Features (from next-steps.md)
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | Real-Time Updates (SSE) | Done |
+| 2 | Cross-Timeframe Agents | Done |
+| 3 | Backtesting Framework | Done |
+| 4 | Performance Dashboard / Analytics | Pending |
+| 5 | Advanced Charting (TradingView) | Pending |
+| 6 | Agent Comparison Mode | Pending |
+| 7 | Caching Layer (Redis) | Pending |
+
 ## Open Decisions
 
 None — all decisions resolved.
@@ -119,11 +134,11 @@ None — all decisions resolved.
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-12 13:22 | Post-launch | Backtesting Framework (9 phases) |
 | 2026-02-11 14:00 | Phase 15 | Rule-Based Python Agents |
 | 2026-02-09 | Phase 11-14 | Agent Frontend + Deployment + Polish |
 | 2026-02-05 20:00 | Phase 10 | Agent Learning & Evolution |
 | 2026-02-05 19:00 | Phase 9 | Agent Core |
-| 2026-02-05 18:30 | Phase 8 | Rankings UI Polish |
 
 ---
 
