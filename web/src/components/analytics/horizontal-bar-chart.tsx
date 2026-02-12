@@ -42,11 +42,24 @@ export function HorizontalBarChart({
   const maxAbs = Math.max(...items.map((d) => Math.abs(d.value)), 0.01);
   const midX = labelWidth + barAreaWidth / 2;
 
+  // Build aria summary
+  const summaryParts = items.map(
+    (item) => `${item.label}: ${formatValue(item.value)}`
+  );
+  const ariaLabel = `Bar chart: ${summaryParts.join(", ")}`;
+
   return (
     <div
       className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
     >
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full"
+        role="img"
+        aria-label={ariaLabel}
+      >
+        <title>{ariaLabel}</title>
+
         {/* Center line */}
         <line
           x1={midX}

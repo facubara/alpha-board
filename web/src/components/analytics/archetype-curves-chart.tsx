@@ -26,37 +26,55 @@ interface ArchetypeCurvesChartProps {
   className?: string;
 }
 
+/** Deduplicate date labels for sparse data. */
+function buildDateLabels(
+  allDays: string[],
+  scaleX: (i: number) => number,
+  targetCount: number
+): { x: number; label: string }[] {
+  const uniqueDays = [...new Set(allDays)];
+  const count = Math.min(targetCount, uniqueDays.length);
+  if (count <= 0) return [];
+
+  const labels: { x: number; label: string }[] = [];
+  for (let i = 0; i < count; i++) {
+    const dayIdx = Math.round((i / (count - 1)) * (uniqueDays.length - 1));
+    const day = uniqueDays[dayIdx];
+    const dataIdx = allDays.indexOf(day);
+    if (dataIdx >= 0) {
+      labels.push({
+        x: scaleX(dataIdx),
+        label: new Date(day + "T00:00:00").toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        }),
+      });
+    }
+  }
+  return labels;
+}
+
 export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartProps) {
   const curves = useMemo(() => {
-    // Group by archetype, compute cumulative PnL
     const byArchetype: Record<string, { day: string; cumPnl: number }[]> = {};
     const cumulatives: Record<string, number> = {};
-
-    // Get all unique days sorted
     const allDays = [...new Set(data.map((d) => d.day))].sort();
-
-    // Build day->archetype->pnl lookup
     const lookup: Record<string, Record<string, number>> = {};
     for (const d of data) {
       if (!lookup[d.day]) lookup[d.day] = {};
       lookup[d.day][d.archetype] = d.dailyPnl;
     }
-
-    // Get all archetypes present
     const archetypes = [...new Set(data.map((d) => d.archetype))] as StrategyArchetype[];
-
     for (const arch of archetypes) {
       cumulatives[arch] = 0;
       byArchetype[arch] = [];
     }
-
     for (const day of allDays) {
       for (const arch of archetypes) {
         cumulatives[arch] += lookup[day]?.[arch] ?? 0;
         byArchetype[arch].push({ day, cumPnl: cumulatives[arch] });
       }
     }
-
     return { byArchetype, archetypes, allDays };
   }, [data]);
 
@@ -77,7 +95,6 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
   const legendHeight = 24;
   const totalHeight = height + legendHeight;
 
-  // Find global min/max across all curves
   const allValues = curves.archetypes.flatMap(
     (a) => curves.byArchetype[a]?.map((p) => p.cumPnl) ?? []
   );
@@ -92,28 +109,29 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
 
   const baselineY = scaleY(0);
 
-  // Date labels
-  const dateLabels: { x: number; label: string }[] = [];
-  const labelCount = 4;
-  for (let i = 0; i < labelCount; i++) {
-    const idx = Math.round((i / (labelCount - 1)) * maxX);
-    const day = curves.allDays[idx];
-    if (day) {
-      dateLabels.push({
-        x: scaleX(idx),
-        label: new Date(day + "T00:00:00").toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        }),
-      });
-    }
-  }
+  const dateLabels = buildDateLabels(curves.allDays, scaleX, 4);
+
+  // Build aria description
+  const summaryParts = curves.archetypes.map((arch) => {
+    const pts = curves.byArchetype[arch] ?? [];
+    const final = pts.length > 0 ? pts[pts.length - 1].cumPnl : 0;
+    return `${ARCHETYPE_LABELS[arch]}: ${final >= 0 ? "+" : ""}$${final.toFixed(0)}`;
+  });
+  const ariaLabel = `Cumulative PnL by archetype: ${summaryParts.join(", ")}`;
 
   return (
     <div
       className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
     >
-      <svg viewBox={`0 0 ${width} ${totalHeight}`} className="w-full" preserveAspectRatio="none">
+      <svg
+        viewBox={`0 0 ${width} ${totalHeight}`}
+        className="w-full"
+        preserveAspectRatio="none"
+        role="img"
+        aria-label={ariaLabel}
+      >
+        <title>{ariaLabel}</title>
+
         {/* Baseline */}
         <line
           x1={padX}
