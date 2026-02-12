@@ -64,31 +64,42 @@ class BacktestEngine:
     """Bar-by-bar backtest engine reusing existing indicators and strategies."""
 
     async def run(
-        self, config: BacktestConfig, session: AsyncSession
+        self, config: BacktestConfig, session: AsyncSession,
+        run_id: int | None = None,
     ) -> BacktestResult:
         """Execute a full backtest and persist results.
 
         Args:
             config: Backtest configuration.
             session: Database session for persisting results.
+            run_id: Existing BacktestRun row id to update (if None, creates one).
 
         Returns:
             BacktestResult with run_id and status.
         """
-        # Create pending run row
-        run = BacktestRun(
-            agent_name=f"bt-{config.strategy}",
-            strategy_archetype=config.strategy,
-            timeframe=config.timeframe,
-            symbol=config.symbol,
-            start_date=config.start_date,
-            end_date=config.end_date,
-            initial_balance=Decimal(str(config.initial_balance)),
-            status="running",
-        )
-        session.add(run)
-        await session.flush()
-        run_id = run.id
+        if run_id is not None:
+            # Use existing row created by the API endpoint
+            from sqlalchemy import select as sa_select
+            result = await session.execute(
+                sa_select(BacktestRun).where(BacktestRun.id == run_id)
+            )
+            run = result.scalar_one()
+            run.status = "running"
+            await session.flush()
+        else:
+            run = BacktestRun(
+                agent_name=f"bt-{config.strategy}",
+                strategy_archetype=config.strategy,
+                timeframe=config.timeframe,
+                symbol=config.symbol,
+                start_date=config.start_date,
+                end_date=config.end_date,
+                initial_balance=Decimal(str(config.initial_balance)),
+                status="running",
+            )
+            session.add(run)
+            await session.flush()
+            run_id = run.id
 
         try:
             # 1. Fetch historical candles

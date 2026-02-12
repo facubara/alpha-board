@@ -643,15 +643,7 @@ async def _run_backtest(run_id: int, config_dict: dict) -> None:
     engine = BacktestEngine()
 
     async with async_session() as session:
-        # Load the run row
-        result = await session.execute(
-            select(BacktestRun).where(BacktestRun.id == run_id)
-        )
-        run = result.scalar_one()
-        run.status = "running"
-        await session.commit()
-
-        await engine.run(config, session)
+        await engine.run(config, session, run_id=run_id)
 
 
 @app.post("/backtest")
@@ -739,12 +731,12 @@ async def list_backtests():
                 "start_date": r.start_date.isoformat(),
                 "end_date": r.end_date.isoformat(),
                 "initial_balance": float(r.initial_balance),
-                "final_equity": float(r.final_equity) if r.final_equity else None,
-                "total_pnl": float(r.total_pnl) if r.total_pnl else None,
+                "final_equity": float(r.final_equity) if r.final_equity is not None else None,
+                "total_pnl": float(r.total_pnl) if r.total_pnl is not None else None,
                 "total_trades": r.total_trades,
                 "winning_trades": r.winning_trades,
-                "max_drawdown_pct": float(r.max_drawdown_pct) if r.max_drawdown_pct else None,
-                "sharpe_ratio": float(r.sharpe_ratio) if r.sharpe_ratio else None,
+                "max_drawdown_pct": float(r.max_drawdown_pct) if r.max_drawdown_pct is not None else None,
+                "sharpe_ratio": float(r.sharpe_ratio) if r.sharpe_ratio is not None else None,
                 "status": r.status,
                 "error_message": r.error_message,
                 "started_at": r.started_at.isoformat(),
@@ -783,12 +775,12 @@ async def get_backtest(run_id: int):
             "start_date": run.start_date.isoformat(),
             "end_date": run.end_date.isoformat(),
             "initial_balance": float(run.initial_balance),
-            "final_equity": float(run.final_equity) if run.final_equity else None,
-            "total_pnl": float(run.total_pnl) if run.total_pnl else None,
+            "final_equity": float(run.final_equity) if run.final_equity is not None else None,
+            "total_pnl": float(run.total_pnl) if run.total_pnl is not None else None,
             "total_trades": run.total_trades,
             "winning_trades": run.winning_trades,
-            "max_drawdown_pct": float(run.max_drawdown_pct) if run.max_drawdown_pct else None,
-            "sharpe_ratio": float(run.sharpe_ratio) if run.sharpe_ratio else None,
+            "max_drawdown_pct": float(run.max_drawdown_pct) if run.max_drawdown_pct is not None else None,
+            "sharpe_ratio": float(run.sharpe_ratio) if run.sharpe_ratio is not None else None,
             "equity_curve": run.equity_curve,
             "status": run.status,
             "error_message": run.error_message,
