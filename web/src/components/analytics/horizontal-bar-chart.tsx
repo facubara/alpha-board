@@ -2,7 +2,8 @@
 
 /**
  * HorizontalBarChart — Reusable horizontal bar chart.
- * Positive bars green (right), negative red (left). Pure SVG.
+ * Positive bars green (right), negative red (left).
+ * HTML/CSS layout for proper mobile text scaling.
  */
 
 interface BarItem {
@@ -32,15 +33,7 @@ export function HorizontalBarChart({
     );
   }
 
-  const rowHeight = 28;
-  const labelWidth = 120;
-  const valueWidth = 80;
-  const barAreaWidth = 400;
-  const width = labelWidth + barAreaWidth + valueWidth;
-  const height = items.length * rowHeight + 8;
-
   const maxAbs = Math.max(...items.map((d) => Math.abs(d.value)), 0.01);
-  const midX = labelWidth + barAreaWidth / 2;
 
   // Build aria summary
   const summaryParts = items.map(
@@ -51,87 +44,77 @@ export function HorizontalBarChart({
   return (
     <div
       className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+      role="img"
+      aria-label={ariaLabel}
     >
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="w-full"
-        role="img"
-        aria-label={ariaLabel}
-      >
-        <title>{ariaLabel}</title>
-
-        {/* Center line */}
-        <line
-          x1={midX}
-          y1={0}
-          x2={midX}
-          y2={height}
-          stroke="var(--border-subtle)"
-          strokeWidth="1"
-          strokeDasharray="2 2"
-        />
-
-        {items.map((item, i) => {
-          const y = i * rowHeight + 4;
-          const barWidth = (Math.abs(item.value) / maxAbs) * (barAreaWidth / 2 - 4);
+      <div className="divide-y divide-[var(--border-subtle)]">
+        {items.map((item) => {
+          const pct = (Math.abs(item.value) / maxAbs) * 100;
           const isPositive = item.value >= 0;
-          const barX = isPositive ? midX : midX - barWidth;
-          const fillColor = isPositive
-            ? "var(--bullish-strong)"
-            : "var(--bearish-strong)";
 
           return (
-            <g key={item.label}>
-              {/* Label */}
-              <text
-                x={labelWidth - 8}
-                y={y + rowHeight / 2 + 1}
-                textAnchor="end"
-                fill="var(--text-secondary)"
-                fontSize="11"
-                fontFamily="var(--font-geist-sans)"
-              >
-                {item.label}
-              </text>
-              {item.sublabel && (
-                <text
-                  x={labelWidth - 8}
-                  y={y + rowHeight / 2 + 11}
-                  textAnchor="end"
-                  fill="var(--text-muted)"
-                  fontSize="8"
-                  fontFamily="var(--font-mono)"
+            <div
+              key={item.label}
+              className="flex items-center gap-2 px-3 py-2"
+            >
+              {/* Label column */}
+              <div className="w-24 shrink-0 text-right sm:w-28">
+                <p className="truncate text-xs text-secondary">{item.label}</p>
+                {item.sublabel && (
+                  <p className="truncate font-mono text-[10px] text-muted">
+                    {item.sublabel}
+                  </p>
+                )}
+              </div>
+
+              {/* Bar area — two halves */}
+              <div className="flex min-w-0 flex-1 items-center">
+                {/* Negative half */}
+                <div className="flex h-4 flex-1 justify-end">
+                  {!isPositive && (
+                    <div
+                      className="rounded-l-sm bg-[var(--bearish-strong)]"
+                      style={{
+                        width: `${pct}%`,
+                        opacity: 0.7,
+                      }}
+                    />
+                  )}
+                </div>
+
+                {/* Center divider */}
+                <div className="mx-px h-5 w-px shrink-0 bg-[var(--border-subtle)]" />
+
+                {/* Positive half */}
+                <div className="flex h-4 flex-1">
+                  {isPositive && (
+                    <div
+                      className="rounded-r-sm bg-[var(--bullish-strong)]"
+                      style={{
+                        width: `${pct}%`,
+                        opacity: 0.7,
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Value column */}
+              <div className="w-16 shrink-0 text-right sm:w-20">
+                <span
+                  className={`font-mono text-xs ${
+                    isPositive
+                      ? "text-[var(--bullish-strong)]"
+                      : "text-[var(--bearish-strong)]"
+                  }`}
                 >
-                  {item.sublabel}
-                </text>
-              )}
-
-              {/* Bar */}
-              <rect
-                x={barX}
-                y={y + 4}
-                width={Math.max(barWidth, 1)}
-                height={rowHeight - 10}
-                rx="2"
-                fill={fillColor}
-                opacity="0.7"
-              />
-
-              {/* Value */}
-              <text
-                x={labelWidth + barAreaWidth + 4}
-                y={y + rowHeight / 2 + 1}
-                textAnchor="start"
-                fill={isPositive ? "var(--bullish-strong)" : "var(--bearish-strong)"}
-                fontSize="11"
-                fontFamily="var(--font-mono)"
-              >
-                {formatValue(item.value)}
-              </text>
-            </g>
+                  {formatValue(item.value)}
+                </span>
+              </div>
+            </div>
           );
         })}
-      </svg>
+      </div>
     </div>
   );
 }

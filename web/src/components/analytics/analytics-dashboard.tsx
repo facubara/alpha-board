@@ -70,10 +70,10 @@ function FilterButtons<T extends string>({
       <span className="mr-1 text-xs text-muted">{label}:</span>
       <button
         onClick={() => onSelect("all")}
-        className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
+        className={`rounded px-2.5 py-1 text-xs font-medium transition-colors ${
           selected === "all"
-            ? "bg-[var(--text-primary)] text-[var(--bg-base)]"
-            : "bg-[var(--bg-muted)] text-secondary hover:text-primary"
+            ? "bg-[var(--text-primary)] text-[var(--bg-base)] ring-1 ring-[var(--text-primary)] ring-offset-1 ring-offset-[var(--bg-base)]"
+            : "bg-[var(--bg-muted)] text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
         }`}
       >
         All
@@ -82,10 +82,10 @@ function FilterButtons<T extends string>({
         <button
           key={opt}
           onClick={() => onSelect(opt)}
-          className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${
+          className={`rounded px-2.5 py-1 text-xs font-medium transition-colors ${
             selected === opt
-              ? "bg-[var(--text-primary)] text-[var(--bg-base)]"
-              : "bg-[var(--bg-muted)] text-secondary hover:text-primary"
+              ? "bg-[var(--text-primary)] text-[var(--bg-base)] ring-1 ring-[var(--text-primary)] ring-offset-1 ring-offset-[var(--bg-base)]"
+              : "bg-[var(--bg-muted)] text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
           }`}
         >
           {labels[opt]}

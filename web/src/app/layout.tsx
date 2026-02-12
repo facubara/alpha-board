@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { HeaderAuth } from "@/components/auth/header-auth";
+import { NavLinks } from "@/components/nav-links";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -50,33 +51,10 @@ export default function RootLayout({
               </Link>
 
               {/* Navigation */}
-              <nav className="flex items-center gap-1">
-                <Link
-                  href="/"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
-                >
-                  Rankings
-                </Link>
-                <Link
-                  href="/agents"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
-                >
-                  Agents
-                </Link>
-                <Link
-                  href="/backtest"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
-                >
-                  Backtest
-                </Link>
-                <Link
-                  href="/analytics"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
-                >
-                  Analytics
-                </Link>
+              <div className="flex items-center gap-1">
+                <NavLinks />
                 <HeaderAuth />
-              </nav>
+              </div>
             </div>
           </header>
 
