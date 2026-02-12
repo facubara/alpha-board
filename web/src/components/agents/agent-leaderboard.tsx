@@ -15,6 +15,7 @@ import { useState, useMemo, useCallback } from "react";
 import { ChevronUp, ChevronDown, PauseCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
+import { useSSE } from "@/hooks/use-sse";
 import {
   Table,
   TableBody,
@@ -52,7 +53,29 @@ interface AgentLeaderboardProps {
   className?: string;
 }
 
+interface AgentSSEEvent {
+  type: string;
+  agents?: AgentLeaderboardRow[];
+}
+
+const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
+
 export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
+  // Live state: initialized from server-fetched data, updated via SSE
+  const [agentsData, setAgentsData] = useState<AgentLeaderboardRow[]>(agents);
+
+  const handleSSEMessage = useCallback((event: AgentSSEEvent) => {
+    if (event.type === "agent_update" && event.agents) {
+      setAgentsData(event.agents);
+    }
+  }, []);
+
+  useSSE<AgentSSEEvent>({
+    url: `${WORKER_URL}/sse/agents`,
+    enabled: !!WORKER_URL,
+    onMessage: handleSSEMessage,
+  });
+
   const [timeframeFilter, setTimeframeFilter] = useState<
     AgentTimeframe | "all"
   >("all");
@@ -90,7 +113,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   }, [pausingLlm, requireAuth]);
 
   const filtered = useMemo(() => {
-    let result = [...agents];
+    let result = [...agentsData];
 
     if (timeframeFilter !== "all") {
       result = result.filter((a) => a.timeframe === timeframeFilter);
@@ -128,7 +151,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     });
 
     return result;
-  }, [agents, timeframeFilter, archetypeFilter, engineFilter, sortField, sortDirection]);
+  }, [agentsData, timeframeFilter, archetypeFilter, engineFilter, sortField, sortDirection]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -241,7 +264,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
       {/* Results count */}
       {(timeframeFilter !== "all" || archetypeFilter !== "all" || engineFilter !== "all") && (
         <p className="text-xs text-secondary">
-          {filtered.length} of {agents.length} agents
+          {filtered.length} of {agentsData.length} agents
         </p>
       )}
 

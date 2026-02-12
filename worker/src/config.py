@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     telegram_bot_token: str = ""
     telegram_chat_id: str = ""
 
+    # CORS
+    cors_origins: str = "https://alpha-board.vercel.app,http://localhost:3000"
+
     # Feature flags
     agents_enabled: bool = True
     evolution_enabled: bool = True

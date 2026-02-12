@@ -8,25 +8,31 @@ Provides:
 - Daily retention cleanup for old partitions
 """
 
+import json
 import logging
 import time
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 
 import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 from fastapi import FastAPI, HTTPException
-from sqlalchemy import text
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import select, func, text
 
 from src.agents.context import ContextBuilder
 from src.agents.orchestrator import AgentOrchestrator
 from src.agents.rule_executor import RuleBasedExecutor
 from src.config import settings
 from src.db import async_session, engine
+from src.events import event_bus
+from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, Snapshot, Symbol
 from src.notifications.digest import send_daily_digest_job
 from src.notifications.routes import router as notifications_router
 from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner
+from src.sse import router as sse_router
 
 logging.basicConfig(
     level=settings.log_level,
@@ -35,7 +41,17 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Alpha Worker", version="0.1.0")
+
+# CORS for SSE connections from the frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
+
 app.include_router(notifications_router)
+app.include_router(sse_router)
 scheduler = AsyncIOScheduler()
 
 # Pipeline runner instance
@@ -45,6 +61,158 @@ runner = PipelineRunner(min_volume_usd=settings.min_volume_usd)
 last_runs: dict[str, datetime] = {}
 last_results: dict[str, dict] = {}
 start_time = time.monotonic()
+
+
+class _DecimalEncoder(json.JSONEncoder):
+    """JSON encoder that handles Decimal values."""
+
+    def default(self, o):
+        if isinstance(o, Decimal):
+            return float(o)
+        return super().default(o)
+
+
+async def _broadcast_ranking_update(timeframe: str) -> None:
+    """Query latest rankings for a timeframe and publish to SSE subscribers."""
+    try:
+        async with async_session() as session:
+            # Same query logic as web/src/lib/queries/rankings.ts getTimeframeRankings
+            subquery = (
+                select(func.max(Snapshot.computed_at))
+                .where(Snapshot.timeframe == timeframe)
+                .scalar_subquery()
+            )
+            result = await session.execute(
+                select(Snapshot, Symbol)
+                .join(Symbol, Symbol.id == Snapshot.symbol_id)
+                .where(
+                    Snapshot.timeframe == timeframe,
+                    Snapshot.computed_at == subquery,
+                )
+                .order_by(Snapshot.rank.asc())
+            )
+            rows = result.all()
+
+            if not rows:
+                return
+
+            computed_at = rows[0][0].computed_at.isoformat()
+            rankings = []
+            for snap, sym in rows:
+                # Build indicator_signals in the same camelCase format as the frontend
+                indicator_signals = []
+                if snap.indicator_signals:
+                    for name, data in snap.indicator_signals.items():
+                        indicator_signals.append({
+                            "name": name,
+                            "displayName": name.replace("_", " ").title(),
+                            "signal": float(data.get("signal", 0)),
+                            "label": data.get("label", "neutral"),
+                            "description": str(data.get("label", "neutral")),
+                            "rawValues": data.get("raw", {}),
+                        })
+
+                rankings.append({
+                    "id": snap.id,
+                    "symbol": sym.symbol,
+                    "symbolId": sym.id,
+                    "baseAsset": sym.base_asset,
+                    "quoteAsset": sym.quote_asset,
+                    "timeframe": snap.timeframe,
+                    "bullishScore": float(snap.bullish_score),
+                    "confidence": int(snap.confidence),
+                    "rank": int(snap.rank),
+                    "highlights": snap.highlights or [],
+                    "indicatorSignals": indicator_signals,
+                    "computedAt": snap.computed_at.isoformat(),
+                    "runId": str(snap.run_id),
+                })
+
+            await event_bus.publish("rankings", {
+                "type": "ranking_update",
+                "timeframe": timeframe,
+                "rankings": rankings,
+                "computedAt": computed_at,
+            })
+            logger.info(f"Broadcast ranking update for {timeframe}: {len(rankings)} symbols")
+    except Exception as e:
+        logger.exception(f"Failed to broadcast ranking update for {timeframe}: {e}")
+
+
+async def _broadcast_agent_update() -> None:
+    """Query agent leaderboard and publish to SSE subscribers."""
+    try:
+        async with async_session() as session:
+            # Same query logic as web/src/lib/queries/agents.ts getAgentLeaderboard
+            result = await session.execute(
+                select(Agent, AgentPortfolio)
+                .join(AgentPortfolio, AgentPortfolio.agent_id == Agent.id)
+                .order_by((AgentPortfolio.total_equity - Agent.initial_balance).desc())
+            )
+            rows = result.all()
+
+            agents = []
+            for agent, portfolio in rows:
+                # Count trades and wins
+                trade_result = await session.execute(
+                    select(
+                        func.count().label("total"),
+                        func.count().filter(AgentTrade.pnl > 0).label("wins"),
+                    ).where(AgentTrade.agent_id == agent.id)
+                )
+                trade_row = trade_result.first()
+                trade_count = trade_row[0] if trade_row else 0
+                wins = trade_row[1] if trade_row else 0
+
+                # Token cost
+                cost_result = await session.execute(
+                    select(func.coalesce(func.sum(AgentTokenUsage.estimated_cost_usd), 0))
+                    .where(AgentTokenUsage.agent_id == agent.id)
+                )
+                total_token_cost = float(cost_result.scalar() or 0)
+
+                # Open positions
+                pos_result = await session.execute(
+                    select(func.count())
+                    .select_from(AgentPosition)
+                    .where(AgentPosition.agent_id == agent.id)
+                )
+                open_positions = pos_result.scalar() or 0
+
+                total_pnl = float(portfolio.total_equity - agent.initial_balance)
+
+                agents.append({
+                    "id": agent.id,
+                    "name": agent.name,
+                    "displayName": agent.display_name,
+                    "strategyArchetype": agent.strategy_archetype,
+                    "timeframe": agent.timeframe,
+                    "engine": agent.engine or "llm",
+                    "scanModel": agent.scan_model,
+                    "tradeModel": agent.trade_model,
+                    "evolutionModel": agent.evolution_model,
+                    "status": agent.status,
+                    "initialBalance": float(agent.initial_balance),
+                    "cashBalance": float(portfolio.cash_balance),
+                    "totalEquity": float(portfolio.total_equity),
+                    "totalRealizedPnl": float(portfolio.total_realized_pnl),
+                    "totalFeesPaid": float(portfolio.total_fees_paid),
+                    "totalPnl": total_pnl,
+                    "tradeCount": trade_count,
+                    "wins": wins,
+                    "winRate": wins / trade_count if trade_count > 0 else 0,
+                    "totalTokenCost": total_token_cost,
+                    "openPositions": open_positions,
+                    "lastCycleAt": agent.last_cycle_at.isoformat() if agent.last_cycle_at else None,
+                })
+
+            await event_bus.publish("agents", {
+                "type": "agent_update",
+                "agents": agents,
+            })
+            logger.info(f"Broadcast agent update: {len(agents)} agents")
+    except Exception as e:
+        logger.exception(f"Failed to broadcast agent update: {e}")
 
 
 async def run_timeframe_pipeline(timeframe: str):
@@ -74,6 +242,10 @@ async def run_timeframe_pipeline(timeframe: str):
                             await orchestrator.run_cycle(timeframe, current_prices, candle_data)
                     except Exception as e:
                         logger.exception(f"Agent cycle failed for {timeframe}: {e}")
+
+            # Broadcast updates to SSE subscribers
+            await _broadcast_ranking_update(timeframe)
+            await _broadcast_agent_update()
 
         elif result["status"] == "skipped":
             logger.info(f"Skipped {timeframe}: {result.get('reason')}")

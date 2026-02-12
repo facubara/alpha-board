@@ -12,8 +12,9 @@
  * - Sort by rank, score, confidence, symbol
  */
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Search, ChevronUp, ChevronDown } from "lucide-react";
+import { useSSE } from "@/hooks/use-sse";
 import { cn } from "@/lib/utils";
 import {
   Table,
@@ -23,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import type { AllTimeframeRankings, RankingSnapshot, Timeframe } from "@/lib/types";
+import type { AllTimeframeRankings, RankingSnapshot, RankingsData, Timeframe } from "@/lib/types";
 import { useTimeframe } from "@/hooks/use-timeframe";
 import { TimeframeSelector } from "./timeframe-selector";
 import { RankingRow } from "./ranking-row";
@@ -37,13 +38,44 @@ interface RankingsTableProps {
   className?: string;
 }
 
+interface RankingSSEEvent {
+  type: string;
+  timeframe?: Timeframe;
+  rankings?: RankingSnapshot[];
+  computedAt?: string;
+}
+
+const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
+
 export function RankingsTable({ data, className }: RankingsTableProps) {
   const { timeframe, setTimeframe } = useTimeframe("1h");
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState<SortField>("rank");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
-  const currentData = data[timeframe];
+  // Live state: initialized from server-fetched data, updated via SSE
+  const [rankingsData, setRankingsData] = useState<AllTimeframeRankings>(data);
+
+  const handleSSEMessage = useCallback((event: RankingSSEEvent) => {
+    if (event.type === "ranking_update" && event.timeframe && event.rankings) {
+      setRankingsData((prev) => ({
+        ...prev,
+        [event.timeframe!]: {
+          timeframe: event.timeframe!,
+          snapshots: event.rankings!,
+          computedAt: event.computedAt ?? null,
+        } satisfies RankingsData,
+      }));
+    }
+  }, []);
+
+  useSSE<RankingSSEEvent>({
+    url: `${WORKER_URL}/sse/rankings`,
+    enabled: !!WORKER_URL,
+    onMessage: handleSSEMessage,
+  });
+
+  const currentData = rankingsData[timeframe];
   const snapshots = currentData?.snapshots ?? [];
   const computedAt = currentData?.computedAt;
 
