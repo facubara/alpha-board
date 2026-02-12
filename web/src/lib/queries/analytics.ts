@@ -232,13 +232,13 @@ export async function getSymbolStats(): Promise<SymbolStats[]> {
 export async function getDailyTokenCost(): Promise<DailyTokenCost[]> {
   const rows = await sql`
     SELECT
-      DATE(created_at) as day,
+      date as day,
       SUM(estimated_cost_usd) as daily_cost,
       SUM(input_tokens) as input_tokens,
       SUM(output_tokens) as output_tokens
     FROM agent_token_usage
-    WHERE created_at >= NOW() - INTERVAL '90 days'
-    GROUP BY DATE(created_at)
+    WHERE date >= NOW() - INTERVAL '90 days'
+    GROUP BY date
     ORDER BY day ASC
   `;
 
@@ -307,15 +307,15 @@ export async function getAgentDrawdowns(): Promise<AgentDrawdown[]> {
       a.display_name,
       a.strategy_archetype,
       a.timeframe,
-      a.initial_balance as peak_equity,
+      GREATEST(p.peak_equity, a.initial_balance) as peak_equity,
       p.total_equity,
-      CASE WHEN a.initial_balance > 0
-        THEN ((p.total_equity - a.initial_balance) / a.initial_balance) * 100
+      CASE WHEN GREATEST(p.peak_equity, a.initial_balance) > 0
+        THEN ((p.total_equity - GREATEST(p.peak_equity, a.initial_balance)) / GREATEST(p.peak_equity, a.initial_balance)) * 100
         ELSE 0
       END as drawdown_pct
     FROM agents a
     JOIN agent_portfolios p ON a.id = p.agent_id
-    WHERE p.total_equity < a.initial_balance
+    WHERE p.total_equity < GREATEST(p.peak_equity, a.initial_balance)
     ORDER BY drawdown_pct ASC
   `;
 
