@@ -34,7 +34,7 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 
 ---
 
-## 3. Backtesting Framework — `PENDING`
+## 3. Backtesting Framework — `COMPLETED`
 
 **What:** Replay historical Binance candles through the existing pipeline and agent logic to evaluate strategy performance before deploying changes.
 
