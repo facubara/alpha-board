@@ -672,9 +672,19 @@ async def on_startup():
         replace_existing=True,
     )
 
+    # Periodic agent leaderboard broadcast for live PnL updates
+    scheduler.add_job(
+        _broadcast_agent_update,
+        trigger=IntervalTrigger(seconds=settings.sse_agent_broadcast_seconds),
+        id="sse_agent_broadcast",
+        name=f"SSE agent broadcast (every {settings.sse_agent_broadcast_seconds}s)",
+        replace_existing=True,
+        max_instances=1,
+    )
+
     scheduler.start()
     logger.info(
-        f"Scheduler started with {len(TIMEFRAME_CONFIG)} independent timeframe jobs + daily cleanup + daily digest"
+        f"Scheduler started with {len(TIMEFRAME_CONFIG)} independent timeframe jobs + daily cleanup + daily digest + SSE broadcast"
     )
 
 

@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     # CORS
     cors_origins: str = "https://alpha-board.com,https://www.alpha-board.com,http://localhost:3000"
 
+    # SSE
+    sse_agent_broadcast_seconds: int = 30
+
     # Feature flags
     agents_enabled: bool = True
     evolution_enabled: bool = True
