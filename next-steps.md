@@ -20,7 +20,7 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 
 ---
 
-## 2. Cross-Timeframe Agents — `PENDING`
+## 2. Cross-Timeframe Agents — `COMPLETED`
 
 **What:** Expand the 4 existing cross-timeframe agents (Confluence, Divergence, Cascade, Regime Detector) with richer multi-timeframe signal fusion.
 
