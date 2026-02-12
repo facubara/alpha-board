@@ -63,6 +63,12 @@ export default function RootLayout({
                 >
                   Agents
                 </Link>
+                <Link
+                  href="/backtest"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
+                >
+                  Backtest
+                </Link>
                 <HeaderAuth />
               </nav>
             </div>

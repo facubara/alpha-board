@@ -433,3 +433,68 @@ class NotificationPreference(Base):
     muted_agent_ids: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
     quiet_hours_start: Mapped[int | None] = mapped_column(Integer, nullable=True)
     quiet_hours_end: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+
+# =============================================================================
+# Backtest Tables
+# =============================================================================
+
+
+class BacktestRun(Base):
+    """A single backtest run with summary metrics."""
+
+    __tablename__ = "backtest_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    agent_name: Mapped[str] = mapped_column(String(50), nullable=False)
+    strategy_archetype: Mapped[str] = mapped_column(String(20), nullable=False)
+    timeframe: Mapped[str] = mapped_column(String(10), nullable=False)
+    symbol: Mapped[str] = mapped_column(String(30), nullable=False)
+    start_date: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    end_date: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    initial_balance: Mapped[Decimal] = mapped_column(
+        Numeric(14, 2), nullable=False, server_default="10000.00"
+    )
+    final_equity: Mapped[Decimal | None] = mapped_column(Numeric(14, 2))
+    total_pnl: Mapped[Decimal | None] = mapped_column(Numeric(14, 2))
+    total_trades: Mapped[int] = mapped_column(Integer, server_default="0")
+    winning_trades: Mapped[int] = mapped_column(Integer, server_default="0")
+    max_drawdown_pct: Mapped[Decimal | None] = mapped_column(Numeric(8, 4))
+    sharpe_ratio: Mapped[Decimal | None] = mapped_column(Numeric(8, 4))
+    equity_curve: Mapped[list | None] = mapped_column(JSONB)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, server_default="pending")
+    error_message: Mapped[str | None] = mapped_column(Text)
+    started_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    completed_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
+
+    # Relationships
+    trades: Mapped[list["BacktestTrade"]] = relationship(
+        back_populates="run", cascade="all, delete-orphan"
+    )
+
+
+class BacktestTrade(Base):
+    """Individual trade within a backtest run."""
+
+    __tablename__ = "backtest_trades"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    run_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("backtest_runs.id", ondelete="CASCADE"), nullable=False
+    )
+    symbol: Mapped[str] = mapped_column(String(30), nullable=False)
+    direction: Mapped[str] = mapped_column(String(5), nullable=False)
+    entry_price: Mapped[Decimal] = mapped_column(Numeric(18, 8), nullable=False)
+    exit_price: Mapped[Decimal] = mapped_column(Numeric(18, 8), nullable=False)
+    position_size: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    pnl: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    fees: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    exit_reason: Mapped[str] = mapped_column(String(20), nullable=False)
+    entry_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    exit_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    duration_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    # Relationships
+    run: Mapped["BacktestRun"] = relationship(back_populates="trades")

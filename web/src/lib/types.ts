@@ -282,6 +282,51 @@ export interface AgentTokenUsageSummary {
 // Agent Leaderboard
 // =============================================================================
 
+// =============================================================================
+// Backtest Types
+// =============================================================================
+
+export interface BacktestRun {
+  id: number;
+  agentName: string;
+  strategyArchetype: string;
+  timeframe: string;
+  symbol: string;
+  startDate: string;
+  endDate: string;
+  initialBalance: number;
+  finalEquity: number | null;
+  totalPnl: number | null;
+  totalTrades: number;
+  winningTrades: number;
+  maxDrawdownPct: number | null;
+  sharpeRatio: number | null;
+  equityCurve: { timestamp: string; equity: number }[] | null;
+  status: "pending" | "running" | "completed" | "failed";
+  errorMessage: string | null;
+  startedAt: string;
+  completedAt: string | null;
+}
+
+export interface BacktestTrade {
+  id: number;
+  symbol: string;
+  direction: "long" | "short";
+  entryPrice: number;
+  exitPrice: number;
+  positionSize: number;
+  pnl: number;
+  fees: number;
+  exitReason: string;
+  entryAt: string;
+  exitAt: string;
+  durationMinutes: number;
+}
+
+// =============================================================================
+// Agent Leaderboard
+// =============================================================================
+
 export interface AgentLeaderboardRow {
   id: number;
   name: string;

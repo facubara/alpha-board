@@ -18,8 +18,9 @@ import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
-from fastapi import FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel as PydanticBaseModel
 from sqlalchemy import select, func, text
 
 from src.agents.context import ContextBuilder
@@ -28,7 +29,7 @@ from src.agents.rule_executor import RuleBasedExecutor
 from src.config import settings
 from src.db import async_session, engine
 from src.events import event_bus
-from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, Snapshot, Symbol
+from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, BacktestRun, BacktestTrade, Snapshot, Symbol
 from src.notifications.digest import send_daily_digest_job
 from src.notifications.routes import router as notifications_router
 from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner, compute_and_persist_regime
@@ -46,7 +47,7 @@ app = FastAPI(title="Alpha Worker", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
@@ -616,6 +617,201 @@ async def debug_agents(timeframe: str):
         logger.exception(f"Debug agents failed for {timeframe}: {e}")
 
     return diagnostics
+
+
+# =============================================================================
+# Backtest Endpoints
+# =============================================================================
+
+
+class BacktestRequest(PydanticBaseModel):
+    """Request body for creating a backtest."""
+
+    strategy: str
+    timeframe: str
+    symbol: str
+    start_date: str  # ISO date or datetime string
+    end_date: str
+    initial_balance: float = 10000.0
+
+
+async def _run_backtest(run_id: int, config_dict: dict) -> None:
+    """Background task that executes a backtest."""
+    from src.backtest.engine import BacktestEngine, BacktestConfig
+
+    config = BacktestConfig(**config_dict)
+    engine = BacktestEngine()
+
+    async with async_session() as session:
+        # Load the run row
+        result = await session.execute(
+            select(BacktestRun).where(BacktestRun.id == run_id)
+        )
+        run = result.scalar_one()
+        run.status = "running"
+        await session.commit()
+
+        await engine.run(config, session)
+
+
+@app.post("/backtest")
+async def create_backtest(
+    request: BacktestRequest, background_tasks: BackgroundTasks
+):
+    """Launch a backtest as a background task. Returns run_id immediately."""
+    from src.agents.strategies import STRATEGY_REGISTRY
+
+    if request.strategy not in STRATEGY_REGISTRY:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unknown strategy. Must be one of: {list(STRATEGY_REGISTRY.keys())}",
+        )
+
+    valid_timeframes = ["15m", "30m", "1h", "4h", "1d", "1w"]
+    if request.timeframe not in valid_timeframes:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid timeframe. Must be one of: {valid_timeframes}",
+        )
+
+    try:
+        start_dt = datetime.fromisoformat(request.start_date.replace("Z", "+00:00"))
+        end_dt = datetime.fromisoformat(request.end_date.replace("Z", "+00:00"))
+        if start_dt.tzinfo is None:
+            start_dt = start_dt.replace(tzinfo=timezone.utc)
+        if end_dt.tzinfo is None:
+            end_dt = end_dt.replace(tzinfo=timezone.utc)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Use ISO format.")
+
+    if end_dt <= start_dt:
+        raise HTTPException(status_code=400, detail="end_date must be after start_date")
+
+    # Create pending run row
+    async with async_session() as session:
+        run = BacktestRun(
+            agent_name=f"bt-{request.strategy}",
+            strategy_archetype=request.strategy,
+            timeframe=request.timeframe,
+            symbol=request.symbol.upper(),
+            start_date=start_dt,
+            end_date=end_dt,
+            initial_balance=Decimal(str(request.initial_balance)),
+            status="pending",
+        )
+        session.add(run)
+        await session.commit()
+        await session.refresh(run)
+        run_id = run.id
+
+    config_dict = {
+        "strategy": request.strategy,
+        "timeframe": request.timeframe,
+        "symbol": request.symbol.upper(),
+        "start_date": start_dt,
+        "end_date": end_dt,
+        "initial_balance": request.initial_balance,
+    }
+
+    background_tasks.add_task(_run_backtest, run_id, config_dict)
+
+    return {"run_id": run_id, "status": "pending"}
+
+
+@app.get("/backtest")
+async def list_backtests():
+    """List all backtest runs, most recent first."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(BacktestRun)
+            .order_by(BacktestRun.started_at.desc())
+            .limit(50)
+        )
+        runs = result.scalars().all()
+
+        return [
+            {
+                "id": r.id,
+                "agent_name": r.agent_name,
+                "strategy_archetype": r.strategy_archetype,
+                "timeframe": r.timeframe,
+                "symbol": r.symbol,
+                "start_date": r.start_date.isoformat(),
+                "end_date": r.end_date.isoformat(),
+                "initial_balance": float(r.initial_balance),
+                "final_equity": float(r.final_equity) if r.final_equity else None,
+                "total_pnl": float(r.total_pnl) if r.total_pnl else None,
+                "total_trades": r.total_trades,
+                "winning_trades": r.winning_trades,
+                "max_drawdown_pct": float(r.max_drawdown_pct) if r.max_drawdown_pct else None,
+                "sharpe_ratio": float(r.sharpe_ratio) if r.sharpe_ratio else None,
+                "status": r.status,
+                "error_message": r.error_message,
+                "started_at": r.started_at.isoformat(),
+                "completed_at": r.completed_at.isoformat() if r.completed_at else None,
+            }
+            for r in runs
+        ]
+
+
+@app.get("/backtest/{run_id}")
+async def get_backtest(run_id: int):
+    """Get full backtest result including trades and equity curve."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(BacktestRun).where(BacktestRun.id == run_id)
+        )
+        run = result.scalar_one_or_none()
+
+        if not run:
+            raise HTTPException(status_code=404, detail="Backtest run not found")
+
+        # Fetch trades
+        trades_result = await session.execute(
+            select(BacktestTrade)
+            .where(BacktestTrade.run_id == run_id)
+            .order_by(BacktestTrade.entry_at)
+        )
+        trades = trades_result.scalars().all()
+
+        return {
+            "id": run.id,
+            "agent_name": run.agent_name,
+            "strategy_archetype": run.strategy_archetype,
+            "timeframe": run.timeframe,
+            "symbol": run.symbol,
+            "start_date": run.start_date.isoformat(),
+            "end_date": run.end_date.isoformat(),
+            "initial_balance": float(run.initial_balance),
+            "final_equity": float(run.final_equity) if run.final_equity else None,
+            "total_pnl": float(run.total_pnl) if run.total_pnl else None,
+            "total_trades": run.total_trades,
+            "winning_trades": run.winning_trades,
+            "max_drawdown_pct": float(run.max_drawdown_pct) if run.max_drawdown_pct else None,
+            "sharpe_ratio": float(run.sharpe_ratio) if run.sharpe_ratio else None,
+            "equity_curve": run.equity_curve,
+            "status": run.status,
+            "error_message": run.error_message,
+            "started_at": run.started_at.isoformat(),
+            "completed_at": run.completed_at.isoformat() if run.completed_at else None,
+            "trades": [
+                {
+                    "id": t.id,
+                    "symbol": t.symbol,
+                    "direction": t.direction,
+                    "entry_price": float(t.entry_price),
+                    "exit_price": float(t.exit_price),
+                    "position_size": float(t.position_size),
+                    "pnl": float(t.pnl),
+                    "fees": float(t.fees),
+                    "exit_reason": t.exit_reason,
+                    "entry_at": t.entry_at.isoformat(),
+                    "exit_at": t.exit_at.isoformat(),
+                    "duration_minutes": t.duration_minutes,
+                }
+                for t in trades
+            ],
+        }
 
 
 async def retention_cleanup():
