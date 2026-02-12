@@ -51,6 +51,7 @@ class BinanceClient:
     # API endpoints
     EXCHANGE_INFO_ENDPOINT = "/api/v3/exchangeInfo"
     TICKER_24H_ENDPOINT = "/api/v3/ticker/24hr"
+    TICKER_PRICE_ENDPOINT = "/api/v3/ticker/price"
     KLINES_ENDPOINT = "/api/v3/klines"
 
     def __init__(self, base_url: str | None = None, timeout: float = 30.0):
@@ -215,6 +216,17 @@ class BinanceClient:
             f"Found {len(symbols)} active USDT pairs with volume >= ${min_volume_usd:,.0f}"
         )
         return symbols
+
+    async def get_ticker_prices(self) -> dict[str, Decimal]:
+        """Fetch current prices for all symbols.
+
+        Uses the lightweight /api/v3/ticker/price endpoint (weight=2).
+
+        Returns:
+            Dict mapping symbol name to current price.
+        """
+        data = await self._request("GET", self.TICKER_PRICE_ENDPOINT)
+        return {item["symbol"]: Decimal(item["price"]) for item in data}
 
     async def get_klines(
         self, symbol: str, interval: str, limit: int = 200

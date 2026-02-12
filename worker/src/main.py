@@ -139,17 +139,42 @@ async def _broadcast_ranking_update(timeframe: str) -> None:
         logger.exception(f"Failed to broadcast ranking update for {timeframe}: {e}")
 
 
-async def _broadcast_agent_update() -> None:
-    """Query agent leaderboard and publish to SSE subscribers."""
+async def _fetch_live_prices() -> dict[str, Decimal]:
+    """Fetch current prices from Binance. Cached briefly to avoid redundant calls."""
     try:
+        from src.exchange.client import BinanceClient
+        client = BinanceClient()
+        return await client.get_ticker_prices()
+    except Exception as e:
+        logger.warning(f"Failed to fetch live prices from Binance: {e}")
+        return {}
+
+
+async def _broadcast_agent_update() -> None:
+    """Query agent leaderboard with live PnL and publish to SSE subscribers."""
+    try:
+        # Fetch live prices from Binance for unrealized PnL calculation
+        live_prices = await _fetch_live_prices()
+
         async with async_session() as session:
-            # Same query logic as web/src/lib/queries/agents.ts getAgentLeaderboard
+            # Get all agents with portfolios
             result = await session.execute(
                 select(Agent, AgentPortfolio)
                 .join(AgentPortfolio, AgentPortfolio.agent_id == Agent.id)
-                .order_by((AgentPortfolio.total_equity - Agent.initial_balance).desc())
             )
             rows = result.all()
+
+            # Get all open positions with their symbols in one query
+            pos_result = await session.execute(
+                select(AgentPosition, Symbol)
+                .join(Symbol, Symbol.id == AgentPosition.symbol_id)
+            )
+            all_positions = pos_result.all()
+
+            # Group positions by agent_id
+            positions_by_agent: dict[int, list[tuple]] = {}
+            for pos, sym in all_positions:
+                positions_by_agent.setdefault(pos.agent_id, []).append((pos, sym))
 
             agents = []
             for agent, portfolio in rows:
@@ -171,15 +196,24 @@ async def _broadcast_agent_update() -> None:
                 )
                 total_token_cost = float(cost_result.scalar() or 0)
 
-                # Open positions
-                pos_result = await session.execute(
-                    select(func.count())
-                    .select_from(AgentPosition)
-                    .where(AgentPosition.agent_id == agent.id)
-                )
-                open_positions = pos_result.scalar() or 0
+                # Calculate live unrealized PnL from open positions + current prices
+                agent_positions = positions_by_agent.get(agent.id, [])
+                live_unrealized_pnl = Decimal("0")
+                for pos, sym in agent_positions:
+                    current_price = live_prices.get(sym.symbol)
+                    if current_price and pos.entry_price > 0:
+                        if pos.direction == "long":
+                            pnl = pos.position_size * (current_price - pos.entry_price) / pos.entry_price
+                        else:
+                            pnl = pos.position_size * (pos.entry_price - current_price) / pos.entry_price
+                        live_unrealized_pnl += pnl
 
-                total_pnl = float(portfolio.total_equity - agent.initial_balance)
+                # Live equity = cash + sum of (position_size + unrealized_pnl)
+                positions_value = sum(
+                    float(pos.position_size) for pos, _ in agent_positions
+                )
+                live_equity = float(portfolio.cash_balance) + positions_value + float(live_unrealized_pnl)
+                live_pnl = live_equity - float(agent.initial_balance)
 
                 agents.append({
                     "id": agent.id,
@@ -194,23 +228,26 @@ async def _broadcast_agent_update() -> None:
                     "status": agent.status,
                     "initialBalance": float(agent.initial_balance),
                     "cashBalance": float(portfolio.cash_balance),
-                    "totalEquity": float(portfolio.total_equity),
+                    "totalEquity": round(live_equity, 2),
                     "totalRealizedPnl": float(portfolio.total_realized_pnl),
                     "totalFeesPaid": float(portfolio.total_fees_paid),
-                    "totalPnl": total_pnl,
+                    "totalPnl": round(live_pnl, 2),
                     "tradeCount": trade_count,
                     "wins": wins,
                     "winRate": wins / trade_count if trade_count > 0 else 0,
                     "totalTokenCost": total_token_cost,
-                    "openPositions": open_positions,
+                    "openPositions": len(agent_positions),
                     "lastCycleAt": agent.last_cycle_at.isoformat() if agent.last_cycle_at else None,
                 })
+
+            # Sort by live PnL descending (best performers first)
+            agents.sort(key=lambda a: a["totalPnl"], reverse=True)
 
             await event_bus.publish("agents", {
                 "type": "agent_update",
                 "agents": agents,
             })
-            logger.info(f"Broadcast agent update: {len(agents)} agents")
+            logger.debug(f"Broadcast agent update: {len(agents)} agents")
     except Exception as e:
         logger.exception(f"Failed to broadcast agent update: {e}")
 
