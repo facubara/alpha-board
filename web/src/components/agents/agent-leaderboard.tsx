@@ -327,7 +327,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
             value={symbolSearch}
             onChange={(e) => setSymbolSearch(e.target.value)}
             placeholder="Search by symbol..."
-            className="h-9 w-48 rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] pl-8 pr-8 font-mono text-sm text-primary placeholder:text-muted focus:border-[var(--border-strong)] focus:outline-none"
+            className="h-9 w-56 rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] pl-8 pr-8 font-mono text-sm text-primary placeholder:text-muted focus:border-[var(--border-strong)] focus:outline-none"
           />
           {symbolSearch && (
             <button

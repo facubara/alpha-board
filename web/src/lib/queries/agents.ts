@@ -503,6 +503,7 @@ export async function getComparisonData(
 export async function getSymbolAgentActivity(
   symbol: string
 ): Promise<SymbolAgentActivity> {
+  const pattern = `${symbol}%`;
   const [positionRows, tradeRows] = await Promise.all([
     sql`
       SELECT
@@ -518,7 +519,7 @@ export async function getSymbolAgentActivity(
       FROM agent_positions pos
       JOIN symbols sym ON sym.id = pos.symbol_id
       JOIN agents a ON a.id = pos.agent_id
-      WHERE sym.symbol = ${symbol}
+      WHERE sym.symbol LIKE ${pattern}
       ORDER BY pos.opened_at DESC
     `,
     sql`
@@ -536,7 +537,7 @@ export async function getSymbolAgentActivity(
       FROM agent_trades t
       JOIN symbols sym ON sym.id = t.symbol_id
       JOIN agents a ON a.id = t.agent_id
-      WHERE sym.symbol = ${symbol}
+      WHERE sym.symbol LIKE ${pattern}
       ORDER BY t.closed_at DESC
       LIMIT 50
     `,

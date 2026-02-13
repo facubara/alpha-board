@@ -138,22 +138,22 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
                 <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
                   Open Positions ({positions.length})
                 </h3>
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   {positions.map((pos, i) => (
                     <div
                       key={`${pos.agentId}-${i}`}
-                      className="grid grid-cols-[1fr] gap-1 text-xs sm:grid-cols-[1fr_60px_80px_70px_80px] sm:items-center sm:gap-3"
+                      className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs"
                     >
                       <Link
                         href={`/agents/${pos.agentId}`}
-                        className="truncate font-medium text-primary hover:underline"
+                        className="min-w-[140px] truncate font-medium text-primary hover:underline"
                       >
                         {pos.agentDisplayName}
                       </Link>
                       <Badge
                         variant="secondary"
                         className={cn(
-                          "w-fit text-[10px] uppercase",
+                          "text-[10px] uppercase",
                           pos.direction === "long"
                             ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
                             : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"
@@ -187,22 +187,22 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
                 <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
                   Recent Trades ({trades.length})
                 </h3>
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   {trades.map((trade, i) => (
                     <div
                       key={`${trade.agentId}-${i}`}
-                      className="grid grid-cols-[1fr] gap-1 text-xs sm:grid-cols-[1fr_60px_80px_100px] sm:items-center sm:gap-3"
+                      className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs"
                     >
                       <Link
                         href={`/agents/${trade.agentId}`}
-                        className="truncate font-medium text-primary hover:underline"
+                        className="min-w-[140px] truncate font-medium text-primary hover:underline"
                       >
                         {trade.agentDisplayName}
                       </Link>
                       <Badge
                         variant="secondary"
                         className={cn(
-                          "w-fit text-[10px] uppercase",
+                          "text-[10px] uppercase",
                           trade.direction === "long"
                             ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
                             : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"
