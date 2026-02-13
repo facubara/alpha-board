@@ -1,6 +1,6 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-12
+**Last Updated:** 2026-02-13
 **Current Phase:** Complete (all 15 phases done) + Post-launch features
 
 ---
@@ -64,6 +64,8 @@
 - [x] **Performance Dashboard / Analytics** — Post-launch feature
 - [x] **Advanced Charting (TradingView)** — Post-launch feature
 - [x] **Agent Comparison Mode** — Post-launch feature
+- [x] **Symbol-Agent Cross-Referencing** — Post-launch feature
+- [x] **Candle Close Countdown** — Post-launch feature
 
 ---
 
@@ -126,6 +128,7 @@
 | 5 | Advanced Charting (TradingView) | Done |
 | 6 | Agent Comparison Mode | Done |
 | 7 | Caching Layer (Redis) | Pending |
+| 8 | Symbol-Agent Cross-Referencing | Done |
 
 ## Open Decisions
 
@@ -137,11 +140,11 @@ None — all decisions resolved.
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-13 00:20 | Post-launch | Symbol cross-ref (#8) + candle countdown |
 | 2026-02-12 20:00 | Post-launch | Agent Comparison Mode (#6) |
 | 2026-02-12 13:22 | Post-launch | Backtesting Framework (9 phases) |
 | 2026-02-11 14:00 | Phase 15 | Rule-Based Python Agents |
 | 2026-02-09 | Phase 11-14 | Agent Frontend + Deployment + Polish |
-| 2026-02-05 20:00 | Phase 10 | Agent Learning & Evolution |
 
 ---
 
