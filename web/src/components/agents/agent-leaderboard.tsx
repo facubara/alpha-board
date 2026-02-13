@@ -11,8 +11,8 @@
  * - E-ink aesthetic, no decoration
  */
 
-import { useState, useMemo, useCallback } from "react";
-import { ChevronUp, ChevronDown, PauseCircle, GitCompareArrows } from "lucide-react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { ChevronUp, ChevronDown, PauseCircle, GitCompareArrows, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
@@ -29,6 +29,7 @@ import type {
   AgentLeaderboardRow,
   AgentTimeframe,
   StrategyArchetype,
+  SymbolAgentActivity,
 } from "@/lib/types";
 import {
   AGENT_ENGINES,
@@ -116,6 +117,49 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   const [engineFilter, setEngineFilter] = useState<AgentEngine | "all">("all");
   const [sortField, setSortField] = useState<SortField>("pnl");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [symbolSearch, setSymbolSearch] = useState("");
+  const [symbolAgentIds, setSymbolAgentIds] = useState<Set<number> | null>(null);
+  const [symbolActivity, setSymbolActivity] = useState<SymbolAgentActivity | null>(null);
+  const [symbolLoading, setSymbolLoading] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    if (!symbolSearch.trim()) {
+      setSymbolAgentIds(null);
+      setSymbolActivity(null);
+      setSymbolLoading(false);
+      return;
+    }
+
+    setSymbolLoading(true);
+    debounceRef.current = setTimeout(() => {
+      const upper = symbolSearch.trim().toUpperCase();
+      fetch(`/api/symbols/${encodeURIComponent(upper)}/agents`)
+        .then((res) => {
+          if (!res.ok) throw new Error("fetch failed");
+          return res.json();
+        })
+        .then((data: SymbolAgentActivity) => {
+          const ids = new Set<number>();
+          for (const p of data.positions) ids.add(p.agentId);
+          for (const t of data.trades) ids.add(t.agentId);
+          setSymbolAgentIds(ids);
+          setSymbolActivity(data);
+        })
+        .catch(() => {
+          setSymbolAgentIds(new Set());
+          setSymbolActivity(null);
+        })
+        .finally(() => setSymbolLoading(false));
+    }, 300);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [symbolSearch]);
+
   const [pausingLlm, setPausingLlm] = useState(false);
   const [pauseLlmResult, setPauseLlmResult] = useState<string | null>(null);
   const { requireAuth } = useAuth();
@@ -155,6 +199,9 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     if (engineFilter !== "all") {
       result = result.filter((a) => a.engine === engineFilter);
     }
+    if (symbolAgentIds !== null) {
+      result = result.filter((a) => symbolAgentIds.has(a.id));
+    }
 
     result.sort((a, b) => {
       let comparison = 0;
@@ -182,7 +229,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     });
 
     return result;
-  }, [agentsData, timeframeFilter, archetypeFilter, engineFilter, sortField, sortDirection]);
+  }, [agentsData, timeframeFilter, archetypeFilter, engineFilter, symbolAgentIds, sortField, sortDirection]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -269,6 +316,29 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
           ))}
         </div>
 
+        {/* Divider */}
+        <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
+
+        {/* Symbol search */}
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+          <input
+            type="text"
+            value={symbolSearch}
+            onChange={(e) => setSymbolSearch(e.target.value)}
+            placeholder="Search by symbol..."
+            className="h-9 w-48 rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] pl-8 pr-8 font-mono text-sm text-primary placeholder:text-muted focus:border-[var(--border-strong)] focus:outline-none"
+          />
+          {symbolSearch && (
+            <button
+              onClick={() => setSymbolSearch("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+
         {/* Spacer */}
         <div className="flex-1" />
 
@@ -305,10 +375,53 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
       </div>
 
       {/* Results count */}
-      {(timeframeFilter !== "all" || archetypeFilter !== "all" || engineFilter !== "all") && (
+      {(timeframeFilter !== "all" || archetypeFilter !== "all" || engineFilter !== "all" || symbolAgentIds !== null) && (
         <p className="text-xs text-secondary">
           {filtered.length} of {agentsData.length} agents
         </p>
+      )}
+
+      {/* Symbol search summary */}
+      {symbolSearch.trim() && symbolActivity && !symbolLoading && (
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2 text-xs text-secondary">
+          <span className="font-mono font-semibold text-primary">{symbolSearch.trim().toUpperCase()}</span>
+          <span className="text-muted">:</span>
+          {symbolActivity.summary.agentsWithPositions > 0 && (
+            <span>
+              <span className="font-medium text-primary">{symbolActivity.summary.agentsWithPositions}</span>{" "}
+              with open positions
+            </span>
+          )}
+          {symbolActivity.summary.agentsWithPositions > 0 && symbolActivity.summary.agentsThatTraded > 0 && (
+            <span className="text-muted">·</span>
+          )}
+          {symbolActivity.summary.agentsThatTraded > 0 && (
+            <span>
+              <span className="font-medium text-primary">{symbolActivity.summary.agentsThatTraded}</span>{" "}
+              traded
+            </span>
+          )}
+          {symbolActivity.summary.totalTrades > 0 && (
+            <>
+              <span className="text-muted">·</span>
+              <span
+                className={cn(
+                  "font-mono font-medium tabular-nums",
+                  symbolActivity.summary.totalPnl >= 0 ? "text-bullish" : "text-bearish"
+                )}
+              >
+                {symbolActivity.summary.totalPnl >= 0 ? "+" : ""}${symbolActivity.summary.totalPnl.toFixed(2)}
+              </span>
+              <span>PnL</span>
+            </>
+          )}
+          {symbolAgentIds !== null && symbolAgentIds.size === 0 && (
+            <span>No agents found</span>
+          )}
+        </div>
+      )}
+      {symbolSearch.trim() && symbolLoading && (
+        <div className="h-4 w-48 animate-pulse rounded bg-[var(--bg-muted)]" />
       )}
 
       {/* Table */}

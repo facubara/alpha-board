@@ -1,5 +1,9 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import { ChartContainer } from "@/components/charts/chart-container";
+import { getSymbolAgentActivity } from "@/lib/queries/agents";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +13,22 @@ interface SymbolPageProps {
   params: Promise<{ symbol: string }>;
 }
 
+function formatPnl(value: number): string {
+  const sign = value >= 0 ? "+" : "";
+  return `${sign}$${value.toFixed(2)}`;
+}
+
+function formatPrice(value: number): string {
+  if (value >= 1000) return `$${value.toFixed(2)}`;
+  if (value >= 1) return `$${value.toFixed(4)}`;
+  return `$${value.toFixed(6)}`;
+}
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
 export default async function SymbolPage({ params }: SymbolPageProps) {
   const { symbol } = await params;
   const upperSymbol = symbol.toUpperCase();
@@ -16,6 +36,10 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
   if (!SYMBOL_RE.test(upperSymbol)) {
     notFound();
   }
+
+  const activity = await getSymbolAgentActivity(upperSymbol);
+  const { summary, positions, trades } = activity;
+  const hasActivity = positions.length > 0 || trades.length > 0;
 
   return (
     <div className="space-y-4">
@@ -61,6 +85,149 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
           />
           Bollinger Bands
         </span>
+      </div>
+
+      {/* Agent Activity */}
+      <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4">
+        <h2 className="mb-3 text-sm font-semibold text-primary">Agent Activity</h2>
+
+        {!hasActivity ? (
+          <p className="text-xs text-muted">No agent activity for this symbol</p>
+        ) : (
+          <div className="space-y-4">
+            {/* Summary */}
+            <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs text-secondary">
+              {summary.agentsWithPositions > 0 && (
+                <span>
+                  <span className="font-medium text-primary">{summary.agentsWithPositions}</span>{" "}
+                  agent{summary.agentsWithPositions !== 1 ? "s" : ""} holding positions
+                </span>
+              )}
+              {summary.agentsWithPositions > 0 && summary.agentsThatTraded > 0 && (
+                <span className="text-muted">·</span>
+              )}
+              {summary.agentsThatTraded > 0 && (
+                <span>
+                  <span className="font-medium text-primary">{summary.agentsThatTraded}</span>{" "}
+                  agent{summary.agentsThatTraded !== 1 ? "s" : ""} traded
+                </span>
+              )}
+              {summary.totalTrades > 0 && (
+                <>
+                  <span className="text-muted">·</span>
+                  <span
+                    className={cn(
+                      "font-mono font-medium tabular-nums",
+                      summary.totalPnl >= 0 ? "text-bullish" : "text-bearish"
+                    )}
+                  >
+                    {formatPnl(summary.totalPnl)}
+                  </span>
+                  <span>total PnL</span>
+                  <span className="text-muted">·</span>
+                  <span>
+                    <span className="font-medium text-primary">{(summary.winRate * 100).toFixed(0)}%</span> win rate
+                  </span>
+                </>
+              )}
+            </div>
+
+            {/* Open Positions */}
+            {positions.length > 0 && (
+              <div>
+                <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
+                  Open Positions ({positions.length})
+                </h3>
+                <div className="space-y-1.5">
+                  {positions.map((pos, i) => (
+                    <div
+                      key={`${pos.agentId}-${i}`}
+                      className="grid grid-cols-[1fr] gap-1 text-xs sm:grid-cols-[1fr_60px_80px_70px_80px] sm:items-center sm:gap-3"
+                    >
+                      <Link
+                        href={`/agents/${pos.agentId}`}
+                        className="truncate font-medium text-primary hover:underline"
+                      >
+                        {pos.agentDisplayName}
+                      </Link>
+                      <Badge
+                        variant="secondary"
+                        className={cn(
+                          "w-fit text-[10px] uppercase",
+                          pos.direction === "long"
+                            ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
+                            : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"
+                        )}
+                      >
+                        {pos.direction}
+                      </Badge>
+                      <span className="font-mono tabular-nums text-secondary">
+                        {formatPrice(pos.entryPrice)}
+                      </span>
+                      <span className="font-mono tabular-nums text-secondary">
+                        {pos.positionSize.toFixed(4)}
+                      </span>
+                      <span
+                        className={cn(
+                          "font-mono font-medium tabular-nums",
+                          pos.unrealizedPnl >= 0 ? "text-bullish" : "text-bearish"
+                        )}
+                      >
+                        {formatPnl(pos.unrealizedPnl)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Recent Trades */}
+            {trades.length > 0 && (
+              <div>
+                <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
+                  Recent Trades ({trades.length})
+                </h3>
+                <div className="space-y-1.5">
+                  {trades.map((trade, i) => (
+                    <div
+                      key={`${trade.agentId}-${i}`}
+                      className="grid grid-cols-[1fr] gap-1 text-xs sm:grid-cols-[1fr_60px_80px_100px] sm:items-center sm:gap-3"
+                    >
+                      <Link
+                        href={`/agents/${trade.agentId}`}
+                        className="truncate font-medium text-primary hover:underline"
+                      >
+                        {trade.agentDisplayName}
+                      </Link>
+                      <Badge
+                        variant="secondary"
+                        className={cn(
+                          "w-fit text-[10px] uppercase",
+                          trade.direction === "long"
+                            ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
+                            : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"
+                        )}
+                      >
+                        {trade.direction}
+                      </Badge>
+                      <span
+                        className={cn(
+                          "font-mono font-medium tabular-nums",
+                          trade.pnl >= 0 ? "text-bullish" : "text-bearish"
+                        )}
+                      >
+                        {formatPnl(trade.pnl)}
+                      </span>
+                      <span className="text-muted">
+                        {formatDate(trade.closedAt)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

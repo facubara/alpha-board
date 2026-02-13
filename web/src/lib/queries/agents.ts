@@ -18,6 +18,9 @@ import type {
   AgentTrade,
   ComparisonData,
   StrategyArchetype,
+  SymbolAgentActivity,
+  SymbolAgentPosition,
+  SymbolAgentTrade,
 } from "@/lib/types";
 
 /**
@@ -492,6 +495,94 @@ export async function getComparisonData(
   }
 
   return { agents, trades };
+}
+
+/**
+ * Fetch agent activity for a symbol (open positions + recent trades across all agents).
+ */
+export async function getSymbolAgentActivity(
+  symbol: string
+): Promise<SymbolAgentActivity> {
+  const [positionRows, tradeRows] = await Promise.all([
+    sql`
+      SELECT
+        a.id as agent_id,
+        a.display_name,
+        a.strategy_archetype,
+        a.timeframe,
+        pos.direction,
+        pos.entry_price,
+        pos.position_size,
+        pos.unrealized_pnl,
+        pos.opened_at
+      FROM agent_positions pos
+      JOIN symbols sym ON sym.id = pos.symbol_id
+      JOIN agents a ON a.id = pos.agent_id
+      WHERE sym.symbol = ${symbol}
+      ORDER BY pos.opened_at DESC
+    `,
+    sql`
+      SELECT
+        a.id as agent_id,
+        a.display_name,
+        a.strategy_archetype,
+        a.timeframe,
+        t.direction,
+        t.entry_price,
+        t.exit_price,
+        t.pnl,
+        t.fees,
+        t.closed_at
+      FROM agent_trades t
+      JOIN symbols sym ON sym.id = t.symbol_id
+      JOIN agents a ON a.id = t.agent_id
+      WHERE sym.symbol = ${symbol}
+      ORDER BY t.closed_at DESC
+      LIMIT 50
+    `,
+  ]);
+
+  const positions: SymbolAgentPosition[] = positionRows.map((row) => ({
+    agentId: Number(row.agent_id),
+    agentDisplayName: row.display_name as string,
+    archetype: row.strategy_archetype as StrategyArchetype,
+    timeframe: row.timeframe as AgentTimeframe,
+    direction: row.direction as "long" | "short",
+    entryPrice: Number(row.entry_price),
+    positionSize: Number(row.position_size),
+    unrealizedPnl: Number(row.unrealized_pnl),
+    openedAt: (row.opened_at as Date).toISOString(),
+  }));
+
+  const trades: SymbolAgentTrade[] = tradeRows.map((row) => ({
+    agentId: Number(row.agent_id),
+    agentDisplayName: row.display_name as string,
+    archetype: row.strategy_archetype as StrategyArchetype,
+    timeframe: row.timeframe as AgentTimeframe,
+    direction: row.direction as "long" | "short",
+    entryPrice: Number(row.entry_price),
+    exitPrice: Number(row.exit_price),
+    pnl: Number(row.pnl),
+    fees: Number(row.fees),
+    closedAt: (row.closed_at as Date).toISOString(),
+  }));
+
+  const positionAgentIds = new Set(positions.map((p) => p.agentId));
+  const tradeAgentIds = new Set(trades.map((t) => t.agentId));
+  const totalPnl = trades.reduce((sum, t) => sum + t.pnl, 0);
+  const wins = trades.filter((t) => t.pnl > 0).length;
+
+  return {
+    positions,
+    trades,
+    summary: {
+      agentsWithPositions: positionAgentIds.size,
+      agentsThatTraded: tradeAgentIds.size,
+      totalTrades: trades.length,
+      totalPnl,
+      winRate: trades.length > 0 ? wins / trades.length : 0,
+    },
+  };
 }
 
 /**

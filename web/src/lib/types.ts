@@ -488,3 +488,44 @@ export interface ComparisonData {
   agents: AgentDetail[];
   trades: Record<number, AgentTrade[]>;
 }
+
+// =============================================================================
+// Symbol-Agent Cross-Referencing
+// =============================================================================
+
+export interface SymbolAgentActivity {
+  positions: SymbolAgentPosition[];
+  trades: SymbolAgentTrade[];
+  summary: {
+    agentsWithPositions: number;
+    agentsThatTraded: number;
+    totalTrades: number;
+    totalPnl: number;
+    winRate: number;
+  };
+}
+
+export interface SymbolAgentPosition {
+  agentId: number;
+  agentDisplayName: string;
+  archetype: StrategyArchetype;
+  timeframe: AgentTimeframe;
+  direction: "long" | "short";
+  entryPrice: number;
+  positionSize: number;
+  unrealizedPnl: number;
+  openedAt: string;
+}
+
+export interface SymbolAgentTrade {
+  agentId: number;
+  agentDisplayName: string;
+  archetype: StrategyArchetype;
+  timeframe: AgentTimeframe;
+  direction: "long" | "short";
+  entryPrice: number;
+  exitPrice: number;
+  pnl: number;
+  fees: number;
+  closedAt: string;
+}

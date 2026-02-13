@@ -21,6 +21,7 @@ import type { RankingSnapshot } from "@/lib/types";
 import { ScoreBar } from "./score-bar";
 import { HighlightChips } from "./highlight-chip";
 import { IndicatorBreakdown } from "./indicator-breakdown";
+import { SymbolAgentSummary } from "./symbol-agent-summary";
 
 interface RankingRowProps {
   snapshot: RankingSnapshot;
@@ -129,6 +130,9 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
               </div>
             )}
             <IndicatorBreakdown signals={snapshot.indicatorSignals} />
+            <div className="border-t border-[var(--border-subtle)]">
+              <SymbolAgentSummary symbol={snapshot.symbol} />
+            </div>
           </TableCell>
         </TableRow>
       )}

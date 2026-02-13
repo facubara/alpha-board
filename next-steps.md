@@ -102,3 +102,17 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 - Invalidate on pipeline completion: after `runner.py` finishes a cycle, delete the relevant cache key so the next web request fetches fresh data.
 - On the worker side, cache Binance API responses (order book, ticker) with short TTLs (5–10 s) to reduce external API calls during agent cycles.
 - Start with read-through caching on the hottest queries; profile before expanding.
+
+---
+
+## 8. Symbol-Agent Cross-Referencing — `COMPLETED`
+
+**What:** Connect symbol data with agent activity — see which agents are trading a symbol (from rankings/symbol pages) and filter agents by symbol (from the agents page).
+
+**Why:** With 56 agents trading across multiple symbols, there was no way to see agent activity per symbol or discover which agents interacted with a given symbol. This makes it hard to connect market signals to agent behavior.
+
+**Implementation notes:**
+- New API route `/api/symbols/[symbol]/agents` returns open positions + recent trades across all agents for a symbol.
+- Rankings page: expanding a symbol row now shows agent activity summary below the indicator breakdown, with expandable positions/trades tables.
+- Symbol detail page: server-rendered agent activity section below the chart.
+- Agents page: symbol search input filters the leaderboard to agents that interacted with the searched symbol, with a summary banner.
