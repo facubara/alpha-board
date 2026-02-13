@@ -28,6 +28,7 @@ import type { AllTimeframeRankings, RankingSnapshot, RankingsData, Timeframe } f
 import { useTimeframe } from "@/hooks/use-timeframe";
 import { TimeframeSelector } from "./timeframe-selector";
 import { RankingRow } from "./ranking-row";
+import { CandleCountdown } from "./candle-countdown";
 import { formatRelativeTime } from "@/lib/utils";
 
 type SortField = "rank" | "symbol" | "score" | "confidence";
@@ -160,11 +161,14 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
           </div>
         </div>
 
-        {computedAt && (
-          <span className="font-mono text-xs text-muted">
-            Updated {formatRelativeTime(computedAt)}
-          </span>
-        )}
+        <div className="flex items-center gap-3">
+          <CandleCountdown timeframe={timeframe} />
+          {computedAt && (
+            <span className="font-mono text-xs text-muted">
+              Updated {formatRelativeTime(computedAt)}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Results count when filtering */}
