@@ -12,7 +12,8 @@
  */
 
 import { useState, useMemo, useCallback } from "react";
-import { ChevronUp, ChevronDown, PauseCircle } from "lucide-react";
+import { ChevronUp, ChevronDown, PauseCircle, GitCompareArrows } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useSSE } from "@/hooks/use-sse";
@@ -61,6 +62,36 @@ interface AgentSSEEvent {
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
 export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
+  const router = useRouter();
+
+  // Compare mode state
+  const [compareMode, setCompareMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+  const handleToggleCompare = useCallback(() => {
+    setCompareMode((v) => !v);
+    setSelectedIds(new Set());
+  }, []);
+
+  const handleSelectAgent = useCallback((id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else if (next.size < 4) {
+        next.add(id);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleGoCompare = useCallback(() => {
+    if (selectedIds.size >= 2) {
+      const ids = Array.from(selectedIds).join(",");
+      router.push(`/agents/compare?ids=${ids}`);
+    }
+  }, [selectedIds, router]);
+
   // Live state: initialized from server-fetched data, updated via SSE
   const [agentsData, setAgentsData] = useState<AgentLeaderboardRow[]>(agents);
 
@@ -241,8 +272,20 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Pause All LLM */}
+        {/* Compare + Pause All LLM */}
         <div className="flex items-center gap-2">
+          <button
+            onClick={handleToggleCompare}
+            className={cn(
+              "flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+              compareMode
+                ? "border-[var(--border-strong)] bg-[var(--bg-surface)] text-primary"
+                : "border-[var(--border-default)] text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
+            )}
+          >
+            <GitCompareArrows className="h-3.5 w-3.5" />
+            Compare
+          </button>
           {pauseLlmResult && (
             <span className="text-xs text-secondary">{pauseLlmResult}</span>
           )}
@@ -278,6 +321,9 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
           <Table>
             <TableHeader>
               <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
+                {compareMode && (
+                  <TableHead className="w-10" />
+                )}
                 <TableHead
                   className="cursor-pointer select-none text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
                   onClick={() => handleSort("name")}
@@ -328,10 +374,29 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
             </TableHeader>
             <TableBody>
               {filtered.map((agent) => (
-                <AgentRow key={agent.id} agent={agent} />
+                <AgentRow
+                  key={agent.id}
+                  agent={agent}
+                  showCheckbox={compareMode}
+                  selected={selectedIds.has(agent.id)}
+                  onSelect={handleSelectAgent}
+                />
               ))}
             </TableBody>
           </Table>
+        </div>
+      )}
+
+      {/* Floating compare bar */}
+      {compareMode && selectedIds.size >= 2 && (
+        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2">
+          <button
+            onClick={handleGoCompare}
+            className="flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface)] px-5 py-2.5 font-mono text-sm font-semibold text-primary shadow-lg transition-colors-fast hover:bg-[var(--bg-elevated)]"
+          >
+            <GitCompareArrows className="h-4 w-4" />
+            Compare ({selectedIds.size})
+          </button>
         </div>
       )}
     </div>

@@ -16,6 +16,7 @@ import type {
   AgentTimeframe,
   AgentTokenUsageSummary,
   AgentTrade,
+  ComparisonData,
   StrategyArchetype,
 } from "@/lib/types";
 
@@ -457,6 +458,40 @@ export async function pauseAllLlmAgents(): Promise<number> {
     RETURNING id
   `;
   return rows.length;
+}
+
+/**
+ * Fetch comparison data for multiple agents (max 4).
+ * Fetches detail + trades in parallel for each agent.
+ */
+export async function getComparisonData(
+  ids: number[]
+): Promise<ComparisonData | null> {
+  const clamped = ids.slice(0, 4);
+  const results = await Promise.all(
+    clamped.map(async (id) => {
+      const [agent, trades] = await Promise.all([
+        getAgentDetail(id),
+        getAgentTrades(id),
+      ]);
+      return { agent, trades };
+    })
+  );
+
+  const agents = results
+    .map((r) => r.agent)
+    .filter((a): a is AgentDetail => a !== null);
+
+  if (agents.length < 2) return null;
+
+  const trades: Record<number, AgentTrade[]> = {};
+  for (const r of results) {
+    if (r.agent) {
+      trades[r.agent.id] = r.trades;
+    }
+  }
+
+  return { agents, trades };
 }
 
 /**

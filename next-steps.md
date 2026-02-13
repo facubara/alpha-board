@@ -76,7 +76,7 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 
 ---
 
-## 6. Agent Comparison Mode — `PENDING`
+## 6. Agent Comparison Mode — `COMPLETED`
 
 **What:** A side-by-side comparison view where users can select 2–4 agents and compare their equity curves, trade logs, and decision reasoning on the same symbols.
 

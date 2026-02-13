@@ -8,3 +8,7 @@ export { PromptEditor } from "./prompt-editor";
 export { PromptHistory } from "./prompt-history";
 export { ModelConfig } from "./model-config";
 export { EquityChart } from "./equity-chart";
+export { ComparisonView } from "./comparison-view";
+export { ComparisonEquityChart } from "./comparison-equity-chart";
+export { ComparisonMetrics } from "./comparison-metrics";
+export { ComparisonTrades } from "./comparison-trades";

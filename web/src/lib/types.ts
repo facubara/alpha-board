@@ -479,3 +479,12 @@ export interface TradeMarker {
   shape: "arrowUp" | "arrowDown";
   text: string;
 }
+
+// =============================================================================
+// Agent Comparison
+// =============================================================================
+
+export interface ComparisonData {
+  agents: AgentDetail[];
+  trades: Record<number, AgentTrade[]>;
+}

@@ -25,6 +25,9 @@ import {
 
 interface AgentRowProps {
   agent: AgentLeaderboardRow;
+  showCheckbox?: boolean;
+  selected?: boolean;
+  onSelect?: (id: number) => void;
 }
 
 function formatPnl(value: number): string {
@@ -73,7 +76,7 @@ function getHealthStatus(
   return { color: "bg-[var(--text-muted)]", label: `Inactive ${Math.round(ageMinutes)}m ago` };
 }
 
-export function AgentRow({ agent }: AgentRowProps) {
+export function AgentRow({ agent, showCheckbox, selected, onSelect }: AgentRowProps) {
   const [status, setStatus] = useState(agent.status);
   const [toggling, setToggling] = useState(false);
   const { requireAuth } = useAuth();
@@ -109,6 +112,21 @@ export function AgentRow({ agent }: AgentRowProps) {
         isPaused && "opacity-50"
       )}
     >
+      {/* Compare checkbox */}
+      {showCheckbox && (
+        <TableCell className="w-10">
+          <input
+            type="checkbox"
+            checked={selected ?? false}
+            onChange={(e) => {
+              e.stopPropagation();
+              onSelect?.(agent.id);
+            }}
+            className="h-3.5 w-3.5 cursor-pointer rounded accent-[var(--bullish)]"
+          />
+        </TableCell>
+      )}
+
       {/* Agent name + archetype + engine + health dot */}
       <TableCell className="max-w-[240px]">
         <Link
