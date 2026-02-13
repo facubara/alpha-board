@@ -54,7 +54,8 @@
       "Bash(npm install:*)",
       "WebSearch",
       "WebFetch(domain:tradingview.github.io)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(dir:*)"
     ]
   }
 }
