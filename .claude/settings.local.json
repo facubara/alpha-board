@@ -53,7 +53,8 @@
       "Bash(python3:*)",
       "Bash(npm install:*)",
       "WebSearch",
-      "WebFetch(domain:tradingview.github.io)"
+      "WebFetch(domain:tradingview.github.io)",
+      "Bash(git status:*)"
     ]
   }
 }

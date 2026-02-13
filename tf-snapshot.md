@@ -1,0 +1,4639 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Alpha Board" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e5]:
+        - navigation [ref=e6]:
+          - link "Rankings" [ref=e7] [cursor=pointer]:
+            - /url: /
+          - link "Agents" [ref=e8] [cursor=pointer]:
+            - /url: /agents
+          - link "Backtest" [ref=e9] [cursor=pointer]:
+            - /url: /backtest
+          - link "Analytics" [ref=e10] [cursor=pointer]:
+            - /url: /analytics
+        - button "Login" [ref=e11]:
+          - img [ref=e12]
+          - text: Login
+  - main [ref=e15]:
+    - generic [ref=e5003]:
+      - generic [ref=e5004]:
+        - heading "Rankings" [level=1] [ref=e5005]
+        - paragraph [ref=e5006]: Real-time crypto market rankings based on technical indicators
+      - generic [ref=e5007]:
+        - generic [ref=e5008]:
+          - generic [ref=e5009]:
+            - tablist "Select timeframe" [ref=e5010]:
+              - tab "15m" [active] [selected] [ref=e5011]
+              - tab "30m" [ref=e5012]
+              - tab "1h" [ref=e5013]
+              - tab "4h" [ref=e5014]
+              - tab "1d" [ref=e5015]
+              - tab "1w" [ref=e5016]
+            - generic [ref=e5017]:
+              - img [ref=e5018]
+              - textbox "Search symbols..." [ref=e5021]
+          - generic [ref=e5022]:
+            - generic [ref=e5023]: Next close 1m 07s
+            - generic [ref=e5024]: Updated 7m ago
+        - tabpanel [ref=e5025]:
+          - table [ref=e5028]:
+            - rowgroup [ref=e5029]:
+              - row "# Symbol Score Conf Highlights" [ref=e5030]:
+                - columnheader "#" [ref=e5031] [cursor=pointer]:
+                  - text: "#"
+                  - img [ref=e9990]
+                - columnheader "Symbol" [ref=e5034] [cursor=pointer]
+                - columnheader "Score" [ref=e5035] [cursor=pointer]
+                - columnheader "Conf" [ref=e5036] [cursor=pointer]
+                - columnheader "Highlights" [ref=e5037]
+                - columnheader [ref=e5038]
+            - rowgroup [ref=e5039]:
+              - row "1 LPTUSDT 74 0.743 67% Strong Uptrend EMA Bullish Strong Buying" [ref=e9992] [cursor=pointer]:
+                - cell "1" [ref=e9993]
+                - cell "LPTUSDT" [ref=e9994]:
+                  - generic [ref=e9995]:
+                    - text: LPTUSDT
+                    - link "Chart for LPTUSDT" [ref=e9996]:
+                      - /url: /symbols/LPTUSDT
+                      - img [ref=e9997]
+                    - link "Trade LPT/USDT on Binance" [ref=e10000]:
+                      - /url: https://www.binance.com/en/trade/LPT_USDT
+                      - img [ref=e10001]
+                - cell "74 0.743" [ref=e10003]:
+                  - generic [ref=e10004]:
+                    - 'progressbar "Bullish score: 0.743" [ref=e10005]'
+                    - generic [ref=e10007]: "0.743"
+                - cell "67%" [ref=e10008]
+                - cell "Strong Uptrend EMA Bullish Strong Buying" [ref=e10009]:
+                  - generic [ref=e10010]:
+                    - generic [ref=e10011]: Strong Uptrend
+                    - generic [ref=e10012]: EMA Bullish
+                    - generic [ref=e10013]: Strong Buying
+                - cell [ref=e10014]:
+                  - img [ref=e10015]
+              - row "2 SAPIENUSDT 73 0.732 54% Strong Uptrend RSI Overbought EMA Bullish" [ref=e10017] [cursor=pointer]:
+                - cell "2" [ref=e10018]
+                - cell "SAPIENUSDT" [ref=e10019]:
+                  - generic [ref=e10020]:
+                    - text: SAPIENUSDT
+                    - link "Chart for SAPIENUSDT" [ref=e10021]:
+                      - /url: /symbols/SAPIENUSDT
+                      - img [ref=e10022]
+                    - link "Trade SAPIEN/USDT on Binance" [ref=e10025]:
+                      - /url: https://www.binance.com/en/trade/SAPIEN_USDT
+                      - img [ref=e10026]
+                - cell "73 0.732" [ref=e10028]:
+                  - generic [ref=e10029]:
+                    - 'progressbar "Bullish score: 0.732" [ref=e10030]'
+                    - generic [ref=e10032]: "0.732"
+                - cell "54%" [ref=e10033]
+                - cell "Strong Uptrend RSI Overbought EMA Bullish" [ref=e10034]:
+                  - generic [ref=e10035]:
+                    - generic [ref=e10036]: Strong Uptrend
+                    - generic [ref=e10037]: RSI Overbought
+                    - generic [ref=e10038]: EMA Bullish
+                - cell [ref=e10039]:
+                  - img [ref=e10040]
+              - row "3 TREEUSDT 72 0.717 50% EMA Bullish MACD Bullish Strong Buying" [ref=e10042] [cursor=pointer]:
+                - cell "3" [ref=e10043]
+                - cell "TREEUSDT" [ref=e10044]:
+                  - generic [ref=e10045]:
+                    - text: TREEUSDT
+                    - link "Chart for TREEUSDT" [ref=e10046]:
+                      - /url: /symbols/TREEUSDT
+                      - img [ref=e10047]
+                    - link "Trade TREE/USDT on Binance" [ref=e10050]:
+                      - /url: https://www.binance.com/en/trade/TREE_USDT
+                      - img [ref=e10051]
+                - cell "72 0.717" [ref=e10053]:
+                  - generic [ref=e10054]:
+                    - 'progressbar "Bullish score: 0.717" [ref=e10055]'
+                    - generic [ref=e10057]: "0.717"
+                - cell "50%" [ref=e10058]
+                - cell "EMA Bullish MACD Bullish Strong Buying" [ref=e10059]:
+                  - generic [ref=e10060]:
+                    - generic [ref=e10061]: EMA Bullish
+                    - generic [ref=e10062]: MACD Bullish
+                    - generic [ref=e10063]: Strong Buying
+                - cell [ref=e10064]:
+                  - img [ref=e10065]
+              - row "4 C98USDT 71 0.705 66% EMA Bullish MACD Bullish Strong Buying" [ref=e10067] [cursor=pointer]:
+                - cell "4" [ref=e10068]
+                - cell "C98USDT" [ref=e10069]:
+                  - generic [ref=e10070]:
+                    - text: C98USDT
+                    - link "Chart for C98USDT" [ref=e10071]:
+                      - /url: /symbols/C98USDT
+                      - img [ref=e10072]
+                    - link "Trade C98/USDT on Binance" [ref=e10075]:
+                      - /url: https://www.binance.com/en/trade/C98_USDT
+                      - img [ref=e10076]
+                - cell "71 0.705" [ref=e10078]:
+                  - generic [ref=e10079]:
+                    - 'progressbar "Bullish score: 0.705" [ref=e10080]'
+                    - generic [ref=e10082]: "0.705"
+                - cell "66%" [ref=e10083]
+                - cell "EMA Bullish MACD Bullish Strong Buying" [ref=e10084]:
+                  - generic [ref=e10085]:
+                    - generic [ref=e10086]: EMA Bullish
+                    - generic [ref=e10087]: MACD Bullish
+                    - generic [ref=e10088]: Strong Buying
+                - cell [ref=e10089]:
+                  - img [ref=e10090]
+              - row "5 ASTERUSDT 70 0.701 68% EMA Bullish MACD Bullish Strong Buying" [ref=e10092] [cursor=pointer]:
+                - cell "5" [ref=e10093]
+                - cell "ASTERUSDT" [ref=e10094]:
+                  - generic [ref=e10095]:
+                    - text: ASTERUSDT
+                    - link "Chart for ASTERUSDT" [ref=e10096]:
+                      - /url: /symbols/ASTERUSDT
+                      - img [ref=e10097]
+                    - link "Trade ASTER/USDT on Binance" [ref=e10100]:
+                      - /url: https://www.binance.com/en/trade/ASTER_USDT
+                      - img [ref=e10101]
+                - cell "70 0.701" [ref=e10103]:
+                  - generic [ref=e10104]:
+                    - 'progressbar "Bullish score: 0.701" [ref=e10105]'
+                    - generic [ref=e10107]: "0.701"
+                - cell "68%" [ref=e10108]
+                - cell "EMA Bullish MACD Bullish Strong Buying" [ref=e10109]:
+                  - generic [ref=e10110]:
+                    - generic [ref=e10111]: EMA Bullish
+                    - generic [ref=e10112]: MACD Bullish
+                    - generic [ref=e10113]: Strong Buying
+                - cell [ref=e10114]:
+                  - img [ref=e10115]
+              - row "6 ZKCUSDT 70 0.695 60% EMA Bullish Strong Buying" [ref=e10117] [cursor=pointer]:
+                - cell "6" [ref=e10118]
+                - cell "ZKCUSDT" [ref=e10119]:
+                  - generic [ref=e10120]:
+                    - text: ZKCUSDT
+                    - link "Chart for ZKCUSDT" [ref=e10121]:
+                      - /url: /symbols/ZKCUSDT
+                      - img [ref=e10122]
+                    - link "Trade ZKC/USDT on Binance" [ref=e10125]:
+                      - /url: https://www.binance.com/en/trade/ZKC_USDT
+                      - img [ref=e10126]
+                - cell "70 0.695" [ref=e10128]:
+                  - generic [ref=e10129]:
+                    - 'progressbar "Bullish score: 0.695" [ref=e10130]'
+                    - generic [ref=e10132]: "0.695"
+                - cell "60%" [ref=e10133]
+                - cell "EMA Bullish Strong Buying" [ref=e10134]:
+                  - generic [ref=e10135]:
+                    - generic [ref=e10136]: EMA Bullish
+                    - generic [ref=e10137]: Strong Buying
+                - cell [ref=e10138]:
+                  - img [ref=e10139]
+              - row "7 EGLDUSDT 68 0.678 68% EMA Bullish Strong Buying" [ref=e10141] [cursor=pointer]:
+                - cell "7" [ref=e10142]
+                - cell "EGLDUSDT" [ref=e10143]:
+                  - generic [ref=e10144]:
+                    - text: EGLDUSDT
+                    - link "Chart for EGLDUSDT" [ref=e10145]:
+                      - /url: /symbols/EGLDUSDT
+                      - img [ref=e10146]
+                    - link "Trade EGLD/USDT on Binance" [ref=e10149]:
+                      - /url: https://www.binance.com/en/trade/EGLD_USDT
+                      - img [ref=e10150]
+                - cell "68 0.678" [ref=e10152]:
+                  - generic [ref=e10153]:
+                    - 'progressbar "Bullish score: 0.678" [ref=e10154]'
+                    - generic [ref=e10156]: "0.678"
+                - cell "68%" [ref=e10157]
+                - cell "EMA Bullish Strong Buying" [ref=e10158]:
+                  - generic [ref=e10159]:
+                    - generic [ref=e10160]: EMA Bullish
+                    - generic [ref=e10161]: Strong Buying
+                - cell [ref=e10162]:
+                  - img [ref=e10163]
+              - row "8 ZILUSDT 65 0.652 72% EMA Bullish Strong Buying No Trend" [ref=e10165] [cursor=pointer]:
+                - cell "8" [ref=e10166]
+                - cell "ZILUSDT" [ref=e10167]:
+                  - generic [ref=e10168]:
+                    - text: ZILUSDT
+                    - link "Chart for ZILUSDT" [ref=e10169]:
+                      - /url: /symbols/ZILUSDT
+                      - img [ref=e10170]
+                    - link "Trade ZIL/USDT on Binance" [ref=e10173]:
+                      - /url: https://www.binance.com/en/trade/ZIL_USDT
+                      - img [ref=e10174]
+                - cell "65 0.652" [ref=e10176]:
+                  - generic [ref=e10177]:
+                    - 'progressbar "Bullish score: 0.652" [ref=e10178]'
+                    - generic [ref=e10180]: "0.652"
+                - cell "72%" [ref=e10181]
+                - cell "EMA Bullish Strong Buying No Trend" [ref=e10182]:
+                  - generic [ref=e10183]:
+                    - generic [ref=e10184]: EMA Bullish
+                    - generic [ref=e10185]: Strong Buying
+                    - generic [ref=e10186]: No Trend
+                - cell [ref=e10187]:
+                  - img [ref=e10188]
+              - row "9 FOGOUSDT 65 0.650 68% EMA Bullish Strong Buying Stoch Overbought" [ref=e10190] [cursor=pointer]:
+                - cell "9" [ref=e10191]
+                - cell "FOGOUSDT" [ref=e10192]:
+                  - generic [ref=e10193]:
+                    - text: FOGOUSDT
+                    - link "Chart for FOGOUSDT" [ref=e10194]:
+                      - /url: /symbols/FOGOUSDT
+                      - img [ref=e10195]
+                    - link "Trade FOGO/USDT on Binance" [ref=e10198]:
+                      - /url: https://www.binance.com/en/trade/FOGO_USDT
+                      - img [ref=e10199]
+                - cell "65 0.650" [ref=e10201]:
+                  - generic [ref=e10202]:
+                    - 'progressbar "Bullish score: 0.650" [ref=e10203]'
+                    - generic [ref=e10205]: "0.650"
+                - cell "68%" [ref=e10206]
+                - cell "EMA Bullish Strong Buying Stoch Overbought" [ref=e10207]:
+                  - generic [ref=e10208]:
+                    - generic [ref=e10209]: EMA Bullish
+                    - generic [ref=e10210]: Strong Buying
+                    - generic [ref=e10211]: Stoch Overbought
+                - cell [ref=e10212]:
+                  - img [ref=e10213]
+              - row "10 DUSKUSDT 65 0.649 68% EMA Bullish" [ref=e10215] [cursor=pointer]:
+                - cell "10" [ref=e10216]
+                - cell "DUSKUSDT" [ref=e10217]:
+                  - generic [ref=e10218]:
+                    - text: DUSKUSDT
+                    - link "Chart for DUSKUSDT" [ref=e10219]:
+                      - /url: /symbols/DUSKUSDT
+                      - img [ref=e10220]
+                    - link "Trade DUSK/USDT on Binance" [ref=e10223]:
+                      - /url: https://www.binance.com/en/trade/DUSK_USDT
+                      - img [ref=e10224]
+                - cell "65 0.649" [ref=e10226]:
+                  - generic [ref=e10227]:
+                    - 'progressbar "Bullish score: 0.649" [ref=e10228]'
+                    - generic [ref=e10230]: "0.649"
+                - cell "68%" [ref=e10231]
+                - cell "EMA Bullish" [ref=e10232]:
+                  - generic [ref=e10234]: EMA Bullish
+                - cell [ref=e10235]:
+                  - img [ref=e10236]
+              - row "11 ALLOUSDT 65 0.648 63% Strong Uptrend RSI Overbought EMA Bullish" [ref=e10238] [cursor=pointer]:
+                - cell "11" [ref=e10239]
+                - cell "ALLOUSDT" [ref=e10240]:
+                  - generic [ref=e10241]:
+                    - text: ALLOUSDT
+                    - link "Chart for ALLOUSDT" [ref=e10242]:
+                      - /url: /symbols/ALLOUSDT
+                      - img [ref=e10243]
+                    - link "Trade ALLO/USDT on Binance" [ref=e10246]:
+                      - /url: https://www.binance.com/en/trade/ALLO_USDT
+                      - img [ref=e10247]
+                - cell "65 0.648" [ref=e10249]:
+                  - generic [ref=e10250]:
+                    - 'progressbar "Bullish score: 0.648" [ref=e10251]'
+                    - generic [ref=e10253]: "0.648"
+                - cell "63%" [ref=e10254]
+                - cell "Strong Uptrend RSI Overbought EMA Bullish" [ref=e10255]:
+                  - generic [ref=e10256]:
+                    - generic [ref=e10257]: Strong Uptrend
+                    - generic [ref=e10258]: RSI Overbought
+                    - generic [ref=e10259]: EMA Bullish
+                - cell [ref=e10260]:
+                  - img [ref=e10261]
+              - row "12 POLUSDT 64 0.639 75% EMA Bullish Strong Buying" [ref=e10263] [cursor=pointer]:
+                - cell "12" [ref=e10264]
+                - cell "POLUSDT" [ref=e10265]:
+                  - generic [ref=e10266]:
+                    - text: POLUSDT
+                    - link "Chart for POLUSDT" [ref=e10267]:
+                      - /url: /symbols/POLUSDT
+                      - img [ref=e10268]
+                    - link "Trade POL/USDT on Binance" [ref=e10271]:
+                      - /url: https://www.binance.com/en/trade/POL_USDT
+                      - img [ref=e10272]
+                - cell "64 0.639" [ref=e10274]:
+                  - generic [ref=e10275]:
+                    - 'progressbar "Bullish score: 0.639" [ref=e10276]'
+                    - generic [ref=e10278]: "0.639"
+                - cell "75%" [ref=e10279]
+                - cell "EMA Bullish Strong Buying" [ref=e10280]:
+                  - generic [ref=e10281]:
+                    - generic [ref=e10282]: EMA Bullish
+                    - generic [ref=e10283]: Strong Buying
+                - cell [ref=e10284]:
+                  - img [ref=e10285]
+              - row "13 DASHUSDT 63 0.626 78% EMA Bullish Strong Buying No Trend" [ref=e10287] [cursor=pointer]:
+                - cell "13" [ref=e10288]
+                - cell "DASHUSDT" [ref=e10289]:
+                  - generic [ref=e10290]:
+                    - text: DASHUSDT
+                    - link "Chart for DASHUSDT" [ref=e10291]:
+                      - /url: /symbols/DASHUSDT
+                      - img [ref=e10292]
+                    - link "Trade DASH/USDT on Binance" [ref=e10295]:
+                      - /url: https://www.binance.com/en/trade/DASH_USDT
+                      - img [ref=e10296]
+                - cell "63 0.626" [ref=e10298]:
+                  - generic [ref=e10299]:
+                    - 'progressbar "Bullish score: 0.626" [ref=e10300]'
+                    - generic [ref=e10302]: "0.626"
+                - cell "78%" [ref=e10303]
+                - cell "EMA Bullish Strong Buying No Trend" [ref=e10304]:
+                  - generic [ref=e10305]:
+                    - generic [ref=e10306]: EMA Bullish
+                    - generic [ref=e10307]: Strong Buying
+                    - generic [ref=e10308]: No Trend
+                - cell [ref=e10309]:
+                  - img [ref=e10310]
+              - row "14 AVAXUSDT 63 0.626 79% EMA Bullish Strong Buying" [ref=e10312] [cursor=pointer]:
+                - cell "14" [ref=e10313]
+                - cell "AVAXUSDT" [ref=e10314]:
+                  - generic [ref=e10315]:
+                    - text: AVAXUSDT
+                    - link "Chart for AVAXUSDT" [ref=e10316]:
+                      - /url: /symbols/AVAXUSDT
+                      - img [ref=e10317]
+                    - link "Trade AVAX/USDT on Binance" [ref=e10320]:
+                      - /url: https://www.binance.com/en/trade/AVAX_USDT
+                      - img [ref=e10321]
+                - cell "63 0.626" [ref=e10323]:
+                  - generic [ref=e10324]:
+                    - 'progressbar "Bullish score: 0.626" [ref=e10325]'
+                    - generic [ref=e10327]: "0.626"
+                - cell "79%" [ref=e10328]
+                - cell "EMA Bullish Strong Buying" [ref=e10329]:
+                  - generic [ref=e10330]:
+                    - generic [ref=e10331]: EMA Bullish
+                    - generic [ref=e10332]: Strong Buying
+                - cell [ref=e10333]:
+                  - img [ref=e10334]
+              - row "15 GIGGLEUSDT 62 0.623 80% EMA Bullish Strong Buying" [ref=e10336] [cursor=pointer]:
+                - cell "15" [ref=e10337]
+                - cell "GIGGLEUSDT" [ref=e10338]:
+                  - generic [ref=e10339]:
+                    - text: GIGGLEUSDT
+                    - link "Chart for GIGGLEUSDT" [ref=e10340]:
+                      - /url: /symbols/GIGGLEUSDT
+                      - img [ref=e10341]
+                    - link "Trade GIGGLE/USDT on Binance" [ref=e10344]:
+                      - /url: https://www.binance.com/en/trade/GIGGLE_USDT
+                      - img [ref=e10345]
+                - cell "62 0.623" [ref=e10347]:
+                  - generic [ref=e10348]:
+                    - 'progressbar "Bullish score: 0.623" [ref=e10349]'
+                    - generic [ref=e10351]: "0.623"
+                - cell "80%" [ref=e10352]
+                - cell "EMA Bullish Strong Buying" [ref=e10353]:
+                  - generic [ref=e10354]:
+                    - generic [ref=e10355]: EMA Bullish
+                    - generic [ref=e10356]: Strong Buying
+                - cell [ref=e10357]:
+                  - img [ref=e10358]
+              - row "16 CITYUSDT 61 0.607 57% EMA Bullish" [ref=e10360] [cursor=pointer]:
+                - cell "16" [ref=e10361]
+                - cell "CITYUSDT" [ref=e10362]:
+                  - generic [ref=e10363]:
+                    - text: CITYUSDT
+                    - link "Chart for CITYUSDT" [ref=e10364]:
+                      - /url: /symbols/CITYUSDT
+                      - img [ref=e10365]
+                    - link "Trade CITY/USDT on Binance" [ref=e10368]:
+                      - /url: https://www.binance.com/en/trade/CITY_USDT
+                      - img [ref=e10369]
+                - cell "61 0.607" [ref=e10371]:
+                  - generic [ref=e10372]:
+                    - 'progressbar "Bullish score: 0.607" [ref=e10373]'
+                    - generic [ref=e10375]: "0.607"
+                - cell "57%" [ref=e10376]
+                - cell "EMA Bullish" [ref=e10377]:
+                  - generic [ref=e10379]: EMA Bullish
+                - cell [ref=e10380]:
+                  - img [ref=e10381]
+              - row "17 PUMPUSDT 61 0.607 80% EMA Bullish MACD Bullish No Trend" [ref=e10383] [cursor=pointer]:
+                - cell "17" [ref=e10384]
+                - cell "PUMPUSDT" [ref=e10385]:
+                  - generic [ref=e10386]:
+                    - text: PUMPUSDT
+                    - link "Chart for PUMPUSDT" [ref=e10387]:
+                      - /url: /symbols/PUMPUSDT
+                      - img [ref=e10388]
+                    - link "Trade PUMP/USDT on Binance" [ref=e10391]:
+                      - /url: https://www.binance.com/en/trade/PUMP_USDT
+                      - img [ref=e10392]
+                - cell "61 0.607" [ref=e10394]:
+                  - generic [ref=e10395]:
+                    - 'progressbar "Bullish score: 0.607" [ref=e10396]'
+                    - generic [ref=e10398]: "0.607"
+                - cell "80%" [ref=e10399]
+                - cell "EMA Bullish MACD Bullish No Trend" [ref=e10400]:
+                  - generic [ref=e10401]:
+                    - generic [ref=e10402]: EMA Bullish
+                    - generic [ref=e10403]: MACD Bullish
+                    - generic [ref=e10404]: No Trend
+                - cell [ref=e10405]:
+                  - img [ref=e10406]
+              - row "18 GUNUSDT 61 0.606 70% Strong Buying EMA Transition" [ref=e10408] [cursor=pointer]:
+                - cell "18" [ref=e10409]
+                - cell "GUNUSDT" [ref=e10410]:
+                  - generic [ref=e10411]:
+                    - text: GUNUSDT
+                    - link "Chart for GUNUSDT" [ref=e10412]:
+                      - /url: /symbols/GUNUSDT
+                      - img [ref=e10413]
+                    - link "Trade GUN/USDT on Binance" [ref=e10416]:
+                      - /url: https://www.binance.com/en/trade/GUN_USDT
+                      - img [ref=e10417]
+                - cell "61 0.606" [ref=e10419]:
+                  - generic [ref=e10420]:
+                    - 'progressbar "Bullish score: 0.606" [ref=e10421]'
+                    - generic [ref=e10423]: "0.606"
+                - cell "70%" [ref=e10424]
+                - cell "Strong Buying EMA Transition" [ref=e10425]:
+                  - generic [ref=e10426]:
+                    - generic [ref=e10427]: Strong Buying
+                    - generic [ref=e10428]: EMA Transition
+                - cell [ref=e10429]:
+                  - img [ref=e10430]
+              - row "19 ATOMUSDT 60 0.604 75% EMA Bullish Strong Buying BB Squeeze" [ref=e10432] [cursor=pointer]:
+                - cell "19" [ref=e10433]
+                - cell "ATOMUSDT" [ref=e10434]:
+                  - generic [ref=e10435]:
+                    - text: ATOMUSDT
+                    - link "Chart for ATOMUSDT" [ref=e10436]:
+                      - /url: /symbols/ATOMUSDT
+                      - img [ref=e10437]
+                    - link "Trade ATOM/USDT on Binance" [ref=e10440]:
+                      - /url: https://www.binance.com/en/trade/ATOM_USDT
+                      - img [ref=e10441]
+                - cell "60 0.604" [ref=e10443]:
+                  - generic [ref=e10444]:
+                    - 'progressbar "Bullish score: 0.604" [ref=e10445]'
+                    - generic [ref=e10447]: "0.604"
+                - cell "75%" [ref=e10448]
+                - cell "EMA Bullish Strong Buying BB Squeeze" [ref=e10449]:
+                  - generic [ref=e10450]:
+                    - generic [ref=e10451]: EMA Bullish
+                    - generic [ref=e10452]: Strong Buying
+                    - generic [ref=e10453]: BB Squeeze
+                - cell [ref=e10454]:
+                  - img [ref=e10455]
+              - row "20 INJUSDT 60 0.596 76% MACD Bullish BB Squeeze EMA Transition" [ref=e10457] [cursor=pointer]:
+                - cell "20" [ref=e10458]
+                - cell "INJUSDT" [ref=e10459]:
+                  - generic [ref=e10460]:
+                    - text: INJUSDT
+                    - link "Chart for INJUSDT" [ref=e10461]:
+                      - /url: /symbols/INJUSDT
+                      - img [ref=e10462]
+                    - link "Trade INJ/USDT on Binance" [ref=e10465]:
+                      - /url: https://www.binance.com/en/trade/INJ_USDT
+                      - img [ref=e10466]
+                - cell "60 0.596" [ref=e10468]:
+                  - generic [ref=e10469]:
+                    - 'progressbar "Bullish score: 0.596" [ref=e10470]'
+                    - generic [ref=e10472]: "0.596"
+                - cell "76%" [ref=e10473]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e10474]:
+                  - generic [ref=e10475]:
+                    - generic [ref=e10476]: MACD Bullish
+                    - generic [ref=e10477]: BB Squeeze
+                    - generic [ref=e10478]: EMA Transition
+                - cell [ref=e10479]:
+                  - img [ref=e10480]
+              - row "21 TRXUSDT 60 0.596 75% Strong Uptrend EMA Bullish Strong Buying" [ref=e10482] [cursor=pointer]:
+                - cell "21" [ref=e10483]
+                - cell "TRXUSDT" [ref=e10484]:
+                  - generic [ref=e10485]:
+                    - text: TRXUSDT
+                    - link "Chart for TRXUSDT" [ref=e10486]:
+                      - /url: /symbols/TRXUSDT
+                      - img [ref=e10487]
+                    - link "Trade TRX/USDT on Binance" [ref=e10490]:
+                      - /url: https://www.binance.com/en/trade/TRX_USDT
+                      - img [ref=e10491]
+                - cell "60 0.596" [ref=e10493]:
+                  - generic [ref=e10494]:
+                    - 'progressbar "Bullish score: 0.596" [ref=e10495]'
+                    - generic [ref=e10497]: "0.596"
+                - cell "75%" [ref=e10498]
+                - cell "Strong Uptrend EMA Bullish Strong Buying" [ref=e10499]:
+                  - generic [ref=e10500]:
+                    - generic [ref=e10501]: Strong Uptrend
+                    - generic [ref=e10502]: EMA Bullish
+                    - generic [ref=e10503]: Strong Buying
+                - cell [ref=e10504]:
+                  - img [ref=e10505]
+              - row "22 币安人生USDT 59 0.593 74% EMA Bullish No Trend" [ref=e10507] [cursor=pointer]:
+                - cell "22" [ref=e10508]
+                - cell "币安人生USDT" [ref=e10509]:
+                  - generic [ref=e10510]:
+                    - text: 币安人生USDT
+                    - link "Chart for 币安人生USDT" [ref=e10511]:
+                      - /url: /symbols/币安人生USDT
+                      - img [ref=e10512]
+                    - link "Trade 币安人生/USDT on Binance" [ref=e10515]:
+                      - /url: https://www.binance.com/en/trade/币安人生_USDT
+                      - img [ref=e10516]
+                - cell "59 0.593" [ref=e10518]:
+                  - generic [ref=e10519]:
+                    - 'progressbar "Bullish score: 0.593" [ref=e10520]'
+                    - generic [ref=e10522]: "0.593"
+                - cell "74%" [ref=e10523]
+                - cell "EMA Bullish No Trend" [ref=e10524]:
+                  - generic [ref=e10525]:
+                    - generic [ref=e10526]: EMA Bullish
+                    - generic [ref=e10527]: No Trend
+                - cell [ref=e10528]:
+                  - img [ref=e10529]
+              - row "23 AAVEUSDT 59 0.593 75% Strong Uptrend EMA Bullish" [ref=e10531] [cursor=pointer]:
+                - cell "23" [ref=e10532]
+                - cell "AAVEUSDT" [ref=e10533]:
+                  - generic [ref=e10534]:
+                    - text: AAVEUSDT
+                    - link "Chart for AAVEUSDT" [ref=e10535]:
+                      - /url: /symbols/AAVEUSDT
+                      - img [ref=e10536]
+                    - link "Trade AAVE/USDT on Binance" [ref=e10539]:
+                      - /url: https://www.binance.com/en/trade/AAVE_USDT
+                      - img [ref=e10540]
+                - cell "59 0.593" [ref=e10542]:
+                  - generic [ref=e10543]:
+                    - 'progressbar "Bullish score: 0.593" [ref=e10544]'
+                    - generic [ref=e10546]: "0.593"
+                - cell "75%" [ref=e10547]
+                - cell "Strong Uptrend EMA Bullish" [ref=e10548]:
+                  - generic [ref=e10549]:
+                    - generic [ref=e10550]: Strong Uptrend
+                    - generic [ref=e10551]: EMA Bullish
+                - cell [ref=e10552]:
+                  - img [ref=e10553]
+              - row "24 SOMIUSDT 59 0.588 69% EMA Bullish" [ref=e10555] [cursor=pointer]:
+                - cell "24" [ref=e10556]
+                - cell "SOMIUSDT" [ref=e10557]:
+                  - generic [ref=e10558]:
+                    - text: SOMIUSDT
+                    - link "Chart for SOMIUSDT" [ref=e10559]:
+                      - /url: /symbols/SOMIUSDT
+                      - img [ref=e10560]
+                    - link "Trade SOMI/USDT on Binance" [ref=e10563]:
+                      - /url: https://www.binance.com/en/trade/SOMI_USDT
+                      - img [ref=e10564]
+                - cell "59 0.588" [ref=e10566]:
+                  - generic [ref=e10567]:
+                    - 'progressbar "Bullish score: 0.588" [ref=e10568]'
+                    - generic [ref=e10570]: "0.588"
+                - cell "69%" [ref=e10571]
+                - cell "EMA Bullish" [ref=e10572]:
+                  - generic [ref=e10574]: EMA Bullish
+                - cell [ref=e10575]:
+                  - img [ref=e10576]
+              - row "25 OMUSDT 59 0.587 72% EMA Bullish Strong Buying BB Squeeze" [ref=e10578] [cursor=pointer]:
+                - cell "25" [ref=e10579]
+                - cell "OMUSDT" [ref=e10580]:
+                  - generic [ref=e10581]:
+                    - text: OMUSDT
+                    - link "Chart for OMUSDT" [ref=e10582]:
+                      - /url: /symbols/OMUSDT
+                      - img [ref=e10583]
+                    - link "Trade OM/USDT on Binance" [ref=e10586]:
+                      - /url: https://www.binance.com/en/trade/OM_USDT
+                      - img [ref=e10587]
+                - cell "59 0.587" [ref=e10589]:
+                  - generic [ref=e10590]:
+                    - 'progressbar "Bullish score: 0.587" [ref=e10591]'
+                    - generic [ref=e10593]: "0.587"
+                - cell "72%" [ref=e10594]
+                - cell "EMA Bullish Strong Buying BB Squeeze" [ref=e10595]:
+                  - generic [ref=e10596]:
+                    - generic [ref=e10597]: EMA Bullish
+                    - generic [ref=e10598]: Strong Buying
+                    - generic [ref=e10599]: BB Squeeze
+                - cell [ref=e10600]:
+                  - img [ref=e10601]
+              - row "26 LAYERUSDT 59 0.586 74% EMA Bullish" [ref=e10603] [cursor=pointer]:
+                - cell "26" [ref=e10604]
+                - cell "LAYERUSDT" [ref=e10605]:
+                  - generic [ref=e10606]:
+                    - text: LAYERUSDT
+                    - link "Chart for LAYERUSDT" [ref=e10607]:
+                      - /url: /symbols/LAYERUSDT
+                      - img [ref=e10608]
+                    - link "Trade LAYER/USDT on Binance" [ref=e10611]:
+                      - /url: https://www.binance.com/en/trade/LAYER_USDT
+                      - img [ref=e10612]
+                - cell "59 0.586" [ref=e10614]:
+                  - generic [ref=e10615]:
+                    - 'progressbar "Bullish score: 0.586" [ref=e10616]'
+                    - generic [ref=e10618]: "0.586"
+                - cell "74%" [ref=e10619]
+                - cell "EMA Bullish" [ref=e10620]:
+                  - generic [ref=e10622]: EMA Bullish
+                - cell [ref=e10623]:
+                  - img [ref=e10624]
+              - row "27 SOLVUSDT 59 0.586 69% EMA Bullish No Trend" [ref=e10626] [cursor=pointer]:
+                - cell "27" [ref=e10627]
+                - cell "SOLVUSDT" [ref=e10628]:
+                  - generic [ref=e10629]:
+                    - text: SOLVUSDT
+                    - link "Chart for SOLVUSDT" [ref=e10630]:
+                      - /url: /symbols/SOLVUSDT
+                      - img [ref=e10631]
+                    - link "Trade SOLV/USDT on Binance" [ref=e10634]:
+                      - /url: https://www.binance.com/en/trade/SOLV_USDT
+                      - img [ref=e10635]
+                - cell "59 0.586" [ref=e10637]:
+                  - generic [ref=e10638]:
+                    - 'progressbar "Bullish score: 0.586" [ref=e10639]'
+                    - generic [ref=e10641]: "0.586"
+                - cell "69%" [ref=e10642]
+                - cell "EMA Bullish No Trend" [ref=e10643]:
+                  - generic [ref=e10644]:
+                    - generic [ref=e10645]: EMA Bullish
+                    - generic [ref=e10646]: No Trend
+                - cell [ref=e10647]:
+                  - img [ref=e10648]
+              - row "28 PNUTUSDT 59 0.585 79% EMA Bullish" [ref=e10650] [cursor=pointer]:
+                - cell "28" [ref=e10651]
+                - cell "PNUTUSDT" [ref=e10652]:
+                  - generic [ref=e10653]:
+                    - text: PNUTUSDT
+                    - link "Chart for PNUTUSDT" [ref=e10654]:
+                      - /url: /symbols/PNUTUSDT
+                      - img [ref=e10655]
+                    - link "Trade PNUT/USDT on Binance" [ref=e10658]:
+                      - /url: https://www.binance.com/en/trade/PNUT_USDT
+                      - img [ref=e10659]
+                - cell "59 0.585" [ref=e10661]:
+                  - generic [ref=e10662]:
+                    - 'progressbar "Bullish score: 0.585" [ref=e10663]'
+                    - generic [ref=e10665]: "0.585"
+                - cell "79%" [ref=e10666]
+                - cell "EMA Bullish" [ref=e10667]:
+                  - generic [ref=e10669]: EMA Bullish
+                - cell [ref=e10670]:
+                  - img [ref=e10671]
+              - row "29 TWTUSDT 58 0.583 76% EMA Bullish" [ref=e10673] [cursor=pointer]:
+                - cell "29" [ref=e10674]
+                - cell "TWTUSDT" [ref=e10675]:
+                  - generic [ref=e10676]:
+                    - text: TWTUSDT
+                    - link "Chart for TWTUSDT" [ref=e10677]:
+                      - /url: /symbols/TWTUSDT
+                      - img [ref=e10678]
+                    - link "Trade TWT/USDT on Binance" [ref=e10681]:
+                      - /url: https://www.binance.com/en/trade/TWT_USDT
+                      - img [ref=e10682]
+                - cell "58 0.583" [ref=e10684]:
+                  - generic [ref=e10685]:
+                    - 'progressbar "Bullish score: 0.583" [ref=e10686]'
+                    - generic [ref=e10688]: "0.583"
+                - cell "76%" [ref=e10689]
+                - cell "EMA Bullish" [ref=e10690]:
+                  - generic [ref=e10692]: EMA Bullish
+                - cell [ref=e10693]:
+                  - img [ref=e10694]
+              - row "30 BTCUSDT 58 0.582 79% MACD Bullish BB Squeeze EMA Transition" [ref=e10696] [cursor=pointer]:
+                - cell "30" [ref=e10697]
+                - cell "BTCUSDT" [ref=e10698]:
+                  - generic [ref=e10699]:
+                    - text: BTCUSDT
+                    - link "Chart for BTCUSDT" [ref=e10700]:
+                      - /url: /symbols/BTCUSDT
+                      - img [ref=e10701]
+                    - link "Trade BTC/USDT on Binance" [ref=e10704]:
+                      - /url: https://www.binance.com/en/trade/BTC_USDT
+                      - img [ref=e10705]
+                - cell "58 0.582" [ref=e10707]:
+                  - generic [ref=e10708]:
+                    - 'progressbar "Bullish score: 0.582" [ref=e10709]'
+                    - generic [ref=e10711]: "0.582"
+                - cell "79%" [ref=e10712]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e10713]:
+                  - generic [ref=e10714]:
+                    - generic [ref=e10715]: MACD Bullish
+                    - generic [ref=e10716]: BB Squeeze
+                    - generic [ref=e10717]: EMA Transition
+                - cell [ref=e10718]:
+                  - img [ref=e10719]
+              - row "31 AXLUSDT 58 0.582 71% MACD Bullish BB Squeeze EMA Transition" [ref=e10721] [cursor=pointer]:
+                - cell "31" [ref=e10722]
+                - cell "AXLUSDT" [ref=e10723]:
+                  - generic [ref=e10724]:
+                    - text: AXLUSDT
+                    - link "Chart for AXLUSDT" [ref=e10725]:
+                      - /url: /symbols/AXLUSDT
+                      - img [ref=e10726]
+                    - link "Trade AXL/USDT on Binance" [ref=e10729]:
+                      - /url: https://www.binance.com/en/trade/AXL_USDT
+                      - img [ref=e10730]
+                - cell "58 0.582" [ref=e10732]:
+                  - generic [ref=e10733]:
+                    - 'progressbar "Bullish score: 0.582" [ref=e10734]'
+                    - generic [ref=e10736]: "0.582"
+                - cell "71%" [ref=e10737]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e10738]:
+                  - generic [ref=e10739]:
+                    - generic [ref=e10740]: MACD Bullish
+                    - generic [ref=e10741]: BB Squeeze
+                    - generic [ref=e10742]: EMA Transition
+                - cell [ref=e10743]:
+                  - img [ref=e10744]
+              - row "32 MUBARAKUSDT 58 0.581 68% Strong Uptrend EMA Bullish" [ref=e10746] [cursor=pointer]:
+                - cell "32" [ref=e10747]
+                - cell "MUBARAKUSDT" [ref=e10748]:
+                  - generic [ref=e10749]:
+                    - text: MUBARAKUSDT
+                    - link "Chart for MUBARAKUSDT" [ref=e10750]:
+                      - /url: /symbols/MUBARAKUSDT
+                      - img [ref=e10751]
+                    - link "Trade MUBARAK/USDT on Binance" [ref=e10754]:
+                      - /url: https://www.binance.com/en/trade/MUBARAK_USDT
+                      - img [ref=e10755]
+                - cell "58 0.581" [ref=e10757]:
+                  - generic [ref=e10758]:
+                    - 'progressbar "Bullish score: 0.581" [ref=e10759]'
+                    - generic [ref=e10761]: "0.581"
+                - cell "68%" [ref=e10762]
+                - cell "Strong Uptrend EMA Bullish" [ref=e10763]:
+                  - generic [ref=e10764]:
+                    - generic [ref=e10765]: Strong Uptrend
+                    - generic [ref=e10766]: EMA Bullish
+                - cell [ref=e10767]:
+                  - img [ref=e10768]
+              - row "33 AEURUSDT 58 0.580 78% EMA Bearish Stoch Oversold BB Squeeze" [ref=e10770] [cursor=pointer]:
+                - cell "33" [ref=e10771]
+                - cell "AEURUSDT" [ref=e10772]:
+                  - generic [ref=e10773]:
+                    - text: AEURUSDT
+                    - link "Chart for AEURUSDT" [ref=e10774]:
+                      - /url: /symbols/AEURUSDT
+                      - img [ref=e10775]
+                    - link "Trade AEUR/USDT on Binance" [ref=e10778]:
+                      - /url: https://www.binance.com/en/trade/AEUR_USDT
+                      - img [ref=e10779]
+                - cell "58 0.580" [ref=e10781]:
+                  - generic [ref=e10782]:
+                    - 'progressbar "Bullish score: 0.580" [ref=e10783]'
+                    - generic [ref=e10785]: "0.580"
+                - cell "78%" [ref=e10786]
+                - cell "EMA Bearish Stoch Oversold BB Squeeze" [ref=e10787]:
+                  - generic [ref=e10788]:
+                    - generic [ref=e10789]: EMA Bearish
+                    - generic [ref=e10790]: Stoch Oversold
+                    - generic [ref=e10791]: BB Squeeze
+                - cell [ref=e10792]:
+                  - img [ref=e10793]
+              - row "34 WBTCUSDT 58 0.578 78% MACD Bullish BB Squeeze EMA Transition" [ref=e10795] [cursor=pointer]:
+                - cell "34" [ref=e10796]
+                - cell "WBTCUSDT" [ref=e10797]:
+                  - generic [ref=e10798]:
+                    - text: WBTCUSDT
+                    - link "Chart for WBTCUSDT" [ref=e10799]:
+                      - /url: /symbols/WBTCUSDT
+                      - img [ref=e10800]
+                    - link "Trade WBTC/USDT on Binance" [ref=e10803]:
+                      - /url: https://www.binance.com/en/trade/WBTC_USDT
+                      - img [ref=e10804]
+                - cell "58 0.578" [ref=e10806]:
+                  - generic [ref=e10807]:
+                    - 'progressbar "Bullish score: 0.578" [ref=e10808]'
+                    - generic [ref=e10810]: "0.578"
+                - cell "78%" [ref=e10811]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e10812]:
+                  - generic [ref=e10813]:
+                    - generic [ref=e10814]: MACD Bullish
+                    - generic [ref=e10815]: BB Squeeze
+                    - generic [ref=e10816]: EMA Transition
+                - cell [ref=e10817]:
+                  - img [ref=e10818]
+              - row "35 ROSEUSDT 58 0.577 84% MACD Bullish EMA Transition No Trend" [ref=e10820] [cursor=pointer]:
+                - cell "35" [ref=e10821]
+                - cell "ROSEUSDT" [ref=e10822]:
+                  - generic [ref=e10823]:
+                    - text: ROSEUSDT
+                    - link "Chart for ROSEUSDT" [ref=e10824]:
+                      - /url: /symbols/ROSEUSDT
+                      - img [ref=e10825]
+                    - link "Trade ROSE/USDT on Binance" [ref=e10828]:
+                      - /url: https://www.binance.com/en/trade/ROSE_USDT
+                      - img [ref=e10829]
+                - cell "58 0.577" [ref=e10831]:
+                  - generic [ref=e10832]:
+                    - 'progressbar "Bullish score: 0.577" [ref=e10833]'
+                    - generic [ref=e10835]: "0.577"
+                - cell "84%" [ref=e10836]
+                - cell "MACD Bullish EMA Transition No Trend" [ref=e10837]:
+                  - generic [ref=e10838]:
+                    - generic [ref=e10839]: MACD Bullish
+                    - generic [ref=e10840]: EMA Transition
+                    - generic [ref=e10841]: No Trend
+                - cell [ref=e10842]:
+                  - img [ref=e10843]
+              - row "36 PYTHUSDT 58 0.576 70% EMA Bullish No Trend" [ref=e10845] [cursor=pointer]:
+                - cell "36" [ref=e10846]
+                - cell "PYTHUSDT" [ref=e10847]:
+                  - generic [ref=e10848]:
+                    - text: PYTHUSDT
+                    - link "Chart for PYTHUSDT" [ref=e10849]:
+                      - /url: /symbols/PYTHUSDT
+                      - img [ref=e10850]
+                    - link "Trade PYTH/USDT on Binance" [ref=e10853]:
+                      - /url: https://www.binance.com/en/trade/PYTH_USDT
+                      - img [ref=e10854]
+                - cell "58 0.576" [ref=e10856]:
+                  - generic [ref=e10857]:
+                    - 'progressbar "Bullish score: 0.576" [ref=e10858]'
+                    - generic [ref=e10860]: "0.576"
+                - cell "70%" [ref=e10861]
+                - cell "EMA Bullish No Trend" [ref=e10862]:
+                  - generic [ref=e10863]:
+                    - generic [ref=e10864]: EMA Bullish
+                    - generic [ref=e10865]: No Trend
+                - cell [ref=e10866]:
+                  - img [ref=e10867]
+              - row "37 WLDUSDT 58 0.576 90% EMA Bullish MACD Bullish No Trend" [ref=e10869] [cursor=pointer]:
+                - cell "37" [ref=e10870]
+                - cell "WLDUSDT" [ref=e10871]:
+                  - generic [ref=e10872]:
+                    - text: WLDUSDT
+                    - link "Chart for WLDUSDT" [ref=e10873]:
+                      - /url: /symbols/WLDUSDT
+                      - img [ref=e10874]
+                    - link "Trade WLD/USDT on Binance" [ref=e10877]:
+                      - /url: https://www.binance.com/en/trade/WLD_USDT
+                      - img [ref=e10878]
+                - cell "58 0.576" [ref=e10880]:
+                  - generic [ref=e10881]:
+                    - 'progressbar "Bullish score: 0.576" [ref=e10882]'
+                    - generic [ref=e10884]: "0.576"
+                - cell "90%" [ref=e10885]
+                - cell "EMA Bullish MACD Bullish No Trend" [ref=e10886]:
+                  - generic [ref=e10887]:
+                    - generic [ref=e10888]: EMA Bullish
+                    - generic [ref=e10889]: MACD Bullish
+                    - generic [ref=e10890]: No Trend
+                - cell [ref=e10891]:
+                  - img [ref=e10892]
+              - row "38 JUPUSDT 57 0.574 72% MACD Bullish EMA Transition No Trend" [ref=e10894] [cursor=pointer]:
+                - cell "38" [ref=e10895]
+                - cell "JUPUSDT" [ref=e10896]:
+                  - generic [ref=e10897]:
+                    - text: JUPUSDT
+                    - link "Chart for JUPUSDT" [ref=e10898]:
+                      - /url: /symbols/JUPUSDT
+                      - img [ref=e10899]
+                    - link "Trade JUP/USDT on Binance" [ref=e10902]:
+                      - /url: https://www.binance.com/en/trade/JUP_USDT
+                      - img [ref=e10903]
+                - cell "57 0.574" [ref=e10905]:
+                  - generic [ref=e10906]:
+                    - 'progressbar "Bullish score: 0.574" [ref=e10907]'
+                    - generic [ref=e10909]: "0.574"
+                - cell "72%" [ref=e10910]
+                - cell "MACD Bullish EMA Transition No Trend" [ref=e10911]:
+                  - generic [ref=e10912]:
+                    - generic [ref=e10913]: MACD Bullish
+                    - generic [ref=e10914]: EMA Transition
+                    - generic [ref=e10915]: No Trend
+                - cell [ref=e10916]:
+                  - img [ref=e10917]
+              - row "39 FETUSDT 57 0.574 87% EMA Bullish No Trend" [ref=e10919] [cursor=pointer]:
+                - cell "39" [ref=e10920]
+                - cell "FETUSDT" [ref=e10921]:
+                  - generic [ref=e10922]:
+                    - text: FETUSDT
+                    - link "Chart for FETUSDT" [ref=e10923]:
+                      - /url: /symbols/FETUSDT
+                      - img [ref=e10924]
+                    - link "Trade FET/USDT on Binance" [ref=e10927]:
+                      - /url: https://www.binance.com/en/trade/FET_USDT
+                      - img [ref=e10928]
+                - cell "57 0.574" [ref=e10930]:
+                  - generic [ref=e10931]:
+                    - 'progressbar "Bullish score: 0.574" [ref=e10932]'
+                    - generic [ref=e10934]: "0.574"
+                - cell "87%" [ref=e10935]
+                - cell "EMA Bullish No Trend" [ref=e10936]:
+                  - generic [ref=e10937]:
+                    - generic [ref=e10938]: EMA Bullish
+                    - generic [ref=e10939]: No Trend
+                - cell [ref=e10940]:
+                  - img [ref=e10941]
+              - row "40 HBARUSDT 57 0.574 89% EMA Bullish" [ref=e10943] [cursor=pointer]:
+                - cell "40" [ref=e10944]
+                - cell "HBARUSDT" [ref=e10945]:
+                  - generic [ref=e10946]:
+                    - text: HBARUSDT
+                    - link "Chart for HBARUSDT" [ref=e10947]:
+                      - /url: /symbols/HBARUSDT
+                      - img [ref=e10948]
+                    - link "Trade HBAR/USDT on Binance" [ref=e10951]:
+                      - /url: https://www.binance.com/en/trade/HBAR_USDT
+                      - img [ref=e10952]
+                - cell "57 0.574" [ref=e10954]:
+                  - generic [ref=e10955]:
+                    - 'progressbar "Bullish score: 0.574" [ref=e10956]'
+                    - generic [ref=e10958]: "0.574"
+                - cell "89%" [ref=e10959]
+                - cell "EMA Bullish" [ref=e10960]:
+                  - generic [ref=e10962]: EMA Bullish
+                - cell [ref=e10963]:
+                  - img [ref=e10964]
+              - row "41 NEARUSDT 57 0.573 86% EMA Transition No Trend" [ref=e10966] [cursor=pointer]:
+                - cell "41" [ref=e10967]
+                - cell "NEARUSDT" [ref=e10968]:
+                  - generic [ref=e10969]:
+                    - text: NEARUSDT
+                    - link "Chart for NEARUSDT" [ref=e10970]:
+                      - /url: /symbols/NEARUSDT
+                      - img [ref=e10971]
+                    - link "Trade NEAR/USDT on Binance" [ref=e10974]:
+                      - /url: https://www.binance.com/en/trade/NEAR_USDT
+                      - img [ref=e10975]
+                - cell "57 0.573" [ref=e10977]:
+                  - generic [ref=e10978]:
+                    - 'progressbar "Bullish score: 0.573" [ref=e10979]'
+                    - generic [ref=e10981]: "0.573"
+                - cell "86%" [ref=e10982]
+                - cell "EMA Transition No Trend" [ref=e10983]:
+                  - generic [ref=e10984]:
+                    - generic [ref=e10985]: EMA Transition
+                    - generic [ref=e10986]: No Trend
+                - cell [ref=e10987]:
+                  - img [ref=e10988]
+              - row "42 PAXGUSDT 57 0.571 73% Strong Uptrend MACD Bullish Stoch Overbought" [ref=e10990] [cursor=pointer]:
+                - cell "42" [ref=e10991]
+                - cell "PAXGUSDT" [ref=e10992]:
+                  - generic [ref=e10993]:
+                    - text: PAXGUSDT
+                    - link "Chart for PAXGUSDT" [ref=e10994]:
+                      - /url: /symbols/PAXGUSDT
+                      - img [ref=e10995]
+                    - link "Trade PAXG/USDT on Binance" [ref=e10998]:
+                      - /url: https://www.binance.com/en/trade/PAXG_USDT
+                      - img [ref=e10999]
+                - cell "57 0.571" [ref=e11001]:
+                  - generic [ref=e11002]:
+                    - 'progressbar "Bullish score: 0.571" [ref=e11003]'
+                    - generic [ref=e11005]: "0.571"
+                - cell "73%" [ref=e11006]
+                - cell "Strong Uptrend MACD Bullish Stoch Overbought" [ref=e11007]:
+                  - generic [ref=e11008]:
+                    - generic [ref=e11009]: Strong Uptrend
+                    - generic [ref=e11010]: MACD Bullish
+                    - generic [ref=e11011]: Stoch Overbought
+                - cell [ref=e11012]:
+                  - img [ref=e11013]
+              - row "43 SAHARAUSDT 57 0.569 76% EMA Bullish No Trend" [ref=e11015] [cursor=pointer]:
+                - cell "43" [ref=e11016]
+                - cell "SAHARAUSDT" [ref=e11017]:
+                  - generic [ref=e11018]:
+                    - text: SAHARAUSDT
+                    - link "Chart for SAHARAUSDT" [ref=e11019]:
+                      - /url: /symbols/SAHARAUSDT
+                      - img [ref=e11020]
+                    - link "Trade SAHARA/USDT on Binance" [ref=e11023]:
+                      - /url: https://www.binance.com/en/trade/SAHARA_USDT
+                      - img [ref=e11024]
+                - cell "57 0.569" [ref=e11026]:
+                  - generic [ref=e11027]:
+                    - 'progressbar "Bullish score: 0.569" [ref=e11028]'
+                    - generic [ref=e11030]: "0.569"
+                - cell "76%" [ref=e11031]
+                - cell "EMA Bullish No Trend" [ref=e11032]:
+                  - generic [ref=e11033]:
+                    - generic [ref=e11034]: EMA Bullish
+                    - generic [ref=e11035]: No Trend
+                - cell [ref=e11036]:
+                  - img [ref=e11037]
+              - row "44 BLURUSDT 57 0.569 68% EMA Bullish BB Squeeze" [ref=e11039] [cursor=pointer]:
+                - cell "44" [ref=e11040]
+                - cell "BLURUSDT" [ref=e11041]:
+                  - generic [ref=e11042]:
+                    - text: BLURUSDT
+                    - link "Chart for BLURUSDT" [ref=e11043]:
+                      - /url: /symbols/BLURUSDT
+                      - img [ref=e11044]
+                    - link "Trade BLUR/USDT on Binance" [ref=e11047]:
+                      - /url: https://www.binance.com/en/trade/BLUR_USDT
+                      - img [ref=e11048]
+                - cell "57 0.569" [ref=e11050]:
+                  - generic [ref=e11051]:
+                    - 'progressbar "Bullish score: 0.569" [ref=e11052]'
+                    - generic [ref=e11054]: "0.569"
+                - cell "68%" [ref=e11055]
+                - cell "EMA Bullish BB Squeeze" [ref=e11056]:
+                  - generic [ref=e11057]:
+                    - generic [ref=e11058]: EMA Bullish
+                    - generic [ref=e11059]: BB Squeeze
+                - cell [ref=e11060]:
+                  - img [ref=e11061]
+              - row "45 KITEUSDT 57 0.568 65% EMA Bullish Strong Selling No Trend" [ref=e11063] [cursor=pointer]:
+                - cell "45" [ref=e11064]
+                - cell "KITEUSDT" [ref=e11065]:
+                  - generic [ref=e11066]:
+                    - text: KITEUSDT
+                    - link "Chart for KITEUSDT" [ref=e11067]:
+                      - /url: /symbols/KITEUSDT
+                      - img [ref=e11068]
+                    - link "Trade KITE/USDT on Binance" [ref=e11071]:
+                      - /url: https://www.binance.com/en/trade/KITE_USDT
+                      - img [ref=e11072]
+                - cell "57 0.568" [ref=e11074]:
+                  - generic [ref=e11075]:
+                    - 'progressbar "Bullish score: 0.568" [ref=e11076]'
+                    - generic [ref=e11078]: "0.568"
+                - cell "65%" [ref=e11079]
+                - cell "EMA Bullish Strong Selling No Trend" [ref=e11080]:
+                  - generic [ref=e11081]:
+                    - generic [ref=e11082]: EMA Bullish
+                    - generic [ref=e11083]: Strong Selling
+                    - generic [ref=e11084]: No Trend
+                - cell [ref=e11085]:
+                  - img [ref=e11086]
+              - row "46 SEIUSDT 56 0.565 83% EMA Bullish" [ref=e11088] [cursor=pointer]:
+                - cell "46" [ref=e11089]
+                - cell "SEIUSDT" [ref=e11090]:
+                  - generic [ref=e11091]:
+                    - text: SEIUSDT
+                    - link "Chart for SEIUSDT" [ref=e11092]:
+                      - /url: /symbols/SEIUSDT
+                      - img [ref=e11093]
+                    - link "Trade SEI/USDT on Binance" [ref=e11096]:
+                      - /url: https://www.binance.com/en/trade/SEI_USDT
+                      - img [ref=e11097]
+                - cell "56 0.565" [ref=e11099]:
+                  - generic [ref=e11100]:
+                    - 'progressbar "Bullish score: 0.565" [ref=e11101]'
+                    - generic [ref=e11103]: "0.565"
+                - cell "83%" [ref=e11104]
+                - cell "EMA Bullish" [ref=e11105]:
+                  - generic [ref=e11107]: EMA Bullish
+                - cell [ref=e11108]:
+                  - img [ref=e11109]
+              - row "47 PROVEUSDT 56 0.563 79% EMA Bullish" [ref=e11111] [cursor=pointer]:
+                - cell "47" [ref=e11112]
+                - cell "PROVEUSDT" [ref=e11113]:
+                  - generic [ref=e11114]:
+                    - text: PROVEUSDT
+                    - link "Chart for PROVEUSDT" [ref=e11115]:
+                      - /url: /symbols/PROVEUSDT
+                      - img [ref=e11116]
+                    - link "Trade PROVE/USDT on Binance" [ref=e11119]:
+                      - /url: https://www.binance.com/en/trade/PROVE_USDT
+                      - img [ref=e11120]
+                - cell "56 0.563" [ref=e11122]:
+                  - generic [ref=e11123]:
+                    - 'progressbar "Bullish score: 0.563" [ref=e11124]'
+                    - generic [ref=e11126]: "0.563"
+                - cell "79%" [ref=e11127]
+                - cell "EMA Bullish" [ref=e11128]:
+                  - generic [ref=e11130]: EMA Bullish
+                - cell [ref=e11131]:
+                  - img [ref=e11132]
+              - row "48 KAITOUSDT 56 0.562 75% EMA Bullish" [ref=e11134] [cursor=pointer]:
+                - cell "48" [ref=e11135]
+                - cell "KAITOUSDT" [ref=e11136]:
+                  - generic [ref=e11137]:
+                    - text: KAITOUSDT
+                    - link "Chart for KAITOUSDT" [ref=e11138]:
+                      - /url: /symbols/KAITOUSDT
+                      - img [ref=e11139]
+                    - link "Trade KAITO/USDT on Binance" [ref=e11142]:
+                      - /url: https://www.binance.com/en/trade/KAITO_USDT
+                      - img [ref=e11143]
+                - cell "56 0.562" [ref=e11145]:
+                  - generic [ref=e11146]:
+                    - 'progressbar "Bullish score: 0.562" [ref=e11147]'
+                    - generic [ref=e11149]: "0.562"
+                - cell "75%" [ref=e11150]
+                - cell "EMA Bullish" [ref=e11151]:
+                  - generic [ref=e11153]: EMA Bullish
+                - cell [ref=e11154]:
+                  - img [ref=e11155]
+              - row "49 BNSOLUSDT 56 0.561 73% MACD Bullish BB Squeeze EMA Transition" [ref=e11157] [cursor=pointer]:
+                - cell "49" [ref=e11158]
+                - cell "BNSOLUSDT" [ref=e11159]:
+                  - generic [ref=e11160]:
+                    - text: BNSOLUSDT
+                    - link "Chart for BNSOLUSDT" [ref=e11161]:
+                      - /url: /symbols/BNSOLUSDT
+                      - img [ref=e11162]
+                    - link "Trade BNSOL/USDT on Binance" [ref=e11165]:
+                      - /url: https://www.binance.com/en/trade/BNSOL_USDT
+                      - img [ref=e11166]
+                - cell "56 0.561" [ref=e11168]:
+                  - generic [ref=e11169]:
+                    - 'progressbar "Bullish score: 0.561" [ref=e11170]'
+                    - generic [ref=e11172]: "0.561"
+                - cell "73%" [ref=e11173]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e11174]:
+                  - generic [ref=e11175]:
+                    - generic [ref=e11176]: MACD Bullish
+                    - generic [ref=e11177]: BB Squeeze
+                    - generic [ref=e11178]: EMA Transition
+                - cell [ref=e11179]:
+                  - img [ref=e11180]
+              - row "50 XVGUSDT 56 0.560 71% EMA Bullish" [ref=e11182] [cursor=pointer]:
+                - cell "50" [ref=e11183]
+                - cell "XVGUSDT" [ref=e11184]:
+                  - generic [ref=e11185]:
+                    - text: XVGUSDT
+                    - link "Chart for XVGUSDT" [ref=e11186]:
+                      - /url: /symbols/XVGUSDT
+                      - img [ref=e11187]
+                    - link "Trade XVG/USDT on Binance" [ref=e11190]:
+                      - /url: https://www.binance.com/en/trade/XVG_USDT
+                      - img [ref=e11191]
+                - cell "56 0.560" [ref=e11193]:
+                  - generic [ref=e11194]:
+                    - 'progressbar "Bullish score: 0.560" [ref=e11195]'
+                    - generic [ref=e11197]: "0.560"
+                - cell "71%" [ref=e11198]
+                - cell "EMA Bullish" [ref=e11199]:
+                  - generic [ref=e11201]: EMA Bullish
+                - cell [ref=e11202]:
+                  - img [ref=e11203]
+              - row "51 LINKUSDT 56 0.560 86% EMA Bullish Stoch Overbought No Trend" [ref=e11205] [cursor=pointer]:
+                - cell "51" [ref=e11206]
+                - cell "LINKUSDT" [ref=e11207]:
+                  - generic [ref=e11208]:
+                    - text: LINKUSDT
+                    - link "Chart for LINKUSDT" [ref=e11209]:
+                      - /url: /symbols/LINKUSDT
+                      - img [ref=e11210]
+                    - link "Trade LINK/USDT on Binance" [ref=e11213]:
+                      - /url: https://www.binance.com/en/trade/LINK_USDT
+                      - img [ref=e11214]
+                - cell "56 0.560" [ref=e11216]:
+                  - generic [ref=e11217]:
+                    - 'progressbar "Bullish score: 0.560" [ref=e11218]'
+                    - generic [ref=e11220]: "0.560"
+                - cell "86%" [ref=e11221]
+                - cell "EMA Bullish Stoch Overbought No Trend" [ref=e11222]:
+                  - generic [ref=e11223]:
+                    - generic [ref=e11224]: EMA Bullish
+                    - generic [ref=e11225]: Stoch Overbought
+                    - generic [ref=e11226]: No Trend
+                - cell [ref=e11227]:
+                  - img [ref=e11228]
+              - row "52 BCHUSDT 56 0.555 76% MACD Bullish BB Squeeze EMA Transition" [ref=e11230] [cursor=pointer]:
+                - cell "52" [ref=e11231]
+                - cell "BCHUSDT" [ref=e11232]:
+                  - generic [ref=e11233]:
+                    - text: BCHUSDT
+                    - link "Chart for BCHUSDT" [ref=e11234]:
+                      - /url: /symbols/BCHUSDT
+                      - img [ref=e11235]
+                    - link "Trade BCH/USDT on Binance" [ref=e11238]:
+                      - /url: https://www.binance.com/en/trade/BCH_USDT
+                      - img [ref=e11239]
+                - cell "56 0.555" [ref=e11241]:
+                  - generic [ref=e11242]:
+                    - 'progressbar "Bullish score: 0.555" [ref=e11243]'
+                    - generic [ref=e11245]: "0.555"
+                - cell "76%" [ref=e11246]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e11247]:
+                  - generic [ref=e11248]:
+                    - generic [ref=e11249]: MACD Bullish
+                    - generic [ref=e11250]: BB Squeeze
+                    - generic [ref=e11251]: EMA Transition
+                - cell [ref=e11252]:
+                  - img [ref=e11253]
+              - row "53 EURIUSDT 55 0.554 63% Strong Downtrend EMA Bearish MACD Bullish" [ref=e11255] [cursor=pointer]:
+                - cell "53" [ref=e11256]
+                - cell "EURIUSDT" [ref=e11257]:
+                  - generic [ref=e11258]:
+                    - text: EURIUSDT
+                    - link "Chart for EURIUSDT" [ref=e11259]:
+                      - /url: /symbols/EURIUSDT
+                      - img [ref=e11260]
+                    - link "Trade EURI/USDT on Binance" [ref=e11263]:
+                      - /url: https://www.binance.com/en/trade/EURI_USDT
+                      - img [ref=e11264]
+                - cell "55 0.554" [ref=e11266]:
+                  - generic [ref=e11267]:
+                    - 'progressbar "Bullish score: 0.554" [ref=e11268]'
+                    - generic [ref=e11270]: "0.554"
+                - cell "63%" [ref=e11271]
+                - cell "Strong Downtrend EMA Bearish MACD Bullish" [ref=e11272]:
+                  - generic [ref=e11273]:
+                    - generic [ref=e11274]: Strong Downtrend
+                    - generic [ref=e11275]: EMA Bearish
+                    - generic [ref=e11276]: MACD Bullish
+                - cell [ref=e11277]:
+                  - img [ref=e11278]
+              - row "54 WUSDT 55 0.550 86% EMA Bullish" [ref=e11280] [cursor=pointer]:
+                - cell "54" [ref=e11281]
+                - cell "WUSDT" [ref=e11282]:
+                  - generic [ref=e11283]:
+                    - text: WUSDT
+                    - link "Chart for WUSDT" [ref=e11284]:
+                      - /url: /symbols/WUSDT
+                      - img [ref=e11285]
+                    - link "Trade W/USDT on Binance" [ref=e11288]:
+                      - /url: https://www.binance.com/en/trade/W_USDT
+                      - img [ref=e11289]
+                - cell "55 0.550" [ref=e11291]:
+                  - generic [ref=e11292]:
+                    - 'progressbar "Bullish score: 0.550" [ref=e11293]'
+                    - generic [ref=e11295]: "0.550"
+                - cell "86%" [ref=e11296]
+                - cell "EMA Bullish" [ref=e11297]:
+                  - generic [ref=e11299]: EMA Bullish
+                - cell [ref=e11300]:
+                  - img [ref=e11301]
+              - row "55 DCRUSDT 55 0.550 71% EMA Transition" [ref=e11303] [cursor=pointer]:
+                - cell "55" [ref=e11304]
+                - cell "DCRUSDT" [ref=e11305]:
+                  - generic [ref=e11306]:
+                    - text: DCRUSDT
+                    - link "Chart for DCRUSDT" [ref=e11307]:
+                      - /url: /symbols/DCRUSDT
+                      - img [ref=e11308]
+                    - link "Trade DCR/USDT on Binance" [ref=e11311]:
+                      - /url: https://www.binance.com/en/trade/DCR_USDT
+                      - img [ref=e11312]
+                - cell "55 0.550" [ref=e11314]:
+                  - generic [ref=e11315]:
+                    - 'progressbar "Bullish score: 0.550" [ref=e11316]'
+                    - generic [ref=e11318]: "0.550"
+                - cell "71%" [ref=e11319]
+                - cell "EMA Transition" [ref=e11320]:
+                  - generic [ref=e11322]: EMA Transition
+                - cell [ref=e11323]:
+                  - img [ref=e11324]
+              - row "56 HYPERUSDT 55 0.548 62% EMA Bullish MACD Bearish" [ref=e11326] [cursor=pointer]:
+                - cell "56" [ref=e11327]
+                - cell "HYPERUSDT" [ref=e11328]:
+                  - generic [ref=e11329]:
+                    - text: HYPERUSDT
+                    - link "Chart for HYPERUSDT" [ref=e11330]:
+                      - /url: /symbols/HYPERUSDT
+                      - img [ref=e11331]
+                    - link "Trade HYPER/USDT on Binance" [ref=e11334]:
+                      - /url: https://www.binance.com/en/trade/HYPER_USDT
+                      - img [ref=e11335]
+                - cell "55 0.548" [ref=e11337]:
+                  - generic [ref=e11338]:
+                    - 'progressbar "Bullish score: 0.548" [ref=e11339]'
+                    - generic [ref=e11341]: "0.548"
+                - cell "62%" [ref=e11342]
+                - cell "EMA Bullish MACD Bearish" [ref=e11343]:
+                  - generic [ref=e11344]:
+                    - generic [ref=e11345]: EMA Bullish
+                    - generic [ref=e11346]: MACD Bearish
+                - cell [ref=e11347]:
+                  - img [ref=e11348]
+              - row "57 SANDUSDT 55 0.546 80% EMA Bullish BB Squeeze No Trend" [ref=e11350] [cursor=pointer]:
+                - cell "57" [ref=e11351]
+                - cell "SANDUSDT" [ref=e11352]:
+                  - generic [ref=e11353]:
+                    - text: SANDUSDT
+                    - link "Chart for SANDUSDT" [ref=e11354]:
+                      - /url: /symbols/SANDUSDT
+                      - img [ref=e11355]
+                    - link "Trade SAND/USDT on Binance" [ref=e11358]:
+                      - /url: https://www.binance.com/en/trade/SAND_USDT
+                      - img [ref=e11359]
+                - cell "55 0.546" [ref=e11361]:
+                  - generic [ref=e11362]:
+                    - 'progressbar "Bullish score: 0.546" [ref=e11363]'
+                    - generic [ref=e11365]: "0.546"
+                - cell "80%" [ref=e11366]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e11367]:
+                  - generic [ref=e11368]:
+                    - generic [ref=e11369]: EMA Bullish
+                    - generic [ref=e11370]: BB Squeeze
+                    - generic [ref=e11371]: No Trend
+                - cell [ref=e11372]:
+                  - img [ref=e11373]
+              - row "58 INITUSDT 55 0.545 82% EMA Bullish No Trend" [ref=e11375] [cursor=pointer]:
+                - cell "58" [ref=e11376]
+                - cell "INITUSDT" [ref=e11377]:
+                  - generic [ref=e11378]:
+                    - text: INITUSDT
+                    - link "Chart for INITUSDT" [ref=e11379]:
+                      - /url: /symbols/INITUSDT
+                      - img [ref=e11380]
+                    - link "Trade INIT/USDT on Binance" [ref=e11383]:
+                      - /url: https://www.binance.com/en/trade/INIT_USDT
+                      - img [ref=e11384]
+                - cell "55 0.545" [ref=e11386]:
+                  - generic [ref=e11387]:
+                    - 'progressbar "Bullish score: 0.545" [ref=e11388]'
+                    - generic [ref=e11390]: "0.545"
+                - cell "82%" [ref=e11391]
+                - cell "EMA Bullish No Trend" [ref=e11392]:
+                  - generic [ref=e11393]:
+                    - generic [ref=e11394]: EMA Bullish
+                    - generic [ref=e11395]: No Trend
+                - cell [ref=e11396]:
+                  - img [ref=e11397]
+              - row "59 RENDERUSDT 54 0.544 88% EMA Bullish No Trend" [ref=e11399] [cursor=pointer]:
+                - cell "59" [ref=e11400]
+                - cell "RENDERUSDT" [ref=e11401]:
+                  - generic [ref=e11402]:
+                    - text: RENDERUSDT
+                    - link "Chart for RENDERUSDT" [ref=e11403]:
+                      - /url: /symbols/RENDERUSDT
+                      - img [ref=e11404]
+                    - link "Trade RENDER/USDT on Binance" [ref=e11407]:
+                      - /url: https://www.binance.com/en/trade/RENDER_USDT
+                      - img [ref=e11408]
+                - cell "54 0.544" [ref=e11410]:
+                  - generic [ref=e11411]:
+                    - 'progressbar "Bullish score: 0.544" [ref=e11412]'
+                    - generic [ref=e11414]: "0.544"
+                - cell "88%" [ref=e11415]
+                - cell "EMA Bullish No Trend" [ref=e11416]:
+                  - generic [ref=e11417]:
+                    - generic [ref=e11418]: EMA Bullish
+                    - generic [ref=e11419]: No Trend
+                - cell [ref=e11420]:
+                  - img [ref=e11421]
+              - row "60 ADAUSDT 54 0.543 89% EMA Bullish BB Squeeze No Trend" [ref=e11423] [cursor=pointer]:
+                - cell "60" [ref=e11424]
+                - cell "ADAUSDT" [ref=e11425]:
+                  - generic [ref=e11426]:
+                    - text: ADAUSDT
+                    - link "Chart for ADAUSDT" [ref=e11427]:
+                      - /url: /symbols/ADAUSDT
+                      - img [ref=e11428]
+                    - link "Trade ADA/USDT on Binance" [ref=e11431]:
+                      - /url: https://www.binance.com/en/trade/ADA_USDT
+                      - img [ref=e11432]
+                - cell "54 0.543" [ref=e11434]:
+                  - generic [ref=e11435]:
+                    - 'progressbar "Bullish score: 0.543" [ref=e11436]'
+                    - generic [ref=e11438]: "0.543"
+                - cell "89%" [ref=e11439]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e11440]:
+                  - generic [ref=e11441]:
+                    - generic [ref=e11442]: EMA Bullish
+                    - generic [ref=e11443]: BB Squeeze
+                    - generic [ref=e11444]: No Trend
+                - cell [ref=e11445]:
+                  - img [ref=e11446]
+              - row "61 SUIUSDT 54 0.543 94% EMA Bullish BB Squeeze No Trend" [ref=e11448] [cursor=pointer]:
+                - cell "61" [ref=e11449]
+                - cell "SUIUSDT" [ref=e11450]:
+                  - generic [ref=e11451]:
+                    - text: SUIUSDT
+                    - link "Chart for SUIUSDT" [ref=e11452]:
+                      - /url: /symbols/SUIUSDT
+                      - img [ref=e11453]
+                    - link "Trade SUI/USDT on Binance" [ref=e11456]:
+                      - /url: https://www.binance.com/en/trade/SUI_USDT
+                      - img [ref=e11457]
+                - cell "54 0.543" [ref=e11459]:
+                  - generic [ref=e11460]:
+                    - 'progressbar "Bullish score: 0.543" [ref=e11461]'
+                    - generic [ref=e11463]: "0.543"
+                - cell "94%" [ref=e11464]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e11465]:
+                  - generic [ref=e11466]:
+                    - generic [ref=e11467]: EMA Bullish
+                    - generic [ref=e11468]: BB Squeeze
+                    - generic [ref=e11469]: No Trend
+                - cell [ref=e11470]:
+                  - img [ref=e11471]
+              - row "62 SKYUSDT 54 0.543 84% EMA Bullish BB Squeeze" [ref=e11473] [cursor=pointer]:
+                - cell "62" [ref=e11474]
+                - cell "SKYUSDT" [ref=e11475]:
+                  - generic [ref=e11476]:
+                    - text: SKYUSDT
+                    - link "Chart for SKYUSDT" [ref=e11477]:
+                      - /url: /symbols/SKYUSDT
+                      - img [ref=e11478]
+                    - link "Trade SKY/USDT on Binance" [ref=e11481]:
+                      - /url: https://www.binance.com/en/trade/SKY_USDT
+                      - img [ref=e11482]
+                - cell "54 0.543" [ref=e11484]:
+                  - generic [ref=e11485]:
+                    - 'progressbar "Bullish score: 0.543" [ref=e11486]'
+                    - generic [ref=e11488]: "0.543"
+                - cell "84%" [ref=e11489]
+                - cell "EMA Bullish BB Squeeze" [ref=e11490]:
+                  - generic [ref=e11491]:
+                    - generic [ref=e11492]: EMA Bullish
+                    - generic [ref=e11493]: BB Squeeze
+                - cell [ref=e11494]:
+                  - img [ref=e11495]
+              - row "63 UNIUSDT 54 0.542 71% MACD Bullish EMA Transition" [ref=e11497] [cursor=pointer]:
+                - cell "63" [ref=e11498]
+                - cell "UNIUSDT" [ref=e11499]:
+                  - generic [ref=e11500]:
+                    - text: UNIUSDT
+                    - link "Chart for UNIUSDT" [ref=e11501]:
+                      - /url: /symbols/UNIUSDT
+                      - img [ref=e11502]
+                    - link "Trade UNI/USDT on Binance" [ref=e11505]:
+                      - /url: https://www.binance.com/en/trade/UNI_USDT
+                      - img [ref=e11506]
+                - cell "54 0.542" [ref=e11508]:
+                  - generic [ref=e11509]:
+                    - 'progressbar "Bullish score: 0.542" [ref=e11510]'
+                    - generic [ref=e11512]: "0.542"
+                - cell "71%" [ref=e11513]
+                - cell "MACD Bullish EMA Transition" [ref=e11514]:
+                  - generic [ref=e11515]:
+                    - generic [ref=e11516]: MACD Bullish
+                    - generic [ref=e11517]: EMA Transition
+                - cell [ref=e11518]:
+                  - img [ref=e11519]
+              - row "64 AUSDT 54 0.540 78% EMA Bullish" [ref=e11521] [cursor=pointer]:
+                - cell "64" [ref=e11522]
+                - cell "AUSDT" [ref=e11523]:
+                  - generic [ref=e11524]:
+                    - text: AUSDT
+                    - link "Chart for AUSDT" [ref=e11525]:
+                      - /url: /symbols/AUSDT
+                      - img [ref=e11526]
+                    - link "Trade A/USDT on Binance" [ref=e11529]:
+                      - /url: https://www.binance.com/en/trade/A_USDT
+                      - img [ref=e11530]
+                - cell "54 0.540" [ref=e11532]:
+                  - generic [ref=e11533]:
+                    - 'progressbar "Bullish score: 0.540" [ref=e11534]'
+                    - generic [ref=e11536]: "0.540"
+                - cell "78%" [ref=e11537]
+                - cell "EMA Bullish" [ref=e11538]:
+                  - generic [ref=e11540]: EMA Bullish
+                - cell [ref=e11541]:
+                  - img [ref=e11542]
+              - row "65 TIAUSDT 54 0.540 87% EMA Bullish No Trend" [ref=e11544] [cursor=pointer]:
+                - cell "65" [ref=e11545]
+                - cell "TIAUSDT" [ref=e11546]:
+                  - generic [ref=e11547]:
+                    - text: TIAUSDT
+                    - link "Chart for TIAUSDT" [ref=e11548]:
+                      - /url: /symbols/TIAUSDT
+                      - img [ref=e11549]
+                    - link "Trade TIA/USDT on Binance" [ref=e11552]:
+                      - /url: https://www.binance.com/en/trade/TIA_USDT
+                      - img [ref=e11553]
+                - cell "54 0.540" [ref=e11555]:
+                  - generic [ref=e11556]:
+                    - 'progressbar "Bullish score: 0.540" [ref=e11557]'
+                    - generic [ref=e11559]: "0.540"
+                - cell "87%" [ref=e11560]
+                - cell "EMA Bullish No Trend" [ref=e11561]:
+                  - generic [ref=e11562]:
+                    - generic [ref=e11563]: EMA Bullish
+                    - generic [ref=e11564]: No Trend
+                - cell [ref=e11565]:
+                  - img [ref=e11566]
+              - row "66 ADXUSDT 54 0.539 74% BB Squeeze EMA Transition" [ref=e11568] [cursor=pointer]:
+                - cell "66" [ref=e11569]
+                - cell "ADXUSDT" [ref=e11570]:
+                  - generic [ref=e11571]:
+                    - text: ADXUSDT
+                    - link "Chart for ADXUSDT" [ref=e11572]:
+                      - /url: /symbols/ADXUSDT
+                      - img [ref=e11573]
+                    - link "Trade ADX/USDT on Binance" [ref=e11576]:
+                      - /url: https://www.binance.com/en/trade/ADX_USDT
+                      - img [ref=e11577]
+                - cell "54 0.539" [ref=e11579]:
+                  - generic [ref=e11580]:
+                    - 'progressbar "Bullish score: 0.539" [ref=e11581]'
+                    - generic [ref=e11583]: "0.539"
+                - cell "74%" [ref=e11584]
+                - cell "BB Squeeze EMA Transition" [ref=e11585]:
+                  - generic [ref=e11586]:
+                    - generic [ref=e11587]: BB Squeeze
+                    - generic [ref=e11588]: EMA Transition
+                - cell [ref=e11589]:
+                  - img [ref=e11590]
+              - row "67 RAYUSDT 54 0.539 78% BB Squeeze No Trend" [ref=e11592] [cursor=pointer]:
+                - cell "67" [ref=e11593]
+                - cell "RAYUSDT" [ref=e11594]:
+                  - generic [ref=e11595]:
+                    - text: RAYUSDT
+                    - link "Chart for RAYUSDT" [ref=e11596]:
+                      - /url: /symbols/RAYUSDT
+                      - img [ref=e11597]
+                    - link "Trade RAY/USDT on Binance" [ref=e11600]:
+                      - /url: https://www.binance.com/en/trade/RAY_USDT
+                      - img [ref=e11601]
+                - cell "54 0.539" [ref=e11603]:
+                  - generic [ref=e11604]:
+                    - 'progressbar "Bullish score: 0.539" [ref=e11605]'
+                    - generic [ref=e11607]: "0.539"
+                - cell "78%" [ref=e11608]
+                - cell "BB Squeeze No Trend" [ref=e11609]:
+                  - generic [ref=e11610]:
+                    - generic [ref=e11611]: BB Squeeze
+                    - generic [ref=e11612]: No Trend
+                - cell [ref=e11613]:
+                  - img [ref=e11614]
+              - row "68 LTCUSDT 54 0.539 87% EMA Bullish" [ref=e11616] [cursor=pointer]:
+                - cell "68" [ref=e11617]
+                - cell "LTCUSDT" [ref=e11618]:
+                  - generic [ref=e11619]:
+                    - text: LTCUSDT
+                    - link "Chart for LTCUSDT" [ref=e11620]:
+                      - /url: /symbols/LTCUSDT
+                      - img [ref=e11621]
+                    - link "Trade LTC/USDT on Binance" [ref=e11624]:
+                      - /url: https://www.binance.com/en/trade/LTC_USDT
+                      - img [ref=e11625]
+                - cell "54 0.539" [ref=e11627]:
+                  - generic [ref=e11628]:
+                    - 'progressbar "Bullish score: 0.539" [ref=e11629]'
+                    - generic [ref=e11631]: "0.539"
+                - cell "87%" [ref=e11632]
+                - cell "EMA Bullish" [ref=e11633]:
+                  - generic [ref=e11635]: EMA Bullish
+                - cell [ref=e11636]:
+                  - img [ref=e11637]
+              - row "69 RLUSDUSDT 54 0.537 76% EMA Bullish Stoch Oversold BB Squeeze" [ref=e11639] [cursor=pointer]:
+                - cell "69" [ref=e11640]
+                - cell "RLUSDUSDT" [ref=e11641]:
+                  - generic [ref=e11642]:
+                    - text: RLUSDUSDT
+                    - link "Chart for RLUSDUSDT" [ref=e11643]:
+                      - /url: /symbols/RLUSDUSDT
+                      - img [ref=e11644]
+                    - link "Trade RLUSD/USDT on Binance" [ref=e11647]:
+                      - /url: https://www.binance.com/en/trade/RLUSD_USDT
+                      - img [ref=e11648]
+                - cell "54 0.537" [ref=e11650]:
+                  - generic [ref=e11651]:
+                    - 'progressbar "Bullish score: 0.537" [ref=e11652]'
+                    - generic [ref=e11654]: "0.537"
+                - cell "76%" [ref=e11655]
+                - cell "EMA Bullish Stoch Oversold BB Squeeze" [ref=e11656]:
+                  - generic [ref=e11657]:
+                    - generic [ref=e11658]: EMA Bullish
+                    - generic [ref=e11659]: Stoch Oversold
+                    - generic [ref=e11660]: BB Squeeze
+                - cell [ref=e11661]:
+                  - img [ref=e11662]
+              - row "70 BNBUSDT 54 0.537 93% EMA Bullish BB Squeeze" [ref=e11664] [cursor=pointer]:
+                - cell "70" [ref=e11665]
+                - cell "BNBUSDT" [ref=e11666]:
+                  - generic [ref=e11667]:
+                    - text: BNBUSDT
+                    - link "Chart for BNBUSDT" [ref=e11668]:
+                      - /url: /symbols/BNBUSDT
+                      - img [ref=e11669]
+                    - link "Trade BNB/USDT on Binance" [ref=e11672]:
+                      - /url: https://www.binance.com/en/trade/BNB_USDT
+                      - img [ref=e11673]
+                - cell "54 0.537" [ref=e11675]:
+                  - generic [ref=e11676]:
+                    - 'progressbar "Bullish score: 0.537" [ref=e11677]'
+                    - generic [ref=e11679]: "0.537"
+                - cell "93%" [ref=e11680]
+                - cell "EMA Bullish BB Squeeze" [ref=e11681]:
+                  - generic [ref=e11682]:
+                    - generic [ref=e11683]: EMA Bullish
+                    - generic [ref=e11684]: BB Squeeze
+                - cell [ref=e11685]:
+                  - img [ref=e11686]
+              - row "71 CAKEUSDT 54 0.536 87% BB Squeeze EMA Transition No Trend" [ref=e11688] [cursor=pointer]:
+                - cell "71" [ref=e11689]
+                - cell "CAKEUSDT" [ref=e11690]:
+                  - generic [ref=e11691]:
+                    - text: CAKEUSDT
+                    - link "Chart for CAKEUSDT" [ref=e11692]:
+                      - /url: /symbols/CAKEUSDT
+                      - img [ref=e11693]
+                    - link "Trade CAKE/USDT on Binance" [ref=e11696]:
+                      - /url: https://www.binance.com/en/trade/CAKE_USDT
+                      - img [ref=e11697]
+                - cell "54 0.536" [ref=e11699]:
+                  - generic [ref=e11700]:
+                    - 'progressbar "Bullish score: 0.536" [ref=e11701]'
+                    - generic [ref=e11703]: "0.536"
+                - cell "87%" [ref=e11704]
+                - cell "BB Squeeze EMA Transition No Trend" [ref=e11705]:
+                  - generic [ref=e11706]:
+                    - generic [ref=e11707]: BB Squeeze
+                    - generic [ref=e11708]: EMA Transition
+                    - generic [ref=e11709]: No Trend
+                - cell [ref=e11710]:
+                  - img [ref=e11711]
+              - row "72 LUNCUSDT 54 0.536 69% MACD Bullish BB Squeeze EMA Transition" [ref=e11713] [cursor=pointer]:
+                - cell "72" [ref=e11714]
+                - cell "LUNCUSDT" [ref=e11715]:
+                  - generic [ref=e11716]:
+                    - text: LUNCUSDT
+                    - link "Chart for LUNCUSDT" [ref=e11717]:
+                      - /url: /symbols/LUNCUSDT
+                      - img [ref=e11718]
+                    - link "Trade LUNC/USDT on Binance" [ref=e11721]:
+                      - /url: https://www.binance.com/en/trade/LUNC_USDT
+                      - img [ref=e11722]
+                - cell "54 0.536" [ref=e11724]:
+                  - generic [ref=e11725]:
+                    - 'progressbar "Bullish score: 0.536" [ref=e11726]'
+                    - generic [ref=e11728]: "0.536"
+                - cell "69%" [ref=e11729]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e11730]:
+                  - generic [ref=e11731]:
+                    - generic [ref=e11732]: MACD Bullish
+                    - generic [ref=e11733]: BB Squeeze
+                    - generic [ref=e11734]: EMA Transition
+                - cell [ref=e11735]:
+                  - img [ref=e11736]
+              - row "73 ZENUSDT 54 0.536 87% EMA Bullish" [ref=e11738] [cursor=pointer]:
+                - cell "73" [ref=e11739]
+                - cell "ZENUSDT" [ref=e11740]:
+                  - generic [ref=e11741]:
+                    - text: ZENUSDT
+                    - link "Chart for ZENUSDT" [ref=e11742]:
+                      - /url: /symbols/ZENUSDT
+                      - img [ref=e11743]
+                    - link "Trade ZEN/USDT on Binance" [ref=e11746]:
+                      - /url: https://www.binance.com/en/trade/ZEN_USDT
+                      - img [ref=e11747]
+                - cell "54 0.536" [ref=e11749]:
+                  - generic [ref=e11750]:
+                    - 'progressbar "Bullish score: 0.536" [ref=e11751]'
+                    - generic [ref=e11753]: "0.536"
+                - cell "87%" [ref=e11754]
+                - cell "EMA Bullish" [ref=e11755]:
+                  - generic [ref=e11757]: EMA Bullish
+                - cell [ref=e11758]:
+                  - img [ref=e11759]
+              - row "74 OPUSDT 54 0.535 89% EMA Bullish" [ref=e11761] [cursor=pointer]:
+                - cell "74" [ref=e11762]
+                - cell "OPUSDT" [ref=e11763]:
+                  - generic [ref=e11764]:
+                    - text: OPUSDT
+                    - link "Chart for OPUSDT" [ref=e11765]:
+                      - /url: /symbols/OPUSDT
+                      - img [ref=e11766]
+                    - link "Trade OP/USDT on Binance" [ref=e11769]:
+                      - /url: https://www.binance.com/en/trade/OP_USDT
+                      - img [ref=e11770]
+                - cell "54 0.535" [ref=e11772]:
+                  - generic [ref=e11773]:
+                    - 'progressbar "Bullish score: 0.535" [ref=e11774]'
+                    - generic [ref=e11776]: "0.535"
+                - cell "89%" [ref=e11777]
+                - cell "EMA Bullish" [ref=e11778]:
+                  - generic [ref=e11780]: EMA Bullish
+                - cell [ref=e11781]:
+                  - img [ref=e11782]
+              - row "75 1000CHEEMSUSDT 54 0.535 69% BB Squeeze No Trend" [ref=e11784] [cursor=pointer]:
+                - cell "75" [ref=e11785]
+                - cell "1000CHEEMSUSDT" [ref=e11786]:
+                  - generic [ref=e11787]:
+                    - text: 1000CHEEMSUSDT
+                    - link "Chart for 1000CHEEMSUSDT" [ref=e11788]:
+                      - /url: /symbols/1000CHEEMSUSDT
+                      - img [ref=e11789]
+                    - link "Trade 1000CHEEMS/USDT on Binance" [ref=e11792]:
+                      - /url: https://www.binance.com/en/trade/1000CHEEMS_USDT
+                      - img [ref=e11793]
+                - cell "54 0.535" [ref=e11795]:
+                  - generic [ref=e11796]:
+                    - 'progressbar "Bullish score: 0.535" [ref=e11797]'
+                    - generic [ref=e11799]: "0.535"
+                - cell "69%" [ref=e11800]
+                - cell "BB Squeeze No Trend" [ref=e11801]:
+                  - generic [ref=e11802]:
+                    - generic [ref=e11803]: BB Squeeze
+                    - generic [ref=e11804]: No Trend
+                - cell [ref=e11805]:
+                  - img [ref=e11806]
+              - row "76 AUCTIONUSDT 54 0.535 80%" [ref=e11808] [cursor=pointer]:
+                - cell "76" [ref=e11809]
+                - cell "AUCTIONUSDT" [ref=e11810]:
+                  - generic [ref=e11811]:
+                    - text: AUCTIONUSDT
+                    - link "Chart for AUCTIONUSDT" [ref=e11812]:
+                      - /url: /symbols/AUCTIONUSDT
+                      - img [ref=e11813]
+                    - link "Trade AUCTION/USDT on Binance" [ref=e11816]:
+                      - /url: https://www.binance.com/en/trade/AUCTION_USDT
+                      - img [ref=e11817]
+                - cell "54 0.535" [ref=e11819]:
+                  - generic [ref=e11820]:
+                    - 'progressbar "Bullish score: 0.535" [ref=e11821]'
+                    - generic [ref=e11823]: "0.535"
+                - cell "80%" [ref=e11824]
+                - cell [ref=e11825]
+                - cell [ref=e11826]:
+                  - img [ref=e11827]
+              - row "77 PEPEUSDT 53 0.534 79% EMA Bullish Strong Selling No Trend" [ref=e11829] [cursor=pointer]:
+                - cell "77" [ref=e11830]
+                - cell "PEPEUSDT" [ref=e11831]:
+                  - generic [ref=e11832]:
+                    - text: PEPEUSDT
+                    - link "Chart for PEPEUSDT" [ref=e11833]:
+                      - /url: /symbols/PEPEUSDT
+                      - img [ref=e11834]
+                    - link "Trade PEPE/USDT on Binance" [ref=e11837]:
+                      - /url: https://www.binance.com/en/trade/PEPE_USDT
+                      - img [ref=e11838]
+                - cell "53 0.534" [ref=e11840]:
+                  - generic [ref=e11841]:
+                    - 'progressbar "Bullish score: 0.534" [ref=e11842]'
+                    - generic [ref=e11844]: "0.534"
+                - cell "79%" [ref=e11845]
+                - cell "EMA Bullish Strong Selling No Trend" [ref=e11846]:
+                  - generic [ref=e11847]:
+                    - generic [ref=e11848]: EMA Bullish
+                    - generic [ref=e11849]: Strong Selling
+                    - generic [ref=e11850]: No Trend
+                - cell [ref=e11851]:
+                  - img [ref=e11852]
+              - row "78 DOTUSDT 53 0.534 92% EMA Bullish BB Squeeze No Trend" [ref=e11854] [cursor=pointer]:
+                - cell "78" [ref=e11855]
+                - cell "DOTUSDT" [ref=e11856]:
+                  - generic [ref=e11857]:
+                    - text: DOTUSDT
+                    - link "Chart for DOTUSDT" [ref=e11858]:
+                      - /url: /symbols/DOTUSDT
+                      - img [ref=e11859]
+                    - link "Trade DOT/USDT on Binance" [ref=e11862]:
+                      - /url: https://www.binance.com/en/trade/DOT_USDT
+                      - img [ref=e11863]
+                - cell "53 0.534" [ref=e11865]:
+                  - generic [ref=e11866]:
+                    - 'progressbar "Bullish score: 0.534" [ref=e11867]'
+                    - generic [ref=e11869]: "0.534"
+                - cell "92%" [ref=e11870]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e11871]:
+                  - generic [ref=e11872]:
+                    - generic [ref=e11873]: EMA Bullish
+                    - generic [ref=e11874]: BB Squeeze
+                    - generic [ref=e11875]: No Trend
+                - cell [ref=e11876]:
+                  - img [ref=e11877]
+              - row "79 MINAUSDT 53 0.533 58% EMA Bullish MACD Bullish Strong Selling" [ref=e11879] [cursor=pointer]:
+                - cell "79" [ref=e11880]
+                - cell "MINAUSDT" [ref=e11881]:
+                  - generic [ref=e11882]:
+                    - text: MINAUSDT
+                    - link "Chart for MINAUSDT" [ref=e11883]:
+                      - /url: /symbols/MINAUSDT
+                      - img [ref=e11884]
+                    - link "Trade MINA/USDT on Binance" [ref=e11887]:
+                      - /url: https://www.binance.com/en/trade/MINA_USDT
+                      - img [ref=e11888]
+                - cell "53 0.533" [ref=e11890]:
+                  - generic [ref=e11891]:
+                    - 'progressbar "Bullish score: 0.533" [ref=e11892]'
+                    - generic [ref=e11894]: "0.533"
+                - cell "58%" [ref=e11895]
+                - cell "EMA Bullish MACD Bullish Strong Selling" [ref=e11896]:
+                  - generic [ref=e11897]:
+                    - generic [ref=e11898]: EMA Bullish
+                    - generic [ref=e11899]: MACD Bullish
+                    - generic [ref=e11900]: Strong Selling
+                - cell [ref=e11901]:
+                  - img [ref=e11902]
+              - row "80 NILUSDT 53 0.532 58% EMA Bullish Strong Selling" [ref=e11904] [cursor=pointer]:
+                - cell "80" [ref=e11905]
+                - cell "NILUSDT" [ref=e11906]:
+                  - generic [ref=e11907]:
+                    - text: NILUSDT
+                    - link "Chart for NILUSDT" [ref=e11908]:
+                      - /url: /symbols/NILUSDT
+                      - img [ref=e11909]
+                    - link "Trade NIL/USDT on Binance" [ref=e11912]:
+                      - /url: https://www.binance.com/en/trade/NIL_USDT
+                      - img [ref=e11913]
+                - cell "53 0.532" [ref=e11915]:
+                  - generic [ref=e11916]:
+                    - 'progressbar "Bullish score: 0.532" [ref=e11917]'
+                    - generic [ref=e11919]: "0.532"
+                - cell "58%" [ref=e11920]
+                - cell "EMA Bullish Strong Selling" [ref=e11921]:
+                  - generic [ref=e11922]:
+                    - generic [ref=e11923]: EMA Bullish
+                    - generic [ref=e11924]: Strong Selling
+                - cell [ref=e11925]:
+                  - img [ref=e11926]
+              - row "81 VETUSDT 53 0.532 62% MACD Bullish Strong Selling BB Squeeze" [ref=e11928] [cursor=pointer]:
+                - cell "81" [ref=e11929]
+                - cell "VETUSDT" [ref=e11930]:
+                  - generic [ref=e11931]:
+                    - text: VETUSDT
+                    - link "Chart for VETUSDT" [ref=e11932]:
+                      - /url: /symbols/VETUSDT
+                      - img [ref=e11933]
+                    - link "Trade VET/USDT on Binance" [ref=e11936]:
+                      - /url: https://www.binance.com/en/trade/VET_USDT
+                      - img [ref=e11937]
+                - cell "53 0.532" [ref=e11939]:
+                  - generic [ref=e11940]:
+                    - 'progressbar "Bullish score: 0.532" [ref=e11941]'
+                    - generic [ref=e11943]: "0.532"
+                - cell "62%" [ref=e11944]
+                - cell "MACD Bullish Strong Selling BB Squeeze" [ref=e11945]:
+                  - generic [ref=e11946]:
+                    - generic [ref=e11947]: MACD Bullish
+                    - generic [ref=e11948]: Strong Selling
+                    - generic [ref=e11949]: BB Squeeze
+                - cell [ref=e11950]:
+                  - img [ref=e11951]
+              - row "82 BONKUSDT 53 0.531 84% EMA Bullish No Trend" [ref=e11953] [cursor=pointer]:
+                - cell "82" [ref=e11954]
+                - cell "BONKUSDT" [ref=e11955]:
+                  - generic [ref=e11956]:
+                    - text: BONKUSDT
+                    - link "Chart for BONKUSDT" [ref=e11957]:
+                      - /url: /symbols/BONKUSDT
+                      - img [ref=e11958]
+                    - link "Trade BONK/USDT on Binance" [ref=e11961]:
+                      - /url: https://www.binance.com/en/trade/BONK_USDT
+                      - img [ref=e11962]
+                - cell "53 0.531" [ref=e11964]:
+                  - generic [ref=e11965]:
+                    - 'progressbar "Bullish score: 0.531" [ref=e11966]'
+                    - generic [ref=e11968]: "0.531"
+                - cell "84%" [ref=e11969]
+                - cell "EMA Bullish No Trend" [ref=e11970]:
+                  - generic [ref=e11971]:
+                    - generic [ref=e11972]: EMA Bullish
+                    - generic [ref=e11973]: No Trend
+                - cell [ref=e11974]:
+                  - img [ref=e11975]
+              - row "83 ALGOUSDT 53 0.531 87% EMA Bullish BB Squeeze No Trend" [ref=e11977] [cursor=pointer]:
+                - cell "83" [ref=e11978]
+                - cell "ALGOUSDT" [ref=e11979]:
+                  - generic [ref=e11980]:
+                    - text: ALGOUSDT
+                    - link "Chart for ALGOUSDT" [ref=e11981]:
+                      - /url: /symbols/ALGOUSDT
+                      - img [ref=e11982]
+                    - link "Trade ALGO/USDT on Binance" [ref=e11985]:
+                      - /url: https://www.binance.com/en/trade/ALGO_USDT
+                      - img [ref=e11986]
+                - cell "53 0.531" [ref=e11988]:
+                  - generic [ref=e11989]:
+                    - 'progressbar "Bullish score: 0.531" [ref=e11990]'
+                    - generic [ref=e11992]: "0.531"
+                - cell "87%" [ref=e11993]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e11994]:
+                  - generic [ref=e11995]:
+                    - generic [ref=e11996]: EMA Bullish
+                    - generic [ref=e11997]: BB Squeeze
+                    - generic [ref=e11998]: No Trend
+                - cell [ref=e11999]:
+                  - img [ref=e12000]
+              - row "84 MMTUSDT 53 0.531 57% EMA Bullish Strong Selling BB Squeeze" [ref=e12002] [cursor=pointer]:
+                - cell "84" [ref=e12003]
+                - cell "MMTUSDT" [ref=e12004]:
+                  - generic [ref=e12005]:
+                    - text: MMTUSDT
+                    - link "Chart for MMTUSDT" [ref=e12006]:
+                      - /url: /symbols/MMTUSDT
+                      - img [ref=e12007]
+                    - link "Trade MMT/USDT on Binance" [ref=e12010]:
+                      - /url: https://www.binance.com/en/trade/MMT_USDT
+                      - img [ref=e12011]
+                - cell "53 0.531" [ref=e12013]:
+                  - generic [ref=e12014]:
+                    - 'progressbar "Bullish score: 0.531" [ref=e12015]'
+                    - generic [ref=e12017]: "0.531"
+                - cell "57%" [ref=e12018]
+                - cell "EMA Bullish Strong Selling BB Squeeze" [ref=e12019]:
+                  - generic [ref=e12020]:
+                    - generic [ref=e12021]: EMA Bullish
+                    - generic [ref=e12022]: Strong Selling
+                    - generic [ref=e12023]: BB Squeeze
+                - cell [ref=e12024]:
+                  - img [ref=e12025]
+              - row "85 AIXBTUSDT 53 0.531 66% EMA Bullish Strong Selling No Trend" [ref=e12027] [cursor=pointer]:
+                - cell "85" [ref=e12028]
+                - cell "AIXBTUSDT" [ref=e12029]:
+                  - generic [ref=e12030]:
+                    - text: AIXBTUSDT
+                    - link "Chart for AIXBTUSDT" [ref=e12031]:
+                      - /url: /symbols/AIXBTUSDT
+                      - img [ref=e12032]
+                    - link "Trade AIXBT/USDT on Binance" [ref=e12035]:
+                      - /url: https://www.binance.com/en/trade/AIXBT_USDT
+                      - img [ref=e12036]
+                - cell "53 0.531" [ref=e12038]:
+                  - generic [ref=e12039]:
+                    - 'progressbar "Bullish score: 0.531" [ref=e12040]'
+                    - generic [ref=e12042]: "0.531"
+                - cell "66%" [ref=e12043]
+                - cell "EMA Bullish Strong Selling No Trend" [ref=e12044]:
+                  - generic [ref=e12045]:
+                    - generic [ref=e12046]: EMA Bullish
+                    - generic [ref=e12047]: Strong Selling
+                    - generic [ref=e12048]: No Trend
+                - cell [ref=e12049]:
+                  - img [ref=e12050]
+              - row "86 BROCCOLI714USDT 53 0.529 68% EMA Bullish" [ref=e12052] [cursor=pointer]:
+                - cell "86" [ref=e12053]
+                - cell "BROCCOLI714USDT" [ref=e12054]:
+                  - generic [ref=e12055]:
+                    - text: BROCCOLI714USDT
+                    - link "Chart for BROCCOLI714USDT" [ref=e12056]:
+                      - /url: /symbols/BROCCOLI714USDT
+                      - img [ref=e12057]
+                    - link "Trade BROCCOLI714/USDT on Binance" [ref=e12060]:
+                      - /url: https://www.binance.com/en/trade/BROCCOLI714_USDT
+                      - img [ref=e12061]
+                - cell "53 0.529" [ref=e12063]:
+                  - generic [ref=e12064]:
+                    - 'progressbar "Bullish score: 0.529" [ref=e12065]'
+                    - generic [ref=e12067]: "0.529"
+                - cell "68%" [ref=e12068]
+                - cell "EMA Bullish" [ref=e12069]:
+                  - generic [ref=e12071]: EMA Bullish
+                - cell [ref=e12072]:
+                  - img [ref=e12073]
+              - row "87 HEMIUSDT 53 0.528 62% MACD Bullish EMA Transition" [ref=e12075] [cursor=pointer]:
+                - cell "87" [ref=e12076]
+                - cell "HEMIUSDT" [ref=e12077]:
+                  - generic [ref=e12078]:
+                    - text: HEMIUSDT
+                    - link "Chart for HEMIUSDT" [ref=e12079]:
+                      - /url: /symbols/HEMIUSDT
+                      - img [ref=e12080]
+                    - link "Trade HEMI/USDT on Binance" [ref=e12083]:
+                      - /url: https://www.binance.com/en/trade/HEMI_USDT
+                      - img [ref=e12084]
+                - cell "53 0.528" [ref=e12086]:
+                  - generic [ref=e12087]:
+                    - 'progressbar "Bullish score: 0.528" [ref=e12088]'
+                    - generic [ref=e12090]: "0.528"
+                - cell "62%" [ref=e12091]
+                - cell "MACD Bullish EMA Transition" [ref=e12092]:
+                  - generic [ref=e12093]:
+                    - generic [ref=e12094]: MACD Bullish
+                    - generic [ref=e12095]: EMA Transition
+                - cell [ref=e12096]:
+                  - img [ref=e12097]
+              - row "88 RUNEUSDT 53 0.526 86% BB Squeeze EMA Transition No Trend" [ref=e12099] [cursor=pointer]:
+                - cell "88" [ref=e12100]
+                - cell "RUNEUSDT" [ref=e12101]:
+                  - generic [ref=e12102]:
+                    - text: RUNEUSDT
+                    - link "Chart for RUNEUSDT" [ref=e12103]:
+                      - /url: /symbols/RUNEUSDT
+                      - img [ref=e12104]
+                    - link "Trade RUNE/USDT on Binance" [ref=e12107]:
+                      - /url: https://www.binance.com/en/trade/RUNE_USDT
+                      - img [ref=e12108]
+                - cell "53 0.526" [ref=e12110]:
+                  - generic [ref=e12111]:
+                    - 'progressbar "Bullish score: 0.526" [ref=e12112]'
+                    - generic [ref=e12114]: "0.526"
+                - cell "86%" [ref=e12115]
+                - cell "BB Squeeze EMA Transition No Trend" [ref=e12116]:
+                  - generic [ref=e12117]:
+                    - generic [ref=e12118]: BB Squeeze
+                    - generic [ref=e12119]: EMA Transition
+                    - generic [ref=e12120]: No Trend
+                - cell [ref=e12121]:
+                  - img [ref=e12122]
+              - row "89 ORDIUSDT 53 0.526 81% EMA Bullish BB Squeeze No Trend" [ref=e12124] [cursor=pointer]:
+                - cell "89" [ref=e12125]
+                - cell "ORDIUSDT" [ref=e12126]:
+                  - generic [ref=e12127]:
+                    - text: ORDIUSDT
+                    - link "Chart for ORDIUSDT" [ref=e12128]:
+                      - /url: /symbols/ORDIUSDT
+                      - img [ref=e12129]
+                    - link "Trade ORDI/USDT on Binance" [ref=e12132]:
+                      - /url: https://www.binance.com/en/trade/ORDI_USDT
+                      - img [ref=e12133]
+                - cell "53 0.526" [ref=e12135]:
+                  - generic [ref=e12136]:
+                    - 'progressbar "Bullish score: 0.526" [ref=e12137]'
+                    - generic [ref=e12139]: "0.526"
+                - cell "81%" [ref=e12140]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e12141]:
+                  - generic [ref=e12142]:
+                    - generic [ref=e12143]: EMA Bullish
+                    - generic [ref=e12144]: BB Squeeze
+                    - generic [ref=e12145]: No Trend
+                - cell [ref=e12146]:
+                  - img [ref=e12147]
+              - row "90 SOLUSDT 53 0.526 75% MACD Bullish BB Squeeze EMA Transition" [ref=e12149] [cursor=pointer]:
+                - cell "90" [ref=e12150]
+                - cell "SOLUSDT" [ref=e12151]:
+                  - generic [ref=e12152]:
+                    - text: SOLUSDT
+                    - link "Chart for SOLUSDT" [ref=e12153]:
+                      - /url: /symbols/SOLUSDT
+                      - img [ref=e12154]
+                    - link "Trade SOL/USDT on Binance" [ref=e12157]:
+                      - /url: https://www.binance.com/en/trade/SOL_USDT
+                      - img [ref=e12158]
+                - cell "53 0.526" [ref=e12160]:
+                  - generic [ref=e12161]:
+                    - 'progressbar "Bullish score: 0.526" [ref=e12162]'
+                    - generic [ref=e12164]: "0.526"
+                - cell "75%" [ref=e12165]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e12166]:
+                  - generic [ref=e12167]:
+                    - generic [ref=e12168]: MACD Bullish
+                    - generic [ref=e12169]: BB Squeeze
+                    - generic [ref=e12170]: EMA Transition
+                - cell [ref=e12171]:
+                  - img [ref=e12172]
+              - row "91 FLOKIUSDT 52 0.524 89% EMA Bullish No Trend" [ref=e12174] [cursor=pointer]:
+                - cell "91" [ref=e12175]
+                - cell "FLOKIUSDT" [ref=e12176]:
+                  - generic [ref=e12177]:
+                    - text: FLOKIUSDT
+                    - link "Chart for FLOKIUSDT" [ref=e12178]:
+                      - /url: /symbols/FLOKIUSDT
+                      - img [ref=e12179]
+                    - link "Trade FLOKI/USDT on Binance" [ref=e12182]:
+                      - /url: https://www.binance.com/en/trade/FLOKI_USDT
+                      - img [ref=e12183]
+                - cell "52 0.524" [ref=e12185]:
+                  - generic [ref=e12186]:
+                    - 'progressbar "Bullish score: 0.524" [ref=e12187]'
+                    - generic [ref=e12189]: "0.524"
+                - cell "89%" [ref=e12190]
+                - cell "EMA Bullish No Trend" [ref=e12191]:
+                  - generic [ref=e12192]:
+                    - generic [ref=e12193]: EMA Bullish
+                    - generic [ref=e12194]: No Trend
+                - cell [ref=e12195]:
+                  - img [ref=e12196]
+              - row "92 XUSDUSDT 52 0.524 70% Strong Uptrend EMA Bearish MACD Bearish" [ref=e12198] [cursor=pointer]:
+                - cell "92" [ref=e12199]
+                - cell "XUSDUSDT" [ref=e12200]:
+                  - generic [ref=e12201]:
+                    - text: XUSDUSDT
+                    - link "Chart for XUSDUSDT" [ref=e12202]:
+                      - /url: /symbols/XUSDUSDT
+                      - img [ref=e12203]
+                    - link "Trade XUSD/USDT on Binance" [ref=e12206]:
+                      - /url: https://www.binance.com/en/trade/XUSD_USDT
+                      - img [ref=e12207]
+                - cell "52 0.524" [ref=e12209]:
+                  - generic [ref=e12210]:
+                    - 'progressbar "Bullish score: 0.524" [ref=e12211]'
+                    - generic [ref=e12213]: "0.524"
+                - cell "70%" [ref=e12214]
+                - cell "Strong Uptrend EMA Bearish MACD Bearish" [ref=e12215]:
+                  - generic [ref=e12216]:
+                    - generic [ref=e12217]: Strong Uptrend
+                    - generic [ref=e12218]: EMA Bearish
+                    - generic [ref=e12219]: MACD Bearish
+                - cell [ref=e12220]:
+                  - img [ref=e12221]
+              - row "93 MANTAUSDT 52 0.523 68% MACD Bearish" [ref=e12223] [cursor=pointer]:
+                - cell "93" [ref=e12224]
+                - cell "MANTAUSDT" [ref=e12225]:
+                  - generic [ref=e12226]:
+                    - text: MANTAUSDT
+                    - link "Chart for MANTAUSDT" [ref=e12227]:
+                      - /url: /symbols/MANTAUSDT
+                      - img [ref=e12228]
+                    - link "Trade MANTA/USDT on Binance" [ref=e12231]:
+                      - /url: https://www.binance.com/en/trade/MANTA_USDT
+                      - img [ref=e12232]
+                - cell "52 0.523" [ref=e12234]:
+                  - generic [ref=e12235]:
+                    - 'progressbar "Bullish score: 0.523" [ref=e12236]'
+                    - generic [ref=e12238]: "0.523"
+                - cell "68%" [ref=e12239]
+                - cell "MACD Bearish" [ref=e12240]:
+                  - generic [ref=e12242]: MACD Bearish
+                - cell [ref=e12243]:
+                  - img [ref=e12244]
+              - row "94 SYSUSDT 52 0.523 67% No Trend" [ref=e12246] [cursor=pointer]:
+                - cell "94" [ref=e12247]
+                - cell "SYSUSDT" [ref=e12248]:
+                  - generic [ref=e12249]:
+                    - text: SYSUSDT
+                    - link "Chart for SYSUSDT" [ref=e12250]:
+                      - /url: /symbols/SYSUSDT
+                      - img [ref=e12251]
+                    - link "Trade SYS/USDT on Binance" [ref=e12254]:
+                      - /url: https://www.binance.com/en/trade/SYS_USDT
+                      - img [ref=e12255]
+                - cell "52 0.523" [ref=e12257]:
+                  - generic [ref=e12258]:
+                    - 'progressbar "Bullish score: 0.523" [ref=e12259]'
+                    - generic [ref=e12261]: "0.523"
+                - cell "67%" [ref=e12262]
+                - cell "No Trend" [ref=e12263]:
+                  - generic [ref=e12265]: No Trend
+                - cell [ref=e12266]:
+                  - img [ref=e12267]
+              - row "95 TAOUSDT 52 0.523 74% EMA Bullish Strong Selling" [ref=e12269] [cursor=pointer]:
+                - cell "95" [ref=e12270]
+                - cell "TAOUSDT" [ref=e12271]:
+                  - generic [ref=e12272]:
+                    - text: TAOUSDT
+                    - link "Chart for TAOUSDT" [ref=e12273]:
+                      - /url: /symbols/TAOUSDT
+                      - img [ref=e12274]
+                    - link "Trade TAO/USDT on Binance" [ref=e12277]:
+                      - /url: https://www.binance.com/en/trade/TAO_USDT
+                      - img [ref=e12278]
+                - cell "52 0.523" [ref=e12280]:
+                  - generic [ref=e12281]:
+                    - 'progressbar "Bullish score: 0.523" [ref=e12282]'
+                    - generic [ref=e12284]: "0.523"
+                - cell "74%" [ref=e12285]
+                - cell "EMA Bullish Strong Selling" [ref=e12286]:
+                  - generic [ref=e12287]:
+                    - generic [ref=e12288]: EMA Bullish
+                    - generic [ref=e12289]: Strong Selling
+                - cell [ref=e12290]:
+                  - img [ref=e12291]
+              - row "96 LDOUSDT 52 0.522 85% EMA Bullish" [ref=e12293] [cursor=pointer]:
+                - cell "96" [ref=e12294]
+                - cell "LDOUSDT" [ref=e12295]:
+                  - generic [ref=e12296]:
+                    - text: LDOUSDT
+                    - link "Chart for LDOUSDT" [ref=e12297]:
+                      - /url: /symbols/LDOUSDT
+                      - img [ref=e12298]
+                    - link "Trade LDO/USDT on Binance" [ref=e12301]:
+                      - /url: https://www.binance.com/en/trade/LDO_USDT
+                      - img [ref=e12302]
+                - cell "52 0.522" [ref=e12304]:
+                  - generic [ref=e12305]:
+                    - 'progressbar "Bullish score: 0.522" [ref=e12306]'
+                    - generic [ref=e12308]: "0.522"
+                - cell "85%" [ref=e12309]
+                - cell "EMA Bullish" [ref=e12310]:
+                  - generic [ref=e12312]: EMA Bullish
+                - cell [ref=e12313]:
+                  - img [ref=e12314]
+              - row "97 TRUMPUSDT 52 0.522 89% EMA Bullish BB Squeeze No Trend" [ref=e12316] [cursor=pointer]:
+                - cell "97" [ref=e12317]
+                - cell "TRUMPUSDT" [ref=e12318]:
+                  - generic [ref=e12319]:
+                    - text: TRUMPUSDT
+                    - link "Chart for TRUMPUSDT" [ref=e12320]:
+                      - /url: /symbols/TRUMPUSDT
+                      - img [ref=e12321]
+                    - link "Trade TRUMP/USDT on Binance" [ref=e12324]:
+                      - /url: https://www.binance.com/en/trade/TRUMP_USDT
+                      - img [ref=e12325]
+                - cell "52 0.522" [ref=e12327]:
+                  - generic [ref=e12328]:
+                    - 'progressbar "Bullish score: 0.522" [ref=e12329]'
+                    - generic [ref=e12331]: "0.522"
+                - cell "89%" [ref=e12332]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e12333]:
+                  - generic [ref=e12334]:
+                    - generic [ref=e12335]: EMA Bullish
+                    - generic [ref=e12336]: BB Squeeze
+                    - generic [ref=e12337]: No Trend
+                - cell [ref=e12338]:
+                  - img [ref=e12339]
+              - row "98 QNTUSDT 52 0.522 65% EMA Bullish Strong Selling" [ref=e12341] [cursor=pointer]:
+                - cell "98" [ref=e12342]
+                - cell "QNTUSDT" [ref=e12343]:
+                  - generic [ref=e12344]:
+                    - text: QNTUSDT
+                    - link "Chart for QNTUSDT" [ref=e12345]:
+                      - /url: /symbols/QNTUSDT
+                      - img [ref=e12346]
+                    - link "Trade QNT/USDT on Binance" [ref=e12349]:
+                      - /url: https://www.binance.com/en/trade/QNT_USDT
+                      - img [ref=e12350]
+                - cell "52 0.522" [ref=e12352]:
+                  - generic [ref=e12353]:
+                    - 'progressbar "Bullish score: 0.522" [ref=e12354]'
+                    - generic [ref=e12356]: "0.522"
+                - cell "65%" [ref=e12357]
+                - cell "EMA Bullish Strong Selling" [ref=e12358]:
+                  - generic [ref=e12359]:
+                    - generic [ref=e12360]: EMA Bullish
+                    - generic [ref=e12361]: Strong Selling
+                - cell [ref=e12362]:
+                  - img [ref=e12363]
+              - row "99 XPLUSDT 52 0.522 77% MACD Bearish No Trend" [ref=e12365] [cursor=pointer]:
+                - cell "99" [ref=e12366]
+                - cell "XPLUSDT" [ref=e12367]:
+                  - generic [ref=e12368]:
+                    - text: XPLUSDT
+                    - link "Chart for XPLUSDT" [ref=e12369]:
+                      - /url: /symbols/XPLUSDT
+                      - img [ref=e12370]
+                    - link "Trade XPL/USDT on Binance" [ref=e12373]:
+                      - /url: https://www.binance.com/en/trade/XPL_USDT
+                      - img [ref=e12374]
+                - cell "52 0.522" [ref=e12376]:
+                  - generic [ref=e12377]:
+                    - 'progressbar "Bullish score: 0.522" [ref=e12378]'
+                    - generic [ref=e12380]: "0.522"
+                - cell "77%" [ref=e12381]
+                - cell "MACD Bearish No Trend" [ref=e12382]:
+                  - generic [ref=e12383]:
+                    - generic [ref=e12384]: MACD Bearish
+                    - generic [ref=e12385]: No Trend
+                - cell [ref=e12386]:
+                  - img [ref=e12387]
+              - row "100 UUSDT 52 0.522 94% EMA Bullish BB Squeeze" [ref=e12389] [cursor=pointer]:
+                - cell "100" [ref=e12390]
+                - cell "UUSDT" [ref=e12391]:
+                  - generic [ref=e12392]:
+                    - text: UUSDT
+                    - link "Chart for UUSDT" [ref=e12393]:
+                      - /url: /symbols/UUSDT
+                      - img [ref=e12394]
+                    - link "Trade U/USDT on Binance" [ref=e12397]:
+                      - /url: https://www.binance.com/en/trade/U_USDT
+                      - img [ref=e12398]
+                - cell "52 0.522" [ref=e12400]:
+                  - generic [ref=e12401]:
+                    - 'progressbar "Bullish score: 0.522" [ref=e12402]'
+                    - generic [ref=e12404]: "0.522"
+                - cell "94%" [ref=e12405]
+                - cell "EMA Bullish BB Squeeze" [ref=e12406]:
+                  - generic [ref=e12407]:
+                    - generic [ref=e12408]: EMA Bullish
+                    - generic [ref=e12409]: BB Squeeze
+                - cell [ref=e12410]:
+                  - img [ref=e12411]
+              - row "101 DOGEUSDT 52 0.520 90% EMA Bullish No Trend" [ref=e12413] [cursor=pointer]:
+                - cell "101" [ref=e12414]
+                - cell "DOGEUSDT" [ref=e12415]:
+                  - generic [ref=e12416]:
+                    - text: DOGEUSDT
+                    - link "Chart for DOGEUSDT" [ref=e12417]:
+                      - /url: /symbols/DOGEUSDT
+                      - img [ref=e12418]
+                    - link "Trade DOGE/USDT on Binance" [ref=e12421]:
+                      - /url: https://www.binance.com/en/trade/DOGE_USDT
+                      - img [ref=e12422]
+                - cell "52 0.520" [ref=e12424]:
+                  - generic [ref=e12425]:
+                    - 'progressbar "Bullish score: 0.520" [ref=e12426]'
+                    - generic [ref=e12428]: "0.520"
+                - cell "90%" [ref=e12429]
+                - cell "EMA Bullish No Trend" [ref=e12430]:
+                  - generic [ref=e12431]:
+                    - generic [ref=e12432]: EMA Bullish
+                    - generic [ref=e12433]: No Trend
+                - cell [ref=e12434]:
+                  - img [ref=e12435]
+              - row "102 ACEUSDT 52 0.520 62% MACD Bullish BB Squeeze EMA Transition" [ref=e12437] [cursor=pointer]:
+                - cell "102" [ref=e12438]
+                - cell "ACEUSDT" [ref=e12439]:
+                  - generic [ref=e12440]:
+                    - text: ACEUSDT
+                    - link "Chart for ACEUSDT" [ref=e12441]:
+                      - /url: /symbols/ACEUSDT
+                      - img [ref=e12442]
+                    - link "Trade ACE/USDT on Binance" [ref=e12445]:
+                      - /url: https://www.binance.com/en/trade/ACE_USDT
+                      - img [ref=e12446]
+                - cell "52 0.520" [ref=e12448]:
+                  - generic [ref=e12449]:
+                    - 'progressbar "Bullish score: 0.520" [ref=e12450]'
+                    - generic [ref=e12452]: "0.520"
+                - cell "62%" [ref=e12453]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e12454]:
+                  - generic [ref=e12455]:
+                    - generic [ref=e12456]: MACD Bullish
+                    - generic [ref=e12457]: BB Squeeze
+                    - generic [ref=e12458]: EMA Transition
+                - cell [ref=e12459]:
+                  - img [ref=e12460]
+              - row "103 CHZUSDT 52 0.519 86% EMA Bullish BB Squeeze No Trend" [ref=e12462] [cursor=pointer]:
+                - cell "103" [ref=e12463]
+                - cell "CHZUSDT" [ref=e12464]:
+                  - generic [ref=e12465]:
+                    - text: CHZUSDT
+                    - link "Chart for CHZUSDT" [ref=e12466]:
+                      - /url: /symbols/CHZUSDT
+                      - img [ref=e12467]
+                    - link "Trade CHZ/USDT on Binance" [ref=e12470]:
+                      - /url: https://www.binance.com/en/trade/CHZ_USDT
+                      - img [ref=e12471]
+                - cell "52 0.519" [ref=e12473]:
+                  - generic [ref=e12474]:
+                    - 'progressbar "Bullish score: 0.519" [ref=e12475]'
+                    - generic [ref=e12477]: "0.519"
+                - cell "86%" [ref=e12478]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e12479]:
+                  - generic [ref=e12480]:
+                    - generic [ref=e12481]: EMA Bullish
+                    - generic [ref=e12482]: BB Squeeze
+                    - generic [ref=e12483]: No Trend
+                - cell [ref=e12484]:
+                  - img [ref=e12485]
+              - row "104 ETCUSDT 52 0.519 92% EMA Bullish BB Squeeze" [ref=e12487] [cursor=pointer]:
+                - cell "104" [ref=e12488]
+                - cell "ETCUSDT" [ref=e12489]:
+                  - generic [ref=e12490]:
+                    - text: ETCUSDT
+                    - link "Chart for ETCUSDT" [ref=e12491]:
+                      - /url: /symbols/ETCUSDT
+                      - img [ref=e12492]
+                    - link "Trade ETC/USDT on Binance" [ref=e12495]:
+                      - /url: https://www.binance.com/en/trade/ETC_USDT
+                      - img [ref=e12496]
+                - cell "52 0.519" [ref=e12498]:
+                  - generic [ref=e12499]:
+                    - 'progressbar "Bullish score: 0.519" [ref=e12500]'
+                    - generic [ref=e12502]: "0.519"
+                - cell "92%" [ref=e12503]
+                - cell "EMA Bullish BB Squeeze" [ref=e12504]:
+                  - generic [ref=e12505]:
+                    - generic [ref=e12506]: EMA Bullish
+                    - generic [ref=e12507]: BB Squeeze
+                - cell [ref=e12508]:
+                  - img [ref=e12509]
+              - row "105 STRKUSDT 52 0.518 80% EMA Bullish BB Squeeze" [ref=e12511] [cursor=pointer]:
+                - cell "105" [ref=e12512]
+                - cell "STRKUSDT" [ref=e12513]:
+                  - generic [ref=e12514]:
+                    - text: STRKUSDT
+                    - link "Chart for STRKUSDT" [ref=e12515]:
+                      - /url: /symbols/STRKUSDT
+                      - img [ref=e12516]
+                    - link "Trade STRK/USDT on Binance" [ref=e12519]:
+                      - /url: https://www.binance.com/en/trade/STRK_USDT
+                      - img [ref=e12520]
+                - cell "52 0.518" [ref=e12522]:
+                  - generic [ref=e12523]:
+                    - 'progressbar "Bullish score: 0.518" [ref=e12524]'
+                    - generic [ref=e12526]: "0.518"
+                - cell "80%" [ref=e12527]
+                - cell "EMA Bullish BB Squeeze" [ref=e12528]:
+                  - generic [ref=e12529]:
+                    - generic [ref=e12530]: EMA Bullish
+                    - generic [ref=e12531]: BB Squeeze
+                - cell [ref=e12532]:
+                  - img [ref=e12533]
+              - row "106 IMXUSDT 52 0.518 62% EMA Bullish Strong Selling" [ref=e12535] [cursor=pointer]:
+                - cell "106" [ref=e12536]
+                - cell "IMXUSDT" [ref=e12537]:
+                  - generic [ref=e12538]:
+                    - text: IMXUSDT
+                    - link "Chart for IMXUSDT" [ref=e12539]:
+                      - /url: /symbols/IMXUSDT
+                      - img [ref=e12540]
+                    - link "Trade IMX/USDT on Binance" [ref=e12543]:
+                      - /url: https://www.binance.com/en/trade/IMX_USDT
+                      - img [ref=e12544]
+                - cell "52 0.518" [ref=e12546]:
+                  - generic [ref=e12547]:
+                    - 'progressbar "Bullish score: 0.518" [ref=e12548]'
+                    - generic [ref=e12550]: "0.518"
+                - cell "62%" [ref=e12551]
+                - cell "EMA Bullish Strong Selling" [ref=e12552]:
+                  - generic [ref=e12553]:
+                    - generic [ref=e12554]: EMA Bullish
+                    - generic [ref=e12555]: Strong Selling
+                - cell [ref=e12556]:
+                  - img [ref=e12557]
+              - row "107 ETHFIUSDT 52 0.517 87% No Trend" [ref=e12559] [cursor=pointer]:
+                - cell "107" [ref=e12560]
+                - cell "ETHFIUSDT" [ref=e12561]:
+                  - generic [ref=e12562]:
+                    - text: ETHFIUSDT
+                    - link "Chart for ETHFIUSDT" [ref=e12563]:
+                      - /url: /symbols/ETHFIUSDT
+                      - img [ref=e12564]
+                    - link "Trade ETHFI/USDT on Binance" [ref=e12567]:
+                      - /url: https://www.binance.com/en/trade/ETHFI_USDT
+                      - img [ref=e12568]
+                - cell "52 0.517" [ref=e12570]:
+                  - generic [ref=e12571]:
+                    - 'progressbar "Bullish score: 0.517" [ref=e12572]'
+                    - generic [ref=e12574]: "0.517"
+                - cell "87%" [ref=e12575]
+                - cell "No Trend" [ref=e12576]:
+                  - generic [ref=e12578]: No Trend
+                - cell [ref=e12579]:
+                  - img [ref=e12580]
+              - row "108 USDCUSDT 52 0.515 94% EMA Bullish BB Squeeze" [ref=e12582] [cursor=pointer]:
+                - cell "108" [ref=e12583]
+                - cell "USDCUSDT" [ref=e12584]:
+                  - generic [ref=e12585]:
+                    - text: USDCUSDT
+                    - link "Chart for USDCUSDT" [ref=e12586]:
+                      - /url: /symbols/USDCUSDT
+                      - img [ref=e12587]
+                    - link "Trade USDC/USDT on Binance" [ref=e12590]:
+                      - /url: https://www.binance.com/en/trade/USDC_USDT
+                      - img [ref=e12591]
+                - cell "52 0.515" [ref=e12593]:
+                  - generic [ref=e12594]:
+                    - 'progressbar "Bullish score: 0.515" [ref=e12595]'
+                    - generic [ref=e12597]: "0.515"
+                - cell "94%" [ref=e12598]
+                - cell "EMA Bullish BB Squeeze" [ref=e12599]:
+                  - generic [ref=e12600]:
+                    - generic [ref=e12601]: EMA Bullish
+                    - generic [ref=e12602]: BB Squeeze
+                - cell [ref=e12603]:
+                  - img [ref=e12604]
+              - row "109 PENGUUSDT 51 0.514 84% EMA Bullish Strong Selling No Trend" [ref=e12606] [cursor=pointer]:
+                - cell "109" [ref=e12607]
+                - cell "PENGUUSDT" [ref=e12608]:
+                  - generic [ref=e12609]:
+                    - text: PENGUUSDT
+                    - link "Chart for PENGUUSDT" [ref=e12610]:
+                      - /url: /symbols/PENGUUSDT
+                      - img [ref=e12611]
+                    - link "Trade PENGU/USDT on Binance" [ref=e12614]:
+                      - /url: https://www.binance.com/en/trade/PENGU_USDT
+                      - img [ref=e12615]
+                - cell "51 0.514" [ref=e12617]:
+                  - generic [ref=e12618]:
+                    - 'progressbar "Bullish score: 0.514" [ref=e12619]'
+                    - generic [ref=e12621]: "0.514"
+                - cell "84%" [ref=e12622]
+                - cell "EMA Bullish Strong Selling No Trend" [ref=e12623]:
+                  - generic [ref=e12624]:
+                    - generic [ref=e12625]: EMA Bullish
+                    - generic [ref=e12626]: Strong Selling
+                    - generic [ref=e12627]: No Trend
+                - cell [ref=e12628]:
+                  - img [ref=e12629]
+              - row "110 SYRUPUSDT 51 0.513 80% BB Squeeze EMA Transition" [ref=e12631] [cursor=pointer]:
+                - cell "110" [ref=e12632]
+                - cell "SYRUPUSDT" [ref=e12633]:
+                  - generic [ref=e12634]:
+                    - text: SYRUPUSDT
+                    - link "Chart for SYRUPUSDT" [ref=e12635]:
+                      - /url: /symbols/SYRUPUSDT
+                      - img [ref=e12636]
+                    - link "Trade SYRUP/USDT on Binance" [ref=e12639]:
+                      - /url: https://www.binance.com/en/trade/SYRUP_USDT
+                      - img [ref=e12640]
+                - cell "51 0.513" [ref=e12642]:
+                  - generic [ref=e12643]:
+                    - 'progressbar "Bullish score: 0.513" [ref=e12644]'
+                    - generic [ref=e12646]: "0.513"
+                - cell "80%" [ref=e12647]
+                - cell "BB Squeeze EMA Transition" [ref=e12648]:
+                  - generic [ref=e12649]:
+                    - generic [ref=e12650]: BB Squeeze
+                    - generic [ref=e12651]: EMA Transition
+                - cell [ref=e12652]:
+                  - img [ref=e12653]
+              - row "111 EULUSDT 51 0.513 76% BB Squeeze EMA Transition No Trend" [ref=e12655] [cursor=pointer]:
+                - cell "111" [ref=e12656]
+                - cell "EULUSDT" [ref=e12657]:
+                  - generic [ref=e12658]:
+                    - text: EULUSDT
+                    - link "Chart for EULUSDT" [ref=e12659]:
+                      - /url: /symbols/EULUSDT
+                      - img [ref=e12660]
+                    - link "Trade EUL/USDT on Binance" [ref=e12663]:
+                      - /url: https://www.binance.com/en/trade/EUL_USDT
+                      - img [ref=e12664]
+                - cell "51 0.513" [ref=e12666]:
+                  - generic [ref=e12667]:
+                    - 'progressbar "Bullish score: 0.513" [ref=e12668]'
+                    - generic [ref=e12670]: "0.513"
+                - cell "76%" [ref=e12671]
+                - cell "BB Squeeze EMA Transition No Trend" [ref=e12672]:
+                  - generic [ref=e12673]:
+                    - generic [ref=e12674]: BB Squeeze
+                    - generic [ref=e12675]: EMA Transition
+                    - generic [ref=e12676]: No Trend
+                - cell [ref=e12677]:
+                  - img [ref=e12678]
+              - row "112 BFUSDUSDT 51 0.511 70% Strong Uptrend EMA Bearish MACD Bearish" [ref=e12680] [cursor=pointer]:
+                - cell "112" [ref=e12681]
+                - cell "BFUSDUSDT" [ref=e12682]:
+                  - generic [ref=e12683]:
+                    - text: BFUSDUSDT
+                    - link "Chart for BFUSDUSDT" [ref=e12684]:
+                      - /url: /symbols/BFUSDUSDT
+                      - img [ref=e12685]
+                    - link "Trade BFUSD/USDT on Binance" [ref=e12688]:
+                      - /url: https://www.binance.com/en/trade/BFUSD_USDT
+                      - img [ref=e12689]
+                - cell "51 0.511" [ref=e12691]:
+                  - generic [ref=e12692]:
+                    - 'progressbar "Bullish score: 0.511" [ref=e12693]'
+                    - generic [ref=e12695]: "0.511"
+                - cell "70%" [ref=e12696]
+                - cell "Strong Uptrend EMA Bearish MACD Bearish" [ref=e12697]:
+                  - generic [ref=e12698]:
+                    - generic [ref=e12699]: Strong Uptrend
+                    - generic [ref=e12700]: EMA Bearish
+                    - generic [ref=e12701]: MACD Bearish
+                - cell [ref=e12702]:
+                  - img [ref=e12703]
+              - row "113 IOTAUSDT 51 0.510 79% EMA Bullish BB Squeeze No Trend" [ref=e12705] [cursor=pointer]:
+                - cell "113" [ref=e12706]
+                - cell "IOTAUSDT" [ref=e12707]:
+                  - generic [ref=e12708]:
+                    - text: IOTAUSDT
+                    - link "Chart for IOTAUSDT" [ref=e12709]:
+                      - /url: /symbols/IOTAUSDT
+                      - img [ref=e12710]
+                    - link "Trade IOTA/USDT on Binance" [ref=e12713]:
+                      - /url: https://www.binance.com/en/trade/IOTA_USDT
+                      - img [ref=e12714]
+                - cell "51 0.510" [ref=e12716]:
+                  - generic [ref=e12717]:
+                    - 'progressbar "Bullish score: 0.510" [ref=e12718]'
+                    - generic [ref=e12720]: "0.510"
+                - cell "79%" [ref=e12721]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e12722]:
+                  - generic [ref=e12723]:
+                    - generic [ref=e12724]: EMA Bullish
+                    - generic [ref=e12725]: BB Squeeze
+                    - generic [ref=e12726]: No Trend
+                - cell [ref=e12727]:
+                  - img [ref=e12728]
+              - row "114 ACHUSDT 51 0.508 72% EMA Bullish BB Squeeze No Trend" [ref=e12730] [cursor=pointer]:
+                - cell "114" [ref=e12731]
+                - cell "ACHUSDT" [ref=e12732]:
+                  - generic [ref=e12733]:
+                    - text: ACHUSDT
+                    - link "Chart for ACHUSDT" [ref=e12734]:
+                      - /url: /symbols/ACHUSDT
+                      - img [ref=e12735]
+                    - link "Trade ACH/USDT on Binance" [ref=e12738]:
+                      - /url: https://www.binance.com/en/trade/ACH_USDT
+                      - img [ref=e12739]
+                - cell "51 0.508" [ref=e12741]:
+                  - generic [ref=e12742]:
+                    - 'progressbar "Bullish score: 0.508" [ref=e12743]'
+                    - generic [ref=e12745]: "0.508"
+                - cell "72%" [ref=e12746]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e12747]:
+                  - generic [ref=e12748]:
+                    - generic [ref=e12749]: EMA Bullish
+                    - generic [ref=e12750]: BB Squeeze
+                    - generic [ref=e12751]: No Trend
+                - cell [ref=e12752]:
+                  - img [ref=e12753]
+              - row "115 FFUSDT 51 0.507 82% EMA Bullish" [ref=e12755] [cursor=pointer]:
+                - cell "115" [ref=e12756]
+                - cell "FFUSDT" [ref=e12757]:
+                  - generic [ref=e12758]:
+                    - text: FFUSDT
+                    - link "Chart for FFUSDT" [ref=e12759]:
+                      - /url: /symbols/FFUSDT
+                      - img [ref=e12760]
+                    - link "Trade FF/USDT on Binance" [ref=e12763]:
+                      - /url: https://www.binance.com/en/trade/FF_USDT
+                      - img [ref=e12764]
+                - cell "51 0.507" [ref=e12766]:
+                  - generic [ref=e12767]:
+                    - 'progressbar "Bullish score: 0.507" [ref=e12768]'
+                    - generic [ref=e12770]: "0.507"
+                - cell "82%" [ref=e12771]
+                - cell "EMA Bullish" [ref=e12772]:
+                  - generic [ref=e12774]: EMA Bullish
+                - cell [ref=e12775]:
+                  - img [ref=e12776]
+              - row "116 WIFUSDT 51 0.507 88% EMA Bullish No Trend" [ref=e12778] [cursor=pointer]:
+                - cell "116" [ref=e12779]
+                - cell "WIFUSDT" [ref=e12780]:
+                  - generic [ref=e12781]:
+                    - text: WIFUSDT
+                    - link "Chart for WIFUSDT" [ref=e12782]:
+                      - /url: /symbols/WIFUSDT
+                      - img [ref=e12783]
+                    - link "Trade WIF/USDT on Binance" [ref=e12786]:
+                      - /url: https://www.binance.com/en/trade/WIF_USDT
+                      - img [ref=e12787]
+                - cell "51 0.507" [ref=e12789]:
+                  - generic [ref=e12790]:
+                    - 'progressbar "Bullish score: 0.507" [ref=e12791]'
+                    - generic [ref=e12793]: "0.507"
+                - cell "88%" [ref=e12794]
+                - cell "EMA Bullish No Trend" [ref=e12795]:
+                  - generic [ref=e12796]:
+                    - generic [ref=e12797]: EMA Bullish
+                    - generic [ref=e12798]: No Trend
+                - cell [ref=e12799]:
+                  - img [ref=e12800]
+              - row "117 ZECUSDT 51 0.506 69% MACD Bullish Strong Selling Stoch Overbought" [ref=e12802] [cursor=pointer]:
+                - cell "117" [ref=e12803]
+                - cell "ZECUSDT" [ref=e12804]:
+                  - generic [ref=e12805]:
+                    - text: ZECUSDT
+                    - link "Chart for ZECUSDT" [ref=e12806]:
+                      - /url: /symbols/ZECUSDT
+                      - img [ref=e12807]
+                    - link "Trade ZEC/USDT on Binance" [ref=e12810]:
+                      - /url: https://www.binance.com/en/trade/ZEC_USDT
+                      - img [ref=e12811]
+                - cell "51 0.506" [ref=e12813]:
+                  - generic [ref=e12814]:
+                    - 'progressbar "Bullish score: 0.506" [ref=e12815]'
+                    - generic [ref=e12817]: "0.506"
+                - cell "69%" [ref=e12818]
+                - cell "MACD Bullish Strong Selling Stoch Overbought" [ref=e12819]:
+                  - generic [ref=e12820]:
+                    - generic [ref=e12821]: MACD Bullish
+                    - generic [ref=e12822]: Strong Selling
+                    - generic [ref=e12823]: Stoch Overbought
+                - cell [ref=e12824]:
+                  - img [ref=e12825]
+              - row "118 FDUSDUSDT 51 0.506 74% MACD Bullish Stoch Overbought BB Squeeze" [ref=e12827] [cursor=pointer]:
+                - cell "118" [ref=e12828]
+                - cell "FDUSDUSDT" [ref=e12829]:
+                  - generic [ref=e12830]:
+                    - text: FDUSDUSDT
+                    - link "Chart for FDUSDUSDT" [ref=e12831]:
+                      - /url: /symbols/FDUSDUSDT
+                      - img [ref=e12832]
+                    - link "Trade FDUSD/USDT on Binance" [ref=e12835]:
+                      - /url: https://www.binance.com/en/trade/FDUSD_USDT
+                      - img [ref=e12836]
+                - cell "51 0.506" [ref=e12838]:
+                  - generic [ref=e12839]:
+                    - 'progressbar "Bullish score: 0.506" [ref=e12840]'
+                    - generic [ref=e12842]: "0.506"
+                - cell "74%" [ref=e12843]
+                - cell "MACD Bullish Stoch Overbought BB Squeeze" [ref=e12844]:
+                  - generic [ref=e12845]:
+                    - generic [ref=e12846]: MACD Bullish
+                    - generic [ref=e12847]: Stoch Overbought
+                    - generic [ref=e12848]: BB Squeeze
+                - cell [ref=e12849]:
+                  - img [ref=e12850]
+              - row "119 ETHUSDT 50 0.504 79% Strong Selling BB Squeeze EMA Transition" [ref=e12852] [cursor=pointer]:
+                - cell "119" [ref=e12853]
+                - cell "ETHUSDT" [ref=e12854]:
+                  - generic [ref=e12855]:
+                    - text: ETHUSDT
+                    - link "Chart for ETHUSDT" [ref=e12856]:
+                      - /url: /symbols/ETHUSDT
+                      - img [ref=e12857]
+                    - link "Trade ETH/USDT on Binance" [ref=e12860]:
+                      - /url: https://www.binance.com/en/trade/ETH_USDT
+                      - img [ref=e12861]
+                - cell "50 0.504" [ref=e12863]:
+                  - generic [ref=e12864]:
+                    - 'progressbar "Bullish score: 0.504" [ref=e12865]'
+                    - generic [ref=e12867]: "0.504"
+                - cell "79%" [ref=e12868]
+                - cell "Strong Selling BB Squeeze EMA Transition" [ref=e12869]:
+                  - generic [ref=e12870]:
+                    - generic [ref=e12871]: Strong Selling
+                    - generic [ref=e12872]: BB Squeeze
+                    - generic [ref=e12873]: EMA Transition
+                - cell [ref=e12874]:
+                  - img [ref=e12875]
+              - row "120 PENDLEUSDT 50 0.501 85% EMA Bullish No Trend" [ref=e12877] [cursor=pointer]:
+                - cell "120" [ref=e12878]
+                - cell "PENDLEUSDT" [ref=e12879]:
+                  - generic [ref=e12880]:
+                    - text: PENDLEUSDT
+                    - link "Chart for PENDLEUSDT" [ref=e12881]:
+                      - /url: /symbols/PENDLEUSDT
+                      - img [ref=e12882]
+                    - link "Trade PENDLE/USDT on Binance" [ref=e12885]:
+                      - /url: https://www.binance.com/en/trade/PENDLE_USDT
+                      - img [ref=e12886]
+                - cell "50 0.501" [ref=e12888]:
+                  - generic [ref=e12889]:
+                    - 'progressbar "Bullish score: 0.501" [ref=e12890]'
+                    - generic [ref=e12892]: "0.501"
+                - cell "85%" [ref=e12893]
+                - cell "EMA Bullish No Trend" [ref=e12894]:
+                  - generic [ref=e12895]:
+                    - generic [ref=e12896]: EMA Bullish
+                    - generic [ref=e12897]: No Trend
+                - cell [ref=e12898]:
+                  - img [ref=e12899]
+              - row "121 DYDXUSDT 50 0.500 63% EMA Bullish Strong Selling" [ref=e12901] [cursor=pointer]:
+                - cell "121" [ref=e12902]
+                - cell "DYDXUSDT" [ref=e12903]:
+                  - generic [ref=e12904]:
+                    - text: DYDXUSDT
+                    - link "Chart for DYDXUSDT" [ref=e12905]:
+                      - /url: /symbols/DYDXUSDT
+                      - img [ref=e12906]
+                    - link "Trade DYDX/USDT on Binance" [ref=e12909]:
+                      - /url: https://www.binance.com/en/trade/DYDX_USDT
+                      - img [ref=e12910]
+                - cell "50 0.500" [ref=e12912]:
+                  - generic [ref=e12913]:
+                    - 'progressbar "Bullish score: 0.500" [ref=e12914]'
+                    - generic [ref=e12916]: "0.500"
+                - cell "63%" [ref=e12917]
+                - cell "EMA Bullish Strong Selling" [ref=e12918]:
+                  - generic [ref=e12919]:
+                    - generic [ref=e12920]: EMA Bullish
+                    - generic [ref=e12921]: Strong Selling
+                - cell [ref=e12922]:
+                  - img [ref=e12923]
+              - row "122 FRAXUSDT 50 0.500 65% EMA Transition No Trend" [ref=e12925] [cursor=pointer]:
+                - cell "122" [ref=e12926]
+                - cell "FRAXUSDT" [ref=e12927]:
+                  - generic [ref=e12928]:
+                    - text: FRAXUSDT
+                    - link "Chart for FRAXUSDT" [ref=e12929]:
+                      - /url: /symbols/FRAXUSDT
+                      - img [ref=e12930]
+                    - link "Trade FRAX/USDT on Binance" [ref=e12933]:
+                      - /url: https://www.binance.com/en/trade/FRAX_USDT
+                      - img [ref=e12934]
+                - cell "50 0.500" [ref=e12936]:
+                  - generic [ref=e12937]:
+                    - 'progressbar "Bullish score: 0.500" [ref=e12938]'
+                    - generic [ref=e12940]: "0.500"
+                - cell "65%" [ref=e12941]
+                - cell "EMA Transition No Trend" [ref=e12942]:
+                  - generic [ref=e12943]:
+                    - generic [ref=e12944]: EMA Transition
+                    - generic [ref=e12945]: No Trend
+                - cell [ref=e12946]:
+                  - img [ref=e12947]
+              - row "123 ZAMAUSDT 50 0.499 75% EMA Transition" [ref=e12949] [cursor=pointer]:
+                - cell "123" [ref=e12950]
+                - cell "ZAMAUSDT" [ref=e12951]:
+                  - generic [ref=e12952]:
+                    - text: ZAMAUSDT
+                    - link "Chart for ZAMAUSDT" [ref=e12953]:
+                      - /url: /symbols/ZAMAUSDT
+                      - img [ref=e12954]
+                    - link "Trade ZAMA/USDT on Binance" [ref=e12957]:
+                      - /url: https://www.binance.com/en/trade/ZAMA_USDT
+                      - img [ref=e12958]
+                - cell "50 0.499" [ref=e12960]:
+                  - generic [ref=e12961]:
+                    - 'progressbar "Bullish score: 0.499" [ref=e12962]'
+                    - generic [ref=e12964]: "0.499"
+                - cell "75%" [ref=e12965]
+                - cell "EMA Transition" [ref=e12966]:
+                  - generic [ref=e12968]: EMA Transition
+                - cell [ref=e12969]:
+                  - img [ref=e12970]
+              - row "124 RIFUSDT 50 0.498 55% MACD Bullish Stoch Overbought EMA Transition" [ref=e12972] [cursor=pointer]:
+                - cell "124" [ref=e12973]
+                - cell "RIFUSDT" [ref=e12974]:
+                  - generic [ref=e12975]:
+                    - text: RIFUSDT
+                    - link "Chart for RIFUSDT" [ref=e12976]:
+                      - /url: /symbols/RIFUSDT
+                      - img [ref=e12977]
+                    - link "Trade RIF/USDT on Binance" [ref=e12980]:
+                      - /url: https://www.binance.com/en/trade/RIF_USDT
+                      - img [ref=e12981]
+                - cell "50 0.498" [ref=e12983]:
+                  - generic [ref=e12984]:
+                    - 'progressbar "Bullish score: 0.498" [ref=e12985]'
+                    - generic [ref=e12987]: "0.498"
+                - cell "55%" [ref=e12988]
+                - cell "MACD Bullish Stoch Overbought EMA Transition" [ref=e12989]:
+                  - generic [ref=e12990]:
+                    - generic [ref=e12991]: MACD Bullish
+                    - generic [ref=e12992]: Stoch Overbought
+                    - generic [ref=e12993]: EMA Transition
+                - cell [ref=e12994]:
+                  - img [ref=e12995]
+              - row "125 ONDOUSDT 50 0.497 88% No Trend" [ref=e12997] [cursor=pointer]:
+                - cell "125" [ref=e12998]
+                - cell "ONDOUSDT" [ref=e12999]:
+                  - generic [ref=e13000]:
+                    - text: ONDOUSDT
+                    - link "Chart for ONDOUSDT" [ref=e13001]:
+                      - /url: /symbols/ONDOUSDT
+                      - img [ref=e13002]
+                    - link "Trade ONDO/USDT on Binance" [ref=e13005]:
+                      - /url: https://www.binance.com/en/trade/ONDO_USDT
+                      - img [ref=e13006]
+                - cell "50 0.497" [ref=e13008]:
+                  - generic [ref=e13009]:
+                    - 'progressbar "Bullish score: 0.497" [ref=e13010]'
+                    - generic [ref=e13012]: "0.497"
+                - cell "88%" [ref=e13013]
+                - cell "No Trend" [ref=e13014]:
+                  - generic [ref=e13016]: No Trend
+                - cell [ref=e13017]:
+                  - img [ref=e13018]
+              - row "126 APTUSDT 50 0.497 85% EMA Transition No Trend" [ref=e13020] [cursor=pointer]:
+                - cell "126" [ref=e13021]
+                - cell "APTUSDT" [ref=e13022]:
+                  - generic [ref=e13023]:
+                    - text: APTUSDT
+                    - link "Chart for APTUSDT" [ref=e13024]:
+                      - /url: /symbols/APTUSDT
+                      - img [ref=e13025]
+                    - link "Trade APT/USDT on Binance" [ref=e13028]:
+                      - /url: https://www.binance.com/en/trade/APT_USDT
+                      - img [ref=e13029]
+                - cell "50 0.497" [ref=e13031]:
+                  - generic [ref=e13032]:
+                    - 'progressbar "Bullish score: 0.497" [ref=e13033]'
+                    - generic [ref=e13035]: "0.497"
+                - cell "85%" [ref=e13036]
+                - cell "EMA Transition No Trend" [ref=e13037]:
+                  - generic [ref=e13038]:
+                    - generic [ref=e13039]: EMA Transition
+                    - generic [ref=e13040]: No Trend
+                - cell [ref=e13041]:
+                  - img [ref=e13042]
+              - row "127 BIOUSDT 50 0.496 85% EMA Transition" [ref=e13044] [cursor=pointer]:
+                - cell "127" [ref=e13045]
+                - cell "BIOUSDT" [ref=e13046]:
+                  - generic [ref=e13047]:
+                    - text: BIOUSDT
+                    - link "Chart for BIOUSDT" [ref=e13048]:
+                      - /url: /symbols/BIOUSDT
+                      - img [ref=e13049]
+                    - link "Trade BIO/USDT on Binance" [ref=e13052]:
+                      - /url: https://www.binance.com/en/trade/BIO_USDT
+                      - img [ref=e13053]
+                - cell "50 0.496" [ref=e13055]:
+                  - generic [ref=e13056]:
+                    - 'progressbar "Bullish score: 0.496" [ref=e13057]'
+                    - generic [ref=e13059]: "0.496"
+                - cell "85%" [ref=e13060]
+                - cell "EMA Transition" [ref=e13061]:
+                  - generic [ref=e13063]: EMA Transition
+                - cell [ref=e13064]:
+                  - img [ref=e13065]
+              - row "128 ACTUSDT 49 0.494 76% EMA Bullish BB Squeeze No Trend" [ref=e13067] [cursor=pointer]:
+                - cell "128" [ref=e13068]
+                - cell "ACTUSDT" [ref=e13069]:
+                  - generic [ref=e13070]:
+                    - text: ACTUSDT
+                    - link "Chart for ACTUSDT" [ref=e13071]:
+                      - /url: /symbols/ACTUSDT
+                      - img [ref=e13072]
+                    - link "Trade ACT/USDT on Binance" [ref=e13075]:
+                      - /url: https://www.binance.com/en/trade/ACT_USDT
+                      - img [ref=e13076]
+                - cell "49 0.494" [ref=e13078]:
+                  - generic [ref=e13079]:
+                    - 'progressbar "Bullish score: 0.494" [ref=e13080]'
+                    - generic [ref=e13082]: "0.494"
+                - cell "76%" [ref=e13083]
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e13084]:
+                  - generic [ref=e13085]:
+                    - generic [ref=e13086]: EMA Bullish
+                    - generic [ref=e13087]: BB Squeeze
+                    - generic [ref=e13088]: No Trend
+                - cell [ref=e13089]:
+                  - img [ref=e13090]
+              - row "129 TONUSDT 49 0.491 70% EMA Bullish Strong Selling BB Squeeze" [ref=e13092] [cursor=pointer]:
+                - cell "129" [ref=e13093]
+                - cell "TONUSDT" [ref=e13094]:
+                  - generic [ref=e13095]:
+                    - text: TONUSDT
+                    - link "Chart for TONUSDT" [ref=e13096]:
+                      - /url: /symbols/TONUSDT
+                      - img [ref=e13097]
+                    - link "Trade TON/USDT on Binance" [ref=e13100]:
+                      - /url: https://www.binance.com/en/trade/TON_USDT
+                      - img [ref=e13101]
+                - cell "49 0.491" [ref=e13103]:
+                  - generic [ref=e13104]:
+                    - 'progressbar "Bullish score: 0.491" [ref=e13105]'
+                    - generic [ref=e13107]: "0.491"
+                - cell "70%" [ref=e13108]
+                - cell "EMA Bullish Strong Selling BB Squeeze" [ref=e13109]:
+                  - generic [ref=e13110]:
+                    - generic [ref=e13111]: EMA Bullish
+                    - generic [ref=e13112]: Strong Selling
+                    - generic [ref=e13113]: BB Squeeze
+                - cell [ref=e13114]:
+                  - img [ref=e13115]
+              - row "130 CRVUSDT 49 0.491 88% No Trend" [ref=e13117] [cursor=pointer]:
+                - cell "130" [ref=e13118]
+                - cell "CRVUSDT" [ref=e13119]:
+                  - generic [ref=e13120]:
+                    - text: CRVUSDT
+                    - link "Chart for CRVUSDT" [ref=e13121]:
+                      - /url: /symbols/CRVUSDT
+                      - img [ref=e13122]
+                    - link "Trade CRV/USDT on Binance" [ref=e13125]:
+                      - /url: https://www.binance.com/en/trade/CRV_USDT
+                      - img [ref=e13126]
+                - cell "49 0.491" [ref=e13128]:
+                  - generic [ref=e13129]:
+                    - 'progressbar "Bullish score: 0.491" [ref=e13130]'
+                    - generic [ref=e13132]: "0.491"
+                - cell "88%" [ref=e13133]
+                - cell "No Trend" [ref=e13134]:
+                  - generic [ref=e13136]: No Trend
+                - cell [ref=e13137]:
+                  - img [ref=e13138]
+              - row "131 PARTIUSDT 49 0.490 66% EMA Bullish MACD Bearish BB Squeeze" [ref=e13140] [cursor=pointer]:
+                - cell "131" [ref=e13141]
+                - cell "PARTIUSDT" [ref=e13142]:
+                  - generic [ref=e13143]:
+                    - text: PARTIUSDT
+                    - link "Chart for PARTIUSDT" [ref=e13144]:
+                      - /url: /symbols/PARTIUSDT
+                      - img [ref=e13145]
+                    - link "Trade PARTI/USDT on Binance" [ref=e13148]:
+                      - /url: https://www.binance.com/en/trade/PARTI_USDT
+                      - img [ref=e13149]
+                - cell "49 0.490" [ref=e13151]:
+                  - generic [ref=e13152]:
+                    - 'progressbar "Bullish score: 0.490" [ref=e13153]'
+                    - generic [ref=e13155]: "0.490"
+                - cell "66%" [ref=e13156]
+                - cell "EMA Bullish MACD Bearish BB Squeeze" [ref=e13157]:
+                  - generic [ref=e13158]:
+                    - generic [ref=e13159]: EMA Bullish
+                    - generic [ref=e13160]: MACD Bearish
+                    - generic [ref=e13161]: BB Squeeze
+                - cell [ref=e13162]:
+                  - img [ref=e13163]
+              - row "132 PLUMEUSDT 49 0.489 80% No Trend" [ref=e13165] [cursor=pointer]:
+                - cell "132" [ref=e13166]
+                - cell "PLUMEUSDT" [ref=e13167]:
+                  - generic [ref=e13168]:
+                    - text: PLUMEUSDT
+                    - link "Chart for PLUMEUSDT" [ref=e13169]:
+                      - /url: /symbols/PLUMEUSDT
+                      - img [ref=e13170]
+                    - link "Trade PLUME/USDT on Binance" [ref=e13173]:
+                      - /url: https://www.binance.com/en/trade/PLUME_USDT
+                      - img [ref=e13174]
+                - cell "49 0.489" [ref=e13176]:
+                  - generic [ref=e13177]:
+                    - 'progressbar "Bullish score: 0.489" [ref=e13178]'
+                    - generic [ref=e13180]: "0.489"
+                - cell "80%" [ref=e13181]
+                - cell "No Trend" [ref=e13182]:
+                  - generic [ref=e13184]: No Trend
+                - cell [ref=e13185]:
+                  - img [ref=e13186]
+              - row "133 SPKUSDT 49 0.488 63% EMA Bullish Strong Selling BB Squeeze" [ref=e13188] [cursor=pointer]:
+                - cell "133" [ref=e13189]
+                - cell "SPKUSDT" [ref=e13190]:
+                  - generic [ref=e13191]:
+                    - text: SPKUSDT
+                    - link "Chart for SPKUSDT" [ref=e13192]:
+                      - /url: /symbols/SPKUSDT
+                      - img [ref=e13193]
+                    - link "Trade SPK/USDT on Binance" [ref=e13196]:
+                      - /url: https://www.binance.com/en/trade/SPK_USDT
+                      - img [ref=e13197]
+                - cell "49 0.488" [ref=e13199]:
+                  - generic [ref=e13200]:
+                    - 'progressbar "Bullish score: 0.488" [ref=e13201]'
+                    - generic [ref=e13203]: "0.488"
+                - cell "63%" [ref=e13204]
+                - cell "EMA Bullish Strong Selling BB Squeeze" [ref=e13205]:
+                  - generic [ref=e13206]:
+                    - generic [ref=e13207]: EMA Bullish
+                    - generic [ref=e13208]: Strong Selling
+                    - generic [ref=e13209]: BB Squeeze
+                - cell [ref=e13210]:
+                  - img [ref=e13211]
+              - row "134 SAGAUSDT 49 0.487 81% BB Squeeze No Trend" [ref=e13213] [cursor=pointer]:
+                - cell "134" [ref=e13214]
+                - cell "SAGAUSDT" [ref=e13215]:
+                  - generic [ref=e13216]:
+                    - text: SAGAUSDT
+                    - link "Chart for SAGAUSDT" [ref=e13217]:
+                      - /url: /symbols/SAGAUSDT
+                      - img [ref=e13218]
+                    - link "Trade SAGA/USDT on Binance" [ref=e13221]:
+                      - /url: https://www.binance.com/en/trade/SAGA_USDT
+                      - img [ref=e13222]
+                - cell "49 0.487" [ref=e13224]:
+                  - generic [ref=e13225]:
+                    - 'progressbar "Bullish score: 0.487" [ref=e13226]'
+                    - generic [ref=e13228]: "0.487"
+                - cell "81%" [ref=e13229]
+                - cell "BB Squeeze No Trend" [ref=e13230]:
+                  - generic [ref=e13231]:
+                    - generic [ref=e13232]: BB Squeeze
+                    - generic [ref=e13233]: No Trend
+                - cell [ref=e13234]:
+                  - img [ref=e13235]
+              - row "135 IOUSDT 48 0.484 78% EMA Bearish No Trend" [ref=e13237] [cursor=pointer]:
+                - cell "135" [ref=e13238]
+                - cell "IOUSDT" [ref=e13239]:
+                  - generic [ref=e13240]:
+                    - text: IOUSDT
+                    - link "Chart for IOUSDT" [ref=e13241]:
+                      - /url: /symbols/IOUSDT
+                      - img [ref=e13242]
+                    - link "Trade IO/USDT on Binance" [ref=e13245]:
+                      - /url: https://www.binance.com/en/trade/IO_USDT
+                      - img [ref=e13246]
+                - cell "48 0.484" [ref=e13248]:
+                  - generic [ref=e13249]:
+                    - 'progressbar "Bullish score: 0.484" [ref=e13250]'
+                    - generic [ref=e13252]: "0.484"
+                - cell "78%" [ref=e13253]
+                - cell "EMA Bearish No Trend" [ref=e13254]:
+                  - generic [ref=e13255]:
+                    - generic [ref=e13256]: EMA Bearish
+                    - generic [ref=e13257]: No Trend
+                - cell [ref=e13258]:
+                  - img [ref=e13259]
+              - row "136 METUSDT 48 0.484 63% MACD Bullish Strong Selling BB Squeeze" [ref=e13261] [cursor=pointer]:
+                - cell "136" [ref=e13262]
+                - cell "METUSDT" [ref=e13263]:
+                  - generic [ref=e13264]:
+                    - text: METUSDT
+                    - link "Chart for METUSDT" [ref=e13265]:
+                      - /url: /symbols/METUSDT
+                      - img [ref=e13266]
+                    - link "Trade MET/USDT on Binance" [ref=e13269]:
+                      - /url: https://www.binance.com/en/trade/MET_USDT
+                      - img [ref=e13270]
+                - cell "48 0.484" [ref=e13272]:
+                  - generic [ref=e13273]:
+                    - 'progressbar "Bullish score: 0.484" [ref=e13274]'
+                    - generic [ref=e13276]: "0.484"
+                - cell "63%" [ref=e13277]
+                - cell "MACD Bullish Strong Selling BB Squeeze" [ref=e13278]:
+                  - generic [ref=e13279]:
+                    - generic [ref=e13280]: MACD Bullish
+                    - generic [ref=e13281]: Strong Selling
+                    - generic [ref=e13282]: BB Squeeze
+                - cell [ref=e13283]:
+                  - img [ref=e13284]
+              - row "137 SUSDT 48 0.483 72% MACD Bearish No Trend" [ref=e13286] [cursor=pointer]:
+                - cell "137" [ref=e13287]
+                - cell "SUSDT" [ref=e13288]:
+                  - generic [ref=e13289]:
+                    - text: SUSDT
+                    - link "Chart for SUSDT" [ref=e13290]:
+                      - /url: /symbols/SUSDT
+                      - img [ref=e13291]
+                    - link "Trade S/USDT on Binance" [ref=e13294]:
+                      - /url: https://www.binance.com/en/trade/S_USDT
+                      - img [ref=e13295]
+                - cell "48 0.483" [ref=e13297]:
+                  - generic [ref=e13298]:
+                    - 'progressbar "Bullish score: 0.483" [ref=e13299]'
+                    - generic [ref=e13301]: "0.483"
+                - cell "72%" [ref=e13302]
+                - cell "MACD Bearish No Trend" [ref=e13303]:
+                  - generic [ref=e13304]:
+                    - generic [ref=e13305]: MACD Bearish
+                    - generic [ref=e13306]: No Trend
+                - cell [ref=e13307]:
+                  - img [ref=e13308]
+              - row "138 CFXUSDT 48 0.483 64% EMA Bullish Strong Selling No Trend" [ref=e13310] [cursor=pointer]:
+                - cell "138" [ref=e13311]
+                - cell "CFXUSDT" [ref=e13312]:
+                  - generic [ref=e13313]:
+                    - text: CFXUSDT
+                    - link "Chart for CFXUSDT" [ref=e13314]:
+                      - /url: /symbols/CFXUSDT
+                      - img [ref=e13315]
+                    - link "Trade CFX/USDT on Binance" [ref=e13318]:
+                      - /url: https://www.binance.com/en/trade/CFX_USDT
+                      - img [ref=e13319]
+                - cell "48 0.483" [ref=e13321]:
+                  - generic [ref=e13322]:
+                    - 'progressbar "Bullish score: 0.483" [ref=e13323]'
+                    - generic [ref=e13325]: "0.483"
+                - cell "64%" [ref=e13326]
+                - cell "EMA Bullish Strong Selling No Trend" [ref=e13327]:
+                  - generic [ref=e13328]:
+                    - generic [ref=e13329]: EMA Bullish
+                    - generic [ref=e13330]: Strong Selling
+                    - generic [ref=e13331]: No Trend
+                - cell [ref=e13332]:
+                  - img [ref=e13333]
+              - row "139 MOVEUSDT 48 0.482 67%" [ref=e13335] [cursor=pointer]:
+                - cell "139" [ref=e13336]
+                - cell "MOVEUSDT" [ref=e13337]:
+                  - generic [ref=e13338]:
+                    - text: MOVEUSDT
+                    - link "Chart for MOVEUSDT" [ref=e13339]:
+                      - /url: /symbols/MOVEUSDT
+                      - img [ref=e13340]
+                    - link "Trade MOVE/USDT on Binance" [ref=e13343]:
+                      - /url: https://www.binance.com/en/trade/MOVE_USDT
+                      - img [ref=e13344]
+                - cell "48 0.482" [ref=e13346]:
+                  - generic [ref=e13347]:
+                    - 'progressbar "Bullish score: 0.482" [ref=e13348]'
+                    - generic [ref=e13350]: "0.482"
+                - cell "67%" [ref=e13351]
+                - cell [ref=e13352]
+                - cell [ref=e13353]:
+                  - img [ref=e13354]
+              - row "140 BARDUSDT 48 0.481 72% BB Squeeze EMA Transition No Trend" [ref=e13356] [cursor=pointer]:
+                - cell "140" [ref=e13357]
+                - cell "BARDUSDT" [ref=e13358]:
+                  - generic [ref=e13359]:
+                    - text: BARDUSDT
+                    - link "Chart for BARDUSDT" [ref=e13360]:
+                      - /url: /symbols/BARDUSDT
+                      - img [ref=e13361]
+                    - link "Trade BARD/USDT on Binance" [ref=e13364]:
+                      - /url: https://www.binance.com/en/trade/BARD_USDT
+                      - img [ref=e13365]
+                - cell "48 0.481" [ref=e13367]:
+                  - generic [ref=e13368]:
+                    - 'progressbar "Bullish score: 0.481" [ref=e13369]'
+                    - generic [ref=e13371]: "0.481"
+                - cell "72%" [ref=e13372]
+                - cell "BB Squeeze EMA Transition No Trend" [ref=e13373]:
+                  - generic [ref=e13374]:
+                    - generic [ref=e13375]: BB Squeeze
+                    - generic [ref=e13376]: EMA Transition
+                    - generic [ref=e13377]: No Trend
+                - cell [ref=e13378]:
+                  - img [ref=e13379]
+              - row "141 THETAUSDT 48 0.481 76% BB Squeeze No Trend" [ref=e13381] [cursor=pointer]:
+                - cell "141" [ref=e13382]
+                - cell "THETAUSDT" [ref=e13383]:
+                  - generic [ref=e13384]:
+                    - text: THETAUSDT
+                    - link "Chart for THETAUSDT" [ref=e13385]:
+                      - /url: /symbols/THETAUSDT
+                      - img [ref=e13386]
+                    - link "Trade THETA/USDT on Binance" [ref=e13389]:
+                      - /url: https://www.binance.com/en/trade/THETA_USDT
+                      - img [ref=e13390]
+                - cell "48 0.481" [ref=e13392]:
+                  - generic [ref=e13393]:
+                    - 'progressbar "Bullish score: 0.481" [ref=e13394]'
+                    - generic [ref=e13396]: "0.481"
+                - cell "76%" [ref=e13397]
+                - cell "BB Squeeze No Trend" [ref=e13398]:
+                  - generic [ref=e13399]:
+                    - generic [ref=e13400]: BB Squeeze
+                    - generic [ref=e13401]: No Trend
+                - cell [ref=e13402]:
+                  - img [ref=e13403]
+              - row "142 XLMUSDT 48 0.480 88% EMA Bearish BB Squeeze No Trend" [ref=e13405] [cursor=pointer]:
+                - cell "142" [ref=e13406]
+                - cell "XLMUSDT" [ref=e13407]:
+                  - generic [ref=e13408]:
+                    - text: XLMUSDT
+                    - link "Chart for XLMUSDT" [ref=e13409]:
+                      - /url: /symbols/XLMUSDT
+                      - img [ref=e13410]
+                    - link "Trade XLM/USDT on Binance" [ref=e13413]:
+                      - /url: https://www.binance.com/en/trade/XLM_USDT
+                      - img [ref=e13414]
+                - cell "48 0.480" [ref=e13416]:
+                  - generic [ref=e13417]:
+                    - 'progressbar "Bullish score: 0.480" [ref=e13418]'
+                    - generic [ref=e13420]: "0.480"
+                - cell "88%" [ref=e13421]
+                - cell "EMA Bearish BB Squeeze No Trend" [ref=e13422]:
+                  - generic [ref=e13423]:
+                    - generic [ref=e13424]: EMA Bearish
+                    - generic [ref=e13425]: BB Squeeze
+                    - generic [ref=e13426]: No Trend
+                - cell [ref=e13427]:
+                  - img [ref=e13428]
+              - row "143 EURUSDT 48 0.479 79% EMA Bearish Strong Selling BB Squeeze" [ref=e13430] [cursor=pointer]:
+                - cell "143" [ref=e13431]
+                - cell "EURUSDT" [ref=e13432]:
+                  - generic [ref=e13433]:
+                    - text: EURUSDT
+                    - link "Chart for EURUSDT" [ref=e13434]:
+                      - /url: /symbols/EURUSDT
+                      - img [ref=e13435]
+                    - link "Trade EUR/USDT on Binance" [ref=e13438]:
+                      - /url: https://www.binance.com/en/trade/EUR_USDT
+                      - img [ref=e13439]
+                - cell "48 0.479" [ref=e13441]:
+                  - generic [ref=e13442]:
+                    - 'progressbar "Bullish score: 0.479" [ref=e13443]'
+                    - generic [ref=e13445]: "0.479"
+                - cell "79%" [ref=e13446]
+                - cell "EMA Bearish Strong Selling BB Squeeze" [ref=e13447]:
+                  - generic [ref=e13448]:
+                    - generic [ref=e13449]: EMA Bearish
+                    - generic [ref=e13450]: Strong Selling
+                    - generic [ref=e13451]: BB Squeeze
+                - cell [ref=e13452]:
+                  - img [ref=e13453]
+              - row "144 ARKMUSDT 48 0.477 76% EMA Bearish BB Squeeze No Trend" [ref=e13455] [cursor=pointer]:
+                - cell "144" [ref=e13456]
+                - cell "ARKMUSDT" [ref=e13457]:
+                  - generic [ref=e13458]:
+                    - text: ARKMUSDT
+                    - link "Chart for ARKMUSDT" [ref=e13459]:
+                      - /url: /symbols/ARKMUSDT
+                      - img [ref=e13460]
+                    - link "Trade ARKM/USDT on Binance" [ref=e13463]:
+                      - /url: https://www.binance.com/en/trade/ARKM_USDT
+                      - img [ref=e13464]
+                - cell "48 0.477" [ref=e13466]:
+                  - generic [ref=e13467]:
+                    - 'progressbar "Bullish score: 0.477" [ref=e13468]'
+                    - generic [ref=e13470]: "0.477"
+                - cell "76%" [ref=e13471]
+                - cell "EMA Bearish BB Squeeze No Trend" [ref=e13472]:
+                  - generic [ref=e13473]:
+                    - generic [ref=e13474]: EMA Bearish
+                    - generic [ref=e13475]: BB Squeeze
+                    - generic [ref=e13476]: No Trend
+                - cell [ref=e13477]:
+                  - img [ref=e13478]
+              - row "145 RESOLVUSDT 48 0.477 76% Strong Selling BB Squeeze EMA Transition" [ref=e13480] [cursor=pointer]:
+                - cell "145" [ref=e13481]
+                - cell "RESOLVUSDT" [ref=e13482]:
+                  - generic [ref=e13483]:
+                    - text: RESOLVUSDT
+                    - link "Chart for RESOLVUSDT" [ref=e13484]:
+                      - /url: /symbols/RESOLVUSDT
+                      - img [ref=e13485]
+                    - link "Trade RESOLV/USDT on Binance" [ref=e13488]:
+                      - /url: https://www.binance.com/en/trade/RESOLV_USDT
+                      - img [ref=e13489]
+                - cell "48 0.477" [ref=e13491]:
+                  - generic [ref=e13492]:
+                    - 'progressbar "Bullish score: 0.477" [ref=e13493]'
+                    - generic [ref=e13495]: "0.477"
+                - cell "76%" [ref=e13496]
+                - cell "Strong Selling BB Squeeze EMA Transition" [ref=e13497]:
+                  - generic [ref=e13498]:
+                    - generic [ref=e13499]: Strong Selling
+                    - generic [ref=e13500]: BB Squeeze
+                    - generic [ref=e13501]: EMA Transition
+                - cell [ref=e13502]:
+                  - img [ref=e13503]
+              - row "146 BATUSDT 48 0.475 71% EMA Bearish BB Squeeze No Trend" [ref=e13505] [cursor=pointer]:
+                - cell "146" [ref=e13506]
+                - cell "BATUSDT" [ref=e13507]:
+                  - generic [ref=e13508]:
+                    - text: BATUSDT
+                    - link "Chart for BATUSDT" [ref=e13509]:
+                      - /url: /symbols/BATUSDT
+                      - img [ref=e13510]
+                    - link "Trade BAT/USDT on Binance" [ref=e13513]:
+                      - /url: https://www.binance.com/en/trade/BAT_USDT
+                      - img [ref=e13514]
+                - cell "48 0.475" [ref=e13516]:
+                  - generic [ref=e13517]:
+                    - 'progressbar "Bullish score: 0.475" [ref=e13518]'
+                    - generic [ref=e13520]: "0.475"
+                - cell "71%" [ref=e13521]
+                - cell "EMA Bearish BB Squeeze No Trend" [ref=e13522]:
+                  - generic [ref=e13523]:
+                    - generic [ref=e13524]: EMA Bearish
+                    - generic [ref=e13525]: BB Squeeze
+                    - generic [ref=e13526]: No Trend
+                - cell [ref=e13527]:
+                  - img [ref=e13528]
+              - row "147 STXUSDT 47 0.471 72% MACD Bearish BB Squeeze No Trend" [ref=e13530] [cursor=pointer]:
+                - cell "147" [ref=e13531]
+                - cell "STXUSDT" [ref=e13532]:
+                  - generic [ref=e13533]:
+                    - text: STXUSDT
+                    - link "Chart for STXUSDT" [ref=e13534]:
+                      - /url: /symbols/STXUSDT
+                      - img [ref=e13535]
+                    - link "Trade STX/USDT on Binance" [ref=e13538]:
+                      - /url: https://www.binance.com/en/trade/STX_USDT
+                      - img [ref=e13539]
+                - cell "47 0.471" [ref=e13541]:
+                  - generic [ref=e13542]:
+                    - 'progressbar "Bullish score: 0.471" [ref=e13543]'
+                    - generic [ref=e13545]: "0.471"
+                - cell "72%" [ref=e13546]
+                - cell "MACD Bearish BB Squeeze No Trend" [ref=e13547]:
+                  - generic [ref=e13548]:
+                    - generic [ref=e13549]: MACD Bearish
+                    - generic [ref=e13550]: BB Squeeze
+                    - generic [ref=e13551]: No Trend
+                - cell [ref=e13552]:
+                  - img [ref=e13553]
+              - row "148 JASMYUSDT 47 0.471 76% MACD Bearish BB Squeeze No Trend" [ref=e13555] [cursor=pointer]:
+                - cell "148" [ref=e13556]
+                - cell "JASMYUSDT" [ref=e13557]:
+                  - generic [ref=e13558]:
+                    - text: JASMYUSDT
+                    - link "Chart for JASMYUSDT" [ref=e13559]:
+                      - /url: /symbols/JASMYUSDT
+                      - img [ref=e13560]
+                    - link "Trade JASMY/USDT on Binance" [ref=e13563]:
+                      - /url: https://www.binance.com/en/trade/JASMY_USDT
+                      - img [ref=e13564]
+                - cell "47 0.471" [ref=e13566]:
+                  - generic [ref=e13567]:
+                    - 'progressbar "Bullish score: 0.471" [ref=e13568]'
+                    - generic [ref=e13570]: "0.471"
+                - cell "76%" [ref=e13571]
+                - cell "MACD Bearish BB Squeeze No Trend" [ref=e13572]:
+                  - generic [ref=e13573]:
+                    - generic [ref=e13574]: MACD Bearish
+                    - generic [ref=e13575]: BB Squeeze
+                    - generic [ref=e13576]: No Trend
+                - cell [ref=e13577]:
+                  - img [ref=e13578]
+              - row "149 NEIROUSDT 47 0.470 74% EMA Bullish Strong Selling No Trend" [ref=e13580] [cursor=pointer]:
+                - cell "149" [ref=e13581]
+                - cell "NEIROUSDT" [ref=e13582]:
+                  - generic [ref=e13583]:
+                    - text: NEIROUSDT
+                    - link "Chart for NEIROUSDT" [ref=e13584]:
+                      - /url: /symbols/NEIROUSDT
+                      - img [ref=e13585]
+                    - link "Trade NEIRO/USDT on Binance" [ref=e13588]:
+                      - /url: https://www.binance.com/en/trade/NEIRO_USDT
+                      - img [ref=e13589]
+                - cell "47 0.470" [ref=e13591]:
+                  - generic [ref=e13592]:
+                    - 'progressbar "Bullish score: 0.470" [ref=e13593]'
+                    - generic [ref=e13595]: "0.470"
+                - cell "74%" [ref=e13596]
+                - cell "EMA Bullish Strong Selling No Trend" [ref=e13597]:
+                  - generic [ref=e13598]:
+                    - generic [ref=e13599]: EMA Bullish
+                    - generic [ref=e13600]: Strong Selling
+                    - generic [ref=e13601]: No Trend
+                - cell [ref=e13602]:
+                  - img [ref=e13603]
+              - row "150 ARBUSDT 47 0.470 88% No Trend" [ref=e13605] [cursor=pointer]:
+                - cell "150" [ref=e13606]
+                - cell "ARBUSDT" [ref=e13607]:
+                  - generic [ref=e13608]:
+                    - text: ARBUSDT
+                    - link "Chart for ARBUSDT" [ref=e13609]:
+                      - /url: /symbols/ARBUSDT
+                      - img [ref=e13610]
+                    - link "Trade ARB/USDT on Binance" [ref=e13613]:
+                      - /url: https://www.binance.com/en/trade/ARB_USDT
+                      - img [ref=e13614]
+                - cell "47 0.470" [ref=e13616]:
+                  - generic [ref=e13617]:
+                    - 'progressbar "Bullish score: 0.470" [ref=e13618]'
+                    - generic [ref=e13620]: "0.470"
+                - cell "88%" [ref=e13621]
+                - cell "No Trend" [ref=e13622]:
+                  - generic [ref=e13624]: No Trend
+                - cell [ref=e13625]:
+                  - img [ref=e13626]
+              - row "151 XRPUSDT 47 0.469 88% EMA Bearish BB Squeeze No Trend" [ref=e13628] [cursor=pointer]:
+                - cell "151" [ref=e13629]
+                - cell "XRPUSDT" [ref=e13630]:
+                  - generic [ref=e13631]:
+                    - text: XRPUSDT
+                    - link "Chart for XRPUSDT" [ref=e13632]:
+                      - /url: /symbols/XRPUSDT
+                      - img [ref=e13633]
+                    - link "Trade XRP/USDT on Binance" [ref=e13636]:
+                      - /url: https://www.binance.com/en/trade/XRP_USDT
+                      - img [ref=e13637]
+                - cell "47 0.469" [ref=e13639]:
+                  - generic [ref=e13640]:
+                    - 'progressbar "Bullish score: 0.469" [ref=e13641]'
+                    - generic [ref=e13643]: "0.469"
+                - cell "88%" [ref=e13644]
+                - cell "EMA Bearish BB Squeeze No Trend" [ref=e13645]:
+                  - generic [ref=e13646]:
+                    - generic [ref=e13647]: EMA Bearish
+                    - generic [ref=e13648]: BB Squeeze
+                    - generic [ref=e13649]: No Trend
+                - cell [ref=e13650]:
+                  - img [ref=e13651]
+              - row "152 JTOUSDT 47 0.466 65% MACD Bearish No Trend" [ref=e13653] [cursor=pointer]:
+                - cell "152" [ref=e13654]
+                - cell "JTOUSDT" [ref=e13655]:
+                  - generic [ref=e13656]:
+                    - text: JTOUSDT
+                    - link "Chart for JTOUSDT" [ref=e13657]:
+                      - /url: /symbols/JTOUSDT
+                      - img [ref=e13658]
+                    - link "Trade JTO/USDT on Binance" [ref=e13661]:
+                      - /url: https://www.binance.com/en/trade/JTO_USDT
+                      - img [ref=e13662]
+                - cell "47 0.466" [ref=e13664]:
+                  - generic [ref=e13665]:
+                    - 'progressbar "Bullish score: 0.466" [ref=e13666]'
+                    - generic [ref=e13668]: "0.466"
+                - cell "65%" [ref=e13669]
+                - cell "MACD Bearish No Trend" [ref=e13670]:
+                  - generic [ref=e13671]:
+                    - generic [ref=e13672]: MACD Bearish
+                    - generic [ref=e13673]: No Trend
+                - cell [ref=e13674]:
+                  - img [ref=e13675]
+              - row "153 WLFIUSDT 47 0.466 80% MACD Bearish No Trend" [ref=e13677] [cursor=pointer]:
+                - cell "153" [ref=e13678]
+                - cell "WLFIUSDT" [ref=e13679]:
+                  - generic [ref=e13680]:
+                    - text: WLFIUSDT
+                    - link "Chart for WLFIUSDT" [ref=e13681]:
+                      - /url: /symbols/WLFIUSDT
+                      - img [ref=e13682]
+                    - link "Trade WLFI/USDT on Binance" [ref=e13685]:
+                      - /url: https://www.binance.com/en/trade/WLFI_USDT
+                      - img [ref=e13686]
+                - cell "47 0.466" [ref=e13688]:
+                  - generic [ref=e13689]:
+                    - 'progressbar "Bullish score: 0.466" [ref=e13690]'
+                    - generic [ref=e13692]: "0.466"
+                - cell "80%" [ref=e13693]
+                - cell "MACD Bearish No Trend" [ref=e13694]:
+                  - generic [ref=e13695]:
+                    - generic [ref=e13696]: MACD Bearish
+                    - generic [ref=e13697]: No Trend
+                - cell [ref=e13698]:
+                  - img [ref=e13699]
+              - row "154 DOLOUSDT 46 0.464 61% MACD Bearish BB Squeeze No Trend" [ref=e13701] [cursor=pointer]:
+                - cell "154" [ref=e13702]
+                - cell "DOLOUSDT" [ref=e13703]:
+                  - generic [ref=e13704]:
+                    - text: DOLOUSDT
+                    - link "Chart for DOLOUSDT" [ref=e13705]:
+                      - /url: /symbols/DOLOUSDT
+                      - img [ref=e13706]
+                    - link "Trade DOLO/USDT on Binance" [ref=e13709]:
+                      - /url: https://www.binance.com/en/trade/DOLO_USDT
+                      - img [ref=e13710]
+                - cell "46 0.464" [ref=e13712]:
+                  - generic [ref=e13713]:
+                    - 'progressbar "Bullish score: 0.464" [ref=e13714]'
+                    - generic [ref=e13716]: "0.464"
+                - cell "61%" [ref=e13717]
+                - cell "MACD Bearish BB Squeeze No Trend" [ref=e13718]:
+                  - generic [ref=e13719]:
+                    - generic [ref=e13720]: MACD Bearish
+                    - generic [ref=e13721]: BB Squeeze
+                    - generic [ref=e13722]: No Trend
+                - cell [ref=e13723]:
+                  - img [ref=e13724]
+              - row "155 VTHOUSDT 46 0.464 69% No Trend" [ref=e13726] [cursor=pointer]:
+                - cell "155" [ref=e13727]
+                - cell "VTHOUSDT" [ref=e13728]:
+                  - generic [ref=e13729]:
+                    - text: VTHOUSDT
+                    - link "Chart for VTHOUSDT" [ref=e13730]:
+                      - /url: /symbols/VTHOUSDT
+                      - img [ref=e13731]
+                    - link "Trade VTHO/USDT on Binance" [ref=e13734]:
+                      - /url: https://www.binance.com/en/trade/VTHO_USDT
+                      - img [ref=e13735]
+                - cell "46 0.464" [ref=e13737]:
+                  - generic [ref=e13738]:
+                    - 'progressbar "Bullish score: 0.464" [ref=e13739]'
+                    - generic [ref=e13741]: "0.464"
+                - cell "69%" [ref=e13742]
+                - cell "No Trend" [ref=e13743]:
+                  - generic [ref=e13745]: No Trend
+                - cell [ref=e13746]:
+                  - img [ref=e13747]
+              - row "156 ARUSDT 46 0.463 68% EMA Bullish Strong Selling No Trend" [ref=e13749] [cursor=pointer]:
+                - cell "156" [ref=e13750]
+                - cell "ARUSDT" [ref=e13751]:
+                  - generic [ref=e13752]:
+                    - text: ARUSDT
+                    - link "Chart for ARUSDT" [ref=e13753]:
+                      - /url: /symbols/ARUSDT
+                      - img [ref=e13754]
+                    - link "Trade AR/USDT on Binance" [ref=e13757]:
+                      - /url: https://www.binance.com/en/trade/AR_USDT
+                      - img [ref=e13758]
+                - cell "46 0.463" [ref=e13760]:
+                  - generic [ref=e13761]:
+                    - 'progressbar "Bullish score: 0.463" [ref=e13762]'
+                    - generic [ref=e13764]: "0.463"
+                - cell "68%" [ref=e13765]
+                - cell "EMA Bullish Strong Selling No Trend" [ref=e13766]:
+                  - generic [ref=e13767]:
+                    - generic [ref=e13768]: EMA Bullish
+                    - generic [ref=e13769]: Strong Selling
+                    - generic [ref=e13770]: No Trend
+                - cell [ref=e13771]:
+                  - img [ref=e13772]
+              - row "157 SENTUSDT 46 0.461 67% EMA Bearish Stoch Oversold BB Squeeze" [ref=e13774] [cursor=pointer]:
+                - cell "157" [ref=e13775]
+                - cell "SENTUSDT" [ref=e13776]:
+                  - generic [ref=e13777]:
+                    - text: SENTUSDT
+                    - link "Chart for SENTUSDT" [ref=e13778]:
+                      - /url: /symbols/SENTUSDT
+                      - img [ref=e13779]
+                    - link "Trade SENT/USDT on Binance" [ref=e13782]:
+                      - /url: https://www.binance.com/en/trade/SENT_USDT
+                      - img [ref=e13783]
+                - cell "46 0.461" [ref=e13785]:
+                  - generic [ref=e13786]:
+                    - 'progressbar "Bullish score: 0.461" [ref=e13787]'
+                    - generic [ref=e13789]: "0.461"
+                - cell "67%" [ref=e13790]
+                - cell "EMA Bearish Stoch Oversold BB Squeeze" [ref=e13791]:
+                  - generic [ref=e13792]:
+                    - generic [ref=e13793]: EMA Bearish
+                    - generic [ref=e13794]: Stoch Oversold
+                    - generic [ref=e13795]: BB Squeeze
+                - cell [ref=e13796]:
+                  - img [ref=e13797]
+              - row "158 TNSRUSDT 46 0.461 65% No Trend" [ref=e13799] [cursor=pointer]:
+                - cell "158" [ref=e13800]
+                - cell "TNSRUSDT" [ref=e13801]:
+                  - generic [ref=e13802]:
+                    - text: TNSRUSDT
+                    - link "Chart for TNSRUSDT" [ref=e13803]:
+                      - /url: /symbols/TNSRUSDT
+                      - img [ref=e13804]
+                    - link "Trade TNSR/USDT on Binance" [ref=e13807]:
+                      - /url: https://www.binance.com/en/trade/TNSR_USDT
+                      - img [ref=e13808]
+                - cell "46 0.461" [ref=e13810]:
+                  - generic [ref=e13811]:
+                    - 'progressbar "Bullish score: 0.461" [ref=e13812]'
+                    - generic [ref=e13814]: "0.461"
+                - cell "65%" [ref=e13815]
+                - cell "No Trend" [ref=e13816]:
+                  - generic [ref=e13818]: No Trend
+                - cell [ref=e13819]:
+                  - img [ref=e13820]
+              - row "159 SHIBUSDT 46 0.460 87% BB Squeeze No Trend" [ref=e13822] [cursor=pointer]:
+                - cell "159" [ref=e13823]
+                - cell "SHIBUSDT" [ref=e13824]:
+                  - generic [ref=e13825]:
+                    - text: SHIBUSDT
+                    - link "Chart for SHIBUSDT" [ref=e13826]:
+                      - /url: /symbols/SHIBUSDT
+                      - img [ref=e13827]
+                    - link "Trade SHIB/USDT on Binance" [ref=e13830]:
+                      - /url: https://www.binance.com/en/trade/SHIB_USDT
+                      - img [ref=e13831]
+                - cell "46 0.460" [ref=e13833]:
+                  - generic [ref=e13834]:
+                    - 'progressbar "Bullish score: 0.460" [ref=e13835]'
+                    - generic [ref=e13837]: "0.460"
+                - cell "87%" [ref=e13838]
+                - cell "BB Squeeze No Trend" [ref=e13839]:
+                  - generic [ref=e13840]:
+                    - generic [ref=e13841]: BB Squeeze
+                    - generic [ref=e13842]: No Trend
+                - cell [ref=e13843]:
+                  - img [ref=e13844]
+              - row "160 ENAUSDT 46 0.460 77% Strong Selling" [ref=e13846] [cursor=pointer]:
+                - cell "160" [ref=e13847]
+                - cell "ENAUSDT" [ref=e13848]:
+                  - generic [ref=e13849]:
+                    - text: ENAUSDT
+                    - link "Chart for ENAUSDT" [ref=e13850]:
+                      - /url: /symbols/ENAUSDT
+                      - img [ref=e13851]
+                    - link "Trade ENA/USDT on Binance" [ref=e13854]:
+                      - /url: https://www.binance.com/en/trade/ENA_USDT
+                      - img [ref=e13855]
+                - cell "46 0.460" [ref=e13857]:
+                  - generic [ref=e13858]:
+                    - 'progressbar "Bullish score: 0.460" [ref=e13859]'
+                    - generic [ref=e13861]: "0.460"
+                - cell "77%" [ref=e13862]
+                - cell "Strong Selling" [ref=e13863]:
+                  - generic [ref=e13865]: Strong Selling
+                - cell [ref=e13866]:
+                  - img [ref=e13867]
+              - row "161 APEUSDT 46 0.458 74% BB Squeeze No Trend" [ref=e13869] [cursor=pointer]:
+                - cell "161" [ref=e13870]
+                - cell "APEUSDT" [ref=e13871]:
+                  - generic [ref=e13872]:
+                    - text: APEUSDT
+                    - link "Chart for APEUSDT" [ref=e13873]:
+                      - /url: /symbols/APEUSDT
+                      - img [ref=e13874]
+                    - link "Trade APE/USDT on Binance" [ref=e13877]:
+                      - /url: https://www.binance.com/en/trade/APE_USDT
+                      - img [ref=e13878]
+                - cell "46 0.458" [ref=e13880]:
+                  - generic [ref=e13881]:
+                    - 'progressbar "Bullish score: 0.458" [ref=e13882]'
+                    - generic [ref=e13884]: "0.458"
+                - cell "74%" [ref=e13885]
+                - cell "BB Squeeze No Trend" [ref=e13886]:
+                  - generic [ref=e13887]:
+                    - generic [ref=e13888]: BB Squeeze
+                    - generic [ref=e13889]: No Trend
+                - cell [ref=e13890]:
+                  - img [ref=e13891]
+              - row "162 ENSUSDT 46 0.458 76% MACD Bearish BB Squeeze No Trend" [ref=e13893] [cursor=pointer]:
+                - cell "162" [ref=e13894]
+                - cell "ENSUSDT" [ref=e13895]:
+                  - generic [ref=e13896]:
+                    - text: ENSUSDT
+                    - link "Chart for ENSUSDT" [ref=e13897]:
+                      - /url: /symbols/ENSUSDT
+                      - img [ref=e13898]
+                    - link "Trade ENS/USDT on Binance" [ref=e13901]:
+                      - /url: https://www.binance.com/en/trade/ENS_USDT
+                      - img [ref=e13902]
+                - cell "46 0.458" [ref=e13904]:
+                  - generic [ref=e13905]:
+                    - 'progressbar "Bullish score: 0.458" [ref=e13906]'
+                    - generic [ref=e13908]: "0.458"
+                - cell "76%" [ref=e13909]
+                - cell "MACD Bearish BB Squeeze No Trend" [ref=e13910]:
+                  - generic [ref=e13911]:
+                    - generic [ref=e13912]: MACD Bearish
+                    - generic [ref=e13913]: BB Squeeze
+                    - generic [ref=e13914]: No Trend
+                - cell [ref=e13915]:
+                  - img [ref=e13916]
+              - row "163 JSTUSDT 46 0.455 65% EMA Bearish Strong Selling BB Squeeze" [ref=e13918] [cursor=pointer]:
+                - cell "163" [ref=e13919]
+                - cell "JSTUSDT" [ref=e13920]:
+                  - generic [ref=e13921]:
+                    - text: JSTUSDT
+                    - link "Chart for JSTUSDT" [ref=e13922]:
+                      - /url: /symbols/JSTUSDT
+                      - img [ref=e13923]
+                    - link "Trade JST/USDT on Binance" [ref=e13926]:
+                      - /url: https://www.binance.com/en/trade/JST_USDT
+                      - img [ref=e13927]
+                - cell "46 0.455" [ref=e13929]:
+                  - generic [ref=e13930]:
+                    - 'progressbar "Bullish score: 0.455" [ref=e13931]'
+                    - generic [ref=e13933]: "0.455"
+                - cell "65%" [ref=e13934]
+                - cell "EMA Bearish Strong Selling BB Squeeze" [ref=e13935]:
+                  - generic [ref=e13936]:
+                    - generic [ref=e13937]: EMA Bearish
+                    - generic [ref=e13938]: Strong Selling
+                    - generic [ref=e13939]: BB Squeeze
+                - cell [ref=e13940]:
+                  - img [ref=e13941]
+              - row "164 ANIMEUSDT 46 0.455 65% MACD Bearish No Trend" [ref=e13943] [cursor=pointer]:
+                - cell "164" [ref=e13944]
+                - cell "ANIMEUSDT" [ref=e13945]:
+                  - generic [ref=e13946]:
+                    - text: ANIMEUSDT
+                    - link "Chart for ANIMEUSDT" [ref=e13947]:
+                      - /url: /symbols/ANIMEUSDT
+                      - img [ref=e13948]
+                    - link "Trade ANIME/USDT on Binance" [ref=e13951]:
+                      - /url: https://www.binance.com/en/trade/ANIME_USDT
+                      - img [ref=e13952]
+                - cell "46 0.455" [ref=e13954]:
+                  - generic [ref=e13955]:
+                    - 'progressbar "Bullish score: 0.455" [ref=e13956]'
+                    - generic [ref=e13958]: "0.455"
+                - cell "65%" [ref=e13959]
+                - cell "MACD Bearish No Trend" [ref=e13960]:
+                  - generic [ref=e13961]:
+                    - generic [ref=e13962]: MACD Bearish
+                    - generic [ref=e13963]: No Trend
+                - cell [ref=e13964]:
+                  - img [ref=e13965]
+              - row "165 BBUSDT 45 0.454 71% No Trend" [ref=e13967] [cursor=pointer]:
+                - cell "165" [ref=e13968]
+                - cell "BBUSDT" [ref=e13969]:
+                  - generic [ref=e13970]:
+                    - text: BBUSDT
+                    - link "Chart for BBUSDT" [ref=e13971]:
+                      - /url: /symbols/BBUSDT
+                      - img [ref=e13972]
+                    - link "Trade BB/USDT on Binance" [ref=e13975]:
+                      - /url: https://www.binance.com/en/trade/BB_USDT
+                      - img [ref=e13976]
+                - cell "45 0.454" [ref=e13978]:
+                  - generic [ref=e13979]:
+                    - 'progressbar "Bullish score: 0.454" [ref=e13980]'
+                    - generic [ref=e13982]: "0.454"
+                - cell "71%" [ref=e13983]
+                - cell "No Trend" [ref=e13984]:
+                  - generic [ref=e13986]: No Trend
+                - cell [ref=e13987]:
+                  - img [ref=e13988]
+              - row "166 ALTUSDT 45 0.454 70% MACD Bearish No Trend" [ref=e13990] [cursor=pointer]:
+                - cell "166" [ref=e13991]
+                - cell "ALTUSDT" [ref=e13992]:
+                  - generic [ref=e13993]:
+                    - text: ALTUSDT
+                    - link "Chart for ALTUSDT" [ref=e13994]:
+                      - /url: /symbols/ALTUSDT
+                      - img [ref=e13995]
+                    - link "Trade ALT/USDT on Binance" [ref=e13998]:
+                      - /url: https://www.binance.com/en/trade/ALT_USDT
+                      - img [ref=e13999]
+                - cell "45 0.454" [ref=e14001]:
+                  - generic [ref=e14002]:
+                    - 'progressbar "Bullish score: 0.454" [ref=e14003]'
+                    - generic [ref=e14005]: "0.454"
+                - cell "70%" [ref=e14006]
+                - cell "MACD Bearish No Trend" [ref=e14007]:
+                  - generic [ref=e14008]:
+                    - generic [ref=e14009]: MACD Bearish
+                    - generic [ref=e14010]: No Trend
+                - cell [ref=e14011]:
+                  - img [ref=e14012]
+              - row "167 BANANAS31USDT 45 0.454 66% EMA Bearish MACD Bearish BB Squeeze" [ref=e14014] [cursor=pointer]:
+                - cell "167" [ref=e14015]
+                - cell "BANANAS31USDT" [ref=e14016]:
+                  - generic [ref=e14017]:
+                    - text: BANANAS31USDT
+                    - link "Chart for BANANAS31USDT" [ref=e14018]:
+                      - /url: /symbols/BANANAS31USDT
+                      - img [ref=e14019]
+                    - link "Trade BANANAS31/USDT on Binance" [ref=e14022]:
+                      - /url: https://www.binance.com/en/trade/BANANAS31_USDT
+                      - img [ref=e14023]
+                - cell "45 0.454" [ref=e14025]:
+                  - generic [ref=e14026]:
+                    - 'progressbar "Bullish score: 0.454" [ref=e14027]'
+                    - generic [ref=e14029]: "0.454"
+                - cell "66%" [ref=e14030]
+                - cell "EMA Bearish MACD Bearish BB Squeeze" [ref=e14031]:
+                  - generic [ref=e14032]:
+                    - generic [ref=e14033]: EMA Bearish
+                    - generic [ref=e14034]: MACD Bearish
+                    - generic [ref=e14035]: BB Squeeze
+                - cell [ref=e14036]:
+                  - img [ref=e14037]
+              - row "168 OGUSDT 45 0.453 75% MACD Bearish BB Squeeze No Trend" [ref=e14039] [cursor=pointer]:
+                - cell "168" [ref=e14040]
+                - cell "OGUSDT" [ref=e14041]:
+                  - generic [ref=e14042]:
+                    - text: OGUSDT
+                    - link "Chart for OGUSDT" [ref=e14043]:
+                      - /url: /symbols/OGUSDT
+                      - img [ref=e14044]
+                    - link "Trade OG/USDT on Binance" [ref=e14047]:
+                      - /url: https://www.binance.com/en/trade/OG_USDT
+                      - img [ref=e14048]
+                - cell "45 0.453" [ref=e14050]:
+                  - generic [ref=e14051]:
+                    - 'progressbar "Bullish score: 0.453" [ref=e14052]'
+                    - generic [ref=e14054]: "0.453"
+                - cell "75%" [ref=e14055]
+                - cell "MACD Bearish BB Squeeze No Trend" [ref=e14056]:
+                  - generic [ref=e14057]:
+                    - generic [ref=e14058]: MACD Bearish
+                    - generic [ref=e14059]: BB Squeeze
+                    - generic [ref=e14060]: No Trend
+                - cell [ref=e14061]:
+                  - img [ref=e14062]
+              - row "169 MIRAUSDT 45 0.453 69% MACD Bearish No Trend" [ref=e14064] [cursor=pointer]:
+                - cell "169" [ref=e14065]
+                - cell "MIRAUSDT" [ref=e14066]:
+                  - generic [ref=e14067]:
+                    - text: MIRAUSDT
+                    - link "Chart for MIRAUSDT" [ref=e14068]:
+                      - /url: /symbols/MIRAUSDT
+                      - img [ref=e14069]
+                    - link "Trade MIRA/USDT on Binance" [ref=e14072]:
+                      - /url: https://www.binance.com/en/trade/MIRA_USDT
+                      - img [ref=e14073]
+                - cell "45 0.453" [ref=e14075]:
+                  - generic [ref=e14076]:
+                    - 'progressbar "Bullish score: 0.453" [ref=e14077]'
+                    - generic [ref=e14079]: "0.453"
+                - cell "69%" [ref=e14080]
+                - cell "MACD Bearish No Trend" [ref=e14081]:
+                  - generic [ref=e14082]:
+                    - generic [ref=e14083]: MACD Bearish
+                    - generic [ref=e14084]: No Trend
+                - cell [ref=e14085]:
+                  - img [ref=e14086]
+              - row "170 USDEUSDT 45 0.450 72% MACD Bearish Stoch Oversold BB Squeeze" [ref=e14088] [cursor=pointer]:
+                - cell "170" [ref=e14089]
+                - cell "USDEUSDT" [ref=e14090]:
+                  - generic [ref=e14091]:
+                    - text: USDEUSDT
+                    - link "Chart for USDEUSDT" [ref=e14092]:
+                      - /url: /symbols/USDEUSDT
+                      - img [ref=e14093]
+                    - link "Trade USDE/USDT on Binance" [ref=e14096]:
+                      - /url: https://www.binance.com/en/trade/USDE_USDT
+                      - img [ref=e14097]
+                - cell "45 0.450" [ref=e14099]:
+                  - generic [ref=e14100]:
+                    - 'progressbar "Bullish score: 0.450" [ref=e14101]'
+                    - generic [ref=e14103]: "0.450"
+                - cell "72%" [ref=e14104]
+                - cell "MACD Bearish Stoch Oversold BB Squeeze" [ref=e14105]:
+                  - generic [ref=e14106]:
+                    - generic [ref=e14107]: MACD Bearish
+                    - generic [ref=e14108]: Stoch Oversold
+                    - generic [ref=e14109]: BB Squeeze
+                - cell [ref=e14110]:
+                  - img [ref=e14111]
+              - row "171 MBLUSDT 45 0.450 69% Strong Selling BB Squeeze" [ref=e14113] [cursor=pointer]:
+                - cell "171" [ref=e14114]
+                - cell "MBLUSDT" [ref=e14115]:
+                  - generic [ref=e14116]:
+                    - text: MBLUSDT
+                    - link "Chart for MBLUSDT" [ref=e14117]:
+                      - /url: /symbols/MBLUSDT
+                      - img [ref=e14118]
+                    - link "Trade MBL/USDT on Binance" [ref=e14121]:
+                      - /url: https://www.binance.com/en/trade/MBL_USDT
+                      - img [ref=e14122]
+                - cell "45 0.450" [ref=e14124]:
+                  - generic [ref=e14125]:
+                    - 'progressbar "Bullish score: 0.450" [ref=e14126]'
+                    - generic [ref=e14128]: "0.450"
+                - cell "69%" [ref=e14129]
+                - cell "Strong Selling BB Squeeze" [ref=e14130]:
+                  - generic [ref=e14131]:
+                    - generic [ref=e14132]: Strong Selling
+                    - generic [ref=e14133]: BB Squeeze
+                - cell [ref=e14134]:
+                  - img [ref=e14135]
+              - row "172 AWEUSDT 45 0.448 62% MACD Bearish BB Squeeze No Trend" [ref=e14137] [cursor=pointer]:
+                - cell "172" [ref=e14138]
+                - cell "AWEUSDT" [ref=e14139]:
+                  - generic [ref=e14140]:
+                    - text: AWEUSDT
+                    - link "Chart for AWEUSDT" [ref=e14141]:
+                      - /url: /symbols/AWEUSDT
+                      - img [ref=e14142]
+                    - link "Trade AWE/USDT on Binance" [ref=e14145]:
+                      - /url: https://www.binance.com/en/trade/AWE_USDT
+                      - img [ref=e14146]
+                - cell "45 0.448" [ref=e14148]:
+                  - generic [ref=e14149]:
+                    - 'progressbar "Bullish score: 0.448" [ref=e14150]'
+                    - generic [ref=e14152]: "0.448"
+                - cell "62%" [ref=e14153]
+                - cell "MACD Bearish BB Squeeze No Trend" [ref=e14154]:
+                  - generic [ref=e14155]:
+                    - generic [ref=e14156]: MACD Bearish
+                    - generic [ref=e14157]: BB Squeeze
+                    - generic [ref=e14158]: No Trend
+                - cell [ref=e14159]:
+                  - img [ref=e14160]
+              - row "173 ZBTUSDT 45 0.447 71% EMA Bearish MACD Bearish" [ref=e14162] [cursor=pointer]:
+                - cell "173" [ref=e14163]
+                - cell "ZBTUSDT" [ref=e14164]:
+                  - generic [ref=e14165]:
+                    - text: ZBTUSDT
+                    - link "Chart for ZBTUSDT" [ref=e14166]:
+                      - /url: /symbols/ZBTUSDT
+                      - img [ref=e14167]
+                    - link "Trade ZBT/USDT on Binance" [ref=e14170]:
+                      - /url: https://www.binance.com/en/trade/ZBT_USDT
+                      - img [ref=e14171]
+                - cell "45 0.447" [ref=e14173]:
+                  - generic [ref=e14174]:
+                    - 'progressbar "Bullish score: 0.447" [ref=e14175]'
+                    - generic [ref=e14177]: "0.447"
+                - cell "71%" [ref=e14178]
+                - cell "EMA Bearish MACD Bearish" [ref=e14179]:
+                  - generic [ref=e14180]:
+                    - generic [ref=e14181]: EMA Bearish
+                    - generic [ref=e14182]: MACD Bearish
+                - cell [ref=e14183]:
+                  - img [ref=e14184]
+              - row "174 SNXUSDT 45 0.445 70% MACD Bearish" [ref=e14186] [cursor=pointer]:
+                - cell "174" [ref=e14187]
+                - cell "SNXUSDT" [ref=e14188]:
+                  - generic [ref=e14189]:
+                    - text: SNXUSDT
+                    - link "Chart for SNXUSDT" [ref=e14190]:
+                      - /url: /symbols/SNXUSDT
+                      - img [ref=e14191]
+                    - link "Trade SNX/USDT on Binance" [ref=e14194]:
+                      - /url: https://www.binance.com/en/trade/SNX_USDT
+                      - img [ref=e14195]
+                - cell "45 0.445" [ref=e14197]:
+                  - generic [ref=e14198]:
+                    - 'progressbar "Bullish score: 0.445" [ref=e14199]'
+                    - generic [ref=e14201]: "0.445"
+                - cell "70%" [ref=e14202]
+                - cell "MACD Bearish" [ref=e14203]:
+                  - generic [ref=e14205]: MACD Bearish
+                - cell [ref=e14206]:
+                  - img [ref=e14207]
+              - row "175 RONINUSDT 45 0.445 70% Stoch Oversold BB Squeeze No Trend" [ref=e14209] [cursor=pointer]:
+                - cell "175" [ref=e14210]
+                - cell "RONINUSDT" [ref=e14211]:
+                  - generic [ref=e14212]:
+                    - text: RONINUSDT
+                    - link "Chart for RONINUSDT" [ref=e14213]:
+                      - /url: /symbols/RONINUSDT
+                      - img [ref=e14214]
+                    - link "Trade RONIN/USDT on Binance" [ref=e14217]:
+                      - /url: https://www.binance.com/en/trade/RONIN_USDT
+                      - img [ref=e14218]
+                - cell "45 0.445" [ref=e14220]:
+                  - generic [ref=e14221]:
+                    - 'progressbar "Bullish score: 0.445" [ref=e14222]'
+                    - generic [ref=e14224]: "0.445"
+                - cell "70%" [ref=e14225]
+                - cell "Stoch Oversold BB Squeeze No Trend" [ref=e14226]:
+                  - generic [ref=e14227]:
+                    - generic [ref=e14228]: Stoch Oversold
+                    - generic [ref=e14229]: BB Squeeze
+                    - generic [ref=e14230]: No Trend
+                - cell [ref=e14231]:
+                  - img [ref=e14232]
+              - row "176 AVNTUSDT 44 0.444 72% MACD Bearish No Trend" [ref=e14234] [cursor=pointer]:
+                - cell "176" [ref=e14235]
+                - cell "AVNTUSDT" [ref=e14236]:
+                  - generic [ref=e14237]:
+                    - text: AVNTUSDT
+                    - link "Chart for AVNTUSDT" [ref=e14238]:
+                      - /url: /symbols/AVNTUSDT
+                      - img [ref=e14239]
+                    - link "Trade AVNT/USDT on Binance" [ref=e14242]:
+                      - /url: https://www.binance.com/en/trade/AVNT_USDT
+                      - img [ref=e14243]
+                - cell "44 0.444" [ref=e14245]:
+                  - generic [ref=e14246]:
+                    - 'progressbar "Bullish score: 0.444" [ref=e14247]'
+                    - generic [ref=e14249]: "0.444"
+                - cell "72%" [ref=e14250]
+                - cell "MACD Bearish No Trend" [ref=e14251]:
+                  - generic [ref=e14252]:
+                    - generic [ref=e14253]: MACD Bearish
+                    - generic [ref=e14254]: No Trend
+                - cell [ref=e14255]:
+                  - img [ref=e14256]
+              - row "177 WCTUSDT 44 0.441 68% MACD Bearish" [ref=e14258] [cursor=pointer]:
+                - cell "177" [ref=e14259]
+                - cell "WCTUSDT" [ref=e14260]:
+                  - generic [ref=e14261]:
+                    - text: WCTUSDT
+                    - link "Chart for WCTUSDT" [ref=e14262]:
+                      - /url: /symbols/WCTUSDT
+                      - img [ref=e14263]
+                    - link "Trade WCT/USDT on Binance" [ref=e14266]:
+                      - /url: https://www.binance.com/en/trade/WCT_USDT
+                      - img [ref=e14267]
+                - cell "44 0.441" [ref=e14269]:
+                  - generic [ref=e14270]:
+                    - 'progressbar "Bullish score: 0.441" [ref=e14271]'
+                    - generic [ref=e14273]: "0.441"
+                - cell "68%" [ref=e14274]
+                - cell "MACD Bearish" [ref=e14275]:
+                  - generic [ref=e14277]: MACD Bearish
+                - cell [ref=e14278]:
+                  - img [ref=e14279]
+              - row "178 FILUSDT 44 0.441 85% MACD Bearish BB Squeeze No Trend" [ref=e14281] [cursor=pointer]:
+                - cell "178" [ref=e14282]
+                - cell "FILUSDT" [ref=e14283]:
+                  - generic [ref=e14284]:
+                    - text: FILUSDT
+                    - link "Chart for FILUSDT" [ref=e14285]:
+                      - /url: /symbols/FILUSDT
+                      - img [ref=e14286]
+                    - link "Trade FIL/USDT on Binance" [ref=e14289]:
+                      - /url: https://www.binance.com/en/trade/FIL_USDT
+                      - img [ref=e14290]
+                - cell "44 0.441" [ref=e14292]:
+                  - generic [ref=e14293]:
+                    - 'progressbar "Bullish score: 0.441" [ref=e14294]'
+                    - generic [ref=e14296]: "0.441"
+                - cell "85%" [ref=e14297]
+                - cell "MACD Bearish BB Squeeze No Trend" [ref=e14298]:
+                  - generic [ref=e14299]:
+                    - generic [ref=e14300]: MACD Bearish
+                    - generic [ref=e14301]: BB Squeeze
+                    - generic [ref=e14302]: No Trend
+                - cell [ref=e14303]:
+                  - img [ref=e14304]
+              - row "179 DYMUSDT 44 0.441 66% No Trend" [ref=e14306] [cursor=pointer]:
+                - cell "179" [ref=e14307]
+                - cell "DYMUSDT" [ref=e14308]:
+                  - generic [ref=e14309]:
+                    - text: DYMUSDT
+                    - link "Chart for DYMUSDT" [ref=e14310]:
+                      - /url: /symbols/DYMUSDT
+                      - img [ref=e14311]
+                    - link "Trade DYM/USDT on Binance" [ref=e14314]:
+                      - /url: https://www.binance.com/en/trade/DYM_USDT
+                      - img [ref=e14315]
+                - cell "44 0.441" [ref=e14317]:
+                  - generic [ref=e14318]:
+                    - 'progressbar "Bullish score: 0.441" [ref=e14319]'
+                    - generic [ref=e14321]: "0.441"
+                - cell "66%" [ref=e14322]
+                - cell "No Trend" [ref=e14323]:
+                  - generic [ref=e14325]: No Trend
+                - cell [ref=e14326]:
+                  - img [ref=e14327]
+              - row "180 MAGICUSDT 44 0.439 81% No Trend" [ref=e14329] [cursor=pointer]:
+                - cell "180" [ref=e14330]
+                - cell "MAGICUSDT" [ref=e14331]:
+                  - generic [ref=e14332]:
+                    - text: MAGICUSDT
+                    - link "Chart for MAGICUSDT" [ref=e14333]:
+                      - /url: /symbols/MAGICUSDT
+                      - img [ref=e14334]
+                    - link "Trade MAGIC/USDT on Binance" [ref=e14337]:
+                      - /url: https://www.binance.com/en/trade/MAGIC_USDT
+                      - img [ref=e14338]
+                - cell "44 0.439" [ref=e14340]:
+                  - generic [ref=e14341]:
+                    - 'progressbar "Bullish score: 0.439" [ref=e14342]'
+                    - generic [ref=e14344]: "0.439"
+                - cell "81%" [ref=e14345]
+                - cell "No Trend" [ref=e14346]:
+                  - generic [ref=e14348]: No Trend
+                - cell [ref=e14349]:
+                  - img [ref=e14350]
+              - row "181 EIGENUSDT 44 0.437 78% Strong Selling No Trend" [ref=e14352] [cursor=pointer]:
+                - cell "181" [ref=e14353]
+                - cell "EIGENUSDT" [ref=e14354]:
+                  - generic [ref=e14355]:
+                    - text: EIGENUSDT
+                    - link "Chart for EIGENUSDT" [ref=e14356]:
+                      - /url: /symbols/EIGENUSDT
+                      - img [ref=e14357]
+                    - link "Trade EIGEN/USDT on Binance" [ref=e14360]:
+                      - /url: https://www.binance.com/en/trade/EIGEN_USDT
+                      - img [ref=e14361]
+                - cell "44 0.437" [ref=e14363]:
+                  - generic [ref=e14364]:
+                    - 'progressbar "Bullish score: 0.437" [ref=e14365]'
+                    - generic [ref=e14367]: "0.437"
+                - cell "78%" [ref=e14368]
+                - cell "Strong Selling No Trend" [ref=e14369]:
+                  - generic [ref=e14370]:
+                    - generic [ref=e14371]: Strong Selling
+                    - generic [ref=e14372]: No Trend
+                - cell [ref=e14373]:
+                  - img [ref=e14374]
+              - row "182 VIRTUALUSDT 44 0.435 67% MACD Bearish Strong Selling No Trend" [ref=e14376] [cursor=pointer]:
+                - cell "182" [ref=e14377]
+                - cell "VIRTUALUSDT" [ref=e14378]:
+                  - generic [ref=e14379]:
+                    - text: VIRTUALUSDT
+                    - link "Chart for VIRTUALUSDT" [ref=e14380]:
+                      - /url: /symbols/VIRTUALUSDT
+                      - img [ref=e14381]
+                    - link "Trade VIRTUAL/USDT on Binance" [ref=e14384]:
+                      - /url: https://www.binance.com/en/trade/VIRTUAL_USDT
+                      - img [ref=e14385]
+                - cell "44 0.435" [ref=e14387]:
+                  - generic [ref=e14388]:
+                    - 'progressbar "Bullish score: 0.435" [ref=e14389]'
+                    - generic [ref=e14391]: "0.435"
+                - cell "67%" [ref=e14392]
+                - cell "MACD Bearish Strong Selling No Trend" [ref=e14393]:
+                  - generic [ref=e14394]:
+                    - generic [ref=e14395]: MACD Bearish
+                    - generic [ref=e14396]: Strong Selling
+                    - generic [ref=e14397]: No Trend
+                - cell [ref=e14398]:
+                  - img [ref=e14399]
+              - row "183 SKLUSDT 43 0.434 77% EMA Bearish BB Squeeze No Trend" [ref=e14401] [cursor=pointer]:
+                - cell "183" [ref=e14402]
+                - cell "SKLUSDT" [ref=e14403]:
+                  - generic [ref=e14404]:
+                    - text: SKLUSDT
+                    - link "Chart for SKLUSDT" [ref=e14405]:
+                      - /url: /symbols/SKLUSDT
+                      - img [ref=e14406]
+                    - link "Trade SKL/USDT on Binance" [ref=e14409]:
+                      - /url: https://www.binance.com/en/trade/SKL_USDT
+                      - img [ref=e14410]
+                - cell "43 0.434" [ref=e14412]:
+                  - generic [ref=e14413]:
+                    - 'progressbar "Bullish score: 0.434" [ref=e14414]'
+                    - generic [ref=e14416]: "0.434"
+                - cell "77%" [ref=e14417]
+                - cell "EMA Bearish BB Squeeze No Trend" [ref=e14418]:
+                  - generic [ref=e14419]:
+                    - generic [ref=e14420]: EMA Bearish
+                    - generic [ref=e14421]: BB Squeeze
+                    - generic [ref=e14422]: No Trend
+                - cell [ref=e14423]:
+                  - img [ref=e14424]
+              - row "184 BREVUSDT 43 0.434 67% MACD Bearish No Trend" [ref=e14426] [cursor=pointer]:
+                - cell "184" [ref=e14427]
+                - cell "BREVUSDT" [ref=e14428]:
+                  - generic [ref=e14429]:
+                    - text: BREVUSDT
+                    - link "Chart for BREVUSDT" [ref=e14430]:
+                      - /url: /symbols/BREVUSDT
+                      - img [ref=e14431]
+                    - link "Trade BREV/USDT on Binance" [ref=e14434]:
+                      - /url: https://www.binance.com/en/trade/BREV_USDT
+                      - img [ref=e14435]
+                - cell "43 0.434" [ref=e14437]:
+                  - generic [ref=e14438]:
+                    - 'progressbar "Bullish score: 0.434" [ref=e14439]'
+                    - generic [ref=e14441]: "0.434"
+                - cell "67%" [ref=e14442]
+                - cell "MACD Bearish No Trend" [ref=e14443]:
+                  - generic [ref=e14444]:
+                    - generic [ref=e14445]: MACD Bearish
+                    - generic [ref=e14446]: No Trend
+                - cell [ref=e14447]:
+                  - img [ref=e14448]
+              - row "185 YBUSDT 43 0.425 59% MACD Bearish BB Squeeze No Trend" [ref=e14450] [cursor=pointer]:
+                - cell "185" [ref=e14451]
+                - cell "YBUSDT" [ref=e14452]:
+                  - generic [ref=e14453]:
+                    - text: YBUSDT
+                    - link "Chart for YBUSDT" [ref=e14454]:
+                      - /url: /symbols/YBUSDT
+                      - img [ref=e14455]
+                    - link "Trade YB/USDT on Binance" [ref=e14458]:
+                      - /url: https://www.binance.com/en/trade/YB_USDT
+                      - img [ref=e14459]
+                - cell "43 0.425" [ref=e14461]:
+                  - generic [ref=e14462]:
+                    - 'progressbar "Bullish score: 0.425" [ref=e14463]'
+                    - generic [ref=e14465]: "0.425"
+                - cell "59%" [ref=e14466]
+                - cell "MACD Bearish BB Squeeze No Trend" [ref=e14467]:
+                  - generic [ref=e14468]:
+                    - generic [ref=e14469]: MACD Bearish
+                    - generic [ref=e14470]: BB Squeeze
+                    - generic [ref=e14471]: No Trend
+                - cell [ref=e14472]:
+                  - img [ref=e14473]
+              - row "186 CYBERUSDT 43 0.425 66% Strong Selling No Trend" [ref=e14475] [cursor=pointer]:
+                - cell "186" [ref=e14476]
+                - cell "CYBERUSDT" [ref=e14477]:
+                  - generic [ref=e14478]:
+                    - text: CYBERUSDT
+                    - link "Chart for CYBERUSDT" [ref=e14479]:
+                      - /url: /symbols/CYBERUSDT
+                      - img [ref=e14480]
+                    - link "Trade CYBER/USDT on Binance" [ref=e14483]:
+                      - /url: https://www.binance.com/en/trade/CYBER_USDT
+                      - img [ref=e14484]
+                - cell "43 0.425" [ref=e14486]:
+                  - generic [ref=e14487]:
+                    - 'progressbar "Bullish score: 0.425" [ref=e14488]'
+                    - generic [ref=e14490]: "0.425"
+                - cell "66%" [ref=e14491]
+                - cell "Strong Selling No Trend" [ref=e14492]:
+                  - generic [ref=e14493]:
+                    - generic [ref=e14494]: Strong Selling
+                    - generic [ref=e14495]: No Trend
+                - cell [ref=e14496]:
+                  - img [ref=e14497]
+              - row "187 VANAUSDT 42 0.423 66% EMA Bearish" [ref=e14499] [cursor=pointer]:
+                - cell "187" [ref=e14500]
+                - cell "VANAUSDT" [ref=e14501]:
+                  - generic [ref=e14502]:
+                    - text: VANAUSDT
+                    - link "Chart for VANAUSDT" [ref=e14503]:
+                      - /url: /symbols/VANAUSDT
+                      - img [ref=e14504]
+                    - link "Trade VANA/USDT on Binance" [ref=e14507]:
+                      - /url: https://www.binance.com/en/trade/VANA_USDT
+                      - img [ref=e14508]
+                - cell "42 0.423" [ref=e14510]:
+                  - generic [ref=e14511]:
+                    - 'progressbar "Bullish score: 0.423" [ref=e14512]'
+                    - generic [ref=e14514]: "0.423"
+                - cell "66%" [ref=e14515]
+                - cell "EMA Bearish" [ref=e14516]:
+                  - generic [ref=e14518]: EMA Bearish
+                - cell [ref=e14519]:
+                  - img [ref=e14520]
+              - row "188 ESPUSDT 42 0.422 71% No Trend" [ref=e14522] [cursor=pointer]:
+                - cell "188" [ref=e14523]
+                - cell "ESPUSDT" [ref=e14524]:
+                  - generic [ref=e14525]:
+                    - text: ESPUSDT
+                    - link "Chart for ESPUSDT" [ref=e14526]:
+                      - /url: /symbols/ESPUSDT
+                      - img [ref=e14527]
+                    - link "Trade ESP/USDT on Binance" [ref=e14530]:
+                      - /url: https://www.binance.com/en/trade/ESP_USDT
+                      - img [ref=e14531]
+                - cell "42 0.422" [ref=e14533]:
+                  - generic [ref=e14534]:
+                    - 'progressbar "Bullish score: 0.422" [ref=e14535]'
+                    - generic [ref=e14537]: "0.422"
+                - cell "71%" [ref=e14538]
+                - cell "No Trend" [ref=e14539]:
+                  - generic [ref=e14541]: No Trend
+                - cell [ref=e14542]:
+                  - img [ref=e14543]
+              - row "189 ZKUSDT 41 0.414 67% EMA Bullish MACD Bearish Strong Selling" [ref=e14545] [cursor=pointer]:
+                - cell "189" [ref=e14546]
+                - cell "ZKUSDT" [ref=e14547]:
+                  - generic [ref=e14548]:
+                    - text: ZKUSDT
+                    - link "Chart for ZKUSDT" [ref=e14549]:
+                      - /url: /symbols/ZKUSDT
+                      - img [ref=e14550]
+                    - link "Trade ZK/USDT on Binance" [ref=e14553]:
+                      - /url: https://www.binance.com/en/trade/ZK_USDT
+                      - img [ref=e14554]
+                - cell "41 0.414" [ref=e14556]:
+                  - generic [ref=e14557]:
+                    - 'progressbar "Bullish score: 0.414" [ref=e14558]'
+                    - generic [ref=e14560]: "0.414"
+                - cell "67%" [ref=e14561]
+                - cell "EMA Bullish MACD Bearish Strong Selling" [ref=e14562]:
+                  - generic [ref=e14563]:
+                    - generic [ref=e14564]: EMA Bullish
+                    - generic [ref=e14565]: MACD Bearish
+                    - generic [ref=e14566]: Strong Selling
+                - cell [ref=e14567]:
+                  - img [ref=e14568]
+              - row "190 ZKPUSDT 41 0.412 73% MACD Bearish Stoch Oversold" [ref=e14570] [cursor=pointer]:
+                - cell "190" [ref=e14571]
+                - cell "ZKPUSDT" [ref=e14572]:
+                  - generic [ref=e14573]:
+                    - text: ZKPUSDT
+                    - link "Chart for ZKPUSDT" [ref=e14574]:
+                      - /url: /symbols/ZKPUSDT
+                      - img [ref=e14575]
+                    - link "Trade ZKP/USDT on Binance" [ref=e14578]:
+                      - /url: https://www.binance.com/en/trade/ZKP_USDT
+                      - img [ref=e14579]
+                - cell "41 0.412" [ref=e14581]:
+                  - generic [ref=e14582]:
+                    - 'progressbar "Bullish score: 0.412" [ref=e14583]'
+                    - generic [ref=e14585]: "0.412"
+                - cell "73%" [ref=e14586]
+                - cell "MACD Bearish Stoch Oversold" [ref=e14587]:
+                  - generic [ref=e14588]:
+                    - generic [ref=e14589]: MACD Bearish
+                    - generic [ref=e14590]: Stoch Oversold
+                - cell [ref=e14591]:
+                  - img [ref=e14592]
+              - row "191 USD1USDT 41 0.411 80% EMA Bearish MACD Bearish BB Squeeze" [ref=e14594] [cursor=pointer]:
+                - cell "191" [ref=e14595]
+                - cell "USD1USDT" [ref=e14596]:
+                  - generic [ref=e14597]:
+                    - text: USD1USDT
+                    - link "Chart for USD1USDT" [ref=e14598]:
+                      - /url: /symbols/USD1USDT
+                      - img [ref=e14599]
+                    - link "Trade USD1/USDT on Binance" [ref=e14602]:
+                      - /url: https://www.binance.com/en/trade/USD1_USDT
+                      - img [ref=e14603]
+                - cell "41 0.411" [ref=e14605]:
+                  - generic [ref=e14606]:
+                    - 'progressbar "Bullish score: 0.411" [ref=e14607]'
+                    - generic [ref=e14609]: "0.411"
+                - cell "80%" [ref=e14610]
+                - cell "EMA Bearish MACD Bearish BB Squeeze" [ref=e14611]:
+                  - generic [ref=e14612]:
+                    - generic [ref=e14613]: EMA Bearish
+                    - generic [ref=e14614]: MACD Bearish
+                    - generic [ref=e14615]: BB Squeeze
+                - cell [ref=e14616]:
+                  - img [ref=e14617]
+              - row "192 ICPUSDT 41 0.409 74% EMA Bearish Strong Selling Stoch Oversold" [ref=e14619] [cursor=pointer]:
+                - cell "192" [ref=e14620]
+                - cell "ICPUSDT" [ref=e14621]:
+                  - generic [ref=e14622]:
+                    - text: ICPUSDT
+                    - link "Chart for ICPUSDT" [ref=e14623]:
+                      - /url: /symbols/ICPUSDT
+                      - img [ref=e14624]
+                    - link "Trade ICP/USDT on Binance" [ref=e14627]:
+                      - /url: https://www.binance.com/en/trade/ICP_USDT
+                      - img [ref=e14628]
+                - cell "41 0.409" [ref=e14630]:
+                  - generic [ref=e14631]:
+                    - 'progressbar "Bullish score: 0.409" [ref=e14632]'
+                    - generic [ref=e14634]: "0.409"
+                - cell "74%" [ref=e14635]
+                - cell "EMA Bearish Strong Selling Stoch Oversold" [ref=e14636]:
+                  - generic [ref=e14637]:
+                    - generic [ref=e14638]: EMA Bearish
+                    - generic [ref=e14639]: Strong Selling
+                    - generic [ref=e14640]: Stoch Oversold
+                - cell [ref=e14641]:
+                  - img [ref=e14642]
+              - row "193 GPSUSDT 41 0.407 70% Strong Uptrend EMA Bearish MACD Bearish" [ref=e14644] [cursor=pointer]:
+                - cell "193" [ref=e14645]
+                - cell "GPSUSDT" [ref=e14646]:
+                  - generic [ref=e14647]:
+                    - text: GPSUSDT
+                    - link "Chart for GPSUSDT" [ref=e14648]:
+                      - /url: /symbols/GPSUSDT
+                      - img [ref=e14649]
+                    - link "Trade GPS/USDT on Binance" [ref=e14652]:
+                      - /url: https://www.binance.com/en/trade/GPS_USDT
+                      - img [ref=e14653]
+                - cell "41 0.407" [ref=e14655]:
+                  - generic [ref=e14656]:
+                    - 'progressbar "Bullish score: 0.407" [ref=e14657]'
+                    - generic [ref=e14659]: "0.407"
+                - cell "70%" [ref=e14660]
+                - cell "Strong Uptrend EMA Bearish MACD Bearish" [ref=e14661]:
+                  - generic [ref=e14662]:
+                    - generic [ref=e14663]: Strong Uptrend
+                    - generic [ref=e14664]: EMA Bearish
+                    - generic [ref=e14665]: MACD Bearish
+                - cell [ref=e14666]:
+                  - img [ref=e14667]
+              - row "194 GALAUSDT 41 0.406 75% MACD Bearish BB Squeeze No Trend" [ref=e14669] [cursor=pointer]:
+                - cell "194" [ref=e14670]
+                - cell "GALAUSDT" [ref=e14671]:
+                  - generic [ref=e14672]:
+                    - text: GALAUSDT
+                    - link "Chart for GALAUSDT" [ref=e14673]:
+                      - /url: /symbols/GALAUSDT
+                      - img [ref=e14674]
+                    - link "Trade GALA/USDT on Binance" [ref=e14677]:
+                      - /url: https://www.binance.com/en/trade/GALA_USDT
+                      - img [ref=e14678]
+                - cell "41 0.406" [ref=e14680]:
+                  - generic [ref=e14681]:
+                    - 'progressbar "Bullish score: 0.406" [ref=e14682]'
+                    - generic [ref=e14684]: "0.406"
+                - cell "75%" [ref=e14685]
+                - cell "MACD Bearish BB Squeeze No Trend" [ref=e14686]:
+                  - generic [ref=e14687]:
+                    - generic [ref=e14688]: MACD Bearish
+                    - generic [ref=e14689]: BB Squeeze
+                    - generic [ref=e14690]: No Trend
+                - cell [ref=e14691]:
+                  - img [ref=e14692]
+              - row "195 MEUSDT 40 0.403 61% Strong Selling Stoch Oversold No Trend" [ref=e14694] [cursor=pointer]:
+                - cell "195" [ref=e14695]
+                - cell "MEUSDT" [ref=e14696]:
+                  - generic [ref=e14697]:
+                    - text: MEUSDT
+                    - link "Chart for MEUSDT" [ref=e14698]:
+                      - /url: /symbols/MEUSDT
+                      - img [ref=e14699]
+                    - link "Trade ME/USDT on Binance" [ref=e14702]:
+                      - /url: https://www.binance.com/en/trade/ME_USDT
+                      - img [ref=e14703]
+                - cell "40 0.403" [ref=e14705]:
+                  - generic [ref=e14706]:
+                    - 'progressbar "Bullish score: 0.403" [ref=e14707]'
+                    - generic [ref=e14709]: "0.403"
+                - cell "61%" [ref=e14710]
+                - cell "Strong Selling Stoch Oversold No Trend" [ref=e14711]:
+                  - generic [ref=e14712]:
+                    - generic [ref=e14713]: Strong Selling
+                    - generic [ref=e14714]: Stoch Oversold
+                    - generic [ref=e14715]: No Trend
+                - cell [ref=e14716]:
+                  - img [ref=e14717]
+              - row "196 STGUSDT 40 0.397 61% EMA Bearish BB Squeeze" [ref=e14719] [cursor=pointer]:
+                - cell "196" [ref=e14720]
+                - cell "STGUSDT" [ref=e14721]:
+                  - generic [ref=e14722]:
+                    - text: STGUSDT
+                    - link "Chart for STGUSDT" [ref=e14723]:
+                      - /url: /symbols/STGUSDT
+                      - img [ref=e14724]
+                    - link "Trade STG/USDT on Binance" [ref=e14727]:
+                      - /url: https://www.binance.com/en/trade/STG_USDT
+                      - img [ref=e14728]
+                - cell "40 0.397" [ref=e14730]:
+                  - generic [ref=e14731]:
+                    - 'progressbar "Bullish score: 0.397" [ref=e14732]'
+                    - generic [ref=e14734]: "0.397"
+                - cell "61%" [ref=e14735]
+                - cell "EMA Bearish BB Squeeze" [ref=e14736]:
+                  - generic [ref=e14737]:
+                    - generic [ref=e14738]: EMA Bearish
+                    - generic [ref=e14739]: BB Squeeze
+                - cell [ref=e14740]:
+                  - img [ref=e14741]
+              - row "197 FLOWUSDT 40 0.397 56% EMA Bearish Stoch Oversold BB Squeeze" [ref=e14743] [cursor=pointer]:
+                - cell "197" [ref=e14744]
+                - cell "FLOWUSDT" [ref=e14745]:
+                  - generic [ref=e14746]:
+                    - text: FLOWUSDT
+                    - link "Chart for FLOWUSDT" [ref=e14747]:
+                      - /url: /symbols/FLOWUSDT
+                      - img [ref=e14748]
+                    - link "Trade FLOW/USDT on Binance" [ref=e14751]:
+                      - /url: https://www.binance.com/en/trade/FLOW_USDT
+                      - img [ref=e14752]
+                - cell "40 0.397" [ref=e14754]:
+                  - generic [ref=e14755]:
+                    - 'progressbar "Bullish score: 0.397" [ref=e14756]'
+                    - generic [ref=e14758]: "0.397"
+                - cell "56%" [ref=e14759]
+                - cell "EMA Bearish Stoch Oversold BB Squeeze" [ref=e14760]:
+                  - generic [ref=e14761]:
+                    - generic [ref=e14762]: EMA Bearish
+                    - generic [ref=e14763]: Stoch Oversold
+                    - generic [ref=e14764]: BB Squeeze
+                - cell [ref=e14765]:
+                  - img [ref=e14766]
+              - row "198 0GUSDT 39 0.392 65% Strong Selling Stoch Oversold" [ref=e14768] [cursor=pointer]:
+                - cell "198" [ref=e14769]
+                - cell "0GUSDT" [ref=e14770]:
+                  - generic [ref=e14771]:
+                    - text: 0GUSDT
+                    - link "Chart for 0GUSDT" [ref=e14772]:
+                      - /url: /symbols/0GUSDT
+                      - img [ref=e14773]
+                    - link "Trade 0G/USDT on Binance" [ref=e14776]:
+                      - /url: https://www.binance.com/en/trade/0G_USDT
+                      - img [ref=e14777]
+                - cell "39 0.392" [ref=e14779]:
+                  - generic [ref=e14780]:
+                    - 'progressbar "Bullish score: 0.392" [ref=e14781]'
+                    - generic [ref=e14783]: "0.392"
+                - cell "65%" [ref=e14784]
+                - cell "Strong Selling Stoch Oversold" [ref=e14785]:
+                  - generic [ref=e14786]:
+                    - generic [ref=e14787]: Strong Selling
+                    - generic [ref=e14788]: Stoch Oversold
+                - cell [ref=e14789]:
+                  - img [ref=e14790]
+              - row "199 KERNELUSDT 39 0.389 57% MACD Bearish" [ref=e14792] [cursor=pointer]:
+                - cell "199" [ref=e14793]
+                - cell "KERNELUSDT" [ref=e14794]:
+                  - generic [ref=e14795]:
+                    - text: KERNELUSDT
+                    - link "Chart for KERNELUSDT" [ref=e14796]:
+                      - /url: /symbols/KERNELUSDT
+                      - img [ref=e14797]
+                    - link "Trade KERNEL/USDT on Binance" [ref=e14800]:
+                      - /url: https://www.binance.com/en/trade/KERNEL_USDT
+                      - img [ref=e14801]
+                - cell "39 0.389" [ref=e14803]:
+                  - generic [ref=e14804]:
+                    - 'progressbar "Bullish score: 0.389" [ref=e14805]'
+                    - generic [ref=e14807]: "0.389"
+                - cell "57%" [ref=e14808]
+                - cell "MACD Bearish" [ref=e14809]:
+                  - generic [ref=e14811]: MACD Bearish
+                - cell [ref=e14812]:
+                  - img [ref=e14813]
+              - row "200 ATMUSDT 39 0.386 70% MACD Bearish" [ref=e14815] [cursor=pointer]:
+                - cell "200" [ref=e14816]
+                - cell "ATMUSDT" [ref=e14817]:
+                  - generic [ref=e14818]:
+                    - text: ATMUSDT
+                    - link "Chart for ATMUSDT" [ref=e14819]:
+                      - /url: /symbols/ATMUSDT
+                      - img [ref=e14820]
+                    - link "Trade ATM/USDT on Binance" [ref=e14823]:
+                      - /url: https://www.binance.com/en/trade/ATM_USDT
+                      - img [ref=e14824]
+                - cell "39 0.386" [ref=e14826]:
+                  - generic [ref=e14827]:
+                    - 'progressbar "Bullish score: 0.386" [ref=e14828]'
+                    - generic [ref=e14830]: "0.386"
+                - cell "70%" [ref=e14831]
+                - cell "MACD Bearish" [ref=e14832]:
+                  - generic [ref=e14834]: MACD Bearish
+                - cell [ref=e14835]:
+                  - img [ref=e14836]
+              - row "201 LINEAUSDT 37 0.372 70% MACD Bearish Strong Selling" [ref=e14838] [cursor=pointer]:
+                - cell "201" [ref=e14839]
+                - cell "LINEAUSDT" [ref=e14840]:
+                  - generic [ref=e14841]:
+                    - text: LINEAUSDT
+                    - link "Chart for LINEAUSDT" [ref=e14842]:
+                      - /url: /symbols/LINEAUSDT
+                      - img [ref=e14843]
+                    - link "Trade LINEA/USDT on Binance" [ref=e14846]:
+                      - /url: https://www.binance.com/en/trade/LINEA_USDT
+                      - img [ref=e14847]
+                - cell "37 0.372" [ref=e14849]:
+                  - generic [ref=e14850]:
+                    - 'progressbar "Bullish score: 0.372" [ref=e14851]'
+                    - generic [ref=e14853]: "0.372"
+                - cell "70%" [ref=e14854]
+                - cell "MACD Bearish Strong Selling" [ref=e14855]:
+                  - generic [ref=e14856]:
+                    - generic [ref=e14857]: MACD Bearish
+                    - generic [ref=e14858]: Strong Selling
+                - cell [ref=e14859]:
+                  - img [ref=e14860]
+              - row "202 CHESSUSDT 36 0.361 54% EMA Bearish Stoch Oversold" [ref=e14862] [cursor=pointer]:
+                - cell "202" [ref=e14863]
+                - cell "CHESSUSDT" [ref=e14864]:
+                  - generic [ref=e14865]:
+                    - text: CHESSUSDT
+                    - link "Chart for CHESSUSDT" [ref=e14866]:
+                      - /url: /symbols/CHESSUSDT
+                      - img [ref=e14867]
+                    - link "Trade CHESS/USDT on Binance" [ref=e14870]:
+                      - /url: https://www.binance.com/en/trade/CHESS_USDT
+                      - img [ref=e14871]
+                - cell "36 0.361" [ref=e14873]:
+                  - generic [ref=e14874]:
+                    - 'progressbar "Bullish score: 0.361" [ref=e14875]'
+                    - generic [ref=e14877]: "0.361"
+                - cell "54%" [ref=e14878]
+                - cell "EMA Bearish Stoch Oversold" [ref=e14879]:
+                  - generic [ref=e14880]:
+                    - generic [ref=e14881]: EMA Bearish
+                    - generic [ref=e14882]: Stoch Oversold
+                - cell [ref=e14883]:
+                  - img [ref=e14884]
+              - row "203 NOMUSDT 35 0.354 58% EMA Bearish Stoch Oversold Below BB Lower" [ref=e14886] [cursor=pointer]:
+                - cell "203" [ref=e14887]
+                - cell "NOMUSDT" [ref=e14888]:
+                  - generic [ref=e14889]:
+                    - text: NOMUSDT
+                    - link "Chart for NOMUSDT" [ref=e14890]:
+                      - /url: /symbols/NOMUSDT
+                      - img [ref=e14891]
+                    - link "Trade NOM/USDT on Binance" [ref=e14894]:
+                      - /url: https://www.binance.com/en/trade/NOM_USDT
+                      - img [ref=e14895]
+                - cell "35 0.354" [ref=e14897]:
+                  - generic [ref=e14898]:
+                    - 'progressbar "Bullish score: 0.354" [ref=e14899]'
+                    - generic [ref=e14901]: "0.354"
+                - cell "58%" [ref=e14902]
+                - cell "EMA Bearish Stoch Oversold Below BB Lower" [ref=e14903]:
+                  - generic [ref=e14904]:
+                    - generic [ref=e14905]: EMA Bearish
+                    - generic [ref=e14906]: Stoch Oversold
+                    - generic [ref=e14907]: Below BB Lower
+                - cell [ref=e14908]:
+                  - img [ref=e14909]
+              - row "204 BERAUSDT 35 0.346 67% EMA Bearish Strong Selling Stoch Oversold" [ref=e14911] [cursor=pointer]:
+                - cell "204" [ref=e14912]
+                - cell "BERAUSDT" [ref=e14913]:
+                  - generic [ref=e14914]:
+                    - text: BERAUSDT
+                    - link "Chart for BERAUSDT" [ref=e14915]:
+                      - /url: /symbols/BERAUSDT
+                      - img [ref=e14916]
+                    - link "Trade BERA/USDT on Binance" [ref=e14919]:
+                      - /url: https://www.binance.com/en/trade/BERA_USDT
+                      - img [ref=e14920]
+                - cell "35 0.346" [ref=e14922]:
+                  - generic [ref=e14923]:
+                    - 'progressbar "Bullish score: 0.346" [ref=e14924]'
+                    - generic [ref=e14926]: "0.346"
+                - cell "67%" [ref=e14927]
+                - cell "EMA Bearish Strong Selling Stoch Oversold" [ref=e14928]:
+                  - generic [ref=e14929]:
+                    - generic [ref=e14930]: EMA Bearish
+                    - generic [ref=e14931]: Strong Selling
+                    - generic [ref=e14932]: Stoch Oversold
+                - cell [ref=e14933]:
+                  - img [ref=e14934]
+              - row "205 AXSUSDT 33 0.331 64% EMA Bearish MACD Bearish Stoch Oversold" [ref=e14936] [cursor=pointer]:
+                - cell "205" [ref=e14937]
+                - cell "AXSUSDT" [ref=e14938]:
+                  - generic [ref=e14939]:
+                    - text: AXSUSDT
+                    - link "Chart for AXSUSDT" [ref=e14940]:
+                      - /url: /symbols/AXSUSDT
+                      - img [ref=e14941]
+                    - link "Trade AXS/USDT on Binance" [ref=e14944]:
+                      - /url: https://www.binance.com/en/trade/AXS_USDT
+                      - img [ref=e14945]
+                - cell "33 0.331" [ref=e14947]:
+                  - generic [ref=e14948]:
+                    - 'progressbar "Bullish score: 0.331" [ref=e14949]'
+                    - generic [ref=e14951]: "0.331"
+                - cell "64%" [ref=e14952]
+                - cell "EMA Bearish MACD Bearish Stoch Oversold" [ref=e14953]:
+                  - generic [ref=e14954]:
+                    - generic [ref=e14955]: EMA Bearish
+                    - generic [ref=e14956]: MACD Bearish
+                    - generic [ref=e14957]: Stoch Oversold
+                - cell [ref=e14958]:
+                  - img [ref=e14959]
+              - row "206 ENSOUSDT 33 0.329 64% EMA Bearish Strong Selling" [ref=e14961] [cursor=pointer]:
+                - cell "206" [ref=e14962]
+                - cell "ENSOUSDT" [ref=e14963]:
+                  - generic [ref=e14964]:
+                    - text: ENSOUSDT
+                    - link "Chart for ENSOUSDT" [ref=e14965]:
+                      - /url: /symbols/ENSOUSDT
+                      - img [ref=e14966]
+                    - link "Trade ENSO/USDT on Binance" [ref=e14969]:
+                      - /url: https://www.binance.com/en/trade/ENSO_USDT
+                      - img [ref=e14970]
+                - cell "33 0.329" [ref=e14972]:
+                  - generic [ref=e14973]:
+                    - 'progressbar "Bullish score: 0.329" [ref=e14974]'
+                    - generic [ref=e14976]: "0.329"
+                - cell "64%" [ref=e14977]
+                - cell "EMA Bearish Strong Selling" [ref=e14978]:
+                  - generic [ref=e14979]:
+                    - generic [ref=e14980]: EMA Bearish
+                    - generic [ref=e14981]: Strong Selling
+                - cell [ref=e14982]:
+                  - img [ref=e14983]
+              - row "207 ZROUSDT 33 0.326 67% EMA Bearish Strong Selling BB Squeeze" [ref=e14985] [cursor=pointer]:
+                - cell "207" [ref=e14986]
+                - cell "ZROUSDT" [ref=e14987]:
+                  - generic [ref=e14988]:
+                    - text: ZROUSDT
+                    - link "Chart for ZROUSDT" [ref=e14989]:
+                      - /url: /symbols/ZROUSDT
+                      - img [ref=e14990]
+                    - link "Trade ZRO/USDT on Binance" [ref=e14993]:
+                      - /url: https://www.binance.com/en/trade/ZRO_USDT
+                      - img [ref=e14994]
+                - cell "33 0.326" [ref=e14996]:
+                  - generic [ref=e14997]:
+                    - 'progressbar "Bullish score: 0.326" [ref=e14998]'
+                    - generic [ref=e15000]: "0.326"
+                - cell "67%" [ref=e15001]
+                - cell "EMA Bearish Strong Selling BB Squeeze" [ref=e15002]:
+                  - generic [ref=e15003]:
+                    - generic [ref=e15004]: EMA Bearish
+                    - generic [ref=e15005]: Strong Selling
+                    - generic [ref=e15006]: BB Squeeze
+                - cell [ref=e15007]:
+                  - img [ref=e15008]
+              - row "208 OPENUSDT 31 0.305 56% EMA Bearish MACD Bearish Strong Selling" [ref=e15010] [cursor=pointer]:
+                - cell "208" [ref=e15011]
+                - cell "OPENUSDT" [ref=e15012]:
+                  - generic [ref=e15013]:
+                    - text: OPENUSDT
+                    - link "Chart for OPENUSDT" [ref=e15014]:
+                      - /url: /symbols/OPENUSDT
+                      - img [ref=e15015]
+                    - link "Trade OPEN/USDT on Binance" [ref=e15018]:
+                      - /url: https://www.binance.com/en/trade/OPEN_USDT
+                      - img [ref=e15019]
+                - cell "31 0.305" [ref=e15021]:
+                  - generic [ref=e15022]:
+                    - 'progressbar "Bullish score: 0.305" [ref=e15023]'
+                    - generic [ref=e15025]: "0.305"
+                - cell "56%" [ref=e15026]
+                - cell "EMA Bearish MACD Bearish Strong Selling" [ref=e15027]:
+                  - generic [ref=e15028]:
+                    - generic [ref=e15029]: EMA Bearish
+                    - generic [ref=e15030]: MACD Bearish
+                    - generic [ref=e15031]: Strong Selling
+                - cell [ref=e15032]:
+                  - img [ref=e15033]
+  - alert [ref=e5002]
