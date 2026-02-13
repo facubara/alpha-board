@@ -61,6 +61,9 @@
 - [x] **Real-Time Updates (SSE)** — Post-launch feature
 - [x] **Cross-Timeframe Agents** — Post-launch feature
 - [x] **Backtesting Framework** — Post-launch feature
+- [x] **Performance Dashboard / Analytics** — Post-launch feature
+- [x] **Advanced Charting (TradingView)** — Post-launch feature
+- [x] **Agent Comparison Mode** — Post-launch feature
 
 ---
 
@@ -119,9 +122,9 @@
 | 1 | Real-Time Updates (SSE) | Done |
 | 2 | Cross-Timeframe Agents | Done |
 | 3 | Backtesting Framework | Done |
-| 4 | Performance Dashboard / Analytics | Pending |
-| 5 | Advanced Charting (TradingView) | Pending |
-| 6 | Agent Comparison Mode | Pending |
+| 4 | Performance Dashboard / Analytics | Done |
+| 5 | Advanced Charting (TradingView) | Done |
+| 6 | Agent Comparison Mode | Done |
 | 7 | Caching Layer (Redis) | Pending |
 
 ## Open Decisions
@@ -134,11 +137,11 @@ None — all decisions resolved.
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-12 20:00 | Post-launch | Agent Comparison Mode (#6) |
 | 2026-02-12 13:22 | Post-launch | Backtesting Framework (9 phases) |
 | 2026-02-11 14:00 | Phase 15 | Rule-Based Python Agents |
 | 2026-02-09 | Phase 11-14 | Agent Frontend + Deployment + Polish |
 | 2026-02-05 20:00 | Phase 10 | Agent Learning & Evolution |
-| 2026-02-05 19:00 | Phase 9 | Agent Core |
 
 ---
 

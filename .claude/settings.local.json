@@ -46,7 +46,14 @@
       "mcp__playwright__browser_evaluate",
       "WebFetch(domain:alpha-board.com)",
       "mcp__playwright__browser_run_code",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:vercel.com)",
+      "mcp__playwright__browser_resize",
+      "Bash(python3:*)",
+      "Bash(npm install:*)",
+      "WebSearch",
+      "WebFetch(domain:tradingview.github.io)"
     ]
   }
 }
