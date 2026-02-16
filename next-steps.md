@@ -160,11 +160,13 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 - Tagged with `source: hybrid`, run in normal pipeline cycle alongside technical agents.
 - Pre-built tweet context once per timeframe in orchestrator to avoid redundant DB queries.
 
-### Phase 5 — Dashboard & Analytics
-- New `/tweets` page showing the live tweet feed, sentiment timeline, and account list management.
-- Extend the analytics dashboard with a **signal source comparison** view: technical vs. tweet-only vs. hybrid PnL, win rate, and drawdown.
-- On agent detail pages, show which tweets influenced each decision (link `agent_decisions` → `tweet_signals`).
-- Filter agents by source type on the leaderboard.
+### Phase 5 — Dashboard & Analytics — `COMPLETED`
+- Source filter on agent leaderboard (Technical / Tweet / Hybrid).
+- Source badges (TECH, TW, HYB) on agent rows and detail pages.
+- New "Sources" tab in analytics with PnL bar chart and breakdown table by source type.
+- Expanded StrategyArchetype to include all 12 archetypes (4 base + 4 tweet + 4 hybrid).
+- Fixed hardcoded agent count in analytics copy.
+- **Deferred:** sentiment timeline chart, linking tweet signals to individual decisions.
 
 ### Summary — New Agent Count
 | Source | Agents |
