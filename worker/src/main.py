@@ -30,7 +30,7 @@ from src.cache import cache_delete, get_redis
 from src.config import settings
 from src.db import async_session, engine
 from src.events import event_bus
-from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, BacktestRun, BacktestTrade, Snapshot, Symbol, Tweet, TwitterAccount
+from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, BacktestRun, BacktestTrade, Snapshot, Symbol, Tweet, TweetSignal, TwitterAccount
 from src.notifications.digest import send_daily_digest_job
 from src.notifications.routes import router as notifications_router
 from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner, compute_and_persist_regime
@@ -974,20 +974,22 @@ async def delete_twitter_account(account_id: int):
 
 @app.get("/twitter/feed")
 async def twitter_feed(limit: int = 50, offset: int = 0):
-    """Get recent tweets, paginated."""
+    """Get recent tweets with signal data, paginated."""
     limit = min(limit, 200)
     async with async_session() as session:
         result = await session.execute(
-            select(Tweet, TwitterAccount)
+            select(Tweet, TwitterAccount, TweetSignal)
             .join(TwitterAccount, TwitterAccount.id == Tweet.twitter_account_id)
+            .outerjoin(TweetSignal, TweetSignal.tweet_id == Tweet.id)
             .order_by(Tweet.created_at.desc())
             .offset(offset)
             .limit(limit)
         )
         rows = result.all()
 
-        return [
-            {
+        feed = []
+        for tweet, account, signal in rows:
+            item = {
                 "id": tweet.id,
                 "tweetId": tweet.tweet_id,
                 "accountHandle": account.handle,
@@ -998,8 +1000,17 @@ async def twitter_feed(limit: int = 50, offset: int = 0):
                 "metrics": tweet.metrics,
                 "ingestedAt": tweet.ingested_at.isoformat(),
             }
-            for tweet, account in rows
-        ]
+            if signal:
+                item["signal"] = {
+                    "sentimentScore": float(signal.sentiment_score),
+                    "setupType": signal.setup_type,
+                    "confidence": float(signal.confidence),
+                    "symbolsMentioned": signal.symbols_mentioned or [],
+                    "reasoning": signal.reasoning,
+                }
+            feed.append(item)
+
+        return feed
 
 
 @app.post("/twitter/poll")
@@ -1016,6 +1027,21 @@ async def trigger_twitter():
 
     global last_twitter_poll
     last_twitter_poll = datetime.now(timezone.utc)
+    return result
+
+
+@app.post("/twitter/analyze")
+async def trigger_tweet_analysis():
+    """Manually trigger sentiment analysis on all unanalyzed tweets."""
+    if not settings.anthropic_api_key:
+        raise HTTPException(status_code=400, detail="Anthropic API key not configured")
+
+    from src.twitter.analyzer import TweetAnalyzer
+
+    async with async_session() as session:
+        analyzer = TweetAnalyzer()
+        result = await analyzer.analyze_batch(session)
+
     return result
 
 

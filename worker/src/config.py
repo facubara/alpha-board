@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     twitter_polling_enabled: bool = False
     twitter_poll_interval_minutes: int = 5
 
+    # Tweet analysis
+    tweet_analysis_enabled: bool = False
+    tweet_analysis_model: str = "claude-haiku-3-5-20241022"
+
     # Feature flags
     agents_enabled: bool = True
     evolution_enabled: bool = True

@@ -9,7 +9,7 @@
 
 import { useState, useCallback } from "react";
 import { useSSE } from "@/hooks/use-sse";
-import type { TweetData, TwitterAccountCategory } from "@/lib/types";
+import type { TweetData, TweetSetupType, TwitterAccountCategory } from "@/lib/types";
 import { TWITTER_CATEGORY_LABELS } from "@/lib/types";
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
@@ -112,15 +112,49 @@ export function TweetFeed({ initialTweets }: TweetFeedProps) {
   );
 }
 
+const SENTIMENT_COLORS = {
+  bullish: "bg-green-500/15 text-green-400 border-green-500/30",
+  bearish: "bg-red-500/15 text-red-400 border-red-500/30",
+  neutral: "bg-gray-500/15 text-gray-400 border-gray-500/30",
+} as const;
+
+const SETUP_LABELS: Record<TweetSetupType, string> = {
+  long_entry: "Long Entry",
+  short_entry: "Short Entry",
+  take_profit: "Take Profit",
+  warning: "Warning",
+  neutral: "Neutral",
+  informational: "Info",
+};
+
+const SETUP_COLORS: Record<TweetSetupType, string> = {
+  long_entry: "bg-green-500/15 text-green-400",
+  short_entry: "bg-red-500/15 text-red-400",
+  take_profit: "bg-yellow-500/15 text-yellow-400",
+  warning: "bg-orange-500/15 text-orange-400",
+  neutral: "bg-gray-500/15 text-gray-400",
+  informational: "bg-blue-500/15 text-blue-400",
+};
+
+function getSentimentLabel(score: number): "bullish" | "bearish" | "neutral" {
+  if (score > 0.2) return "bullish";
+  if (score < -0.2) return "bearish";
+  return "neutral";
+}
+
 function TweetCard({ tweet }: { tweet: TweetData }) {
+  const [showReasoning, setShowReasoning] = useState(false);
   const categoryColor = CATEGORY_COLORS[tweet.accountCategory] || "text-secondary";
   const timeAgo = getTimeAgo(tweet.createdAt);
   const mediaUrls = tweet.metrics.media_urls || [];
+  const signal = tweet.signal;
 
   // Strip trailing t.co URLs when we have media to show
   const displayText = mediaUrls.length > 0
     ? tweet.text.replace(/\s*https:\/\/t\.co\/\w+\s*$/g, "").trim()
     : tweet.text;
+
+  const sentimentLabel = signal ? getSentimentLabel(signal.sentimentScore) : null;
 
   return (
     <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
@@ -134,6 +168,20 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
           <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${categoryColor}`}>
             {TWITTER_CATEGORY_LABELS[tweet.accountCategory]}
           </span>
+
+          {/* Sentiment badge */}
+          {signal && sentimentLabel && (
+            <span className={`rounded border px-1.5 py-0.5 text-[10px] font-medium ${SENTIMENT_COLORS[sentimentLabel]}`}>
+              {signal.sentimentScore > 0 ? "+" : ""}{signal.sentimentScore.toFixed(2)}
+            </span>
+          )}
+
+          {/* Setup type badge */}
+          {signal?.setupType && signal.setupType !== "neutral" && signal.setupType !== "informational" && (
+            <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${SETUP_COLORS[signal.setupType]}`}>
+              {SETUP_LABELS[signal.setupType]}
+            </span>
+          )}
         </div>
 
         {/* Tweet text */}
@@ -164,7 +212,7 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
           </div>
         )}
 
-        {/* Metrics row */}
+        {/* Symbol tags + metrics row */}
         <div className="mt-2 flex items-center gap-4 text-xs text-muted">
           <span>{timeAgo}</span>
           {tweet.metrics.like_count != null && (
@@ -176,7 +224,35 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
           {tweet.metrics.reply_count != null && (
             <span>{formatMetric(tweet.metrics.reply_count)} replies</span>
           )}
+
+          {/* Symbol tags */}
+          {signal?.symbolsMentioned && signal.symbolsMentioned.length > 0 && (
+            <span className="flex items-center gap-1">
+              {signal.symbolsMentioned.map((sym) => (
+                <span key={sym} className="rounded bg-[var(--bg-elevated)] px-1.5 py-0.5 text-[10px] font-mono text-secondary">
+                  {sym}
+                </span>
+              ))}
+            </span>
+          )}
+
+          {/* Reasoning toggle */}
+          {signal?.reasoning && (
+            <button
+              onClick={() => setShowReasoning(!showReasoning)}
+              className="text-[10px] text-muted hover:text-secondary transition-colors-fast"
+            >
+              {showReasoning ? "hide" : "why?"}
+            </button>
+          )}
         </div>
+
+        {/* Reasoning expanded */}
+        {showReasoning && signal?.reasoning && (
+          <div className="mt-2 rounded bg-[var(--bg-elevated)] px-3 py-2 text-xs text-secondary italic">
+            {signal.reasoning}
+          </div>
+        )}
       </div>
     </div>
   );

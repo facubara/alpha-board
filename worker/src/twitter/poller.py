@@ -7,6 +7,7 @@ from sqlalchemy import select, func
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.config import settings
 from src.events import event_bus
 from src.models.db import Tweet, TwitterAccount
 from src.twitter.client import TwitterClient
@@ -110,11 +111,26 @@ class TwitterPoller:
                 "tweets": broadcast_tweets,
             })
 
+        # 6. Run sentiment analysis if enabled
+        analysis_result = None
+        if settings.tweet_analysis_enabled and new_count > 0:
+            try:
+                from src.twitter.analyzer import TweetAnalyzer
+
+                analyzer = TweetAnalyzer()
+                analysis_result = await analyzer.analyze_batch(self.session)
+            except Exception as e:
+                logger.exception(f"Tweet analysis failed: {e}")
+                errors.append(f"analysis: {e}")
+
         summary = {
             "new_tweets": new_count,
             "accounts_polled": len(accounts),
             "errors": errors,
         }
+        if analysis_result:
+            summary["analysis"] = analysis_result
+
         logger.info(
             f"Twitter poll: {new_count} new tweets from {len(accounts)} accounts"
         )

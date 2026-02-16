@@ -34,7 +34,7 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID as PG_UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
@@ -542,8 +542,51 @@ class Tweet(Base):
 
     # Relationships
     account: Mapped["TwitterAccount"] = relationship(back_populates="tweets")
+    signal: Mapped["TweetSignal | None"] = relationship(back_populates="tweet", uselist=False)
 
     __table_args__ = (
         Index("idx_tweets_account_time", "twitter_account_id", created_at.desc()),
         Index("idx_tweets_created", created_at.desc()),
+    )
+
+
+class TweetSignal(Base):
+    """LLM-generated sentiment analysis for a tweet."""
+
+    __tablename__ = "tweet_signals"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    tweet_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("tweets.id"), unique=True, nullable=False
+    )
+    sentiment_score: Mapped[Decimal] = mapped_column(Numeric(4, 3), nullable=False)
+    setup_type: Mapped[str | None] = mapped_column(String(30))
+    confidence: Mapped[Decimal] = mapped_column(
+        Numeric(4, 3), nullable=False, default=Decimal("0.500")
+    )
+    symbols_mentioned: Mapped[list[str]] = mapped_column(
+        ARRAY(String), nullable=False, default=list
+    )
+    reasoning: Mapped[str] = mapped_column(Text, nullable=False)
+    model_used: Mapped[str] = mapped_column(String(50), nullable=False)
+    input_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    output_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    estimated_cost_usd: Mapped[Decimal] = mapped_column(
+        Numeric(8, 4), nullable=False, default=Decimal("0.0000")
+    )
+    analyzed_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    # Relationships
+    tweet: Mapped["Tweet"] = relationship(back_populates="signal")
+
+    __table_args__ = (
+        Index("idx_tweet_signals_sentiment", "sentiment_score"),
+        Index(
+            "idx_tweet_signals_setup",
+            "setup_type",
+            postgresql_where=(setup_type != None),  # noqa: E711
+        ),
+        Index("idx_tweet_signals_analyzed", analyzed_at.desc()),
     )

@@ -479,6 +479,22 @@ export interface TwitterAccount {
   tweetCount?: number;
 }
 
+export type TweetSetupType =
+  | "long_entry"
+  | "short_entry"
+  | "take_profit"
+  | "warning"
+  | "neutral"
+  | "informational";
+
+export interface TweetSignal {
+  sentimentScore: number;
+  setupType: TweetSetupType | null;
+  confidence: number;
+  symbolsMentioned: string[];
+  reasoning: string;
+}
+
 export interface TweetData {
   id: number;
   tweetId: string;
@@ -495,6 +511,7 @@ export interface TweetData {
     media_urls?: string[];
   };
   ingestedAt: string;
+  signal?: TweetSignal;
 }
 
 // =============================================================================
