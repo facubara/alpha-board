@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { AUTH_COOKIE_NAME } from "@/lib/auth";
 
 export const config = {
-  matcher: "/api/agents/:path*",
+  matcher: ["/api/agents/:path*", "/api/twitter/:path*"],
 };
 
 export async function middleware(request: NextRequest) {
-  if (request.method !== "POST") {
+  if (request.method !== "POST" && request.method !== "DELETE") {
     return NextResponse.next();
   }
 

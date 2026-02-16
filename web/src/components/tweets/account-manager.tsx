@@ -10,6 +10,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2, Plus, Loader2 } from "lucide-react";
+import { useAuth } from "@/components/auth/auth-provider";
 import type { TwitterAccount, TwitterAccountCategory } from "@/lib/types";
 import { TWITTER_CATEGORIES, TWITTER_CATEGORY_LABELS } from "@/lib/types";
 
@@ -28,6 +29,7 @@ interface AccountManagerProps {
 
 export function AccountManager({ initialAccounts }: AccountManagerProps) {
   const router = useRouter();
+  const { requireAuth } = useAuth();
   const [accounts, setAccounts] = useState<TwitterAccount[]>(initialAccounts);
   const [showForm, setShowForm] = useState(false);
   const [handle, setHandle] = useState("");
@@ -36,7 +38,7 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  async function handleAdd() {
+  async function doAdd() {
     if (!handle.trim()) return;
     setError(null);
 
@@ -66,7 +68,11 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
     }
   }
 
-  async function handleDelete(id: number) {
+  function handleAdd() {
+    requireAuth(() => doAdd());
+  }
+
+  async function doDelete(id: number) {
     try {
       const res = await fetch("/api/twitter/accounts", {
         method: "DELETE",
@@ -81,6 +87,10 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
     } catch {
       // Silently fail — account will remain visible
     }
+  }
+
+  function handleDelete(id: number) {
+    requireAuth(() => doDelete(id));
   }
 
   return (

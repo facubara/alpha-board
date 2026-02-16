@@ -112,6 +112,9 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "Invalid account ID" }, { status: 400 });
   }
 
+  // Delete tweets first (FK constraint)
+  await sql`DELETE FROM tweets WHERE twitter_account_id = ${id}`;
+
   const result = await sql`
     DELETE FROM twitter_accounts WHERE id = ${id} RETURNING id
   `;
