@@ -101,7 +101,14 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
 
   const handleSSEMessage = useCallback((event: AgentSSEEvent) => {
     if (event.type === "agent_update" && event.agents) {
-      setAgentsData(event.agents);
+      // SSE may not include source — preserve from existing data
+      setAgentsData((prev) => {
+        const sourceMap = new Map(prev.map((a) => [a.id, a.source]));
+        return event.agents!.map((a) => ({
+          ...a,
+          source: a.source || sourceMap.get(a.id) || "technical",
+        }));
+      });
     }
   }, []);
 

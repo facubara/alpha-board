@@ -130,9 +130,9 @@ export type StrategyArchetype =
   | "breakout"
   | "swing"
   | "tweet_momentum"
-  | "tweet_mean_reversion"
-  | "tweet_breakout"
-  | "tweet_swing"
+  | "tweet_contrarian"
+  | "tweet_narrative"
+  | "tweet_insider"
   | "hybrid_momentum"
   | "hybrid_mean_reversion"
   | "hybrid_breakout"
@@ -144,9 +144,9 @@ export const STRATEGY_ARCHETYPES: StrategyArchetype[] = [
   "breakout",
   "swing",
   "tweet_momentum",
-  "tweet_mean_reversion",
-  "tweet_breakout",
-  "tweet_swing",
+  "tweet_contrarian",
+  "tweet_narrative",
+  "tweet_insider",
   "hybrid_momentum",
   "hybrid_mean_reversion",
   "hybrid_breakout",
@@ -158,10 +158,10 @@ export const STRATEGY_ARCHETYPE_LABELS: Record<StrategyArchetype, string> = {
   mean_reversion: "Mean Reversion",
   breakout: "Breakout",
   swing: "Swing",
-  tweet_momentum: "Tweet Momentum",
-  tweet_mean_reversion: "Tweet Mean Rev",
-  tweet_breakout: "Tweet Breakout",
-  tweet_swing: "Tweet Swing",
+  tweet_momentum: "TW Momentum",
+  tweet_contrarian: "TW Contrarian",
+  tweet_narrative: "TW Narrative",
+  tweet_insider: "TW Insider",
   hybrid_momentum: "Hybrid Momentum",
   hybrid_mean_reversion: "Hybrid Mean Rev",
   hybrid_breakout: "Hybrid Breakout",
