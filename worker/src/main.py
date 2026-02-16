@@ -1002,7 +1002,7 @@ async def twitter_feed(limit: int = 50, offset: int = 0):
         ]
 
 
-@app.post("/trigger/twitter")
+@app.post("/twitter/poll")
 async def trigger_twitter():
     """Manually trigger a Twitter poll."""
     if not settings.twitter_bearer_token:
