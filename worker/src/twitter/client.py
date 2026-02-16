@@ -129,18 +129,18 @@ class TwitterClient:
     def _build_queries(handles: list[str]) -> list[str]:
         """Build search queries from handles, batching to stay under 512 char limit.
 
-        Each query: (from:h1 OR from:h2 OR ...) -is:retweet
+        Each query: (from:h1 OR from:h2 OR ...) -is:retweet -is:reply
         """
         queries: list[str] = []
         batch: list[str] = []
 
         for handle in handles:
             test_batch = batch + [handle]
-            query = "(" + " OR ".join(f"from:{h}" for h in test_batch) + ") -is:retweet"
+            query = "(" + " OR ".join(f"from:{h}" for h in test_batch) + ") -is:retweet -is:reply"
             if len(query) > MAX_QUERY_LENGTH and batch:
                 # Flush current batch
                 queries.append(
-                    "(" + " OR ".join(f"from:{h}" for h in batch) + ") -is:retweet"
+                    "(" + " OR ".join(f"from:{h}" for h in batch) + ") -is:retweet -is:reply"
                 )
                 batch = [handle]
             else:
@@ -148,13 +148,13 @@ class TwitterClient:
 
             if len(batch) >= HANDLES_PER_BATCH:
                 queries.append(
-                    "(" + " OR ".join(f"from:{h}" for h in batch) + ") -is:retweet"
+                    "(" + " OR ".join(f"from:{h}" for h in batch) + ") -is:retweet -is:reply"
                 )
                 batch = []
 
         if batch:
             queries.append(
-                "(" + " OR ".join(f"from:{h}" for h in batch) + ") -is:retweet"
+                "(" + " OR ".join(f"from:{h}" for h in batch) + ") -is:retweet -is:reply"
             )
 
         return queries
