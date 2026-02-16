@@ -37,14 +37,16 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
   const [error, setError] = useState<string | null>(null);
 
   async function handleAdd() {
-    if (!handle.trim() || !displayName.trim()) return;
+    if (!handle.trim()) return;
     setError(null);
+
+    const resolvedDisplayName = displayName.trim() || handle.replace(/^@/, "").trim();
 
     try {
       const res = await fetch("/api/twitter/accounts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ handle, displayName, category }),
+        body: JSON.stringify({ handle, displayName: resolvedDisplayName, category }),
       });
 
       if (!res.ok) {
@@ -109,7 +111,7 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
             />
             <input
               type="text"
-              placeholder="Display Name"
+              placeholder="Display Name (optional)"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               className="flex-1 rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none"
@@ -127,7 +129,7 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
             </select>
             <button
               onClick={handleAdd}
-              disabled={!handle.trim() || !displayName.trim()}
+              disabled={!handle.trim()}
               className="rounded bg-[var(--primary)] px-3 py-1 text-sm font-medium text-white disabled:opacity-50"
             >
               Add
