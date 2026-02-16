@@ -98,10 +98,22 @@ class AgentOrchestrator:
             "total_cost_usd": Decimal("0.00"),
         }
 
+        # Pre-build tweet context once if any hybrid agents exist (avoids N redundant DB queries)
+        hybrid_tweet_context = None
+        if any(getattr(a, "source", "") == "hybrid" for a in agents):
+            hybrid_tweet_context = await self.context_builder._get_tweet_context(timeframe)
+            if hybrid_tweet_context:
+                logger.info(
+                    f"Pre-built tweet context for hybrid agents in {timeframe}: "
+                    f"{len(hybrid_tweet_context.signals)} signals, "
+                    f"avg_sentiment={hybrid_tweet_context.avg_sentiment:.2f}"
+                )
+
         for agent in agents:
             try:
+                tweet_ctx = hybrid_tweet_context if getattr(agent, "source", "") == "hybrid" else None
                 agent_result = await self._process_agent(
-                    agent, current_prices, candle_data
+                    agent, current_prices, candle_data, tweet_context=tweet_ctx
                 )
                 results["agents_processed"] += 1
                 results["decisions"].append(agent_result["decision"])

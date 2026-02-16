@@ -13,6 +13,10 @@ from src.agents.strategies.tweet_momentum import TweetMomentumStrategy
 from src.agents.strategies.tweet_contrarian import TweetContrarianStrategy
 from src.agents.strategies.tweet_narrative import TweetNarrativeStrategy
 from src.agents.strategies.tweet_insider import TweetInsiderStrategy
+from src.agents.strategies.hybrid_momentum import HybridMomentumStrategy
+from src.agents.strategies.hybrid_mean_reversion import HybridMeanReversionStrategy
+from src.agents.strategies.hybrid_breakout import HybridBreakoutStrategy
+from src.agents.strategies.hybrid_swing import HybridSwingStrategy
 
 # Archetype → strategy class (for timeframe-specific agents)
 STRATEGY_REGISTRY: dict[str, type[BaseRuleStrategy]] = {
@@ -24,6 +28,10 @@ STRATEGY_REGISTRY: dict[str, type[BaseRuleStrategy]] = {
     "tweet_contrarian": TweetContrarianStrategy,
     "tweet_narrative": TweetNarrativeStrategy,
     "tweet_insider": TweetInsiderStrategy,
+    "hybrid_momentum": HybridMomentumStrategy,
+    "hybrid_mean_reversion": HybridMeanReversionStrategy,
+    "hybrid_breakout": HybridBreakoutStrategy,
+    "hybrid_swing": HybridSwingStrategy,
 }
 
 # Agent name → strategy class (for cross-TF agents)
@@ -50,4 +58,8 @@ __all__ = [
     "TweetContrarianStrategy",
     "TweetNarrativeStrategy",
     "TweetInsiderStrategy",
+    "HybridMomentumStrategy",
+    "HybridMeanReversionStrategy",
+    "HybridBreakoutStrategy",
+    "HybridSwingStrategy",
 ]
