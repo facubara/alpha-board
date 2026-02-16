@@ -153,6 +153,16 @@ Sizing: 12-25%. SL 4%, TP 8%.""",
 
 
 def upgrade() -> None:
+    # 0. Widen strategy_archetype column from VARCHAR(20) to VARCHAR(30)
+    op.alter_column(
+        "agents", "strategy_archetype",
+        type_=sa.String(30), existing_type=sa.String(20),
+    )
+    op.alter_column(
+        "backtest_runs", "strategy_archetype",
+        type_=sa.String(30), existing_type=sa.String(20),
+    )
+
     # 1. Seed 48 hybrid agents (4 archetypes x 6 TFs x 2 engines)
     agents_table = sa.table(
         "agents",
@@ -250,3 +260,11 @@ def downgrade() -> None:
     op.execute("DELETE FROM agent_prompts WHERE agent_id IN (SELECT id FROM agents WHERE source = 'hybrid')")
     op.execute("DELETE FROM agent_portfolios WHERE agent_id IN (SELECT id FROM agents WHERE source = 'hybrid')")
     op.execute("DELETE FROM agents WHERE source = 'hybrid'")
+    op.alter_column(
+        "agents", "strategy_archetype",
+        type_=sa.String(20), existing_type=sa.String(30),
+    )
+    op.alter_column(
+        "backtest_runs", "strategy_archetype",
+        type_=sa.String(20), existing_type=sa.String(30),
+    )

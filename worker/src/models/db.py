@@ -176,7 +176,7 @@ class Agent(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     display_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    strategy_archetype: Mapped[str] = mapped_column(String(20), nullable=False)
+    strategy_archetype: Mapped[str] = mapped_column(String(30), nullable=False)
     timeframe: Mapped[str] = mapped_column(String(10), nullable=False)
     scan_model: Mapped[str] = mapped_column(
         String(50), nullable=False, default="claude-haiku-3-5-20241022"
@@ -448,7 +448,7 @@ class BacktestRun(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     agent_name: Mapped[str] = mapped_column(String(50), nullable=False)
-    strategy_archetype: Mapped[str] = mapped_column(String(20), nullable=False)
+    strategy_archetype: Mapped[str] = mapped_column(String(30), nullable=False)
     timeframe: Mapped[str] = mapped_column(String(10), nullable=False)
     symbol: Mapped[str] = mapped_column(String(30), nullable=False)
     start_date: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
