@@ -26,6 +26,7 @@ from sqlalchemy import select, func, text
 from src.agents.context import ContextBuilder
 from src.agents.orchestrator import AgentOrchestrator
 from src.agents.rule_executor import RuleBasedExecutor
+from src.cache import cache_delete, get_redis
 from src.config import settings
 from src.db import async_session, engine
 from src.events import event_bus
@@ -269,6 +270,9 @@ async def run_timeframe_pipeline(timeframe: str):
                 f"Completed {timeframe}: {result.get('symbols', 0)} symbols"
             )
 
+            # Invalidate klines cache for this timeframe so next run gets fresh data
+            await cache_delete(f"klines:*:{timeframe}")
+
             # Compute and persist regime for this timeframe
             try:
                 async with async_session() as session:
@@ -322,6 +326,21 @@ async def health():
     except Exception:
         db_status = "error"
 
+    # Cache connectivity check
+    cache_status = "disabled"
+    if settings.redis_url:
+        try:
+            r = await get_redis()
+            if r:
+                await r.ping()
+                info = await r.info("memory")
+                cache_status = {
+                    "status": "ok",
+                    "memory_used": info.get("used_memory_human"),
+                }
+        except Exception:
+            cache_status = "error"
+
     # Agent stats
     agent_stats = {}
     try:
@@ -348,6 +367,7 @@ async def health():
         "status": "ok" if db_status == "ok" else "degraded",
         "uptime_seconds": uptime_seconds,
         "db_connection": db_status,
+        "cache": cache_status,
         "last_runs": {
             tf: {
                 "finished_at": str(last_runs[tf]) if tf in last_runs else None,

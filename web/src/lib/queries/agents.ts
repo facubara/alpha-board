@@ -4,6 +4,7 @@
  * Fetches agent leaderboard and detail data from Neon database.
  */
 
+import { cached } from "@/lib/cache";
 import { sql } from "@/lib/db";
 import type {
   AgentDecision,
@@ -29,79 +30,81 @@ import type {
  * Includes PnL, win rate, trade count, token cost, and open positions.
  * Ordered by total PnL descending (best performers first).
  */
-export async function getAgentLeaderboard(): Promise<AgentLeaderboardRow[]> {
-  const rows = await sql`
-    SELECT
-      a.id,
-      a.name,
-      a.display_name,
-      a.strategy_archetype,
-      a.timeframe,
-      a.engine,
-      a.scan_model,
-      a.trade_model,
-      a.evolution_model,
-      a.status,
-      a.initial_balance,
-      p.cash_balance,
-      p.total_equity,
-      p.total_realized_pnl,
-      p.total_fees_paid,
-      (p.total_equity - a.initial_balance) as total_pnl,
-      (SELECT COUNT(*) FROM agent_trades WHERE agent_id = a.id) as trade_count,
-      (SELECT COUNT(*) FILTER (WHERE pnl > 0) FROM agent_trades WHERE agent_id = a.id) as wins,
-      (
-        SELECT COALESCE(SUM(estimated_cost_usd), 0)
-        FROM agent_token_usage WHERE agent_id = a.id
-      ) as total_token_cost,
-      (SELECT COUNT(*) FROM agent_positions WHERE agent_id = a.id) as open_positions
-    FROM agents a
-    JOIN agent_portfolios p ON a.id = p.agent_id
-    ORDER BY (p.total_equity - a.initial_balance) DESC
-  `;
+export function getAgentLeaderboard(): Promise<AgentLeaderboardRow[]> {
+  return cached("agents:leaderboard", 60, async () => {
+    const rows = await sql`
+      SELECT
+        a.id,
+        a.name,
+        a.display_name,
+        a.strategy_archetype,
+        a.timeframe,
+        a.engine,
+        a.scan_model,
+        a.trade_model,
+        a.evolution_model,
+        a.status,
+        a.initial_balance,
+        p.cash_balance,
+        p.total_equity,
+        p.total_realized_pnl,
+        p.total_fees_paid,
+        (p.total_equity - a.initial_balance) as total_pnl,
+        (SELECT COUNT(*) FROM agent_trades WHERE agent_id = a.id) as trade_count,
+        (SELECT COUNT(*) FILTER (WHERE pnl > 0) FROM agent_trades WHERE agent_id = a.id) as wins,
+        (
+          SELECT COALESCE(SUM(estimated_cost_usd), 0)
+          FROM agent_token_usage WHERE agent_id = a.id
+        ) as total_token_cost,
+        (SELECT COUNT(*) FROM agent_positions WHERE agent_id = a.id) as open_positions
+      FROM agents a
+      JOIN agent_portfolios p ON a.id = p.agent_id
+      ORDER BY (p.total_equity - a.initial_balance) DESC
+    `;
 
-  // Fetch health data separately — column may not exist until migration 008 runs
-  const healthMap = new Map<number, string | null>();
-  try {
-    const healthRows = await sql`SELECT id, last_cycle_at FROM agents`;
-    for (const r of healthRows) {
-      healthMap.set(
-        Number(r.id),
-        r.last_cycle_at ? (r.last_cycle_at as Date).toISOString() : null
-      );
+    // Fetch health data separately — column may not exist until migration 008 runs
+    const healthMap = new Map<number, string | null>();
+    try {
+      const healthRows = await sql`SELECT id, last_cycle_at FROM agents`;
+      for (const r of healthRows) {
+        healthMap.set(
+          Number(r.id),
+          r.last_cycle_at ? (r.last_cycle_at as Date).toISOString() : null
+        );
+      }
+    } catch {
+      // Column doesn't exist yet — all agents show as "never processed"
     }
-  } catch {
-    // Column doesn't exist yet — all agents show as "never processed"
-  }
 
-  return rows.map((row) => {
-    const tradeCount = Number(row.trade_count);
-    const wins = Number(row.wins);
+    return rows.map((row) => {
+      const tradeCount = Number(row.trade_count);
+      const wins = Number(row.wins);
 
-    return {
-      id: Number(row.id),
-      name: row.name as string,
-      displayName: row.display_name as string,
-      strategyArchetype: row.strategy_archetype as StrategyArchetype,
-      timeframe: row.timeframe as AgentTimeframe,
-      engine: (row.engine as AgentEngine) || "llm",
-      scanModel: row.scan_model as string,
-      tradeModel: row.trade_model as string,
-      evolutionModel: row.evolution_model as string,
-      status: row.status as AgentStatus,
-      initialBalance: Number(row.initial_balance),
-      cashBalance: Number(row.cash_balance),
-      totalEquity: Number(row.total_equity),
-      totalRealizedPnl: Number(row.total_realized_pnl),
-      totalFeesPaid: Number(row.total_fees_paid),
-      totalPnl: Number(row.total_pnl),
-      tradeCount,
-      wins,
-      winRate: tradeCount > 0 ? wins / tradeCount : 0,
-      totalTokenCost: Number(row.total_token_cost),
-      openPositions: Number(row.open_positions),
-      lastCycleAt: healthMap.get(Number(row.id)) ?? null,
-    };
+      return {
+        id: Number(row.id),
+        name: row.name as string,
+        displayName: row.display_name as string,
+        strategyArchetype: row.strategy_archetype as StrategyArchetype,
+        timeframe: row.timeframe as AgentTimeframe,
+        engine: (row.engine as AgentEngine) || "llm",
+        scanModel: row.scan_model as string,
+        tradeModel: row.trade_model as string,
+        evolutionModel: row.evolution_model as string,
+        status: row.status as AgentStatus,
+        initialBalance: Number(row.initial_balance),
+        cashBalance: Number(row.cash_balance),
+        totalEquity: Number(row.total_equity),
+        totalRealizedPnl: Number(row.total_realized_pnl),
+        totalFeesPaid: Number(row.total_fees_paid),
+        totalPnl: Number(row.total_pnl),
+        tradeCount,
+        wins,
+        winRate: tradeCount > 0 ? wins / tradeCount : 0,
+        totalTokenCost: Number(row.total_token_cost),
+        openPositions: Number(row.open_positions),
+        lastCycleAt: healthMap.get(Number(row.id)) ?? null,
+      };
+    });
   });
 }
 

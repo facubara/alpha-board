@@ -1,6 +1,7 @@
 """Binance REST API client with rate limiting and retry logic."""
 
 import asyncio
+import json
 import logging
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -8,6 +9,7 @@ from typing import Any
 
 import httpx
 
+from src.cache import cache_get, cache_set
 from src.config import settings
 from src.exchange.types import (
     Candle,
@@ -17,6 +19,16 @@ from src.exchange.types import (
 )
 
 logger = logging.getLogger(__name__)
+
+# TTL for klines cache by interval
+KLINES_TTL: dict[str, int] = {
+    "15m": 120,
+    "30m": 300,
+    "1h": 600,
+    "4h": 1800,
+    "1d": 7200,
+    "1w": 14400,
+}
 
 
 class BinanceAPIError(Exception):
@@ -171,6 +183,13 @@ class BinanceClient:
         Returns:
             List of Symbol objects for active trading pairs.
         """
+        # Check cache first (5 min TTL)
+        cached = await cache_get("active_symbols")
+        if cached:
+            data = json.loads(cached)
+            logger.debug(f"Cache HIT: active_symbols ({len(data)} symbols)")
+            return [Symbol(**s) for s in data]
+
         # Get exchange info for symbol metadata
         exchange_info = await self._request("GET", self.EXCHANGE_INFO_ENDPOINT)
 
@@ -215,6 +234,21 @@ class BinanceClient:
         logger.info(
             f"Found {len(symbols)} active USDT pairs with volume >= ${min_volume_usd:,.0f}"
         )
+
+        # Store in cache
+        serializable = [
+            {
+                "symbol": s.symbol,
+                "base_asset": s.base_asset,
+                "quote_asset": s.quote_asset,
+                "status": s.status,
+                "is_spot_trading_allowed": s.is_spot_trading_allowed,
+                "quote_volume_24h": str(s.quote_volume_24h),
+            }
+            for s in symbols
+        ]
+        await cache_set("active_symbols", json.dumps(serializable), 300)
+
         return symbols
 
     async def get_ticker_prices(self) -> dict[str, Decimal]:
@@ -225,8 +259,46 @@ class BinanceClient:
         Returns:
             Dict mapping symbol name to current price.
         """
+        # Check cache first (15s TTL)
+        cached = await cache_get("live_prices")
+        if cached:
+            data = json.loads(cached)
+            logger.debug("Cache HIT: live_prices")
+            return {k: Decimal(v) for k, v in data.items()}
+
         data = await self._request("GET", self.TICKER_PRICE_ENDPOINT)
-        return {item["symbol"]: Decimal(item["price"]) for item in data}
+        result = {item["symbol"]: Decimal(item["price"]) for item in data}
+
+        # Store in cache — serialize Decimals as strings
+        await cache_set(
+            "live_prices",
+            json.dumps({k: str(v) for k, v in result.items()}),
+            15,
+        )
+        return result
+
+    @staticmethod
+    def _parse_klines(data: list) -> list[Candle]:
+        """Parse raw Binance klines response into Candle objects."""
+        candles: list[Candle] = []
+        for row in data:
+            # Binance klines format:
+            # [open_time, open, high, low, close, volume, close_time,
+            #  quote_volume, trades, taker_buy_base, taker_buy_quote, ignore]
+            candles.append(
+                Candle(
+                    open_time=datetime.fromtimestamp(row[0] / 1000, tz=timezone.utc),
+                    open=Decimal(str(row[1])),
+                    high=Decimal(str(row[2])),
+                    low=Decimal(str(row[3])),
+                    close=Decimal(str(row[4])),
+                    volume=Decimal(str(row[5])),
+                    close_time=datetime.fromtimestamp(row[6] / 1000, tz=timezone.utc),
+                    quote_volume=Decimal(str(row[7])),
+                    trades=int(row[8]),
+                )
+            )
+        return candles
 
     async def get_klines(
         self, symbol: str, interval: str, limit: int = 200
@@ -241,6 +313,14 @@ class BinanceClient:
         Returns:
             List of Candle objects, ordered by open_time ascending.
         """
+        # Check cache first (TTL varies by interval)
+        cache_key = f"klines:{symbol}:{interval}"
+        cached = await cache_get(cache_key)
+        if cached:
+            raw = json.loads(cached)
+            logger.debug(f"Cache HIT: {cache_key}")
+            return self._parse_klines(raw)
+
         params = {
             "symbol": symbol,
             "interval": interval,
@@ -249,26 +329,11 @@ class BinanceClient:
 
         data = await self._request("GET", self.KLINES_ENDPOINT, params)
 
-        candles: list[Candle] = []
-        for row in data:
-            # Binance klines format:
-            # [open_time, open, high, low, close, volume, close_time,
-            #  quote_volume, trades, taker_buy_base, taker_buy_quote, ignore]
-            candles.append(
-                Candle(
-                    open_time=datetime.fromtimestamp(row[0] / 1000, tz=timezone.utc),
-                    open=Decimal(row[1]),
-                    high=Decimal(row[2]),
-                    low=Decimal(row[3]),
-                    close=Decimal(row[4]),
-                    volume=Decimal(row[5]),
-                    close_time=datetime.fromtimestamp(row[6] / 1000, tz=timezone.utc),
-                    quote_volume=Decimal(row[7]),
-                    trades=int(row[8]),
-                )
-            )
+        # Cache the raw Binance response (before Decimal parsing)
+        ttl = KLINES_TTL.get(interval, 300)
+        await cache_set(cache_key, json.dumps(data), ttl)
 
-        return candles
+        return self._parse_klines(data)
 
     async def get_klines_batch(
         self, symbols: list[str], interval: str, limit: int = 200

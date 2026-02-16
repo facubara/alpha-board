@@ -15,6 +15,7 @@ primary_region = 'ams'
   EVOLUTION_ENABLED = 'true'
   LOG_LEVEL = 'INFO'
   PYTHON_ENV = 'production'
+  # REDIS_URL set via `fly secrets` (Upstash Redis)
   WORKER_PORT = '8000'
 
 [http_service]

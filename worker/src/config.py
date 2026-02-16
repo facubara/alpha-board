@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     telegram_bot_token: str = ""
     telegram_chat_id: str = ""
 
+    # Redis (Upstash)
+    redis_url: str = ""  # Empty = caching disabled
+
     # CORS
     cors_origins: str = "https://alpha-board.com,https://www.alpha-board.com,http://localhost:3000"
 
