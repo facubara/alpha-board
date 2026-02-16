@@ -148,6 +148,18 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect }: AgentRowPr
             >
               {agent.engine === "rule" ? "RULE" : "LLM"}
             </span>
+            <span
+              className={cn(
+                "inline-flex shrink-0 items-center rounded px-1 py-0.5 font-mono text-[10px] font-bold leading-none",
+                agent.source === "tweet"
+                  ? "bg-teal-500/10 text-teal-400"
+                  : agent.source === "hybrid"
+                    ? "bg-purple-500/10 text-purple-400"
+                    : "bg-[var(--bg-muted)] text-muted"
+              )}
+            >
+              {agent.source === "tweet" ? "TW" : agent.source === "hybrid" ? "HYB" : "TECH"}
+            </span>
             <span className="truncate text-sm font-semibold text-primary transition-colors-fast group-hover:text-[var(--bullish-strong)]">
               {agent.displayName}
             </span>

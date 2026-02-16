@@ -9,18 +9,34 @@ import { useMemo } from "react";
 import type { DailyArchetypePnl, StrategyArchetype } from "@/lib/types";
 import { getYAxisLabelVisibility } from "@/lib/chart-utils";
 
-const ARCHETYPE_COLORS: Record<StrategyArchetype, string> = {
+const ARCHETYPE_COLORS: Partial<Record<StrategyArchetype, string>> = {
   momentum: "#3B82F6",
   mean_reversion: "#A855F7",
   breakout: "#F59E0B",
   swing: "#06B6D4",
+  tweet_momentum: "#2DD4BF",
+  tweet_mean_reversion: "#5EEAD4",
+  tweet_breakout: "#14B8A6",
+  tweet_swing: "#0D9488",
+  hybrid_momentum: "#C084FC",
+  hybrid_mean_reversion: "#A78BFA",
+  hybrid_breakout: "#8B5CF6",
+  hybrid_swing: "#7C3AED",
 };
 
-const ARCHETYPE_LABELS: Record<StrategyArchetype, string> = {
+const ARCHETYPE_LABELS: Partial<Record<StrategyArchetype, string>> = {
   momentum: "Momentum",
   mean_reversion: "Mean Reversion",
   breakout: "Breakout",
   swing: "Swing",
+  tweet_momentum: "Tweet Momentum",
+  tweet_mean_reversion: "Tweet Mean Rev",
+  tweet_breakout: "Tweet Breakout",
+  tweet_swing: "Tweet Swing",
+  hybrid_momentum: "Hybrid Momentum",
+  hybrid_mean_reversion: "Hybrid Mean Rev",
+  hybrid_breakout: "Hybrid Breakout",
+  hybrid_swing: "Hybrid Swing",
 };
 
 interface ArchetypeCurvesChartProps {

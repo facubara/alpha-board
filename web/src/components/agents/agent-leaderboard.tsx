@@ -27,6 +27,7 @@ import {
 import type {
   AgentEngine,
   AgentLeaderboardRow,
+  AgentSource,
   AgentTimeframe,
   StrategyArchetype,
   SymbolAgentActivity,
@@ -34,6 +35,8 @@ import type {
 import {
   AGENT_ENGINES,
   AGENT_ENGINE_LABELS,
+  AGENT_SOURCES,
+  AGENT_SOURCE_LABELS,
   AGENT_TIMEFRAMES,
   AGENT_TIMEFRAME_LABELS,
   STRATEGY_ARCHETYPES,
@@ -115,6 +118,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     StrategyArchetype | "all"
   >("all");
   const [engineFilter, setEngineFilter] = useState<AgentEngine | "all">("all");
+  const [sourceFilter, setSourceFilter] = useState<AgentSource | "all">("all");
   const [sortField, setSortField] = useState<SortField>("pnl");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [symbolSearch, setSymbolSearch] = useState("");
@@ -199,6 +203,9 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     if (engineFilter !== "all") {
       result = result.filter((a) => a.engine === engineFilter);
     }
+    if (sourceFilter !== "all") {
+      result = result.filter((a) => a.source === sourceFilter);
+    }
     if (symbolAgentIds !== null) {
       result = result.filter((a) => symbolAgentIds.has(a.id));
     }
@@ -229,7 +236,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     });
 
     return result;
-  }, [agentsData, timeframeFilter, archetypeFilter, engineFilter, symbolAgentIds, sortField, sortDirection]);
+  }, [agentsData, timeframeFilter, archetypeFilter, engineFilter, sourceFilter, symbolAgentIds, sortField, sortDirection]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -319,6 +326,28 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
         {/* Divider */}
         <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
 
+        {/* Source filter */}
+        <div className="flex items-center gap-1">
+          <FilterButton
+            active={sourceFilter === "all"}
+            onClick={() => setSourceFilter("all")}
+          >
+            All
+          </FilterButton>
+          {AGENT_SOURCES.map((src) => (
+            <FilterButton
+              key={src}
+              active={sourceFilter === src}
+              onClick={() => setSourceFilter(src)}
+            >
+              {AGENT_SOURCE_LABELS[src]}
+            </FilterButton>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
+
         {/* Symbol search */}
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
@@ -375,7 +404,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
       </div>
 
       {/* Results count */}
-      {(timeframeFilter !== "all" || archetypeFilter !== "all" || engineFilter !== "all" || symbolAgentIds !== null) && (
+      {(timeframeFilter !== "all" || archetypeFilter !== "all" || engineFilter !== "all" || sourceFilter !== "all" || symbolAgentIds !== null) && (
         <p className="text-xs text-secondary">
           {filtered.length} of {agentsData.length} agents
         </p>

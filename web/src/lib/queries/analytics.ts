@@ -10,6 +10,7 @@ import { sql } from "@/lib/db";
 import type {
   AnalyticsSummary,
   ArchetypeStats,
+  SourceStats,
   TimeframeStats,
   DailyPnl,
   DailyArchetypePnl,
@@ -18,6 +19,7 @@ import type {
   ModelCostBreakdown,
   ArchetypeCost,
   AgentDrawdown,
+  AgentSource,
   StrategyArchetype,
   AgentTimeframe,
 } from "@/lib/types";
@@ -95,6 +97,47 @@ export function getArchetypeStats(): Promise<ArchetypeStats[]> {
       const wins = Number(r.wins);
       return {
         archetype: r.strategy_archetype as StrategyArchetype,
+        agentCount: Number(r.agent_count),
+        totalPnl: Number(r.total_pnl),
+        tradeCount,
+        wins,
+        winRate: tradeCount > 0 ? wins / tradeCount : 0,
+      };
+    });
+  });
+}
+
+/**
+ * Performance grouped by source type.
+ */
+export function getSourceStats(): Promise<SourceStats[]> {
+  return cached("analytics:source_stats", 120, async () => {
+    const rows = await sql`
+      SELECT
+        a.source,
+        COUNT(DISTINCT a.id) as agent_count,
+        COALESCE(SUM(p.total_equity - a.initial_balance), 0) as total_pnl,
+        COALESCE(SUM(sub.trade_count), 0) as trade_count,
+        COALESCE(SUM(sub.wins), 0) as wins
+      FROM agents a
+      JOIN agent_portfolios p ON a.id = p.agent_id
+      LEFT JOIN (
+        SELECT
+          agent_id,
+          COUNT(*) as trade_count,
+          COUNT(*) FILTER (WHERE pnl > 0) as wins
+        FROM agent_trades
+        GROUP BY agent_id
+      ) sub ON sub.agent_id = a.id
+      GROUP BY a.source
+      ORDER BY total_pnl DESC
+    `;
+
+    return rows.map((r) => {
+      const tradeCount = Number(r.trade_count);
+      const wins = Number(r.wins);
+      return {
+        source: (r.source as AgentSource) || "technical",
         agentCount: Number(r.agent_count),
         totalPnl: Number(r.total_pnl),
         tradeCount,

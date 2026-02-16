@@ -8,6 +8,7 @@
 import {
   getAnalyticsSummary,
   getArchetypeStats,
+  getSourceStats,
   getTimeframeStats,
   getDailyPnl,
   getDailyArchetypePnl,
@@ -25,6 +26,7 @@ export default async function AnalyticsPage() {
   const [
     summary,
     archetypeStats,
+    sourceStats,
     timeframeStats,
     dailyPnl,
     dailyArchetypePnl,
@@ -36,6 +38,7 @@ export default async function AnalyticsPage() {
   ] = await Promise.all([
     getAnalyticsSummary(),
     getArchetypeStats(),
+    getSourceStats(),
     getTimeframeStats(),
     getDailyPnl(),
     getDailyArchetypePnl(),
@@ -52,7 +55,7 @@ export default async function AnalyticsPage() {
       <div>
         <h1 className="text-xl font-semibold text-primary">Analytics</h1>
         <p className="mt-1 text-sm text-muted">
-          Fleet-wide performance across all 28 agents
+          Fleet-wide performance across all agents
         </p>
       </div>
 
@@ -65,6 +68,7 @@ export default async function AnalyticsPage() {
       <AnalyticsDashboard
         summary={summary}
         archetypeStats={archetypeStats}
+        sourceStats={sourceStats}
         timeframeStats={timeframeStats}
         dailyPnl={dailyPnl}
         dailyArchetypePnl={dailyArchetypePnl}

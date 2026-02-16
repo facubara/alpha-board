@@ -128,13 +128,29 @@ export type StrategyArchetype =
   | "momentum"
   | "mean_reversion"
   | "breakout"
-  | "swing";
+  | "swing"
+  | "tweet_momentum"
+  | "tweet_mean_reversion"
+  | "tweet_breakout"
+  | "tweet_swing"
+  | "hybrid_momentum"
+  | "hybrid_mean_reversion"
+  | "hybrid_breakout"
+  | "hybrid_swing";
 
 export const STRATEGY_ARCHETYPES: StrategyArchetype[] = [
   "momentum",
   "mean_reversion",
   "breakout",
   "swing",
+  "tweet_momentum",
+  "tweet_mean_reversion",
+  "tweet_breakout",
+  "tweet_swing",
+  "hybrid_momentum",
+  "hybrid_mean_reversion",
+  "hybrid_breakout",
+  "hybrid_swing",
 ];
 
 export const STRATEGY_ARCHETYPE_LABELS: Record<StrategyArchetype, string> = {
@@ -142,6 +158,14 @@ export const STRATEGY_ARCHETYPE_LABELS: Record<StrategyArchetype, string> = {
   mean_reversion: "Mean Reversion",
   breakout: "Breakout",
   swing: "Swing",
+  tweet_momentum: "Tweet Momentum",
+  tweet_mean_reversion: "Tweet Mean Rev",
+  tweet_breakout: "Tweet Breakout",
+  tweet_swing: "Tweet Swing",
+  hybrid_momentum: "Hybrid Momentum",
+  hybrid_mean_reversion: "Hybrid Mean Rev",
+  hybrid_breakout: "Hybrid Breakout",
+  hybrid_swing: "Hybrid Swing",
 };
 
 export type AgentTimeframe = Timeframe | "cross";
@@ -175,6 +199,16 @@ export const AGENT_ENGINE_LABELS: Record<AgentEngine, string> = {
   rule: "Rule",
 };
 
+export type AgentSource = "technical" | "tweet" | "hybrid";
+
+export const AGENT_SOURCES: AgentSource[] = ["technical", "tweet", "hybrid"];
+
+export const AGENT_SOURCE_LABELS: Record<AgentSource, string> = {
+  technical: "Technical",
+  tweet: "Tweet",
+  hybrid: "Hybrid",
+};
+
 export type AgentStatus = "active" | "paused";
 
 // =============================================================================
@@ -188,6 +222,7 @@ export interface AgentDetail {
   strategyArchetype: StrategyArchetype;
   timeframe: AgentTimeframe;
   engine: AgentEngine;
+  source: AgentSource;
   scanModel: string;
   tradeModel: string;
   evolutionModel: string;
@@ -334,6 +369,7 @@ export interface AgentLeaderboardRow {
   strategyArchetype: StrategyArchetype;
   timeframe: AgentTimeframe;
   engine: AgentEngine;
+  source: AgentSource;
   scanModel: string;
   tradeModel: string;
   evolutionModel: string;
@@ -368,6 +404,15 @@ export interface AnalyticsSummary {
 
 export interface ArchetypeStats {
   archetype: StrategyArchetype;
+  agentCount: number;
+  totalPnl: number;
+  tradeCount: number;
+  wins: number;
+  winRate: number;
+}
+
+export interface SourceStats {
+  source: AgentSource;
   agentCount: number;
   totalPnl: number;
   tradeCount: number;

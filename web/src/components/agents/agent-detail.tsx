@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   STRATEGY_ARCHETYPE_LABELS,
   AGENT_TIMEFRAME_LABELS,
+  AGENT_SOURCE_LABELS,
 } from "@/lib/types";
 import type {
   AgentDetail as AgentDetailType,
@@ -62,6 +63,18 @@ export function AgentDetail({
               )}
             >
               {agent.engine === "rule" ? "RULE" : "LLM"}
+            </span>
+            <span
+              className={cn(
+                "inline-flex shrink-0 items-center rounded px-1.5 py-0.5 font-mono text-xs font-bold",
+                agent.source === "tweet"
+                  ? "bg-teal-500/10 text-teal-400"
+                  : agent.source === "hybrid"
+                    ? "bg-purple-500/10 text-purple-400"
+                    : "bg-[var(--bg-muted)] text-muted"
+              )}
+            >
+              {AGENT_SOURCE_LABELS[agent.source]}
             </span>
             <h1 className="text-xl font-semibold text-primary">
               {agent.displayName}
