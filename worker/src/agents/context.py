@@ -52,6 +52,7 @@ class ContextBuilder:
         self,
         agent: Agent,
         current_prices: dict[str, Decimal] | None = None,
+        tweet_context: TweetContext | None = None,
     ) -> AgentContext:
         """Build complete context for an agent.
 
@@ -59,6 +60,8 @@ class ContextBuilder:
             agent: The agent to build context for.
             current_prices: Optional dict of symbol -> current price.
                             If not provided, uses last close from rankings.
+            tweet_context: Pre-built tweet context (avoids redundant DB queries
+                           when multiple agents share the same timeframe).
 
         Returns:
             AgentContext with all data needed for decision-making.
@@ -87,10 +90,9 @@ class ContextBuilder:
         # Build regime context from persisted regime labels
         regime_context = await self._get_regime_context(agent.timeframe)
 
-        # Build tweet context for tweet/hybrid agents
-        tweet_context = None
+        # Build tweet context for tweet/hybrid agents (use pre-built if provided)
         source = getattr(agent, "source", "technical")
-        if source in ("tweet", "hybrid"):
+        if tweet_context is None and source in ("tweet", "hybrid"):
             tweet_context = await self._get_tweet_context(agent.timeframe)
 
         return AgentContext(

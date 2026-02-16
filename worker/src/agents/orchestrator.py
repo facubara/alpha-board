@@ -149,6 +149,7 @@ class AgentOrchestrator:
         agent: Agent,
         current_prices: dict[str, Decimal],
         candle_data: dict[str, dict[str, Decimal]] | None,
+        tweet_context: Any = None,
     ) -> dict[str, Any]:
         """Process a single agent.
 
@@ -156,6 +157,7 @@ class AgentOrchestrator:
             agent: The agent to process.
             current_prices: Dict of symbol -> current price.
             candle_data: Optional candle data for SL/TP checks.
+            tweet_context: Pre-built tweet context to avoid redundant queries.
 
         Returns:
             Dict with decision and optional execution result.
@@ -191,7 +193,9 @@ class AgentOrchestrator:
         await self.portfolio_manager.update_unrealized_pnl(agent.id, current_prices)
 
         # Build context
-        context = await self.context_builder.build(agent, current_prices)
+        context = await self.context_builder.build(
+            agent, current_prices, tweet_context=tweet_context
+        )
 
         # Execute decision — branch on engine type
         if agent.engine == "rule":
@@ -383,6 +387,14 @@ class AgentOrchestrator:
         agents = await self._get_active_agents(timeframe, source="tweet")
         logger.info(f"Found {len(agents)} active tweet agents for {timeframe}")
 
+        # Pre-build tweet context once for this timeframe (shared by all agents)
+        tweet_context = await self.context_builder._get_tweet_context(timeframe)
+        if tweet_context:
+            logger.info(
+                f"Tweet context for {timeframe}: {len(tweet_context.signals)} signals, "
+                f"avg_sentiment={tweet_context.avg_sentiment:.2f}"
+            )
+
         results: dict[str, Any] = {
             "timeframe": timeframe,
             "source": "tweet",
@@ -398,7 +410,9 @@ class AgentOrchestrator:
 
         for agent in agents:
             try:
-                agent_result = await self._process_agent(agent, current_prices, None)
+                agent_result = await self._process_agent(
+                    agent, current_prices, None, tweet_context=tweet_context
+                )
                 results["agents_processed"] += 1
                 results["decisions"].append(agent_result["decision"])
 
