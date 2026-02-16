@@ -492,6 +492,7 @@ export interface TweetData {
     retweet_count?: number;
     reply_count?: number;
     quote_count?: number;
+    media_urls?: string[];
   };
   ingestedAt: string;
 }

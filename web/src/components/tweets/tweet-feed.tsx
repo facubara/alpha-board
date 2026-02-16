@@ -115,40 +115,67 @@ export function TweetFeed({ initialTweets }: TweetFeedProps) {
 function TweetCard({ tweet }: { tweet: TweetData }) {
   const categoryColor = CATEGORY_COLORS[tweet.accountCategory] || "text-secondary";
   const timeAgo = getTimeAgo(tweet.createdAt);
+  const mediaUrls = tweet.metrics.media_urls || [];
+
+  // Strip trailing t.co URLs when we have media to show
+  const displayText = mediaUrls.length > 0
+    ? tweet.text.replace(/\s*https:\/\/t\.co\/\w+\s*$/g, "").trim()
+    : tweet.text;
 
   return (
     <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          {/* Author line */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-primary">
-              {tweet.accountDisplayName}
-            </span>
-            <span className="text-xs text-muted">@{tweet.accountHandle}</span>
-            <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${categoryColor}`}>
-              {TWITTER_CATEGORY_LABELS[tweet.accountCategory]}
-            </span>
-          </div>
+      <div className="min-w-0">
+        {/* Author line */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-primary">
+            {tweet.accountDisplayName}
+          </span>
+          <span className="text-xs text-muted">@{tweet.accountHandle}</span>
+          <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${categoryColor}`}>
+            {TWITTER_CATEGORY_LABELS[tweet.accountCategory]}
+          </span>
+        </div>
 
-          {/* Tweet text */}
-          <p className="mt-1 text-sm text-secondary whitespace-pre-wrap break-words">
-            {tweet.text}
-          </p>
+        {/* Tweet text */}
+        <p className="mt-1 text-sm text-secondary whitespace-pre-wrap break-words">
+          {displayText}
+        </p>
 
-          {/* Metrics row */}
-          <div className="mt-2 flex items-center gap-4 text-xs text-muted">
-            <span>{timeAgo}</span>
-            {tweet.metrics.like_count != null && (
-              <span>{formatMetric(tweet.metrics.like_count)} likes</span>
-            )}
-            {tweet.metrics.retweet_count != null && (
-              <span>{formatMetric(tweet.metrics.retweet_count)} RTs</span>
-            )}
-            {tweet.metrics.reply_count != null && (
-              <span>{formatMetric(tweet.metrics.reply_count)} replies</span>
-            )}
+        {/* Media images */}
+        {mediaUrls.length > 0 && (
+          <div className={`mt-2 grid gap-1 ${mediaUrls.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
+            {mediaUrls.map((url, i) => (
+              <a
+                key={i}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={url}
+                  alt=""
+                  className="w-full rounded-md border border-[var(--border-default)] object-cover"
+                  style={{ maxHeight: mediaUrls.length === 1 ? "300px" : "200px" }}
+                  loading="lazy"
+                />
+              </a>
+            ))}
           </div>
+        )}
+
+        {/* Metrics row */}
+        <div className="mt-2 flex items-center gap-4 text-xs text-muted">
+          <span>{timeAgo}</span>
+          {tweet.metrics.like_count != null && (
+            <span>{formatMetric(tweet.metrics.like_count)} likes</span>
+          )}
+          {tweet.metrics.retweet_count != null && (
+            <span>{formatMetric(tweet.metrics.retweet_count)} RTs</span>
+          )}
+          {tweet.metrics.reply_count != null && (
+            <span>{formatMetric(tweet.metrics.reply_count)} replies</span>
+          )}
         </div>
       </div>
     </div>

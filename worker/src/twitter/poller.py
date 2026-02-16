@@ -62,12 +62,17 @@ class TwitterPoller:
             if not account:
                 continue
 
+            metrics = tweet_data.get("metrics", {})
+            media_urls = tweet_data.get("media_urls", [])
+            if media_urls:
+                metrics["media_urls"] = media_urls
+
             stmt = pg_insert(Tweet).values(
                 twitter_account_id=account.id,
                 tweet_id=tweet_data["tweet_id"],
                 text=tweet_data["text"],
                 created_at=tweet_data["created_at"],
-                metrics=tweet_data.get("metrics", {}),
+                metrics=metrics,
             ).on_conflict_do_nothing(index_elements=["tweet_id"])
 
             result = await self.session.execute(stmt)

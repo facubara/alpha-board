@@ -190,9 +190,10 @@ class TwitterClient:
             params: dict[str, Any] = {
                 "query": query,
                 "max_results": 100,
-                "tweet.fields": "created_at,public_metrics,entities",
-                "expansions": "author_id",
+                "tweet.fields": "created_at,public_metrics,entities,attachments",
+                "expansions": "author_id,attachments.media_keys",
                 "user.fields": "username,name",
+                "media.fields": "url,preview_image_url,type",
             }
             if since_id:
                 params["since_id"] = since_id
@@ -200,17 +201,38 @@ class TwitterClient:
             try:
                 data = await self._request(SEARCH_RECENT_ENDPOINT, params)
 
-                # Build author lookup from includes
+                includes = data.get("includes", {})
+
+                # Build author lookup
                 authors: dict[str, dict] = {}
-                for user in data.get("includes", {}).get("users", []):
+                for user in includes.get("users", []):
                     authors[user["id"]] = {
                         "username": user["username"],
                         "name": user.get("name", user["username"]),
                     }
 
+                # Build media lookup
+                media_map: dict[str, dict] = {}
+                for media in includes.get("media", []):
+                    media_map[media["media_key"]] = {
+                        "type": media.get("type"),
+                        "url": media.get("url") or media.get("preview_image_url"),
+                    }
+
                 # Process tweets
                 for tweet in data.get("data", []):
                     author = authors.get(tweet.get("author_id", ""), {})
+
+                    # Resolve media URLs from attachments
+                    media_urls: list[str] = []
+                    media_keys = (
+                        tweet.get("attachments", {}).get("media_keys", [])
+                    )
+                    for key in media_keys:
+                        m = media_map.get(key)
+                        if m and m.get("url"):
+                            media_urls.append(m["url"])
+
                     all_tweets.append({
                         "tweet_id": tweet["id"],
                         "text": tweet["text"],
@@ -218,6 +240,7 @@ class TwitterClient:
                         "author_handle": author.get("username", ""),
                         "author_name": author.get("name", ""),
                         "metrics": tweet.get("public_metrics", {}),
+                        "media_urls": media_urls,
                     })
 
             except TwitterAPIError as e:
