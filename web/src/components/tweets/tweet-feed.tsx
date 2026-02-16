@@ -142,6 +142,49 @@ function getSentimentLabel(score: number): "bullish" | "bearish" | "neutral" {
   return "neutral";
 }
 
+function SentimentBar({ score }: { score: number }) {
+  // score is -1 to +1, map to 0-100%
+  const pct = Math.round((score + 1) * 50);
+  const label = getSentimentLabel(score);
+  const barColor =
+    label === "bullish"
+      ? "bg-green-500"
+      : label === "bearish"
+        ? "bg-red-500"
+        : "bg-gray-500";
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="h-1.5 flex-1 rounded-full bg-[var(--bg-elevated)] overflow-hidden">
+        <div
+          className={`h-full rounded-full ${barColor} transition-all`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <span className="text-[10px] text-muted tabular-nums w-8 text-right">
+        {score > 0 ? "+" : ""}{score.toFixed(2)}
+      </span>
+    </div>
+  );
+}
+
+function ConfidenceDots({ confidence }: { confidence: number }) {
+  // confidence is 0-1, show as 5 dots
+  const filled = Math.round(confidence * 5);
+  return (
+    <span className="inline-flex gap-0.5">
+      {Array.from({ length: 5 }, (_, i) => (
+        <span
+          key={i}
+          className={`inline-block h-1.5 w-1.5 rounded-full ${
+            i < filled ? "bg-blue-400" : "bg-[var(--bg-elevated)]"
+          }`}
+        />
+      ))}
+    </span>
+  );
+}
+
 function TweetCard({ tweet }: { tweet: TweetData }) {
   const [showReasoning, setShowReasoning] = useState(false);
   const categoryColor = CATEGORY_COLORS[tweet.accountCategory] || "text-secondary";
@@ -168,20 +211,6 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
           <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${categoryColor}`}>
             {TWITTER_CATEGORY_LABELS[tweet.accountCategory]}
           </span>
-
-          {/* Sentiment badge */}
-          {signal && sentimentLabel && (
-            <span className={`rounded border px-1.5 py-0.5 text-[10px] font-medium ${SENTIMENT_COLORS[sentimentLabel]}`}>
-              {signal.sentimentScore > 0 ? "+" : ""}{signal.sentimentScore.toFixed(2)}
-            </span>
-          )}
-
-          {/* Setup type badge */}
-          {signal?.setupType && signal.setupType !== "neutral" && signal.setupType !== "informational" && (
-            <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${SETUP_COLORS[signal.setupType]}`}>
-              {SETUP_LABELS[signal.setupType]}
-            </span>
-          )}
         </div>
 
         {/* Tweet text */}
@@ -212,7 +241,7 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
           </div>
         )}
 
-        {/* Symbol tags + metrics row */}
+        {/* Metrics row */}
         <div className="mt-2 flex items-center gap-4 text-xs text-muted">
           <span>{timeAgo}</span>
           {tweet.metrics.like_count != null && (
@@ -224,33 +253,75 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
           {tweet.metrics.reply_count != null && (
             <span>{formatMetric(tweet.metrics.reply_count)} replies</span>
           )}
-
-          {/* Symbol tags */}
-          {signal?.symbolsMentioned && signal.symbolsMentioned.length > 0 && (
-            <span className="flex items-center gap-1">
-              {signal.symbolsMentioned.map((sym) => (
-                <span key={sym} className="rounded bg-[var(--bg-elevated)] px-1.5 py-0.5 text-[10px] font-mono text-secondary">
-                  {sym}
-                </span>
-              ))}
-            </span>
-          )}
-
-          {/* Reasoning toggle */}
-          {signal?.reasoning && (
-            <button
-              onClick={() => setShowReasoning(!showReasoning)}
-              className="text-[10px] text-muted hover:text-secondary transition-colors-fast"
-            >
-              {showReasoning ? "hide" : "why?"}
-            </button>
-          )}
         </div>
 
-        {/* Reasoning expanded */}
-        {showReasoning && signal?.reasoning && (
-          <div className="mt-2 rounded bg-[var(--bg-elevated)] px-3 py-2 text-xs text-secondary italic">
-            {signal.reasoning}
+        {/* AI Analysis section */}
+        {signal ? (
+          <div className="mt-2.5 rounded border border-[var(--border-default)] bg-[var(--bg-elevated)] px-3 py-2.5">
+            <div className="flex items-center gap-1.5 text-[10px] font-medium text-muted uppercase tracking-wide mb-2">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" className="text-blue-400 shrink-0">
+                <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 1.5a5.5 5.5 0 110 11 5.5 5.5 0 010-11zM8 4a.75.75 0 01.75.75v2.5h2.5a.75.75 0 010 1.5h-2.5v2.5a.75.75 0 01-1.5 0v-2.5h-2.5a.75.75 0 010-1.5h2.5v-2.5A.75.75 0 018 4z"/>
+              </svg>
+              AI Analysis
+            </div>
+
+            {/* Top row: sentiment + setup + confidence */}
+            <div className="flex items-center gap-3 mb-1.5">
+              {/* Sentiment badge */}
+              {sentimentLabel && (
+                <span className={`rounded border px-1.5 py-0.5 text-[11px] font-semibold ${SENTIMENT_COLORS[sentimentLabel]}`}>
+                  {sentimentLabel.charAt(0).toUpperCase() + sentimentLabel.slice(1)}
+                </span>
+              )}
+
+              {/* Setup type */}
+              {signal.setupType && (
+                <span className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${SETUP_COLORS[signal.setupType]}`}>
+                  {SETUP_LABELS[signal.setupType]}
+                </span>
+              )}
+
+              {/* Confidence */}
+              <span className="flex items-center gap-1.5 text-[10px] text-muted ml-auto">
+                conf <ConfidenceDots confidence={signal.confidence} />
+              </span>
+            </div>
+
+            {/* Sentiment bar */}
+            <SentimentBar score={signal.sentimentScore} />
+
+            {/* Symbols row */}
+            {signal.symbolsMentioned && signal.symbolsMentioned.length > 0 && (
+              <div className="flex items-center gap-1.5 mt-2">
+                <span className="text-[10px] text-muted">Symbols:</span>
+                {signal.symbolsMentioned.map((sym) => (
+                  <span key={sym} className="rounded bg-[var(--bg-surface)] px-1.5 py-0.5 text-[10px] font-mono font-medium text-secondary">
+                    {sym}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Reasoning */}
+            {signal.reasoning && (
+              <div className="mt-2">
+                <button
+                  onClick={() => setShowReasoning(!showReasoning)}
+                  className="text-[10px] text-blue-400 hover:text-blue-300 transition-colors-fast"
+                >
+                  {showReasoning ? "Hide reasoning" : "Show reasoning"}
+                </button>
+                {showReasoning && (
+                  <p className="mt-1 text-xs text-secondary leading-relaxed">
+                    {signal.reasoning}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="mt-2.5 rounded border border-dashed border-[var(--border-default)] px-3 py-2 text-[10px] text-muted">
+            Pending analysis...
           </div>
         )}
       </div>
