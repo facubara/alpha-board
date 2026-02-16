@@ -154,11 +154,11 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 - Tweet agents triggered after Twitter poll completes (gated by `tweet_agents_enabled` flag).
 - Existing technical agents excluded from tweet cycles via `source` filtering in orchestrator.
 
-### Phase 4 — Hybrid Agents (Technical + Tweets)
-- Duplicate all **28 existing agents** with a hybrid variant that receives `TweetContext` alongside the existing `RankingsContext`.
-- The hybrid prompt injects tweet sentiment, recent mentions, and setup signals for the symbols the agent is considering.
-- Tag hybrid agents with `source: hybrid` (vs. `source: technical` for originals and `source: tweet` for tweet-only) so analytics can compare performance across signal sources.
-- 28 hybrid agents total.
+### Phase 4 — Hybrid Agents (Technical + Tweets) `COMPLETED`
+- 48 hybrid agents (4 archetypes × 6 TFs × 2 engines) combining technical indicators with tweet sentiment.
+- 4 hybrid strategies: momentum, mean_reversion, breakout, swing — each uses technical signals as primary and tweets as confirmation/boost.
+- Tagged with `source: hybrid`, run in normal pipeline cycle alongside technical agents.
+- Pre-built tweet context once per timeframe in orchestrator to avoid redundant DB queries.
 
 ### Phase 5 — Dashboard & Analytics
 - New `/tweets` page showing the live tweet feed, sentiment timeline, and account list management.
@@ -171,8 +171,8 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 |--------|--------|
 | Existing (technical) | 28 |
 | Tweet-only (4 archetypes × 6 TFs × 2 engines) | 48 |
-| Hybrid (mirror of existing 28 + tweet context) | 28 |
-| **Total** | **104** |
+| Hybrid (4 archetypes × 6 TFs × 2 engines) | 48 |
+| **Total** | **124** |
 
 ---
 
