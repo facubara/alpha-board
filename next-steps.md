@@ -90,7 +90,7 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 
 ---
 
-## 7. Caching Layer (Redis) — `PENDING`
+## 7. Caching Layer (Redis) — `COMPLETED`
 
 **What:** Add Redis (or Upstash Redis for serverless) as a caching layer between the database and both the worker and web app.
 
