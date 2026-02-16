@@ -2,10 +2,12 @@
 
 /**
  * ArchetypeCurvesChart — Multi-line SVG showing cumulative PnL per archetype.
+ * SVG geometry + HTML text overlays + HTML legend.
  */
 
 import { useMemo } from "react";
 import type { DailyArchetypePnl, StrategyArchetype } from "@/lib/types";
+import { getYAxisLabelVisibility } from "@/lib/chart-utils";
 
 const ARCHETYPE_COLORS: Record<StrategyArchetype, string> = {
   momentum: "#3B82F6",
@@ -92,8 +94,6 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
   const height = 200;
   const padX = 55;
   const padY = 20;
-  const legendHeight = 24;
-  const totalHeight = height + legendHeight;
 
   const allValues = curves.archetypes.flatMap(
     (a) => curves.byArchetype[a]?.map((p) => p.cumPnl) ?? []
@@ -108,6 +108,12 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
     height - padY - ((y - minY) / rangeY) * (height - padY * 2);
 
   const baselineY = scaleY(0);
+  const maxLabelY = scaleY(maxY);
+  const minLabelY = scaleY(minY);
+
+  const { showBaseline, showMax, showMin } = getYAxisLabelVisibility(
+    baselineY, maxLabelY, minLabelY
+  );
 
   const dateLabels = buildDateLabels(curves.allDays, scaleX, 4);
 
@@ -123,121 +129,125 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
     <div
       className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
     >
-      <svg
-        viewBox={`0 0 ${width} ${totalHeight}`}
-        className="w-full"
-        preserveAspectRatio="none"
-        role="img"
-        aria-label={ariaLabel}
-      >
-        <title>{ariaLabel}</title>
-
-        {/* Baseline */}
-        <line
-          x1={padX}
-          y1={baselineY}
-          x2={width - padX}
-          y2={baselineY}
-          stroke="var(--border-subtle)"
-          strokeWidth="1"
-          strokeDasharray="4 4"
-        />
-        <text
-          x={padX - 4}
-          y={baselineY + 3}
-          textAnchor="end"
-          fill="var(--text-muted)"
-          fontSize="9"
-          fontFamily="var(--font-mono)"
+      <div className="relative">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="w-full"
+          preserveAspectRatio="none"
+          role="img"
+          aria-label={ariaLabel}
         >
-          $0
-        </text>
+          <title>{ariaLabel}</title>
 
-        {/* Y-axis min/max */}
-        <text
-          x={padX - 4}
-          y={scaleY(maxY) + 3}
-          textAnchor="end"
-          fill="var(--text-muted)"
-          fontSize="9"
-          fontFamily="var(--font-mono)"
-        >
-          ${maxY.toFixed(0)}
-        </text>
-        {Math.abs(scaleY(minY) - scaleY(maxY)) > 20 && (
-          <text
-            x={padX - 4}
-            y={scaleY(minY) + 3}
-            textAnchor="end"
-            fill="var(--text-muted)"
-            fontSize="9"
-            fontFamily="var(--font-mono)"
+          {/* Baseline */}
+          <line
+            x1={padX}
+            y1={baselineY}
+            x2={width - padX}
+            y2={baselineY}
+            stroke="var(--border-subtle)"
+            strokeWidth="1"
+            strokeDasharray="4 4"
+          />
+
+          {/* Lines per archetype */}
+          {curves.archetypes.map((arch) => {
+            const points = curves.byArchetype[arch] ?? [];
+            const pathD = points
+              .map((p, i) => `${i === 0 ? "M" : "L"} ${scaleX(i)} ${scaleY(p.cumPnl)}`)
+              .join(" ");
+            return (
+              <path
+                key={arch}
+                d={pathD}
+                fill="none"
+                stroke={ARCHETYPE_COLORS[arch] ?? "#888"}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            );
+          })}
+        </svg>
+
+        {/* Y-axis labels as HTML overlays */}
+        {showBaseline && (
+          <span
+            className="pointer-events-none absolute font-mono text-[9px] text-muted"
+            style={{
+              left: 0,
+              width: `${(padX / width) * 100}%`,
+              top: `${(baselineY / height) * 100}%`,
+              transform: "translateY(-50%)",
+              textAlign: "right",
+              paddingRight: 4,
+            }}
+          >
+            $0
+          </span>
+        )}
+        {showMax && (
+          <span
+            className="pointer-events-none absolute font-mono text-[9px] text-muted"
+            style={{
+              left: 0,
+              width: `${(padX / width) * 100}%`,
+              top: `${(maxLabelY / height) * 100}%`,
+              transform: "translateY(-50%)",
+              textAlign: "right",
+              paddingRight: 4,
+            }}
+          >
+            ${maxY.toFixed(0)}
+          </span>
+        )}
+        {showMin && (
+          <span
+            className="pointer-events-none absolute font-mono text-[9px] text-muted"
+            style={{
+              left: 0,
+              width: `${(padX / width) * 100}%`,
+              top: `${(minLabelY / height) * 100}%`,
+              transform: "translateY(-50%)",
+              textAlign: "right",
+              paddingRight: 4,
+            }}
           >
             ${minY.toFixed(0)}
-          </text>
+          </span>
         )}
 
-        {/* Date labels */}
+        {/* Date labels as HTML overlays */}
         {dateLabels.map((d, i) => (
-          <text
+          <span
             key={i}
-            x={d.x}
-            y={height - 4}
-            textAnchor="middle"
-            fill="var(--text-muted)"
-            fontSize="9"
-            fontFamily="var(--font-mono)"
+            className="pointer-events-none absolute font-mono text-[9px] text-muted"
+            style={{
+              left: `${(d.x / width) * 100}%`,
+              bottom: 0,
+              transform: "translateX(-50%)",
+              paddingBottom: 2,
+            }}
           >
             {d.label}
-          </text>
+          </span>
         ))}
+      </div>
 
-        {/* Lines per archetype */}
-        {curves.archetypes.map((arch) => {
-          const points = curves.byArchetype[arch] ?? [];
-          const pathD = points
-            .map((p, i) => `${i === 0 ? "M" : "L"} ${scaleX(i)} ${scaleY(p.cumPnl)}`)
-            .join(" ");
-          return (
-            <path
-              key={arch}
-              d={pathD}
-              fill="none"
-              stroke={ARCHETYPE_COLORS[arch] ?? "#888"}
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+      {/* Legend as HTML flex row */}
+      <div className="flex flex-wrap gap-4 px-3 pb-2 pt-1">
+        {curves.archetypes.map((arch) => (
+          <div key={arch} className="flex items-center gap-1.5">
+            <div
+              className="h-[3px] w-[10px] rounded-sm"
+              style={{ backgroundColor: ARCHETYPE_COLORS[arch] ?? "#888" }}
             />
-          );
-        })}
-
-        {/* Legend */}
-        {curves.archetypes.map((arch, i) => {
-          const legendX = padX + i * 140;
-          const legendY = height + 14;
-          return (
-            <g key={`legend-${arch}`}>
-              <rect
-                x={legendX}
-                y={legendY - 6}
-                width="10"
-                height="3"
-                rx="1"
-                fill={ARCHETYPE_COLORS[arch] ?? "#888"}
-              />
-              <text
-                x={legendX + 14}
-                y={legendY}
-                fill="var(--text-secondary)"
-                fontSize="10"
-                fontFamily="var(--font-geist-sans)"
-              >
-                {ARCHETYPE_LABELS[arch] ?? arch}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+            <span className="text-[10px] text-secondary">
+              {ARCHETYPE_LABELS[arch] ?? arch}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

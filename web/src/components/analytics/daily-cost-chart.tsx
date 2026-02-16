@@ -2,7 +2,7 @@
 
 /**
  * DailyCostChart — Area line chart showing daily token costs.
- * Amber/neutral color scheme.
+ * Amber/neutral color scheme. SVG geometry + HTML text overlays.
  */
 
 import type { DailyTokenCost } from "@/lib/types";
@@ -85,6 +85,9 @@ export function DailyCostChart({ data, className }: DailyCostChartProps) {
   const totalCost = values.reduce((sum, v) => sum + v, 0);
   const ariaLabel = `Daily token cost chart: $${totalCost.toFixed(2)} total over ${data.length} days`;
 
+  const maxLabelY = scaleY(maxY);
+  const zeroLabelY = scaleY(0);
+
   return (
     <div
       className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
@@ -95,73 +98,82 @@ export function DailyCostChart({ data, className }: DailyCostChartProps) {
           Total: ${totalCost.toFixed(2)}
         </p>
       </div>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="w-full"
-        preserveAspectRatio="none"
-        role="img"
-        aria-label={ariaLabel}
-      >
-        <title>{ariaLabel}</title>
+      <div className="relative">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="w-full"
+          preserveAspectRatio="none"
+          role="img"
+          aria-label={ariaLabel}
+        >
+          <title>{ariaLabel}</title>
 
-        {/* Area fill */}
-        <path d={areaD} fill={strokeColor} opacity="0.08" />
+          {/* Area fill */}
+          <path d={areaD} fill={strokeColor} opacity="0.08" />
 
-        {/* Y-axis labels */}
-        <text
-          x={padX - 4}
-          y={scaleY(maxY) + 3}
-          textAnchor="end"
-          fill="var(--text-muted)"
-          fontSize="9"
-          fontFamily="var(--font-mono)"
+          {/* Cost line */}
+          <path
+            d={pathD}
+            fill="none"
+            stroke={strokeColor}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* End point */}
+          <circle
+            cx={scaleX(maxX)}
+            cy={scaleY(data[data.length - 1].dailyCost)}
+            r="3"
+            fill={strokeColor}
+          />
+        </svg>
+
+        {/* Y-axis labels as HTML overlays */}
+        <span
+          className="pointer-events-none absolute font-mono text-[9px] text-muted"
+          style={{
+            left: 0,
+            width: `${(padX / width) * 100}%`,
+            top: `${(maxLabelY / height) * 100}%`,
+            transform: "translateY(-50%)",
+            textAlign: "right",
+            paddingRight: 4,
+          }}
         >
           ${maxY.toFixed(2)}
-        </text>
-        <text
-          x={padX - 4}
-          y={scaleY(0) + 3}
-          textAnchor="end"
-          fill="var(--text-muted)"
-          fontSize="9"
-          fontFamily="var(--font-mono)"
+        </span>
+        <span
+          className="pointer-events-none absolute font-mono text-[9px] text-muted"
+          style={{
+            left: 0,
+            width: `${(padX / width) * 100}%`,
+            top: `${(zeroLabelY / height) * 100}%`,
+            transform: "translateY(-50%)",
+            textAlign: "right",
+            paddingRight: 4,
+          }}
         >
           $0
-        </text>
+        </span>
 
-        {/* Date labels */}
+        {/* Date labels as HTML overlays */}
         {dateLabels.map((d, i) => (
-          <text
+          <span
             key={i}
-            x={d.x}
-            y={height - 4}
-            textAnchor="middle"
-            fill="var(--text-muted)"
-            fontSize="9"
-            fontFamily="var(--font-mono)"
+            className="pointer-events-none absolute font-mono text-[9px] text-muted"
+            style={{
+              left: `${(d.x / width) * 100}%`,
+              bottom: 0,
+              transform: "translateX(-50%)",
+              paddingBottom: 2,
+            }}
           >
             {d.label}
-          </text>
+          </span>
         ))}
-
-        {/* Cost line */}
-        <path
-          d={pathD}
-          fill="none"
-          stroke={strokeColor}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* End point */}
-        <circle
-          cx={scaleX(maxX)}
-          cy={scaleY(data[data.length - 1].dailyCost)}
-          r="3"
-          fill={strokeColor}
-        />
-      </svg>
+      </div>
     </div>
   );
 }

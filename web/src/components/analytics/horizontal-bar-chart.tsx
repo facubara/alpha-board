@@ -34,6 +34,9 @@ export function HorizontalBarChart({
   }
 
   const maxAbs = Math.max(...items.map((d) => Math.abs(d.value)), 0.01);
+  const allPositive = items.every((i) => i.value >= 0);
+  const allNegative = items.every((i) => i.value < 0);
+  const allSameSign = allPositive || allNegative;
 
   // Build aria summary
   const summaryParts = items.map(
@@ -58,7 +61,7 @@ export function HorizontalBarChart({
               className="flex items-center gap-2 px-3 py-2"
             >
               {/* Label column */}
-              <div className="w-24 shrink-0 text-right sm:w-28">
+              <div className="w-28 shrink-0 text-right sm:w-36">
                 <p className="truncate text-xs text-secondary">{item.label}</p>
                 {item.sublabel && (
                   <p className="truncate font-mono text-[10px] text-muted">
@@ -67,40 +70,49 @@ export function HorizontalBarChart({
                 )}
               </div>
 
-              {/* Bar area — two halves */}
-              <div className="flex min-w-0 flex-1 items-center">
-                {/* Negative half */}
-                <div className="flex h-4 flex-1 justify-end">
-                  {!isPositive && (
-                    <div
-                      className="rounded-l-sm bg-[var(--bearish-strong)]"
-                      style={{
-                        width: `${pct}%`,
-                        opacity: 0.7,
-                      }}
-                    />
-                  )}
+              {/* Bar area */}
+              {allSameSign ? (
+                <div
+                  className={`flex h-4 min-w-0 flex-1 ${allNegative ? "justify-end" : ""}`}
+                >
+                  <div
+                    className={`${
+                      isPositive
+                        ? "rounded-r-sm bg-[var(--bullish-strong)]"
+                        : "rounded-l-sm bg-[var(--bearish-strong)]"
+                    }`}
+                    style={{ width: `${pct}%`, opacity: 0.7 }}
+                  />
                 </div>
+              ) : (
+                <div className="flex min-w-0 flex-1 items-center">
+                  {/* Negative half */}
+                  <div className="flex h-4 flex-1 justify-end">
+                    {!isPositive && (
+                      <div
+                        className="rounded-l-sm bg-[var(--bearish-strong)]"
+                        style={{ width: `${pct}%`, opacity: 0.7 }}
+                      />
+                    )}
+                  </div>
 
-                {/* Center divider */}
-                <div className="mx-px h-5 w-px shrink-0 bg-[var(--border-subtle)]" />
+                  {/* Center divider */}
+                  <div className="mx-px h-5 w-px shrink-0 bg-[var(--border-subtle)]" />
 
-                {/* Positive half */}
-                <div className="flex h-4 flex-1">
-                  {isPositive && (
-                    <div
-                      className="rounded-r-sm bg-[var(--bullish-strong)]"
-                      style={{
-                        width: `${pct}%`,
-                        opacity: 0.7,
-                      }}
-                    />
-                  )}
+                  {/* Positive half */}
+                  <div className="flex h-4 flex-1">
+                    {isPositive && (
+                      <div
+                        className="rounded-r-sm bg-[var(--bullish-strong)]"
+                        style={{ width: `${pct}%`, opacity: 0.7 }}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Value column */}
-              <div className="w-16 shrink-0 text-right sm:w-20">
+              <div className="w-20 shrink-0 text-right sm:w-24">
                 <span
                   className={`font-mono text-xs ${
                     isPositive

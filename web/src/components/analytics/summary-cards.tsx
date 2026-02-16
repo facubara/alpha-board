@@ -76,7 +76,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           <p className="text-xs text-muted">{m.label}</p>
           <p
             className={cn(
-              "font-mono text-lg font-semibold tabular-nums",
+              "font-mono text-lg font-semibold",
               m.color
             )}
           >

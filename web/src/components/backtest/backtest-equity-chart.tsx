@@ -4,8 +4,10 @@
  * BacktestEquityChart Component
  *
  * SVG line chart showing equity curve from backtest equity_curve data.
- * Adapted from agents/equity-chart.tsx.
+ * SVG geometry + HTML text overlays for crisp labels.
  */
+
+import { getYAxisLabelVisibility } from "@/lib/chart-utils";
 
 interface EquityPoint {
   timestamp: string;
@@ -73,6 +75,12 @@ export function BacktestEquityChart({
     : "var(--bearish-strong)";
 
   const baselineY = scaleY(initialBalance);
+  const maxLabelY = scaleY(maxY);
+  const minLabelY = scaleY(minY);
+
+  const { showBaseline, showMax, showMin } = getYAxisLabelVisibility(
+    baselineY, maxLabelY, minLabelY
+  );
 
   // X-axis date labels (show ~4 dates)
   const dateLabels: { x: number; label: string }[] = [];
@@ -95,94 +103,108 @@ export function BacktestEquityChart({
     <div
       className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
     >
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="w-full"
-        preserveAspectRatio="none"
-      >
-        {/* Area fill */}
-        <path d={areaD} fill={fillColor} opacity="0.05" />
-
-        {/* Baseline at initial balance */}
-        <line
-          x1={padX}
-          y1={baselineY}
-          x2={width - padX}
-          y2={baselineY}
-          stroke="var(--border-subtle)"
-          strokeWidth="1"
-          strokeDasharray="4 4"
-        />
-
-        {/* Baseline label */}
-        <text
-          x={padX - 4}
-          y={baselineY + 3}
-          textAnchor="end"
-          fill="var(--text-muted)"
-          fontSize="9"
-          fontFamily="var(--font-mono)"
+      <div className="relative">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="w-full"
+          preserveAspectRatio="none"
         >
-          {initialBalance.toLocaleString()}
-        </text>
+          {/* Area fill */}
+          <path d={areaD} fill={fillColor} opacity="0.05" />
 
-        {/* Min/Max labels */}
-        <text
-          x={padX - 4}
-          y={scaleY(maxY) + 3}
-          textAnchor="end"
-          fill="var(--text-muted)"
-          fontSize="9"
-          fontFamily="var(--font-mono)"
-        >
-          {maxY.toFixed(0)}
-        </text>
-        {Math.abs(scaleY(minY) - scaleY(maxY)) > 20 && (
-          <text
-            x={padX - 4}
-            y={scaleY(minY) + 3}
-            textAnchor="end"
-            fill="var(--text-muted)"
-            fontSize="9"
-            fontFamily="var(--font-mono)"
+          {/* Baseline at initial balance */}
+          <line
+            x1={padX}
+            y1={baselineY}
+            x2={width - padX}
+            y2={baselineY}
+            stroke="var(--border-subtle)"
+            strokeWidth="1"
+            strokeDasharray="4 4"
+          />
+
+          {/* Equity line */}
+          <path
+            d={pathD}
+            fill="none"
+            stroke={strokeColor}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* End point */}
+          <circle
+            cx={scaleX(maxX)}
+            cy={scaleY(lastEquity)}
+            r="3"
+            fill={strokeColor}
+          />
+        </svg>
+
+        {/* Y-axis labels as HTML overlays */}
+        {showBaseline && (
+          <span
+            className="pointer-events-none absolute font-mono text-[9px] text-muted"
+            style={{
+              left: 0,
+              width: `${(padX / width) * 100}%`,
+              top: `${(baselineY / height) * 100}%`,
+              transform: "translateY(-50%)",
+              textAlign: "right",
+              paddingRight: 4,
+            }}
+          >
+            {initialBalance.toLocaleString()}
+          </span>
+        )}
+        {showMax && (
+          <span
+            className="pointer-events-none absolute font-mono text-[9px] text-muted"
+            style={{
+              left: 0,
+              width: `${(padX / width) * 100}%`,
+              top: `${(maxLabelY / height) * 100}%`,
+              transform: "translateY(-50%)",
+              textAlign: "right",
+              paddingRight: 4,
+            }}
+          >
+            {maxY.toFixed(0)}
+          </span>
+        )}
+        {showMin && (
+          <span
+            className="pointer-events-none absolute font-mono text-[9px] text-muted"
+            style={{
+              left: 0,
+              width: `${(padX / width) * 100}%`,
+              top: `${(minLabelY / height) * 100}%`,
+              transform: "translateY(-50%)",
+              textAlign: "right",
+              paddingRight: 4,
+            }}
           >
             {minY.toFixed(0)}
-          </text>
+          </span>
         )}
 
-        {/* X-axis date labels */}
+        {/* Date labels as HTML overlays */}
         {dateLabels.map((d, i) => (
-          <text
+          <span
             key={i}
-            x={d.x}
-            y={height - 4}
-            textAnchor="middle"
-            fill="var(--text-muted)"
-            fontSize="9"
-            fontFamily="var(--font-mono)"
+            className="pointer-events-none absolute font-mono text-[9px] text-muted"
+            style={{
+              left: `${(d.x / width) * 100}%`,
+              bottom: 0,
+              transform: "translateX(-50%)",
+              paddingBottom: 2,
+            }}
           >
             {d.label}
-          </text>
+          </span>
         ))}
-
-        {/* Equity line */}
-        <path
-          d={pathD}
-          fill="none"
-          stroke={strokeColor}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* End point */}
-        <circle
-          cx={scaleX(maxX)}
-          cy={scaleY(lastEquity)}
-          r="3"
-          fill={strokeColor}
-        />
-      </svg>
+      </div>
     </div>
   );
 }

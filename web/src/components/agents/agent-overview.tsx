@@ -86,7 +86,7 @@ export function AgentOverview({
             className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2"
           >
             <p className="text-xs text-muted">{m.label}</p>
-            <p className={cn("font-mono text-lg font-semibold tabular-nums", m.color)}>
+            <p className={cn("font-mono text-lg font-semibold", m.color)}>
               {m.value}
             </p>
           </div>
