@@ -189,6 +189,7 @@ class Agent(Base):
     )
     status: Mapped[str] = mapped_column(String(10), nullable=False, default="active")
     engine: Mapped[str] = mapped_column(String(10), nullable=False, default="llm")
+    source: Mapped[str] = mapped_column(String(20), nullable=False, server_default="technical")
     initial_balance: Mapped[Decimal] = mapped_column(
         Numeric(12, 2), nullable=False, default=Decimal("10000.00")
     )

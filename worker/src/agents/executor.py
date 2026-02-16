@@ -194,6 +194,43 @@ class AgentExecutor:
                 regime_str = "\n".join(regime_lines)
             regime_str += f"\nHigher-TF trend: {regime.higher_tf_trend} (confidence={regime.higher_tf_confidence:.0f}%)"
 
+        # Format tweet context
+        tweet_str = ""
+        if context.tweet_context:
+            tc = context.tweet_context
+            top_syms = ", ".join(
+                f"{s}({tc.signals.__len__()})" if i == 0 else s
+                for i, s in enumerate(tc.most_mentioned_symbols[:5])
+            )
+            # Better: count per symbol
+            sym_counts: dict[str, int] = {}
+            for sig in tc.signals:
+                for sym in sig.symbols_mentioned:
+                    sym_counts[sym] = sym_counts.get(sym, 0) + 1
+            top_syms = ", ".join(
+                f"{s}({sym_counts.get(s, 0)})"
+                for s in tc.most_mentioned_symbols[:5]
+            )
+
+            signal_lines = []
+            for sig in tc.signals[:15]:  # Limit to 15 signals to manage prompt size
+                sentiment_prefix = "+" if sig.sentiment_score >= 0 else ""
+                signal_lines.append(
+                    f"  @{sig.handle} ({sig.category}) "
+                    f"[{sentiment_prefix}{sig.sentiment_score:.1f} {sig.setup_type}] "
+                    f'"{sig.text[:80]}{"..." if len(sig.text) > 80 else ""}" '
+                    f"[likes:{sig.likes}, RTs:{sig.retweets}]"
+                )
+
+            tweet_str = f"""
+
+=== TWEET SIGNALS ({tc.lookback_hours}h lookback) ===
+Avg sentiment: {'+' if tc.avg_sentiment >= 0 else ''}{tc.avg_sentiment:.2f} | Bullish: {tc.bullish_count} | Bearish: {tc.bearish_count}
+Top symbols: {top_syms}
+
+Recent signals:
+""" + "\n".join(signal_lines)
+
         return f"""Current time: {context.context_built_at.isoformat()}
 Timeframe: {context.primary_timeframe}
 
@@ -222,7 +259,7 @@ Max drawdown: {context.performance.max_drawdown:.1%}
 
 === RECENT LESSONS ===
 {memory_str}
-
+{tweet_str}
 Based on the above data and your strategy, decide what action to take. Use the trade_action tool to submit your decision."""
 
     def _parse_response(

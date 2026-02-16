@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     # Feature flags
     agents_enabled: bool = True
     evolution_enabled: bool = True
+    tweet_agents_enabled: bool = False
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

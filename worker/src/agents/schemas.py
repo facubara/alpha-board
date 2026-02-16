@@ -197,6 +197,33 @@ class CrossTimeframeContext(BaseModel):
     higher_tf_confidence: float = 0.0  # 0-100
 
 
+class TweetSignalContext(BaseModel):
+    """A single tweet signal for agent consumption."""
+
+    handle: str
+    category: str  # analyst, founder, degen, etc.
+    text: str
+    sentiment_score: float  # -1 to +1
+    setup_type: str
+    confidence: float
+    symbols_mentioned: list[str]
+    reasoning: str
+    likes: int
+    retweets: int
+    tweeted_at: datetime
+
+
+class TweetContext(BaseModel):
+    """Aggregated tweet context for agent decision-making."""
+
+    signals: list[TweetSignalContext]
+    avg_sentiment: float
+    bullish_count: int
+    bearish_count: int
+    most_mentioned_symbols: list[str]  # top 5 by frequency
+    lookback_hours: float  # how far back we looked
+
+
 class AgentContext(BaseModel):
     """Full context passed to Claude for decision-making."""
 
@@ -216,6 +243,9 @@ class AgentContext(BaseModel):
 
     # Regime context
     cross_timeframe_regime: CrossTimeframeContext | None = None
+
+    # Tweet context (for tweet/hybrid agents)
+    tweet_context: TweetContext | None = None
 
     # Current prices for open positions
     current_prices: dict[str, Decimal]

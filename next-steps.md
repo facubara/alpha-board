@@ -143,12 +143,16 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 - Web UI: sentiment badges (color-coded), setup type pills, symbol tags, reasoning toggle, stats dashboard (avg sentiment, signal breakdown).
 - **Not implemented** (deferred): `TweetContext` dataclass for agent consumption — will be added in Phase 3/4.
 
-### Phase 3 — Tweet-Only Agents
+### Phase 3 — Tweet-Only Agents — `COMPLETED`
 - New agent class: **tweet-only** — trades purely on tweet signals without technical indicators.
 - Create agents across **all 6 timeframes** (15m, 30m, 1h, 4h, 1d, 1w) — the timeframe determines how long the agent holds positions and how far back it looks at tweet history.
 - Archetypes: `tweet_momentum` (ride hype), `tweet_contrarian` (fade overreaction), `tweet_narrative` (follow macro thesis), `tweet_insider` (weight founder/insider accounts higher).
 - Each archetype runs as both `llm` and `rule` engine, mirroring existing convention.
 - 4 archetypes × 6 timeframes × 2 engines = **48 tweet-only agents**.
+- Migration `013_tweet_agents.py` adds `source` column to agents table and seeds all 48 agents with portfolios and prompts.
+- Tweet context builder queries `tweet_signals` with timeframe-based lookback window.
+- Tweet agents triggered after Twitter poll completes (gated by `tweet_agents_enabled` flag).
+- Existing technical agents excluded from tweet cycles via `source` filtering in orchestrator.
 
 ### Phase 4 — Hybrid Agents (Technical + Tweets)
 - Duplicate all **28 existing agents** with a hybrid variant that receives `TweetContext` alongside the existing `RankingsContext`.

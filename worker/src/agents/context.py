@@ -8,7 +8,7 @@ Assembles all data an agent needs to make a decision:
 - Current prices for open positions
 """
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from typing import Any
 
@@ -24,6 +24,9 @@ from src.models.db import (
     Snapshot,
     Symbol,
     TimeframeRegime,
+    Tweet,
+    TweetSignal,
+    TwitterAccount,
 )
 from src.agents.schemas import (
     AgentContext,
@@ -33,6 +36,8 @@ from src.agents.schemas import (
     PerformanceStats,
     RankingContext,
     RegimeLabel,
+    TweetContext,
+    TweetSignalContext,
     Direction,
 )
 
@@ -82,6 +87,12 @@ class ContextBuilder:
         # Build regime context from persisted regime labels
         regime_context = await self._get_regime_context(agent.timeframe)
 
+        # Build tweet context for tweet/hybrid agents
+        tweet_context = None
+        source = getattr(agent, "source", "technical")
+        if source in ("tweet", "hybrid"):
+            tweet_context = await self._get_tweet_context(agent.timeframe)
+
         return AgentContext(
             agent_id=agent.id,
             agent_name=agent.name,
@@ -92,6 +103,7 @@ class ContextBuilder:
             primary_timeframe_rankings=rankings,
             cross_timeframe_confluence=confluence,
             cross_timeframe_regime=regime_context,
+            tweet_context=tweet_context,
             current_prices=current_prices,
             recent_memory=memory,
             context_built_at=datetime.now(timezone.utc),
@@ -352,6 +364,89 @@ class ContextBuilder:
                 regimes=regimes,
                 higher_tf_trend=higher_tf_trend,
                 higher_tf_confidence=higher_tf_confidence,
+            )
+        except Exception:
+            return None
+
+    # Timeframe → lookback hours for tweet context
+    TWEET_LOOKBACK_HOURS: dict[str, float] = {
+        "15m": 1,
+        "30m": 2,
+        "1h": 4,
+        "4h": 12,
+        "1d": 48,
+        "1w": 168,
+    }
+
+    async def _get_tweet_context(self, timeframe: str) -> TweetContext | None:
+        """Build tweet context from recent tweet signals.
+
+        Args:
+            timeframe: Agent timeframe, determines lookback window.
+
+        Returns:
+            TweetContext with aggregated signals, or None if no signals.
+        """
+        try:
+            lookback_hours = self.TWEET_LOOKBACK_HOURS.get(timeframe, 4)
+            cutoff = datetime.now(timezone.utc) - timedelta(hours=lookback_hours)
+
+            result = await self.session.execute(
+                select(TweetSignal, Tweet, TwitterAccount)
+                .join(Tweet, TweetSignal.tweet_id == Tweet.id)
+                .join(TwitterAccount, Tweet.twitter_account_id == TwitterAccount.id)
+                .where(Tweet.created_at >= cutoff)
+                .order_by(Tweet.created_at.desc())
+            )
+            rows = result.all()
+
+            if not rows:
+                return None
+
+            signals: list[TweetSignalContext] = []
+            symbol_counts: dict[str, int] = {}
+            total_sentiment = 0.0
+            bullish_count = 0
+            bearish_count = 0
+
+            for signal, tweet, account in rows:
+                metrics = tweet.metrics or {}
+                signals.append(TweetSignalContext(
+                    handle=account.handle,
+                    category=account.category,
+                    text=tweet.text,
+                    sentiment_score=float(signal.sentiment_score),
+                    setup_type=signal.setup_type or "neutral",
+                    confidence=float(signal.confidence),
+                    symbols_mentioned=signal.symbols_mentioned or [],
+                    reasoning=signal.reasoning,
+                    likes=metrics.get("like_count", 0),
+                    retweets=metrics.get("retweet_count", 0),
+                    tweeted_at=tweet.created_at,
+                ))
+
+                sentiment = float(signal.sentiment_score)
+                total_sentiment += sentiment
+                if sentiment > 0.2:
+                    bullish_count += 1
+                elif sentiment < -0.2:
+                    bearish_count += 1
+
+                for sym in (signal.symbols_mentioned or []):
+                    symbol_counts[sym] = symbol_counts.get(sym, 0) + 1
+
+            avg_sentiment = total_sentiment / len(signals) if signals else 0.0
+
+            # Top 5 most mentioned symbols
+            most_mentioned = sorted(symbol_counts.keys(), key=lambda s: -symbol_counts[s])[:5]
+
+            return TweetContext(
+                signals=signals,
+                avg_sentiment=avg_sentiment,
+                bullish_count=bullish_count,
+                bearish_count=bearish_count,
+                most_mentioned_symbols=most_mentioned,
+                lookback_hours=lookback_hours,
             )
         except Exception:
             return None

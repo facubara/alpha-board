@@ -361,13 +361,97 @@ class AgentOrchestrator:
 
         return None
 
-    async def _get_active_agents(self, timeframe: str) -> list[Agent]:
-        """Get all active agents for a timeframe."""
+    async def run_tweet_cycle(
+        self,
+        timeframe: str,
+        current_prices: dict[str, Decimal],
+    ) -> dict[str, Any]:
+        """Run a tweet-agent cycle for a timeframe.
+
+        Called after Twitter poll completes. Only processes tweet-source agents.
+
+        Args:
+            timeframe: The timeframe to process.
+            current_prices: Dict of symbol -> current price.
+
+        Returns:
+            Summary of the cycle results (same format as run_cycle).
+        """
+        logger.info(f"Starting tweet agent cycle for {timeframe}")
+        start_time = datetime.now(timezone.utc)
+
+        agents = await self._get_active_agents(timeframe, source="tweet")
+        logger.info(f"Found {len(agents)} active tweet agents for {timeframe}")
+
+        results: dict[str, Any] = {
+            "timeframe": timeframe,
+            "source": "tweet",
+            "agents_processed": 0,
+            "decisions": [],
+            "executions": [],
+            "memories_generated": 0,
+            "evolutions_triggered": 0,
+            "errors": [],
+            "total_tokens": {"input": 0, "output": 0},
+            "total_cost_usd": Decimal("0.00"),
+        }
+
+        for agent in agents:
+            try:
+                agent_result = await self._process_agent(agent, current_prices, None)
+                results["agents_processed"] += 1
+                results["decisions"].append(agent_result["decision"])
+
+                if agent_result.get("execution"):
+                    results["executions"].append(agent_result["execution"])
+                if agent_result.get("memory_generated"):
+                    results["memories_generated"] += 1
+                if agent_result.get("evolution_triggered"):
+                    results["evolutions_triggered"] += 1
+
+                if agent_result["decision"]:
+                    results["total_tokens"]["input"] += agent_result["decision"].input_tokens
+                    results["total_tokens"]["output"] += agent_result["decision"].output_tokens
+                    results["total_cost_usd"] += agent_result["decision"].estimated_cost_usd
+
+            except Exception as e:
+                logger.exception(f"Error processing tweet agent {agent.name}: {e}")
+                results["errors"].append({
+                    "agent_id": agent.id,
+                    "agent_name": agent.name,
+                    "error": str(e),
+                })
+
+        await self.session.commit()
+
+        elapsed = (datetime.now(timezone.utc) - start_time).total_seconds()
+        logger.info(
+            f"Tweet agent cycle for {timeframe} complete: "
+            f"{results['agents_processed']} agents, "
+            f"{len(results['executions'])} executions, "
+            f"{len(results['errors'])} errors, "
+            f"${results['total_cost_usd']:.4f} cost, "
+            f"{elapsed:.1f}s elapsed"
+        )
+
+        return results
+
+    async def _get_active_agents(
+        self, timeframe: str, source: str | None = None
+    ) -> list[Agent]:
+        """Get all active agents for a timeframe, optionally filtered by source."""
+        conditions = [
+            Agent.timeframe == timeframe,
+            Agent.status == "active",
+        ]
+        if source:
+            conditions.append(Agent.source == source)
+        else:
+            # Default: exclude tweet agents from normal pipeline cycle
+            conditions.append(Agent.source != "tweet")
+
         result = await self.session.execute(
-            select(Agent).where(
-                Agent.timeframe == timeframe,
-                Agent.status == "active",
-            )
+            select(Agent).where(*conditions)
         )
         return list(result.scalars().all())
 

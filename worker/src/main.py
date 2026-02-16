@@ -881,6 +881,25 @@ async def run_twitter_poll():
             logger.info(f"Twitter poll complete: {result}")
     except Exception as e:
         logger.exception(f"Twitter poll failed: {e}")
+        return
+
+    # Run tweet agents after poll completes
+    if settings.tweet_agents_enabled:
+        try:
+            current_prices = await _fetch_live_prices()
+            if current_prices:
+                for tf in ["15m", "30m", "1h", "4h", "1d", "1w"]:
+                    try:
+                        async with async_session() as session:
+                            orchestrator = AgentOrchestrator(session)
+                            await orchestrator.run_tweet_cycle(tf, current_prices)
+                    except Exception as e:
+                        logger.exception(f"Tweet agent cycle failed for {tf}: {e}")
+
+                # Broadcast updated leaderboard after tweet agents run
+                await _broadcast_agent_update()
+        except Exception as e:
+            logger.exception(f"Tweet agent execution failed: {e}")
 
 
 @app.get("/twitter/accounts")
