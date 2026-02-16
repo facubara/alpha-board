@@ -119,7 +119,7 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 
 ---
 
-## 9. Twitter Feed Integration & Tweet-Driven Agents — `PENDING`
+## 9. Twitter Feed Integration & Tweet-Driven Agents — `IN PROGRESS`
 
 **What:** Connect to the Twitter API to ingest real-time tweets from a configurable list of accounts, extract sentiment/setups, and feed that context into two new agent tiers: **tweet-only agents** (trade purely on tweet signals) and **hybrid agents** (existing technical analysis + tweet context).
 
