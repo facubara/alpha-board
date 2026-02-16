@@ -134,12 +134,14 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 - Admin UI on the web dashboard to **add/remove tracked accounts** — simple CRUD backed by a POST `/api/twitter/accounts` route (auth-protected).
 - Worker module `worker/src/twitter/` with a streaming listener (or scheduled poller) that persists incoming tweets and broadcasts via SSE.
 
-### Phase 2 — Sentiment & Setup Extraction
-- **Multi-provider LLM analysis**: Use Claude by default but make the sentiment model **toggleable** between providers (Claude, OpenAI, Gemini, etc.) via a new `llm_provider` config on the agent or a global setting.
-- Abstract the current Anthropic-only executor into a **provider-agnostic LLM client** (`worker/src/llm/`) with adapters per provider, each exposing the same `analyze(prompt, context) → structured_output` interface.
-- For each tweet batch, run a sentiment/setup extraction pass that produces: `sentiment` (bullish/bearish/neutral, -1 to +1), `mentioned_symbols[]`, `setup_type` (call, analysis, news, rumor), `confidence`, `raw_reasoning`.
-- Store results in a `tweet_signals` table linked to the tweet and any matched symbols.
-- Expose a `TweetContext` dataclass (recent signals per symbol, account credibility, signal consensus) that agents can consume.
+### Phase 2 — Sentiment & Setup Extraction — `COMPLETED`
+- ~~**Multi-provider LLM analysis**~~: Using Claude Haiku directly (YAGNI on multi-provider — can add later).
+- `tweet_signals` table with `sentiment_score` (-1 to +1), `setup_type`, `confidence`, `symbols_mentioned[]`, `reasoning`, token usage tracking.
+- `TweetAnalyzer` class batches unanalyzed tweets (15 per batch), calls Claude Haiku via `tool_use`, persists results.
+- Integrated into `TwitterPoller` — auto-analyzes after each poll when `tweet_analysis_enabled=True`.
+- `POST /twitter/analyze` manual trigger endpoint; `GET /twitter/feed` returns signal data via LEFT JOIN.
+- Web UI: sentiment badges (color-coded), setup type pills, symbol tags, reasoning toggle, stats dashboard (avg sentiment, signal breakdown).
+- **Not implemented** (deferred): `TweetContext` dataclass for agent consumption — will be added in Phase 3/4.
 
 ### Phase 3 — Tweet-Only Agents
 - New agent class: **tweet-only** — trades purely on tweet signals without technical indicators.
