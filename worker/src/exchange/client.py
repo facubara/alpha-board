@@ -30,6 +30,8 @@ KLINES_TTL: dict[str, int] = {
     "1w": 14400,
 }
 
+FUTURES_BASE_URL = "https://fapi.binance.com"
+
 
 class BinanceAPIError(Exception):
     """Raised when Binance API returns an error."""
@@ -334,6 +336,49 @@ class BinanceClient:
         await cache_set(cache_key, json.dumps(data), ttl)
 
         return self._parse_klines(data)
+
+    async def get_funding_rates(self) -> dict[str, float]:
+        """Fetch current funding rates for all futures symbols.
+
+        Uses the Binance Futures premiumIndex bulk endpoint (public, no auth).
+        Cached for 5 minutes (funding updates every 8 hours).
+
+        Returns:
+            Dict mapping symbol → lastFundingRate as float.
+        """
+        cache_key = "funding_rates"
+        cached = await cache_get(cache_key)
+        if cached:
+            data = json.loads(cached)
+            logger.debug(f"Cache HIT: {cache_key}")
+            return data
+
+        url = f"{FUTURES_BASE_URL}/fapi/v1/premiumIndex"
+
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                response = await client.get(url)
+                if response.status_code != 200:
+                    logger.warning(f"Funding rates request failed: {response.status_code}")
+                    return {}
+                raw = response.json()
+        except Exception as e:
+            logger.warning(f"Failed to fetch funding rates: {e}")
+            return {}
+
+        result: dict[str, float] = {}
+        for item in raw:
+            symbol = item.get("symbol", "")
+            rate = item.get("lastFundingRate")
+            if rate is not None:
+                try:
+                    result[symbol] = float(rate)
+                except (ValueError, TypeError):
+                    pass
+
+        await cache_set(cache_key, json.dumps(result), 300)
+        logger.info(f"Fetched funding rates for {len(result)} symbols")
+        return result
 
     async def get_klines_batch(
         self, symbols: list[str], interval: str, limit: int = 200

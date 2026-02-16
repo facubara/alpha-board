@@ -103,8 +103,46 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
           {snapshot.confidence}%
         </TableCell>
 
-        {/* Highlights (hidden on mobile and tablet) */}
-        <TableCell className="hidden lg:table-cell">
+        {/* Price % (hidden on mobile) */}
+        <TableCell className="hidden w-20 text-right font-mono text-sm tabular-nums md:table-cell">
+          {snapshot.priceChangePct != null ? (
+            <span className={snapshot.priceChangePct >= 0 ? "text-bullish" : "text-bearish"}>
+              {snapshot.priceChangePct >= 0 ? "+" : ""}
+              {snapshot.priceChangePct.toFixed(2)}%
+            </span>
+          ) : (
+            <span className="text-muted">—</span>
+          )}
+        </TableCell>
+
+        {/* Vol % (hidden on mobile) */}
+        <TableCell className="hidden w-20 text-right font-mono text-sm tabular-nums md:table-cell">
+          {snapshot.volumeChangePct != null ? (
+            <span className={snapshot.volumeChangePct >= 0 ? "text-bullish" : "text-bearish"}>
+              {snapshot.volumeChangePct >= 0 ? "+" : ""}
+              {Math.abs(snapshot.volumeChangePct) >= 1000
+                ? `${(snapshot.volumeChangePct / 1000).toFixed(1)}k`
+                : snapshot.volumeChangePct.toFixed(0)}
+              %
+            </span>
+          ) : (
+            <span className="text-muted">—</span>
+          )}
+        </TableCell>
+
+        {/* Funding (hidden on tablet) */}
+        <TableCell className="hidden w-20 text-right font-mono text-sm tabular-nums lg:table-cell">
+          {snapshot.fundingRate != null ? (
+            <span className={snapshot.fundingRate < 0 ? "text-teal-400" : "text-amber-400"}>
+              {(snapshot.fundingRate * 100).toFixed(4)}%
+            </span>
+          ) : (
+            <span className="text-muted">—</span>
+          )}
+        </TableCell>
+
+        {/* Highlights (hidden until xl) */}
+        <TableCell className="hidden xl:table-cell">
           <HighlightChips highlights={snapshot.highlights} max={3} />
         </TableCell>
 
@@ -122,10 +160,10 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
       {/* Expanded indicator breakdown */}
       {isExpanded && (
         <TableRow className="bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
-          <TableCell colSpan={6} className="px-4 py-0">
+          <TableCell colSpan={9} className="px-4 py-0">
             {/* Mobile: show highlights in expanded view */}
             {snapshot.highlights.length > 0 && (
-              <div className="border-b border-[var(--border-subtle)] py-2 lg:hidden">
+              <div className="border-b border-[var(--border-subtle)] py-2 xl:hidden">
                 <HighlightChips highlights={snapshot.highlights} max={4} />
               </div>
             )}

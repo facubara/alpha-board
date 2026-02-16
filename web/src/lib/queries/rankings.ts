@@ -50,32 +50,40 @@ export async function getTimeframeRankings(
     ORDER BY s.rank ASC
   `;
 
-  const snapshots: RankingSnapshot[] = rows.map((row) => ({
-    id: Number(row.id),
-    symbol: row.symbol as string,
-    symbolId: Number(row.symbol_id),
-    baseAsset: row.base_asset as string,
-    quoteAsset: row.quote_asset as string,
-    timeframe: row.timeframe as Timeframe,
-    bullishScore: Number(row.bullish_score),
-    confidence: Number(row.confidence),
-    rank: Number(row.rank),
-    highlights: (row.highlights as Highlight[]) || [],
-    indicatorSignals: row.indicator_signals
-      ? Object.entries(row.indicator_signals as Record<string, Record<string, unknown>>).map(
-          ([name, data]) => ({
-            name,
-            displayName: name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-            signal: Number(data.signal ?? 0),
-            label: (data.label as IndicatorSignal["label"]) ?? "neutral",
-            description: String(data.label ?? "neutral"),
-            rawValues: (data.raw as Record<string, number>) ?? {},
-          })
-        )
-      : [],
-    computedAt: (row.computed_at as Date).toISOString(),
-    runId: row.run_id as string,
-  }));
+  const snapshots: RankingSnapshot[] = rows.map((row) => {
+    const signals = row.indicator_signals as Record<string, Record<string, unknown>> | null;
+    const market = signals?._market as Record<string, number | null> | undefined;
+
+    return {
+      id: Number(row.id),
+      symbol: row.symbol as string,
+      symbolId: Number(row.symbol_id),
+      baseAsset: row.base_asset as string,
+      quoteAsset: row.quote_asset as string,
+      timeframe: row.timeframe as Timeframe,
+      bullishScore: Number(row.bullish_score),
+      confidence: Number(row.confidence),
+      rank: Number(row.rank),
+      highlights: (row.highlights as Highlight[]) || [],
+      indicatorSignals: signals
+        ? Object.entries(signals)
+            .filter(([name]) => !name.startsWith("_"))
+            .map(([name, data]) => ({
+              name,
+              displayName: name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+              signal: Number(data.signal ?? 0),
+              label: (data.label as IndicatorSignal["label"]) ?? "neutral",
+              description: String(data.label ?? "neutral"),
+              rawValues: (data.raw as Record<string, number>) ?? {},
+            }))
+        : [],
+      priceChangePct: market?.price_change_pct ?? null,
+      volumeChangePct: market?.volume_change_pct ?? null,
+      fundingRate: market?.funding_rate ?? null,
+      computedAt: (row.computed_at as Date).toISOString(),
+      runId: row.run_id as string,
+    };
+  });
 
   return {
     timeframe,

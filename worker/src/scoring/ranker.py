@@ -24,6 +24,9 @@ class SymbolData:
     symbol_id: int
     indicators: dict[str, IndicatorOutput]
     quote_volume_24h: float = 0.0
+    price_change_pct: float | None = None
+    volume_change_pct: float | None = None
+    funding_rate: float | None = None
 
 
 @dataclass
@@ -176,6 +179,12 @@ class Ranker:
         snapshots: list[RankedSnapshot] = []
 
         for rank, (sym_data, bullish, confidence, highlights) in enumerate(scored, 1):
+            signals = self._extract_indicator_signals(sym_data.indicators)
+            signals["_market"] = {
+                "price_change_pct": self._sanitize_for_json(sym_data.price_change_pct),
+                "volume_change_pct": self._sanitize_for_json(sym_data.volume_change_pct),
+                "funding_rate": self._sanitize_for_json(sym_data.funding_rate),
+            }
             snapshot = RankedSnapshot(
                 symbol_id=sym_data.symbol_id,
                 symbol=sym_data.symbol,
@@ -184,7 +193,7 @@ class Ranker:
                 confidence=int(round(confidence * 100)),  # Convert to 0-100
                 rank=rank,
                 highlights=chips_to_list(highlights),
-                indicator_signals=self._extract_indicator_signals(sym_data.indicators),
+                indicator_signals=signals,
                 computed_at=computed_at,
             )
             snapshots.append(snapshot)

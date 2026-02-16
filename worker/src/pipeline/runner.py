@@ -268,6 +268,9 @@ class PipelineRunner:
                 )
                 logger.info(f"Fetched OHLCV for {len(ohlcv_data)} symbols")
 
+                # Fetch funding rates (one bulk call)
+                funding_rates = await self.client.get_funding_rates()
+
                 # Compute indicators and prepare for ranking
                 symbol_data_list: list[SymbolData] = []
                 errors = []
@@ -284,12 +287,30 @@ class PipelineRunner:
 
                     try:
                         indicators = self.registry.compute_all(df)
+
+                        # Compute price/volume variation (candle-over-candle)
+                        price_change_pct = None
+                        volume_change_pct = None
+                        if len(df) >= 2:
+                            prev_close = float(df.iloc[-2]["close"])
+                            curr_close = float(df.iloc[-1]["close"])
+                            if prev_close != 0:
+                                price_change_pct = (curr_close - prev_close) / prev_close * 100
+
+                            prev_vol = float(df.iloc[-2]["volume"])
+                            curr_vol = float(df.iloc[-1]["volume"])
+                            if prev_vol != 0:
+                                volume_change_pct = (curr_vol - prev_vol) / prev_vol * 100
+
                         symbol_data_list.append(
                             SymbolData(
                                 symbol=sym.symbol,
                                 symbol_id=symbol_ids[sym.symbol],
                                 indicators=indicators,
                                 quote_volume_24h=float(sym.quote_volume_24h or 0),
+                                price_change_pct=price_change_pct,
+                                volume_change_pct=volume_change_pct,
+                                funding_rate=funding_rates.get(sym.symbol),
                             )
                         )
                     except Exception as e:
