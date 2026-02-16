@@ -1034,7 +1034,7 @@ async def twitter_feed(limit: int = 50, offset: int = 0):
 
 @app.post("/twitter/poll")
 async def trigger_twitter():
-    """Manually trigger a Twitter poll."""
+    """Manually trigger a Twitter poll + tweet agents."""
     if not settings.twitter_bearer_token:
         raise HTTPException(status_code=400, detail="Twitter bearer token not configured")
 
@@ -1046,6 +1046,31 @@ async def trigger_twitter():
 
     global last_twitter_poll
     last_twitter_poll = datetime.now(timezone.utc)
+
+    # Run tweet agents after manual poll (same as scheduled poll)
+    tweet_results = {}
+    if settings.tweet_agents_enabled:
+        try:
+            current_prices = await _fetch_live_prices()
+            if current_prices:
+                for tf in ["15m", "30m", "1h", "4h", "1d", "1w"]:
+                    try:
+                        async with async_session() as session:
+                            orchestrator = AgentOrchestrator(session)
+                            tf_result = await orchestrator.run_tweet_cycle(tf, current_prices)
+                            tweet_results[tf] = {
+                                "agents_processed": tf_result["agents_processed"],
+                                "executions": len(tf_result["executions"]),
+                                "errors": len(tf_result["errors"]),
+                            }
+                    except Exception as e:
+                        tweet_results[tf] = {"error": str(e)}
+
+                await _broadcast_agent_update()
+        except Exception as e:
+            tweet_results["error"] = str(e)
+
+    result["tweet_agents"] = tweet_results
     return result
 
 
