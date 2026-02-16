@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     # SSE
     sse_agent_broadcast_seconds: int = 30
 
+    # Twitter/X
+    twitter_bearer_token: str = ""
+    twitter_polling_enabled: bool = False
+    twitter_poll_interval_minutes: int = 5
+
     # Feature flags
     agents_enabled: bool = True
     evolution_enabled: bool = True

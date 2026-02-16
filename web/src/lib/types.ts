@@ -440,6 +440,63 @@ export interface AgentDrawdown {
 }
 
 // =============================================================================
+// Twitter Types
+// =============================================================================
+
+export type TwitterAccountCategory =
+  | "analyst"
+  | "founder"
+  | "news"
+  | "degen"
+  | "insider"
+  | "protocol";
+
+export const TWITTER_CATEGORIES: TwitterAccountCategory[] = [
+  "analyst",
+  "founder",
+  "news",
+  "degen",
+  "insider",
+  "protocol",
+];
+
+export const TWITTER_CATEGORY_LABELS: Record<TwitterAccountCategory, string> = {
+  analyst: "Analyst",
+  founder: "Founder",
+  news: "News",
+  degen: "Degen",
+  insider: "Insider",
+  protocol: "Protocol",
+};
+
+export interface TwitterAccount {
+  id: number;
+  handle: string;
+  displayName: string;
+  category: TwitterAccountCategory;
+  isActive: boolean;
+  addedAt: string;
+  tweetCount?: number;
+}
+
+export interface TweetData {
+  id: number;
+  tweetId: string;
+  accountHandle: string;
+  accountDisplayName: string;
+  accountCategory: TwitterAccountCategory;
+  text: string;
+  createdAt: string;
+  metrics: {
+    like_count?: number;
+    retweet_count?: number;
+    reply_count?: number;
+    quote_count?: number;
+  };
+  ingestedAt: string;
+}
+
+// =============================================================================
 // Chart Types
 // =============================================================================
 

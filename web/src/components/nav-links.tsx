@@ -14,6 +14,7 @@ import { Menu, X } from "lucide-react";
 const NAV_ITEMS = [
   { href: "/", label: "Rankings" },
   { href: "/agents", label: "Agents" },
+  { href: "/tweets", label: "Tweets" },
   { href: "/backtest", label: "Backtest" },
   { href: "/analytics", label: "Analytics" },
 ] as const;

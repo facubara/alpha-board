@@ -30,7 +30,7 @@ from src.cache import cache_delete, get_redis
 from src.config import settings
 from src.db import async_session, engine
 from src.events import event_bus
-from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, BacktestRun, BacktestTrade, Snapshot, Symbol
+from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, BacktestRun, BacktestTrade, Snapshot, Symbol, Tweet, TwitterAccount
 from src.notifications.digest import send_daily_digest_job
 from src.notifications.routes import router as notifications_router
 from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner, compute_and_persist_regime
@@ -363,6 +363,30 @@ async def health():
     except Exception:
         pass
 
+    # Twitter stats
+    twitter_stats: dict = {
+        "enabled": settings.twitter_polling_enabled,
+        "accounts_tracked": 0,
+        "last_poll": last_twitter_poll.isoformat() if last_twitter_poll else None,
+        "tweets_24h": 0,
+    }
+    try:
+        async with engine.connect() as conn:
+            acct_row = await conn.execute(
+                text("SELECT COUNT(*) FROM twitter_accounts WHERE is_active = true")
+            )
+            twitter_stats["accounts_tracked"] = acct_row.scalar() or 0
+
+            tweets_row = await conn.execute(
+                text(
+                    "SELECT COUNT(*) FROM tweets "
+                    "WHERE created_at > NOW() - INTERVAL '24 hours'"
+                )
+            )
+            twitter_stats["tweets_24h"] = tweets_row.scalar() or 0
+    except Exception:
+        pass
+
     return {
         "status": "ok" if db_status == "ok" else "degraded",
         "uptime_seconds": uptime_seconds,
@@ -376,6 +400,7 @@ async def health():
             for tf in TIMEFRAME_CONFIG
         },
         "agents": agent_stats,
+        "twitter": twitter_stats,
     }
 
 
@@ -826,6 +851,174 @@ async def get_backtest(run_id: int):
         }
 
 
+# =============================================================================
+# Twitter Endpoints
+# =============================================================================
+
+
+class TwitterAccountRequest(PydanticBaseModel):
+    """Request body for adding a Twitter account."""
+
+    handle: str
+    display_name: str
+    category: str
+
+
+last_twitter_poll: datetime | None = None
+
+
+async def run_twitter_poll():
+    """Scheduled job: poll X API for new tweets from tracked accounts."""
+    global last_twitter_poll
+    from src.twitter.poller import TwitterPoller
+
+    logger.info("Running Twitter poll")
+    try:
+        async with async_session() as session:
+            poller = TwitterPoller(session)
+            result = await poller.poll()
+            last_twitter_poll = datetime.now(timezone.utc)
+            logger.info(f"Twitter poll complete: {result}")
+    except Exception as e:
+        logger.exception(f"Twitter poll failed: {e}")
+
+
+@app.get("/twitter/accounts")
+async def list_twitter_accounts():
+    """List all tracked Twitter accounts."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(TwitterAccount).order_by(TwitterAccount.added_at.desc())
+        )
+        accounts = result.scalars().all()
+
+        account_list = []
+        for a in accounts:
+            # Count tweets per account
+            tweet_count_result = await session.execute(
+                select(func.count()).select_from(Tweet).where(
+                    Tweet.twitter_account_id == a.id
+                )
+            )
+            tweet_count = tweet_count_result.scalar() or 0
+
+            account_list.append({
+                "id": a.id,
+                "handle": a.handle,
+                "displayName": a.display_name,
+                "category": a.category,
+                "isActive": a.is_active,
+                "addedAt": a.added_at.isoformat(),
+                "tweetCount": tweet_count,
+            })
+
+        return account_list
+
+
+@app.post("/twitter/accounts")
+async def add_twitter_account(request: TwitterAccountRequest):
+    """Add a new Twitter account to track."""
+    valid_categories = ["analyst", "founder", "news", "degen", "insider", "protocol"]
+    if request.category not in valid_categories:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid category. Must be one of: {valid_categories}",
+        )
+
+    handle = request.handle.lstrip("@").lower()
+    if not handle or len(handle) > 30:
+        raise HTTPException(status_code=400, detail="Invalid handle")
+
+    async with async_session() as session:
+        # Check for duplicate
+        existing = await session.execute(
+            select(TwitterAccount).where(TwitterAccount.handle == handle)
+        )
+        if existing.scalar_one_or_none():
+            raise HTTPException(status_code=409, detail="Account already tracked")
+
+        account = TwitterAccount(
+            handle=handle,
+            display_name=request.display_name,
+            category=request.category,
+        )
+        session.add(account)
+        await session.commit()
+        await session.refresh(account)
+
+        return {
+            "id": account.id,
+            "handle": account.handle,
+            "displayName": account.display_name,
+            "category": account.category,
+            "isActive": account.is_active,
+            "addedAt": account.added_at.isoformat(),
+        }
+
+
+@app.delete("/twitter/accounts/{account_id}")
+async def delete_twitter_account(account_id: int):
+    """Remove a tracked Twitter account."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(TwitterAccount).where(TwitterAccount.id == account_id)
+        )
+        account = result.scalar_one_or_none()
+        if not account:
+            raise HTTPException(status_code=404, detail="Account not found")
+
+        await session.delete(account)
+        await session.commit()
+        return {"status": "deleted", "id": account_id}
+
+
+@app.get("/twitter/feed")
+async def twitter_feed(limit: int = 50, offset: int = 0):
+    """Get recent tweets, paginated."""
+    limit = min(limit, 200)
+    async with async_session() as session:
+        result = await session.execute(
+            select(Tweet, TwitterAccount)
+            .join(TwitterAccount, TwitterAccount.id == Tweet.twitter_account_id)
+            .order_by(Tweet.created_at.desc())
+            .offset(offset)
+            .limit(limit)
+        )
+        rows = result.all()
+
+        return [
+            {
+                "id": tweet.id,
+                "tweetId": tweet.tweet_id,
+                "accountHandle": account.handle,
+                "accountDisplayName": account.display_name,
+                "accountCategory": account.category,
+                "text": tweet.text,
+                "createdAt": tweet.created_at.isoformat(),
+                "metrics": tweet.metrics,
+                "ingestedAt": tweet.ingested_at.isoformat(),
+            }
+            for tweet, account in rows
+        ]
+
+
+@app.post("/trigger/twitter")
+async def trigger_twitter():
+    """Manually trigger a Twitter poll."""
+    if not settings.twitter_bearer_token:
+        raise HTTPException(status_code=400, detail="Twitter bearer token not configured")
+
+    from src.twitter.poller import TwitterPoller
+
+    async with async_session() as session:
+        poller = TwitterPoller(session)
+        result = await poller.poll()
+
+    global last_twitter_poll
+    last_twitter_poll = datetime.now(timezone.utc)
+    return result
+
+
 async def retention_cleanup():
     """Drop snapshot/decision partitions older than 90 days and create future partitions.
 
@@ -942,9 +1135,21 @@ async def on_startup():
         max_instances=1,
     )
 
+    # Twitter polling (gated on feature flag)
+    if settings.twitter_polling_enabled and settings.twitter_bearer_token:
+        scheduler.add_job(
+            run_twitter_poll,
+            trigger=IntervalTrigger(minutes=settings.twitter_poll_interval_minutes),
+            id="twitter_poll",
+            name=f"Twitter poll (every {settings.twitter_poll_interval_minutes}m)",
+            replace_existing=True,
+            max_instances=1,
+        )
+
     scheduler.start()
     logger.info(
         f"Scheduler started with {len(TIMEFRAME_CONFIG)} independent timeframe jobs + daily cleanup + daily digest + SSE broadcast"
+        + (" + Twitter poll" if settings.twitter_polling_enabled else "")
     )
 
 

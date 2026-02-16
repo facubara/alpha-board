@@ -67,3 +67,16 @@ async def sse_agents() -> StreamingResponse:
             "X-Accel-Buffering": "no",
         },
     )
+
+
+@router.get("/tweets")
+async def sse_tweets() -> StreamingResponse:
+    """Stream new tweet ingestion updates."""
+    return StreamingResponse(
+        _event_stream("tweets"),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )

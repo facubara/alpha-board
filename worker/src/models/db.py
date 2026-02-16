@@ -498,3 +498,52 @@ class BacktestTrade(Base):
 
     # Relationships
     run: Mapped["BacktestRun"] = relationship(back_populates="trades")
+
+
+# =============================================================================
+# Twitter Tables
+# =============================================================================
+
+
+class TwitterAccount(Base):
+    """Tracked X/Twitter accounts for tweet ingestion."""
+
+    __tablename__ = "twitter_accounts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    handle: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
+    display_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    category: Mapped[str] = mapped_column(String(20), nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    added_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    # Relationships
+    tweets: Mapped[list["Tweet"]] = relationship(back_populates="account")
+
+
+class Tweet(Base):
+    """Ingested tweets from tracked accounts."""
+
+    __tablename__ = "tweets"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    twitter_account_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("twitter_accounts.id"), nullable=False
+    )
+    tweet_id: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    metrics: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    ingested_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    # Relationships
+    account: Mapped["TwitterAccount"] = relationship(back_populates="tweets")
+
+    __table_args__ = (
+        Index("idx_tweets_account_time", "twitter_account_id", created_at.desc()),
+        Index("idx_tweets_created", created_at.desc()),
+    )
