@@ -36,7 +36,7 @@ class Settings(BaseSettings):
 
     # Tweet analysis
     tweet_analysis_enabled: bool = False
-    tweet_analysis_model: str = "claude-haiku-3-5-20241022"
+    tweet_analysis_model: str = "claude-haiku-4-5-20251001"
 
     # Feature flags
     agents_enabled: bool = True
