@@ -300,7 +300,7 @@ Potential features and improvements for Alpha Board, now that all 15 phases are 
 
 ---
 
-## 12. Rankings Table — Price/Volume Variation & Funding Rate — `PENDING`
+## 12. Rankings Table — Price/Volume Variation & Funding Rate — `COMPLETED`
 
 **What:** Expand the rankings table with new data columns so users can see at a glance how price, volume, and funding rate are changing per timeframe.
 
