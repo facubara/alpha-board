@@ -15,12 +15,14 @@ from typing import Any
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.config import settings
 from src.models.db import (
     Agent,
     AgentPortfolio,
     AgentPosition,
     AgentTrade,
     AgentMemory,
+    FleetLesson,
     Snapshot,
     Symbol,
     TimeframeRegime,
@@ -84,6 +86,11 @@ class ContextBuilder:
         # Fetch recent memory
         memory = await self._get_recent_memory(agent.id, limit=20)
 
+        # Fetch fleet lessons (gated by feature flag)
+        fleet_lessons: list[str] = []
+        if settings.fleet_lessons_in_context:
+            fleet_lessons = await self._get_fleet_lessons(agent.strategy_archetype)
+
         # Build cross-timeframe confluence (optional enhancement)
         confluence = await self._get_cross_timeframe_confluence(agent.timeframe)
 
@@ -108,6 +115,7 @@ class ContextBuilder:
             tweet_context=tweet_context,
             current_prices=current_prices,
             recent_memory=memory,
+            fleet_lessons=fleet_lessons,
             context_built_at=datetime.now(timezone.utc),
         )
 
@@ -497,3 +505,13 @@ class ContextBuilder:
             "timeframes_analyzed": len(timeframes),
             "symbol_tf_scores": confluence_data,
         }
+
+    async def _get_fleet_lessons(self, archetype: str) -> list[str]:
+        """Get active fleet lessons for a given strategy archetype."""
+        result = await self.session.execute(
+            select(FleetLesson)
+            .where(FleetLesson.archetype == archetype, FleetLesson.is_active.is_(True))
+            .order_by(FleetLesson.created_at.desc())
+            .limit(15)
+        )
+        return [f"[{l.category}] {l.lesson}" for l in result.scalars().all()]

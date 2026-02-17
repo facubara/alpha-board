@@ -253,6 +253,9 @@ class AgentContext(BaseModel):
     # Memory (recent lessons)
     recent_memory: list[str] = Field(default_factory=list)
 
+    # Fleet lessons (from discarded agents of same archetype)
+    fleet_lessons: list[str] = Field(default_factory=list)
+
     # Timestamp
     context_built_at: datetime = Field(default_factory=lambda: datetime.now())
 

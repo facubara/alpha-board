@@ -384,6 +384,26 @@ class AgentMemory(Base):
     __table_args__ = (Index("idx_agent_memory_agent_time", "agent_id", created_at.desc()),)
 
 
+class FleetLesson(Base):
+    """Lessons extracted from post-mortem analysis of discarded agents."""
+
+    __tablename__ = "fleet_lessons"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    agent_id: Mapped[int] = mapped_column(Integer, ForeignKey("agents.id"), nullable=False)
+    archetype: Mapped[str] = mapped_column(String(50), nullable=False)
+    category: Mapped[str] = mapped_column(String(20), nullable=False)
+    lesson: Mapped[str] = mapped_column(Text, nullable=False)
+    context: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="true")
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    # Relationships
+    agent: Mapped["Agent"] = relationship()
+
+
 class AgentTokenUsage(Base):
     """Aggregated token usage per agent per model per day."""
 

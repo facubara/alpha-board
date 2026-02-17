@@ -1,6 +1,8 @@
 import { getAgentLeaderboard, getDiscardedAgents } from "@/lib/queries/agents";
+import { getFleetLessons } from "@/lib/queries/lessons";
 import { AgentLeaderboard } from "@/components/agents";
 import { DiscardedAgents } from "@/components/agents/discarded-agents";
+import { FleetLessons } from "@/components/agents/fleet-lessons";
 
 /**
  * Agents Leaderboard Page (Server Component)
@@ -12,9 +14,10 @@ import { DiscardedAgents } from "@/components/agents/discarded-agents";
 export const revalidate = 60;
 
 export default async function AgentsPage() {
-  const [agents, discarded] = await Promise.all([
+  const [agents, discarded, fleetLessons] = await Promise.all([
     getAgentLeaderboard(),
     getDiscardedAgents().catch(() => []),
+    getFleetLessons().catch(() => []),
   ]);
 
   return (
@@ -37,6 +40,9 @@ export default async function AgentsPage() {
 
       {/* Leaderboard */}
       <AgentLeaderboard agents={agents} />
+
+      {/* Fleet lessons section */}
+      {fleetLessons.length > 0 && <FleetLessons lessons={fleetLessons} />}
 
       {/* Discarded agents section */}
       {discarded.length > 0 && <DiscardedAgents agents={discarded} />}

@@ -19,7 +19,7 @@ from sqlalchemy import select, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
-from src.models.db import Agent, AgentPrompt, AgentTrade, AgentPortfolio
+from src.models.db import Agent, AgentPrompt, AgentTrade, AgentPortfolio, FleetLesson
 from src.agents.executor import estimate_cost
 from src.agents.context import ContextBuilder
 
@@ -345,6 +345,12 @@ class EvolutionManager:
         # Format memories
         memories_str = "\n".join(f"- {m}" for m in memories) or "No memories yet"
 
+        # Fleet lessons from discarded agents of same archetype
+        fleet_lessons = await self._get_fleet_lessons(agent.strategy_archetype)
+        fleet_lessons_str = "\n".join(
+            f"- [{l.category}] {l.lesson}" for l in fleet_lessons
+        ) or "No fleet lessons yet"
+
         return f"""AGENT: {agent.name}
 ARCHETYPE: {agent.strategy_archetype}
 TIMEFRAME: {agent.timeframe}
@@ -363,6 +369,9 @@ Max Drawdown: {performance.max_drawdown:.1%}
 
 === LESSONS LEARNED ===
 {memories_str}
+
+=== FLEET LESSONS (from discarded {agent.strategy_archetype} agents) ===
+{fleet_lessons_str}
 
 Based on this analysis, generate an improved version of the prompt that addresses any weaknesses while maintaining the agent's core {agent.strategy_archetype} strategy."""
 
@@ -393,6 +402,16 @@ Based on this analysis, generate an improved version of the prompt that addresse
             })
 
         return trades
+
+    async def _get_fleet_lessons(self, archetype: str) -> list[FleetLesson]:
+        """Get active fleet lessons for a given strategy archetype."""
+        result = await self.session.execute(
+            select(FleetLesson)
+            .where(FleetLesson.archetype == archetype, FleetLesson.is_active.is_(True))
+            .order_by(FleetLesson.created_at.desc())
+            .limit(20)
+        )
+        return list(result.scalars().all())
 
     async def _get_performance_snapshot(self, agent_id: int) -> dict[str, Any]:
         """Get current performance as a snapshot."""

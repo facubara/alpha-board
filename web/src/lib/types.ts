@@ -675,3 +675,21 @@ export interface SymbolAgentTrade {
   fees: number;
   closedAt: string;
 }
+
+// =============================================================================
+// Fleet Lessons
+// =============================================================================
+
+export type FleetLessonCategory = "strength" | "mistake" | "pattern";
+
+export interface FleetLesson {
+  id: number;
+  agentId: number;
+  agentName: string;
+  archetype: string;
+  category: FleetLessonCategory;
+  lesson: string;
+  context: Record<string, unknown> | null;
+  isActive: boolean;
+  createdAt: string;
+}

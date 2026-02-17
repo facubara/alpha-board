@@ -388,6 +388,15 @@ class AgentOrchestrator:
                 f"win_rate={win_rate:.1%})"
             )
 
+            # Trigger post-mortem analysis for LLM agents
+            if agent.engine == "llm":
+                from src.agents.postmortem import PostMortemAnalyzer
+
+                analyzer = PostMortemAnalyzer(self.session)
+                lessons = await analyzer.analyze(agent)
+                if lessons:
+                    logger.info(f"Extracted {len(lessons)} fleet lessons from {agent.name}")
+
     async def _execute_action(
         self,
         agent_id: int,

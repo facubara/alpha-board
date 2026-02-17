@@ -72,6 +72,7 @@
 - [x] **Notification System** — Post-launch feature
 - [x] **Rankings Table Columns** — Post-launch feature
 - [x] **Smart Pruning (Symbol Limit & Agent Auto-Discard)** — Post-launch feature
+- [x] **Fleet Lessons (Learn from Discarded Agents)** — Post-launch feature
 
 ---
 

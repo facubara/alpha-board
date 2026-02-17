@@ -418,3 +418,224 @@ Two sub-columns:
 **What:** A comprehensive evaluation of database providers (Postgres-compatible and otherwise) to inform whether Alpha Board should stay on Neon or migrate — and if so, where.
 
 **Result:** Stay with Neon (recommended). Full evaluation documented in [`dbprovider.md`](./dbprovider.md).
+
+---
+
+## 15. System Status Page — `PENDING`
+
+**What:** A dedicated `/status` page showing real-time operational health of all Alpha Board services — frontend, worker, database, Redis, Binance API, Twitter polling, pipeline runs, and SSE streams. Inspired by [status.claude.com](https://status.claude.com/) but adapted to the dark e-ink aesthetic.
+
+**Why:** With 8 interconnected services (Vercel, Fly.io, Neon, Upstash, Binance, Twitter, pipelines, SSE), there's no single view showing whether everything is healthy. When something breaks — a missed pipeline run, a stale Twitter poll, a Redis timeout — the only way to find out is to notice stale data in the dashboard. A status page provides instant visibility into system health and historical reliability.
+
+**Design reference:** [status.claude.com](https://status.claude.com/) — service rows with 90-day heatmap timelines and uptime percentages, adapted to Alpha Board's dark monochrome palette with semantic colors (bullish green / bearish red / neutral yellow) for status indicators.
+
+**Implementation notes:**
+
+### Phase 1 — Health Check Infrastructure (Worker)
+
+#### New table: `service_health_checks`
+```sql
+CREATE TABLE service_health_checks (
+    id BIGSERIAL PRIMARY KEY,
+    service VARCHAR(50) NOT NULL,        -- 'frontend', 'worker_api', 'database', 'redis', 'binance_api', 'twitter_polling', 'pipeline_15m', ..., 'sse_rankings', etc.
+    status VARCHAR(20) NOT NULL,          -- 'operational', 'degraded', 'down'
+    latency_ms INTEGER,                   -- response time in milliseconds
+    error_message TEXT,                    -- null when healthy, error details when degraded/down
+    checked_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_health_checks_service_time ON service_health_checks (service, checked_at DESC);
+```
+
+#### New table: `service_daily_status`
+```sql
+CREATE TABLE service_daily_status (
+    id SERIAL PRIMARY KEY,
+    service VARCHAR(50) NOT NULL,
+    date DATE NOT NULL,
+    total_checks INTEGER NOT NULL,
+    successful_checks INTEGER NOT NULL,
+    uptime_pct NUMERIC(5,2) NOT NULL,     -- e.g., 99.72
+    avg_latency_ms INTEGER,
+    max_latency_ms INTEGER,
+    incidents INTEGER NOT NULL DEFAULT 0,  -- count of downtime periods that day
+    worst_status VARCHAR(20) NOT NULL,     -- worst status seen that day: 'operational', 'degraded', 'down'
+    UNIQUE(service, date)
+);
+```
+
+#### New table: `service_incidents` (auto-detected)
+```sql
+CREATE TABLE service_incidents (
+    id SERIAL PRIMARY KEY,
+    service VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL,           -- 'degraded' or 'down'
+    started_at TIMESTAMPTZ NOT NULL,
+    resolved_at TIMESTAMPTZ,               -- null if ongoing
+    duration_minutes INTEGER,              -- computed on resolution
+    error_summary TEXT                     -- most common error message during the incident
+);
+
+CREATE INDEX idx_incidents_service_time ON service_incidents (service, started_at DESC);
+```
+
+#### Health checker module: `worker/src/health/checker.py`
+- New APScheduler job running **every 2 minutes**.
+- Pings all 8+ service categories and writes results to `service_health_checks`.
+- **Incident auto-detection:** If a service transitions from `operational` → `degraded`/`down`, insert a new row in `service_incidents`. When it recovers, set `resolved_at` and compute `duration_minutes`.
+- **Daily rollup:** A separate scheduled job (runs once at midnight UTC) aggregates the day's checks into `service_daily_status` for efficient 90-day queries.
+- **Retention:** Purge raw `service_health_checks` rows older than 7 days (the daily rollup preserves the summary). Keep `service_daily_status` for 180 days.
+
+#### Service check implementations:
+
+| Service | Check Method | Degraded threshold | Down threshold |
+|---------|-------------|-------------------|----------------|
+| **Frontend (Vercel)** | HTTP GET `https://alpha-board.com` — expect 200 | Response > 3s | Timeout / non-200 |
+| **Worker API (Fly.io)** | HTTP GET `https://alpha-worker.fly.dev/health` — expect 200 + JSON | Response > 2s | Timeout / non-200 |
+| **Database (Neon)** | `SELECT 1` via existing async DB connection | Query > 500ms | Connection error / timeout |
+| **Redis (Upstash)** | `PING` via existing Redis client | Response > 200ms | Connection error / timeout |
+| **Binance API** | HTTP GET `https://api.binance.com/api/v3/ping` | Response > 1s | Timeout / non-200 |
+| **Twitter Polling** | Query `tweets` table for latest `ingested_at` — compare to expected cadence (15 min) | Last tweet > 30 min ago | Last tweet > 60 min ago |
+| **Pipeline Runs** (×6 TFs) | Query `computation_runs` for latest `completed_at` per timeframe — compare to expected cadence | Missed by > 1.5× cadence | Missed by > 3× cadence |
+| **SSE Streams** | Attempt `EventSource` connection to `/sse/rankings`, `/sse/agents`, `/sse/consensus` — expect initial message within 5s | Slow initial response (> 3s) | Connection refused / timeout |
+
+### Phase 2 — Status API Endpoints (Worker)
+
+#### `GET /status/current`
+Returns current status for all services:
+```json
+{
+    "overall": "operational",        // worst status across all services
+    "services": [
+        {
+            "name": "Frontend (Vercel)",
+            "slug": "frontend",
+            "status": "operational",
+            "latency_ms": 245,
+            "last_checked": "2026-02-17T15:30:00Z"
+        },
+        ...
+    ],
+    "active_incidents": []           // any ongoing incidents from service_incidents
+}
+```
+
+#### `GET /status/history?days=90`
+Returns daily status for the heatmap:
+```json
+{
+    "services": [
+        {
+            "slug": "frontend",
+            "name": "Frontend (Vercel)",
+            "uptime_30d": 99.95,
+            "uptime_60d": 99.87,
+            "uptime_90d": 99.91,
+            "daily": [
+                { "date": "2026-02-17", "status": "operational", "uptime_pct": 100.0, "incidents": 0 },
+                { "date": "2026-02-16", "status": "degraded", "uptime_pct": 97.22, "incidents": 1 },
+                ...
+            ]
+        },
+        ...
+    ]
+}
+```
+
+#### `GET /status/incidents?service={slug}&days=90`
+Returns resolved + active incidents for a service, used in tooltip/detail views.
+
+### Phase 3 — Status Page (Web)
+
+#### New route: `web/src/app/status/page.tsx`
+Server component with ISR revalidation every 60 seconds. Fetches from `/status/current` and `/status/history?days=90`.
+
+#### Layout — Top-level summary
+- **Overall status banner** at the top:
+  - All operational → green banner: "All Systems Operational"
+  - Any degraded → yellow banner: "Partial System Degradation"
+  - Any down → red banner: "Service Disruption"
+- Uses existing semantic color tokens (`--bullish-strong` for green, `--neutral-strong` for yellow, `--bearish-strong` for red).
+
+#### Layout — Service rows
+Each service gets a card/row containing:
+1. **Status indicator dot** (green / yellow / red) + **service name**
+2. **Current latency** (e.g., "245ms")
+3. **90-day heatmap timeline** — horizontal row of 90 small rectangles (one per day), color-coded:
+   - `--bullish-strong` (#22C55E) → 100% uptime (operational all day)
+   - `--bullish-muted` (#166534) → ≥99% uptime (brief degradation)
+   - `--neutral-strong` (#FBBF24) → ≥95% uptime (noticeable degradation)
+   - `--bearish-muted` (#991B1B) → ≥90% uptime (significant issues)
+   - `--bearish-strong` (#EF4444) → <90% uptime (major outage)
+   - `--bg-muted` (#262626) → no data
+4. **Uptime percentages** — 30d / 60d / 90d displayed to the right of the heatmap
+5. **Hover tooltip** on each day block showing: date, uptime %, incident count, and incident details if any
+
+#### Layout — Active incidents section
+Below the service rows, show any ongoing incidents:
+- Service name, status (degraded/down), duration so far, error summary
+- Auto-populated from `service_incidents` where `resolved_at IS NULL`
+
+#### Layout — Recent incidents section
+Below active incidents, a chronological list of resolved incidents from the past 14 days:
+- Date, service, duration, error summary
+- Grouped by date (like Claude's "Past Incidents" section)
+
+#### Components:
+| Component | File |
+|-----------|------|
+| `<StatusPage>` | `web/src/app/status/page.tsx` |
+| `<StatusOverview>` | `web/src/components/status/status-overview.tsx` — overall banner + service list |
+| `<ServiceRow>` | `web/src/components/status/service-row.tsx` — single service with heatmap |
+| `<UptimeHeatmap>` | `web/src/components/status/uptime-heatmap.tsx` — 90-day color-coded timeline |
+| `<IncidentList>` | `web/src/components/status/incident-list.tsx` — active + recent incidents |
+
+#### Navigation
+- Add "Status" link to the site navigation (`nav-links.tsx`).
+
+### Phase 4 — Real-Time Updates (Optional Enhancement)
+
+- Add SSE endpoint `/sse/status` that emits when a service status changes.
+- The status page can use the existing `useSSE` hook pattern to show live status transitions without page reload.
+- Low priority — ISR with 60s revalidation is sufficient for an initial release.
+
+### Summary
+
+| Component | Location |
+|-----------|----------|
+| Migration (3 tables) | `worker/alembic/versions/016_service_health.py` |
+| Health checker module | `worker/src/health/checker.py` |
+| Status API endpoints | `worker/src/api/status.py` |
+| APScheduler jobs | `worker/src/scheduler.py` (2-min check + daily rollup) |
+| Status page | `web/src/app/status/page.tsx` |
+| Status components | `web/src/components/status/` (4 components) |
+| Nav link | `web/src/components/nav-links.tsx` |
+
+### Services Monitored
+
+| # | Service | Source |
+|---|---------|--------|
+| 1 | Frontend (Vercel) | HTTP ping alpha-board.com |
+| 2 | Worker API (Fly.io) | HTTP ping /health |
+| 3 | Database (Neon) | SQL SELECT 1 |
+| 4 | Redis (Upstash) | PING command |
+| 5 | Binance API | HTTP ping /api/v3/ping |
+| 6 | Twitter Polling | Last ingested tweet vs cadence |
+| 7 | Pipeline Runs (×6 TFs) | Last computation_run vs schedule |
+| 8 | SSE Streams | Connection test |
+
+---
+
+## 16. Fleet Lessons (Learn from Discarded Agents) — `COMPLETED`
+
+**What:** Post-mortem LLM analysis on discarded agents extracts structured "fleet lessons" (strengths, mistakes, patterns) scoped by strategy archetype. Lessons are injected into evolution context and optionally into decision context (gated by `FLEET_LESSONS_IN_CONTEXT` flag).
+
+**Why:** When Smart Pruning auto-discards underperforming agents, their experience was lost. Fleet lessons preserve institutional knowledge across agent generations, helping new agents avoid the same mistakes.
+
+**Implementation:**
+- Migration 016: `fleet_lessons` table with archetype index
+- `PostMortemAnalyzer` class using Claude Haiku with `tool_use` to extract 3-7 structured lessons
+- Orchestrator triggers post-mortem after auto-discard (LLM agents only)
+- Evolution context injects fleet lessons (always active)
+- Decision context injection gated by `FLEET_LESSONS_IN_CONTEXT` env var
+- UI: Collapsible section on agents page with category filters (strength/mistake/pattern) and per-lesson removal
