@@ -8,7 +8,7 @@
 
 import { useState, useMemo } from "react";
 import { Search, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatTimestamp } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import type { AgentDecision } from "@/lib/types";
 
@@ -178,8 +178,8 @@ function DecisionCard({
         </span>
 
         {/* Timestamp */}
-        <span className="hidden shrink-0 font-mono text-xs text-muted sm:block" title={new Date(decision.decidedAt).toISOString()}>
-          {new Date(decision.decidedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false })}
+        <span className="hidden shrink-0 font-mono text-xs text-muted sm:block" title={`Local: ${formatTimestamp(decision.decidedAt).local}`}>
+          {formatTimestamp(decision.decidedAt).utc}
         </span>
 
         {/* Chevron */}

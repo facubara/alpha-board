@@ -8,7 +8,7 @@
 
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatTimestamp } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -153,11 +153,11 @@ function TradeRow({
         <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell">
           {formatDuration(trade.durationMinutes)}
         </TableCell>
-        <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell" title={new Date(trade.openedAt).toISOString()}>
-          {new Date(trade.openedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false })}
+        <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell" title={`Local: ${formatTimestamp(trade.openedAt).local}`}>
+          {formatTimestamp(trade.openedAt).utc}
         </TableCell>
-        <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell" title={new Date(trade.closedAt).toISOString()}>
-          {new Date(trade.closedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false })}
+        <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell" title={`Local: ${formatTimestamp(trade.closedAt).local}`}>
+          {formatTimestamp(trade.closedAt).utc}
         </TableCell>
         <TableCell className="w-8">
           <ChevronRight
