@@ -32,6 +32,7 @@ from src.db import async_session, engine
 from src.events import event_bus
 from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, BacktestRun, BacktestTrade, Snapshot, Symbol, Tweet, TweetSignal, TwitterAccount
 from src.notifications.digest import send_daily_digest_job
+from src.health.routes import router as status_router
 from src.notifications.routes import router as notifications_router
 from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner, compute_and_persist_regime
 from src.sse import router as sse_router
@@ -54,6 +55,7 @@ app.add_middleware(
 
 app.include_router(notifications_router)
 app.include_router(sse_router)
+app.include_router(status_router)
 scheduler = AsyncIOScheduler()
 
 # Pipeline runner instance
@@ -1160,6 +1162,33 @@ async def trigger_tweet_analysis():
     return result
 
 
+async def run_health_checks():
+    """Scheduled job: run health checks for all services."""
+    from src.health.checker import ServiceHealthChecker
+
+    logger.info("Running health checks")
+    try:
+        async with async_session() as session:
+            checker = ServiceHealthChecker(session)
+            await checker.run_all_checks()
+    except Exception as e:
+        logger.exception(f"Health checks failed: {e}")
+
+
+async def run_health_rollup():
+    """Scheduled job: daily rollup of health checks + retention cleanup."""
+    from src.health.checker import ServiceHealthChecker
+
+    logger.info("Running health daily rollup")
+    try:
+        async with async_session() as session:
+            checker = ServiceHealthChecker(session)
+            await checker.rollup_daily()
+            await checker.cleanup_old_checks()
+    except Exception as e:
+        logger.exception(f"Health rollup failed: {e}")
+
+
 async def retention_cleanup():
     """Drop snapshot/decision partitions older than 90 days and create future partitions.
 
@@ -1280,6 +1309,25 @@ async def on_startup():
         max_instances=1,
     )
 
+    # Health checks (every 2 minutes)
+    scheduler.add_job(
+        run_health_checks,
+        trigger=IntervalTrigger(minutes=2),
+        id="health_check",
+        name="Health check (every 2m)",
+        replace_existing=True,
+        max_instances=1,
+    )
+
+    # Health daily rollup + cleanup (00:05 UTC)
+    scheduler.add_job(
+        run_health_rollup,
+        trigger=CronTrigger(hour=0, minute=5),
+        id="health_daily_rollup",
+        name="Health daily rollup + cleanup",
+        replace_existing=True,
+    )
+
     # Twitter polling (gated on feature flag)
     if settings.twitter_polling_enabled and settings.twitter_bearer_token:
         scheduler.add_job(
@@ -1293,7 +1341,7 @@ async def on_startup():
 
     scheduler.start()
     logger.info(
-        f"Scheduler started with {len(TIMEFRAME_CONFIG)} independent timeframe jobs + daily cleanup + daily digest + SSE broadcast"
+        f"Scheduler started with {len(TIMEFRAME_CONFIG)} independent timeframe jobs + daily cleanup + daily digest + SSE broadcast + health checks"
         + (" + Twitter poll" if settings.twitter_polling_enabled else "")
     )
 

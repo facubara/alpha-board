@@ -421,7 +421,7 @@ Two sub-columns:
 
 ---
 
-## 15. System Status Page — `PENDING`
+## 15. System Status Page — `COMPLETED`
 
 **What:** A dedicated `/status` page showing real-time operational health of all Alpha Board services — frontend, worker, database, Redis, Binance API, Twitter polling, pipeline runs, and SSE streams. Inspired by [status.claude.com](https://status.claude.com/) but adapted to the dark e-ink aesthetic.
 

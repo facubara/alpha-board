@@ -1,6 +1,6 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-17
+**Last Updated:** 2026-02-17 (Status Page)
 **Current Phase:** Complete (all 15 phases done) + Post-launch features
 
 ---
@@ -73,6 +73,7 @@
 - [x] **Rankings Table Columns** — Post-launch feature
 - [x] **Smart Pruning (Symbol Limit & Agent Auto-Discard)** — Post-launch feature
 - [x] **Fleet Lessons (Learn from Discarded Agents)** — Post-launch feature
+- [x] **System Status Page** — Post-launch feature
 
 ---
 
@@ -145,6 +146,7 @@
 | 11 | Notification System | Done |
 | 12 | Rankings Table Columns | Done |
 | 13 | Smart Pruning (Symbol Limit & Agent Auto-Discard) | Done |
+| 15 | System Status Page | Done |
 
 ## Open Decisions
 

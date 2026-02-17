@@ -680,6 +680,59 @@ export interface SymbolAgentTrade {
 // Fleet Lessons
 // =============================================================================
 
+// =============================================================================
+// Status Types
+// =============================================================================
+
+export type ServiceStatus = "operational" | "degraded" | "down";
+
+export interface ServiceCurrent {
+  name: string;
+  slug: string;
+  status: ServiceStatus;
+  latency_ms: number | null;
+  last_checked: string;
+}
+
+export interface ServiceDailyStatus {
+  date: string;
+  uptime_pct: number;
+  incidents: number;
+  worst_status: ServiceStatus;
+  avg_latency_ms: number | null;
+}
+
+export interface ServiceHistory {
+  slug: string;
+  name: string;
+  uptime_30d: number | null;
+  uptime_90d: number | null;
+  daily: ServiceDailyStatus[];
+}
+
+export interface ServiceIncident {
+  id: number;
+  service: string;
+  serviceName: string;
+  status: ServiceStatus;
+  startedAt: string;
+  resolvedAt: string | null;
+  durationMinutes: number | null;
+  errorSummary: string | null;
+}
+
+export interface StatusData {
+  overall: ServiceStatus;
+  services: ServiceCurrent[];
+  activeIncidents: ServiceIncident[];
+  history: ServiceHistory[];
+  recentIncidents: ServiceIncident[];
+}
+
+// =============================================================================
+// Fleet Lessons
+// =============================================================================
+
 export type FleetLessonCategory = "strength" | "mistake" | "pattern";
 
 export interface FleetLesson {

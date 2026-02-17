@@ -13,6 +13,9 @@ Tables:
 10. agent_decisions — Decision log (partitioned by month)
 11. agent_memory — Memory bank
 12. agent_token_usage — Token usage tracking
+13. service_health_checks — Raw health check results
+14. service_daily_status — Aggregated daily health rollup
+15. service_incidents — Auto-detected service incidents
 """
 
 from datetime import date, datetime
@@ -612,4 +615,67 @@ class TweetSignal(Base):
             postgresql_where=(setup_type != None),  # noqa: E711
         ),
         Index("idx_tweet_signals_analyzed", analyzed_at.desc()),
+    )
+
+
+# =============================================================================
+# Service Health Tables
+# =============================================================================
+
+
+class ServiceHealthCheck(Base):
+    """Raw health check results. Retained 7 days."""
+
+    __tablename__ = "service_health_checks"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    service: Mapped[str] = mapped_column(String(50), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+    latency_ms: Mapped[int | None] = mapped_column(Integer)
+    error_message: Mapped[str | None] = mapped_column(Text)
+    checked_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    __table_args__ = (
+        Index("idx_health_checks_service_time", "service", checked_at.desc()),
+    )
+
+
+class ServiceDailyStatus(Base):
+    """Aggregated daily health rollup. Retained 180 days."""
+
+    __tablename__ = "service_daily_status"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    service: Mapped[str] = mapped_column(String(50), nullable=False)
+    date: Mapped[date] = mapped_column(Date, nullable=False)
+    total_checks: Mapped[int] = mapped_column(Integer, nullable=False)
+    successful_checks: Mapped[int] = mapped_column(Integer, nullable=False)
+    uptime_pct: Mapped[Decimal] = mapped_column(Numeric(5, 2), nullable=False)
+    avg_latency_ms: Mapped[int | None] = mapped_column(Integer)
+    max_latency_ms: Mapped[int | None] = mapped_column(Integer)
+    incidents: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    worst_status: Mapped[str] = mapped_column(String(20), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("service", "date", name="uq_service_daily_status_service_date"),
+    )
+
+
+class ServiceIncident(Base):
+    """Auto-detected service incidents."""
+
+    __tablename__ = "service_incidents"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    service: Mapped[str] = mapped_column(String(50), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+    started_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    resolved_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
+    duration_minutes: Mapped[int | None] = mapped_column(Integer)
+    error_summary: Mapped[str | None] = mapped_column(Text)
+
+    __table_args__ = (
+        Index("idx_incidents_service_time", "service", started_at.desc()),
     )

@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { href: "/tweets", label: "Tweets" },
   { href: "/backtest", label: "Backtest" },
   { href: "/analytics", label: "Analytics" },
+  { href: "/status", label: "Status" },
 ] as const;
 
 function isActive(pathname: string, href: string): boolean {
