@@ -1,6 +1,6 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-15
+**Last Updated:** 2026-02-17
 **Current Phase:** Complete (all 15 phases done) + Post-launch features
 
 ---
@@ -67,6 +67,10 @@
 - [x] **Symbol-Agent Cross-Referencing** — Post-launch feature
 - [x] **Candle Close Countdown** — Post-launch feature
 - [x] **Redis Caching Layer (Upstash)** — Post-launch feature
+- [x] **Twitter Feed & Tweet Agents** — Post-launch feature
+- [x] **Consensus Ticker Banner** — Post-launch feature
+- [x] **Notification System** — Post-launch feature
+- [x] **Rankings Table Columns** — Post-launch feature
 
 ---
 
@@ -130,6 +134,10 @@
 | 6 | Agent Comparison Mode | Done |
 | 7 | Caching Layer (Redis) | Done |
 | 8 | Symbol-Agent Cross-Referencing | Done |
+| 9 | Twitter Feed & Tweet Agents | Done |
+| 10 | Consensus Ticker Banner | Done |
+| 11 | Notification System | Done |
+| 12 | Rankings Table Columns | Done |
 
 ## Open Decisions
 
@@ -141,11 +149,11 @@ None — all decisions resolved.
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-17 00:30 | Post-launch | Consensus Ticker Banner (#10) |
+| 2026-02-16 09:25 | Post-launch | Twitter Feed & Tweet Agents (#9) |
 | 2026-02-15 23:00 | Post-launch | Redis Caching Layer (#7) — Upstash |
 | 2026-02-13 00:20 | Post-launch | Symbol cross-ref (#8) + candle countdown |
 | 2026-02-12 20:00 | Post-launch | Agent Comparison Mode (#6) |
-| 2026-02-12 13:22 | Post-launch | Backtesting Framework (9 phases) |
-| 2026-02-11 14:00 | Phase 15 | Rule-Based Python Agents |
 
 ---
 
