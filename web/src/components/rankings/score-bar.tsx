@@ -10,6 +10,7 @@
  */
 
 import { cn } from "@/lib/utils";
+import { InfoTooltip } from "@/components/ui/info-tooltip";
 
 interface ScoreBarProps {
   /** Bullish score from 0 to 1 */
@@ -18,6 +19,8 @@ interface ScoreBarProps {
   className?: string;
   /** Show numeric value alongside bar */
   showValue?: boolean;
+  /** Number of indicators contributing to this score */
+  indicatorCount?: number;
 }
 
 /**
@@ -42,47 +45,60 @@ function getTextColor(score: number): string {
   return "text-muted";
 }
 
+function getScoreLabel(score: number): string {
+  if (score < 0.4) return "bearish";
+  if (score > 0.6) return "bullish";
+  return "neutral";
+}
+
 export function ScoreBar({
   score,
   className,
   showValue = true,
+  indicatorCount,
 }: ScoreBarProps) {
   // Clamp score between 0 and 1
   const clampedScore = Math.max(0, Math.min(1, score));
   const percentage = clampedScore * 100;
 
-  return (
-    <div className={cn("flex items-center gap-2", className)}>
-      {/* Track + Fill */}
-      <div
-        className="relative h-1.5 w-[100px] overflow-hidden rounded-full bg-[var(--bg-muted)]"
-        role="progressbar"
-        aria-valuenow={Math.round(clampedScore * 100)}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={`Bullish score: ${clampedScore.toFixed(3)}`}
-      >
-        {/* Fill */}
-        <div
-          className={cn(
-            "absolute inset-y-0 left-0 rounded-full transition-colors-fast",
-            getScoreColor(clampedScore)
-          )}
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
+  const tooltipText = indicatorCount
+    ? `Bullish Score: ${clampedScore.toFixed(3)} (${getScoreLabel(clampedScore)}) — Aggregated from ${indicatorCount} indicators. Green = bullish bias, Red = bearish bias.`
+    : `Bullish Score: ${clampedScore.toFixed(3)} (${getScoreLabel(clampedScore)}) — Green = bullish bias, Red = bearish bias.`;
 
-      {/* Numeric value */}
-      {showValue && (
-        <span
-          className={cn(
-            "font-mono text-sm font-semibold tabular-nums",
-            getTextColor(clampedScore)
-          )}
+  return (
+    <InfoTooltip content={tooltipText} side="top">
+      <div className={cn("flex items-center gap-2", className)}>
+        {/* Track + Fill */}
+        <div
+          className="relative h-1.5 w-[100px] overflow-hidden rounded-full bg-[var(--bg-muted)]"
+          role="progressbar"
+          aria-valuenow={Math.round(clampedScore * 100)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Bullish score: ${clampedScore.toFixed(3)}`}
         >
-          {clampedScore.toFixed(3)}
-        </span>
-      )}
-    </div>
+          {/* Fill */}
+          <div
+            className={cn(
+              "absolute inset-y-0 left-0 rounded-full transition-colors-fast",
+              getScoreColor(clampedScore)
+            )}
+            style={{ width: `${percentage}%` }}
+          />
+        </div>
+
+        {/* Numeric value */}
+        {showValue && (
+          <span
+            className={cn(
+              "font-mono text-sm font-semibold tabular-nums",
+              getTextColor(clampedScore)
+            )}
+          >
+            {clampedScore.toFixed(3)}
+          </span>
+        )}
+      </div>
+    </InfoTooltip>
   );
 }

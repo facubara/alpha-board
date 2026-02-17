@@ -119,7 +119,7 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
 
         {/* Score bar + value (hidden on mobile) */}
         <TableCell className="hidden w-44 sm:table-cell">
-          <ScoreBar score={snapshot.bullishScore} />
+          <ScoreBar score={snapshot.bullishScore} indicatorCount={snapshot.indicatorSignals.length} />
         </TableCell>
 
         {/* Confidence */}

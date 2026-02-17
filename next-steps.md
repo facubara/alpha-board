@@ -717,3 +717,68 @@ Add column headers "Price Δ" and "Vol Δ". Make them sortable (same pattern as 
 | `web/src/lib/queries/rankings.ts` | Extract new fields from snapshot data |
 | `web/src/components/rankings/ranking-row.tsx` | Render absolute change cells with formatting |
 | `web/src/components/rankings/rankings-table.tsx` | Add column headers + sort support |
+
+---
+
+## 18. Explanatory Tooltips & Hints — `PENDING`
+
+**What:** Add hover tooltips throughout the rankings UI to explain concepts, definitions, and how values are calculated. First-time visitors and non-technical users should be able to understand every metric without leaving the page.
+
+**Why:** Terms like "bullish score," "confidence," "funding rate," and indicator names (EMA, MACD, BB) are opaque to newcomers. A lightweight tooltip layer turns the dashboard into a self-documenting tool without cluttering the layout.
+
+**Where to add tooltips:**
+
+### Column headers (rankings table)
+| Header | Tooltip text |
+|--------|-------------|
+| Score | Composite bullish score (0–1). Aggregated from all technical indicators weighted by reliability. >0.6 = bullish, <0.4 = bearish. |
+| Conf | Confidence percentage. Measures indicator agreement — high confidence means most indicators align in the same direction. |
+| Price % | Price change percentage over the selected timeframe candle vs. previous candle. |
+| Price Δ | Absolute price change in USD over the selected timeframe. |
+| Vol % | Volume change percentage over the selected timeframe candle vs. previous candle. |
+| Vol Δ | Absolute volume change in quote currency over the selected timeframe. |
+| Funding | Perpetual futures funding rate. Negative = shorts paying longs (contrarian bullish). Positive = longs paying shorts. |
+| Highlights | Notable technical patterns detected by the indicator engine for this symbol. |
+
+### Score bar (visual bar in Score column)
+- Tooltip on hover showing: "Bullish Score: 0.739 — Aggregated from {N} indicators. Green = bullish bias, Red = bearish bias."
+
+### Highlight chips
+Each chip gets a tooltip explaining the pattern:
+| Chip | Tooltip |
+|------|---------|
+| Strong Uptrend | Price is in a strong upward trend across multiple moving averages. |
+| EMA Bullish | Exponential Moving Average crossover: short-term EMA is above long-term EMA, signaling upward momentum. |
+| MACD Bullish | MACD line crossed above signal line, indicating potential upward momentum. |
+| Strong Buying | Volume significantly exceeds recent average, suggesting strong buyer interest. |
+| BB Squeeze | Bollinger Bands are narrowing, often preceding a large price move. |
+| Above BB Upper | Price is above the upper Bollinger Band, signaling overbought conditions or strong momentum. |
+| No Trend | No clear directional trend detected; price is moving sideways. |
+
+### Indicator breakdown (expanded row)
+- Each indicator row in the expanded breakdown section gets a tooltip explaining what the indicator measures and how its signal is derived.
+
+### Implementation notes
+
+**Tooltip component:**
+- Use Radix UI `Tooltip` (already available via shadcn — install `@radix-ui/react-tooltip` if not present).
+- Create a lightweight `<InfoTooltip content="..." />` wrapper that renders a small `(i)` icon or wraps existing text.
+- For column headers: wrap the header text so hovering the header shows the tooltip.
+- For chips/bars: wrap the element itself.
+- Delay: 300ms open, 0ms close. Max width: 280px. Dark theme styled to match `--bg-elevated` / `--text-primary`.
+
+**Files to modify:**
+
+| Component | Change |
+|-----------|--------|
+| `web/src/components/ui/info-tooltip.tsx` | New shared tooltip wrapper component |
+| `web/src/components/rankings/rankings-table.tsx` | Add tooltips to all column headers |
+| `web/src/components/rankings/score-bar.tsx` | Add tooltip to the score bar visual |
+| `web/src/components/rankings/highlight-chip.tsx` | Add tooltip to each highlight chip |
+| `web/src/components/rankings/indicator-breakdown.tsx` | Add tooltip to each indicator name |
+| `web/src/components/rankings/ranking-row.tsx` | Minor adjustments if needed for tooltip integration |
+
+**Design notes:**
+- Tooltips should feel native to the dark e-ink aesthetic — no bright backgrounds or jarring animations.
+- On mobile/touch: tooltips trigger on tap (Radix handles this automatically).
+- Keep tooltip text concise (1–2 sentences max).

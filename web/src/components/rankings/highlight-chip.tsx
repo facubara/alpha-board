@@ -12,12 +12,42 @@
  */
 
 import { cn } from "@/lib/utils";
+import { InfoTooltip } from "@/components/ui/info-tooltip";
 import type { Highlight, HighlightSentiment } from "@/lib/types";
 
-interface HighlightChipProps {
-  highlight: Highlight;
-  className?: string;
-}
+/**
+ * Tooltip descriptions for known highlight patterns.
+ */
+const HIGHLIGHT_TOOLTIPS: Record<string, string> = {
+  "Strong Uptrend":
+    "Price is in a strong upward trend across multiple moving averages.",
+  "Strong Downtrend":
+    "Price is in a strong downward trend across multiple moving averages.",
+  "EMA Bullish":
+    "Short-term EMA is above long-term EMA, signaling upward momentum.",
+  "EMA Bearish":
+    "Short-term EMA is below long-term EMA, signaling downward momentum.",
+  "MACD Bullish":
+    "MACD line crossed above signal line, indicating potential upward momentum.",
+  "MACD Bearish":
+    "MACD line crossed below signal line, indicating potential downward momentum.",
+  "Strong Buying":
+    "Volume significantly exceeds recent average, suggesting strong buyer interest.",
+  "Strong Selling":
+    "Volume significantly exceeds recent average on the sell side.",
+  "BB Squeeze":
+    "Bollinger Bands are narrowing, often preceding a large price move.",
+  "Above BB Upper":
+    "Price is above the upper Bollinger Band — overbought or strong momentum.",
+  "Below BB Lower":
+    "Price is below the lower Bollinger Band — oversold or strong selling pressure.",
+  "No Trend":
+    "No clear directional trend detected; price is moving sideways.",
+  "Overbought":
+    "RSI or similar oscillator indicates the asset may be overbought.",
+  "Oversold":
+    "RSI or similar oscillator indicates the asset may be oversold.",
+};
 
 /**
  * Get styling classes based on sentiment.
@@ -34,17 +64,28 @@ function getSentimentStyles(sentiment: HighlightSentiment): string {
   }
 }
 
-export function HighlightChip({ highlight, className }: HighlightChipProps) {
-  return (
+export function HighlightChip({ highlight, className }: { highlight: Highlight; className?: string }) {
+  const tooltip = HIGHLIGHT_TOOLTIPS[highlight.text];
+
+  const chip = (
     <span
       className={cn(
         "inline-flex items-center rounded px-2 py-1 text-xs font-medium",
+        tooltip && "cursor-help",
         getSentimentStyles(highlight.sentiment),
         className
       )}
     >
       {highlight.text}
     </span>
+  );
+
+  if (!tooltip) return chip;
+
+  return (
+    <InfoTooltip content={tooltip} side="top">
+      {chip}
+    </InfoTooltip>
   );
 }
 

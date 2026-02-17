@@ -5,6 +5,7 @@ import { AuthProvider } from "@/components/auth/auth-provider";
 import { HeaderAuth } from "@/components/auth/header-auth";
 import { ConsensusBannerWrapper } from "@/components/consensus-banner-wrapper";
 import { NavLinks } from "@/components/nav-links";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -40,6 +41,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-[var(--bg-base)] font-sans text-[var(--text-primary)] antialiased`}
       >
         <AuthProvider>
+        <TooltipProvider>
           {/* Header */}
           <header className="sticky top-0 z-50 h-14 border-b border-[var(--border-default)] bg-[var(--bg-base)]">
             <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between px-4 sm:px-8">
@@ -66,6 +68,7 @@ export default function RootLayout({
           <main className="mx-auto max-w-[1200px] px-4 py-6 sm:px-8">
             {children}
           </main>
+        </TooltipProvider>
         </AuthProvider>
       </body>
     </html>

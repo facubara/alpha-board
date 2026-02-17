@@ -24,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { InfoTooltip } from "@/components/ui/info-tooltip";
 import type { AllTimeframeRankings, RankingSnapshot, RankingsData, Timeframe } from "@/lib/types";
 import { useTimeframe } from "@/hooks/use-timeframe";
 import { TimeframeSelector } from "./timeframe-selector";
@@ -156,6 +157,26 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
     );
   };
 
+  // Column header tooltips
+  const COLUMN_TOOLTIPS: Partial<Record<SortField | "highlights", string>> = {
+    score:
+      "Composite bullish score (0–1). Aggregated from all technical indicators weighted by reliability. >0.6 = bullish, <0.4 = bearish.",
+    confidence:
+      "Measures indicator agreement — high confidence means most indicators align in the same direction.",
+    priceChange:
+      "Price change percentage over the selected timeframe candle vs. previous candle.",
+    priceChangeAbs:
+      "Absolute price change in USD over the selected timeframe.",
+    volumeChange:
+      "Volume change percentage over the selected timeframe candle vs. previous candle.",
+    volumeChangeAbs:
+      "Absolute volume change in quote currency over the selected timeframe.",
+    fundingRate:
+      "Perpetual futures funding rate. Negative = shorts paying longs (contrarian bullish). Positive = longs paying shorts.",
+    highlights:
+      "Notable technical patterns detected by the indicator engine for this symbol.",
+  };
+
   return (
     <div className={cn("space-y-4", className)}>
       {/* Header: Timeframe selector + Search + Last updated */}
@@ -232,46 +253,62 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                     className="w-44 cursor-pointer select-none text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
                     onClick={() => handleSort("score")}
                   >
-                    Score<SortIndicator field="score" />
+                    <InfoTooltip content={COLUMN_TOOLTIPS.score!} side="bottom">
+                      <span className="cursor-pointer">Score<SortIndicator field="score" /></span>
+                    </InfoTooltip>
                   </TableHead>
                   <TableHead
                     className="w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
                     onClick={() => handleSort("confidence")}
                   >
-                    Conf<SortIndicator field="confidence" />
+                    <InfoTooltip content={COLUMN_TOOLTIPS.confidence!} side="bottom">
+                      <span className="cursor-pointer">Conf<SortIndicator field="confidence" /></span>
+                    </InfoTooltip>
                   </TableHead>
                   <TableHead
                     className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
                     onClick={() => handleSort("priceChange")}
                   >
-                    Price %<SortIndicator field="priceChange" />
+                    <InfoTooltip content={COLUMN_TOOLTIPS.priceChange!} side="bottom">
+                      <span className="cursor-pointer">Price %<SortIndicator field="priceChange" /></span>
+                    </InfoTooltip>
                   </TableHead>
                   <TableHead
                     className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
                     onClick={() => handleSort("priceChangeAbs")}
                   >
-                    Price Δ<SortIndicator field="priceChangeAbs" />
+                    <InfoTooltip content={COLUMN_TOOLTIPS.priceChangeAbs!} side="bottom">
+                      <span className="cursor-pointer">Price Δ<SortIndicator field="priceChangeAbs" /></span>
+                    </InfoTooltip>
                   </TableHead>
                   <TableHead
                     className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
                     onClick={() => handleSort("volumeChange")}
                   >
-                    Vol %<SortIndicator field="volumeChange" />
+                    <InfoTooltip content={COLUMN_TOOLTIPS.volumeChange!} side="bottom">
+                      <span className="cursor-pointer">Vol %<SortIndicator field="volumeChange" /></span>
+                    </InfoTooltip>
                   </TableHead>
                   <TableHead
                     className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
                     onClick={() => handleSort("volumeChangeAbs")}
                   >
-                    Vol Δ<SortIndicator field="volumeChangeAbs" />
+                    <InfoTooltip content={COLUMN_TOOLTIPS.volumeChangeAbs!} side="bottom">
+                      <span className="cursor-pointer">Vol Δ<SortIndicator field="volumeChangeAbs" /></span>
+                    </InfoTooltip>
                   </TableHead>
                   <TableHead
                     className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
                     onClick={() => handleSort("fundingRate")}
                   >
-                    Funding<SortIndicator field="fundingRate" />
+                    <InfoTooltip content={COLUMN_TOOLTIPS.fundingRate!} side="bottom">
+                      <span className="cursor-pointer">Funding<SortIndicator field="fundingRate" /></span>
+                    </InfoTooltip>
                   </TableHead>
                   <TableHead className="hidden text-xs font-medium text-secondary xl:table-cell">
-                    Highlights
+                    <InfoTooltip content={COLUMN_TOOLTIPS.highlights!} side="bottom">
+                      <span>Highlights</span>
+                    </InfoTooltip>
                   </TableHead>
                   <TableHead className="w-10" />
                 </TableRow>
