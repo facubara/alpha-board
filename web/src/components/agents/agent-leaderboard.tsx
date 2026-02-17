@@ -224,7 +224,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
           comparison = a.displayName.localeCompare(b.displayName);
           break;
         case "pnl":
-          comparison = a.totalPnl - b.totalPnl;
+          comparison = a.totalRealizedPnl - b.totalRealizedPnl;
           break;
         case "winRate":
           comparison = a.winRate - b.winRate;
@@ -487,8 +487,13 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
                   className="w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
                   onClick={() => handleSort("pnl")}
                 >
-                  PnL
+                  Realized
                   <SortIndicator field="pnl" />
+                </TableHead>
+                <TableHead
+                  className="hidden w-20 select-none text-right text-xs font-medium text-secondary sm:table-cell"
+                >
+                  uPnL
                 </TableHead>
                 <TableHead
                   className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"

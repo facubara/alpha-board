@@ -21,8 +21,14 @@ interface Metric {
 
 const METRICS: Metric[] = [
   {
-    label: "Total PnL",
-    getValue: (a) => a.totalPnl,
+    label: "Realized PnL",
+    getValue: (a) => a.totalRealizedPnl,
+    format: (v) => `${v >= 0 ? "+" : ""}$${v.toFixed(2)}`,
+    higherIsBetter: true,
+  },
+  {
+    label: "uPnL",
+    getValue: (a) => a.unrealizedPnl,
     format: (v) => `${v >= 0 ? "+" : ""}$${v.toFixed(2)}`,
     higherIsBetter: true,
   },
@@ -46,7 +52,7 @@ const METRICS: Metric[] = [
   },
   {
     label: "Avg Trade PnL",
-    getValue: (a) => a.tradeCount > 0 ? a.totalPnl / a.tradeCount : 0,
+    getValue: (a) => a.tradeCount > 0 ? a.totalRealizedPnl / a.tradeCount : 0,
     format: (v) => `${v >= 0 ? "+" : ""}$${v.toFixed(2)}`,
     higherIsBetter: true,
   },

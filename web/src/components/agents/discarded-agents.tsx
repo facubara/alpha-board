@@ -108,7 +108,7 @@ export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
                   TF
                 </TableHead>
                 <TableHead className="text-right text-xs font-medium text-secondary">
-                  PnL
+                  Realized
                 </TableHead>
                 <TableHead className="hidden text-xs font-medium text-secondary md:table-cell">
                   Reason
@@ -155,11 +155,11 @@ export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
                   <TableCell
                     className={cn(
                       "py-0 text-right font-mono text-sm",
-                      agent.totalPnl >= 0 ? "text-bullish" : "text-bearish"
+                      agent.totalRealizedPnl >= 0 ? "text-bullish" : "text-bearish"
                     )}
                   >
-                    {agent.totalPnl >= 0 ? "+" : ""}$
-                    {agent.totalPnl.toFixed(2)}
+                    {agent.totalRealizedPnl >= 0 ? "+" : ""}$
+                    {agent.totalRealizedPnl.toFixed(2)}
                   </TableCell>
                   <TableCell className="hidden max-w-xs truncate py-0 text-xs text-muted md:table-cell">
                     {agent.discardReason || "—"}

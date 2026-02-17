@@ -56,7 +56,7 @@ export function ComparisonView({ data }: ComparisonViewProps) {
 
   const pnlItems = visibleAgents.map((a) => ({
     label: a.displayName,
-    value: a.totalPnl,
+    value: a.totalRealizedPnl,
   }));
 
   return (

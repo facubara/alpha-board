@@ -175,17 +175,29 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect }: AgentRowPr
         {AGENT_TIMEFRAME_LABELS[agent.timeframe]}
       </TableCell>
 
-      {/* Total PnL */}
+      {/* Realized PnL */}
       <TableCell
         className={cn(
           "text-right font-mono text-sm font-semibold tabular-nums",
-          agent.totalPnl > 0 && "text-bullish",
-          agent.totalPnl < 0 && "text-bearish",
-          agent.totalPnl === 0 && "text-secondary"
+          agent.totalRealizedPnl > 0 && "text-bullish",
+          agent.totalRealizedPnl < 0 && "text-bearish",
+          agent.totalRealizedPnl === 0 && "text-secondary"
         )}
-        title={`Realized: ${formatPnl(agent.totalRealizedPnl)} | Unrealized: ${formatPnl(agent.unrealizedPnl)}`}
+        title={`Total: ${formatPnl(agent.totalPnl)}`}
       >
-        {formatPnl(agent.totalPnl)}
+        {formatPnl(agent.totalRealizedPnl)}
+      </TableCell>
+
+      {/* Unrealized PnL */}
+      <TableCell
+        className={cn(
+          "hidden text-right font-mono text-sm tabular-nums sm:table-cell",
+          agent.unrealizedPnl > 0 && "text-bullish",
+          agent.unrealizedPnl < 0 && "text-bearish",
+          agent.unrealizedPnl === 0 && "text-secondary"
+        )}
+      >
+        {formatPnl(agent.unrealizedPnl)}
       </TableCell>
 
       {/* Win Rate */}

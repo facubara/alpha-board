@@ -6,7 +6,7 @@
  * Equity curve, key metrics grid, and open positions table.
  */
 
-import { cn } from "@/lib/utils";
+import { cn, formatTimestamp } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -40,16 +40,6 @@ export function AgentOverview({
 }: AgentOverviewProps) {
   const metrics = [
     {
-      label: "Total PnL",
-      value: formatUsd(agent.totalPnl, true),
-      color:
-        agent.totalPnl > 0
-          ? "text-bullish"
-          : agent.totalPnl < 0
-            ? "text-bearish"
-            : "text-secondary",
-    },
-    {
       label: "Realized PnL",
       value: formatUsd(agent.totalRealizedPnl, true),
       color:
@@ -60,12 +50,22 @@ export function AgentOverview({
             : "text-secondary",
     },
     {
-      label: "Unrealized PnL",
+      label: "uPnL",
       value: formatUsd(agent.unrealizedPnl, true),
       color:
         agent.unrealizedPnl > 0
           ? "text-bullish"
           : agent.unrealizedPnl < 0
+            ? "text-bearish"
+            : "text-secondary",
+    },
+    {
+      label: "Total PnL",
+      value: formatUsd(agent.totalPnl, true),
+      color:
+        agent.totalPnl > 0
+          ? "text-bullish"
+          : agent.totalPnl < 0
             ? "text-bearish"
             : "text-secondary",
     },
@@ -178,8 +178,8 @@ export function AgentOverview({
                       {pos.unrealizedPnl >= 0 ? "+" : ""}
                       {pos.unrealizedPnl.toFixed(2)}
                     </TableCell>
-                    <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell">
-                      {new Date(pos.openedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false })}
+                    <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell" title={`Local: ${formatTimestamp(pos.openedAt).local}`}>
+                      {formatTimestamp(pos.openedAt).utc}
                     </TableCell>
                   </TableRow>
                 ))}
