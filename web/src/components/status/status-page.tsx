@@ -5,16 +5,18 @@
  * Renders overall banner, service rows, and incident lists.
  */
 
-import type { StatusData } from "@/lib/types";
+import type { LlmSection, StatusData } from "@/lib/types";
 import { StatusBanner } from "./status-banner";
 import { ServiceRow } from "./service-row";
 import { IncidentList } from "./incident-list";
+import { LlmServicesPanel } from "./llm-services-panel";
 
 interface StatusPageProps {
   data: StatusData;
+  llmSections: LlmSection[];
 }
 
-export function StatusPage({ data }: StatusPageProps) {
+export function StatusPage({ data, llmSections }: StatusPageProps) {
   // Build a lookup from history by slug for service rows
   const historyBySlug = new Map(
     data.history.map((h) => [h.slug, h])
@@ -23,6 +25,9 @@ export function StatusPage({ data }: StatusPageProps) {
   return (
     <div className="space-y-6">
       <StatusBanner overall={data.overall} />
+
+      {/* LLM Services panel */}
+      {llmSections.length > 0 && <LlmServicesPanel sections={llmSections} />}
 
       {/* Service rows */}
       <div className="space-y-2">

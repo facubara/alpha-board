@@ -16,8 +16,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
-from src.models.db import Agent, AgentMemory, AgentTrade, Symbol
+from src.models.db import Agent, AgentMemory, AgentTokenUsage, AgentTrade, Symbol
 from src.agents.executor import estimate_cost, MODEL_PRICING
+from src.llm_settings import is_enabled
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +54,10 @@ class MemoryManager:
         Returns:
             AgentMemory record if successful, None on failure.
         """
+        if not is_enabled("trade_memory"):
+            logger.debug(f"Skipping memory for agent {agent.name} — trade_memory disabled")
+            return None
+
         logger.debug(f"Generating memory for agent {agent.name}, trade {trade.id}")
 
         # Get symbol name
@@ -104,6 +109,28 @@ class MemoryManager:
         input_tokens = response.usage.input_tokens
         output_tokens = response.usage.output_tokens
         cost = estimate_cost(agent.scan_model, input_tokens, output_tokens)
+
+        # Persist token usage
+        from datetime import date
+        from sqlalchemy.dialects.postgresql import insert as pg_insert
+
+        stmt = pg_insert(AgentTokenUsage).values(
+            agent_id=agent.id,
+            model=agent.scan_model,
+            task_type="scan",
+            date=date.today(),
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            estimated_cost_usd=cost,
+        ).on_conflict_do_update(
+            index_elements=["agent_id", "model", "task_type", "date"],
+            set_={
+                "input_tokens": AgentTokenUsage.input_tokens + input_tokens,
+                "output_tokens": AgentTokenUsage.output_tokens + output_tokens,
+                "estimated_cost_usd": AgentTokenUsage.estimated_cost_usd + cost,
+            },
+        )
+        await self.session.execute(stmt)
 
         logger.info(
             f"Generated memory for agent {agent.name}: {lesson[:100]}... "

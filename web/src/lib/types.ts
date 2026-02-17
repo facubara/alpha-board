@@ -739,6 +739,30 @@ export interface StatusData {
 // Fleet Lessons
 // =============================================================================
 
+// =============================================================================
+// LLM Settings (Cost Control)
+// =============================================================================
+
+export interface LlmSection {
+  key: string;
+  displayName: string;
+  description: string;
+  enabled: boolean;
+  hasApiCost: boolean;
+  taskType: string | null;
+  updatedAt: string;
+}
+
+export interface LlmSectionCost {
+  key: string;
+  costAlltime: number;
+  cost30d: number;
+}
+
+// =============================================================================
+// Fleet Lessons
+// =============================================================================
+
 export type FleetLessonCategory = "strength" | "mistake" | "pattern";
 
 export interface FleetLesson {

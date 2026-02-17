@@ -48,6 +48,7 @@ from src.notifications.models import (
     TradeOpenedEvent,
 )
 from src.notifications.service import NotificationService
+from src.llm_settings import load_llm_settings, is_enabled
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +93,9 @@ class AgentOrchestrator:
         """
         logger.info(f"Starting agent cycle for {timeframe}")
         start_time = datetime.now(timezone.utc)
+
+        # Load LLM settings for this cycle
+        await load_llm_settings(self.session)
 
         # Get all active agents for this timeframe
         agents = await self._get_active_agents(timeframe)
@@ -215,6 +219,16 @@ class AgentOrchestrator:
         # Update unrealized PnL
         await self.portfolio_manager.update_unrealized_pnl(agent.id, current_prices)
 
+        # Check LLM settings — skip if section disabled
+        if agent.engine == "rule" and not is_enabled("rule_trade_decisions"):
+            logger.info(f"Skipping rule agent {agent.name} — rule_trade_decisions disabled")
+            agent.last_cycle_at = datetime.now(timezone.utc)
+            return result
+        if agent.engine != "rule" and not is_enabled("llm_trade_decisions"):
+            logger.info(f"Skipping LLM agent {agent.name} — llm_trade_decisions disabled")
+            agent.last_cycle_at = datetime.now(timezone.utc)
+            return result
+
         # Build context
         context = await self.context_builder.build(
             agent, current_prices, tweet_context=tweet_context
@@ -281,36 +295,37 @@ class AgentOrchestrator:
         if closed_trades:
             await self._check_equity_alerts(agent)
 
-        # Generate memory and check evolution (LLM agents only)
-        if agent.engine != "rule":
+        # Generate memory (LLM agents only, gated by trade_memory setting)
+        if agent.engine != "rule" and is_enabled("trade_memory"):
             for trade in closed_trades:
                 memory = await self.memory_manager.generate_memory(agent, trade)
                 if memory:
                     result["memory_generated"] = True
                     logger.debug(f"Generated memory for agent {agent.name}: {memory.lesson[:50]}...")
 
-            if closed_trades:
-                should_evolve = await self.evolution_manager.check_evolution_trigger(agent.id)
-                if should_evolve:
-                    old_prompt = await self._get_active_prompt(agent.id)
-                    old_version = old_prompt.version if old_prompt else None
-                    reverted = await self.evolution_manager.check_auto_revert(agent.id)
-                    if reverted:
-                        new_prompt = await self._get_active_prompt(agent.id)
-                        await self._notify_evolution(
-                            agent, "reverted", old_version,
-                            new_prompt.version if new_prompt else None,
+        # Check evolution (LLM agents only, gated by prompt_evolution setting)
+        if agent.engine != "rule" and closed_trades and is_enabled("prompt_evolution"):
+            should_evolve = await self.evolution_manager.check_evolution_trigger(agent.id)
+            if should_evolve:
+                old_prompt = await self._get_active_prompt(agent.id)
+                old_version = old_prompt.version if old_prompt else None
+                reverted = await self.evolution_manager.check_auto_revert(agent.id)
+                if reverted:
+                    new_prompt = await self._get_active_prompt(agent.id)
+                    await self._notify_evolution(
+                        agent, "reverted", old_version,
+                        new_prompt.version if new_prompt else None,
+                    )
+                else:
+                    new_prompt = await self.evolution_manager.trigger_evolution(agent.id)
+                    if new_prompt:
+                        result["evolution_triggered"] = True
+                        logger.info(
+                            f"Agent {agent.name} evolved to prompt v{new_prompt.version}"
                         )
-                    else:
-                        new_prompt = await self.evolution_manager.trigger_evolution(agent.id)
-                        if new_prompt:
-                            result["evolution_triggered"] = True
-                            logger.info(
-                                f"Agent {agent.name} evolved to prompt v{new_prompt.version}"
-                            )
-                            await self._notify_evolution(
-                                agent, "evolved", old_version, new_prompt.version,
-                            )
+                        await self._notify_evolution(
+                            agent, "evolved", old_version, new_prompt.version,
+                        )
 
         # Evaluate health for auto-discard (only after trades close)
         if closed_trades:
@@ -502,6 +517,9 @@ class AgentOrchestrator:
         """
         logger.info(f"Starting tweet agent cycle for {timeframe}")
         start_time = datetime.now(timezone.utc)
+
+        # Load LLM settings for this cycle
+        await load_llm_settings(self.session)
 
         agents = await self._get_active_agents(timeframe, source="tweet")
         logger.info(f"Found {len(agents)} active tweet agents for {timeframe}")

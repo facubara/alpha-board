@@ -16,9 +16,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
-from src.models.db import Agent, AgentTrade, FleetLesson, Symbol
+from src.models.db import Agent, AgentTokenUsage, AgentTrade, FleetLesson, Symbol
 from src.agents.context import ContextBuilder
 from src.agents.executor import estimate_cost
+from src.llm_settings import is_enabled
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +81,10 @@ class PostMortemAnalyzer:
 
         Returns list of created FleetLesson rows.
         """
+        if not is_enabled("post_mortem"):
+            logger.info(f"Skipping post-mortem for {agent.name} — post_mortem disabled")
+            return []
+
         try:
             # Gather context
             trades = await self._get_recent_trades(agent.id, limit=20)
@@ -129,16 +134,36 @@ Analyze this agent's history and extract lessons for future {agent.strategy_arch
             )
 
             # Track cost
-            cost = estimate_cost(
-                POSTMORTEM_MODEL,
-                response.usage.input_tokens,
-                response.usage.output_tokens,
-            )
+            input_tokens = response.usage.input_tokens
+            output_tokens = response.usage.output_tokens
+            cost = estimate_cost(POSTMORTEM_MODEL, input_tokens, output_tokens)
             logger.info(
                 f"Post-mortem for {agent.name}: "
-                f"{response.usage.input_tokens}in/{response.usage.output_tokens}out, "
+                f"{input_tokens}in/{output_tokens}out, "
                 f"${cost:.4f}"
             )
+
+            # Persist token usage
+            from datetime import date
+            from sqlalchemy.dialects.postgresql import insert as pg_insert
+
+            stmt = pg_insert(AgentTokenUsage).values(
+                agent_id=agent.id,
+                model=POSTMORTEM_MODEL,
+                task_type="postmortem",
+                date=date.today(),
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                estimated_cost_usd=cost,
+            ).on_conflict_do_update(
+                index_elements=["agent_id", "model", "task_type", "date"],
+                set_={
+                    "input_tokens": AgentTokenUsage.input_tokens + input_tokens,
+                    "output_tokens": AgentTokenUsage.output_tokens + output_tokens,
+                    "estimated_cost_usd": AgentTokenUsage.estimated_cost_usd + cost,
+                },
+            )
+            await self.session.execute(stmt)
 
             # Parse tool response
             lessons_data = self._parse_response(response)

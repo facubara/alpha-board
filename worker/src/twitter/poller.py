@@ -11,6 +11,7 @@ from src.config import settings
 from src.events import event_bus
 from src.models.db import Tweet, TwitterAccount
 from src.twitter.client import TwitterClient
+from src.llm_settings import is_enabled
 
 logger = logging.getLogger(__name__)
 
@@ -113,7 +114,7 @@ class TwitterPoller:
 
         # 6. Run sentiment analysis if enabled
         analysis_result = None
-        if settings.tweet_analysis_enabled and new_count > 0:
+        if settings.tweet_analysis_enabled and is_enabled("tweet_sentiment") and new_count > 0:
             try:
                 from src.twitter.analyzer import TweetAnalyzer
 

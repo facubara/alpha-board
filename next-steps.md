@@ -1070,3 +1070,20 @@ Add a `reconcile_pnl(agent_id)` method that:
 5. **19.5** — Telegram parity (depends on UUID + correct PnL)
 6. **19.2** — Paused agent behavior (depends on portfolio force-close)
 7. **19.7** — Cross-verification testing (final validation of everything above)
+
+---
+
+## 20. LLM Cost Control — Per-Section Toggles — `IN PROGRESS`
+
+**What:** Per-section toggle controls for all 6 LLM/rule call sites (trade decisions, evolution, post-mortem, memory, tweet sentiment, rule-based), with cost breakdown per section and visibility on both a new `/settings` page and read-only badges on `/status`.
+
+**Why:** With 5 LLM call sites plus rule-based agents, there's no way to selectively disable sections to save costs during low-activity periods. This feature adds granular control over which pipeline sections run, with cost visibility to inform decisions.
+
+**Implementation:**
+- New `llm_settings` table with 6 rows (migration 019)
+- Worker settings cache module — loaded once per pipeline cycle, fail-open
+- All 6 call sites gated: `llm_trade_decisions`, `rule_trade_decisions`, `prompt_evolution`, `post_mortem`, `trade_memory`, `tweet_sentiment`
+- Missing token tracking added to post-mortem and memory modules
+- `/settings` page with toggle switches, enabled/disabled badges, and alltime + 30d cost breakdown per section
+- `/status` page enhanced with read-only LLM Services panel showing enabled/disabled at a glance
+- Settings nav link added

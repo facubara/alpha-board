@@ -22,6 +22,7 @@ from src.config import settings
 from src.models.db import Agent, AgentPrompt, AgentTrade, AgentPortfolio, FleetLesson
 from src.agents.executor import estimate_cost
 from src.agents.context import ContextBuilder
+from src.llm_settings import is_enabled
 
 logger = logging.getLogger(__name__)
 
@@ -114,6 +115,10 @@ class EvolutionManager:
         Returns:
             New AgentPrompt if successful, None on failure.
         """
+        if not is_enabled("prompt_evolution"):
+            logger.info(f"Skipping evolution for agent {agent_id} — prompt_evolution disabled")
+            return None
+
         logger.info(f"Triggering evolution for agent {agent_id}")
 
         # Get agent

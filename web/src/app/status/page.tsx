@@ -6,17 +6,23 @@
  */
 
 import { getStatusData } from "@/lib/queries/status";
+import { getLlmSettings } from "@/lib/queries/settings";
 import { StatusPage } from "@/components/status/status-page";
 
 export const revalidate = 60;
 
 export default async function StatusRoute() {
   let data;
+  let llmSections;
   try {
-    data = await getStatusData();
+    [data, llmSections] = await Promise.all([
+      getStatusData(),
+      getLlmSettings(),
+    ]);
   } catch {
     // Worker may be down — show fallback
     data = null;
+    llmSections = [];
   }
 
   return (
@@ -30,7 +36,7 @@ export default async function StatusRoute() {
       </div>
 
       {data ? (
-        <StatusPage data={data} />
+        <StatusPage data={data} llmSections={llmSections ?? []} />
       ) : (
         <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-8 text-center text-sm text-muted">
           Unable to fetch status data. The worker API may be unavailable.
