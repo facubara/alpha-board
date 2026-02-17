@@ -100,6 +100,11 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   // Live state: initialized from server-fetched data, updated via SSE
   const [agentsData, setAgentsData] = useState<AgentLeaderboardRow[]>(agents);
 
+  // Sync when server-fetched prop changes (e.g. after router.refresh())
+  useEffect(() => {
+    setAgentsData(agents);
+  }, [agents]);
+
   const handleSSEMessage = useCallback((event: AgentSSEEvent) => {
     if (event.type === "agent_update" && event.agents) {
       // SSE may not include source — preserve from existing data
