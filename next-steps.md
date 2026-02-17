@@ -720,7 +720,7 @@ Add column headers "Price Δ" and "Vol Δ". Make them sortable (same pattern as 
 
 ---
 
-## 18. Explanatory Tooltips & Hints — `PENDING`
+## 18. Explanatory Tooltips & Hints — `COMPLETED`
 
 **What:** Add hover tooltips throughout the rankings UI to explain concepts, definitions, and how values are calculated. First-time visitors and non-technical users should be able to understand every metric without leaving the page.
 
