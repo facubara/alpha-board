@@ -50,15 +50,18 @@ class PipelineRunner:
         self,
         binance_client: BinanceClient | None = None,
         min_volume_usd: float = 1_000_000,
+        top_symbols_limit: int = 0,
     ):
         """Initialize the pipeline runner.
 
         Args:
             binance_client: Custom Binance client (default: creates new one).
             min_volume_usd: Minimum 24h volume for symbol inclusion.
+            top_symbols_limit: Max symbols to process (0 = unlimited).
         """
         self.client = binance_client or BinanceClient()
         self.min_volume_usd = min_volume_usd
+        self.top_symbols_limit = top_symbols_limit
         self.registry = create_default_registry()
         self.ranker = Ranker()
 
@@ -243,7 +246,14 @@ class PipelineRunner:
                 binance_symbols = await self.client.get_active_symbols(
                     min_volume_usd=self.min_volume_usd
                 )
-                logger.info(f"Found {len(binance_symbols)} active symbols")
+                logger.info(f"Found {len(binance_symbols)} active symbols above volume threshold")
+
+                # Cap to top N by volume (already sorted descending)
+                if self.top_symbols_limit > 0 and len(binance_symbols) > self.top_symbols_limit:
+                    logger.info(
+                        f"Pruning to top {self.top_symbols_limit} symbols by volume"
+                    )
+                    binance_symbols = binance_symbols[: self.top_symbols_limit]
 
                 if not binance_symbols:
                     await self._complete_run(session, run_id, 0, "completed")

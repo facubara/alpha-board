@@ -61,21 +61,23 @@ export function getAgentLeaderboard(): Promise<AgentLeaderboardRow[]> {
         (SELECT COUNT(*) FROM agent_positions WHERE agent_id = a.id) as open_positions
       FROM agents a
       JOIN agent_portfolios p ON a.id = p.agent_id
+      WHERE a.status != 'discarded'
       ORDER BY (p.total_equity - a.initial_balance) DESC
     `;
 
-    // Fetch health data separately — column may not exist until migration 008 runs
-    const healthMap = new Map<number, string | null>();
+    // Fetch health + discard data separately — columns may not exist until migrations run
+    const healthMap = new Map<number, { lastCycleAt: string | null; discardedAt: string | null; discardReason: string | null }>();
     try {
-      const healthRows = await sql`SELECT id, last_cycle_at FROM agents`;
+      const healthRows = await sql`SELECT id, last_cycle_at, discarded_at, discard_reason FROM agents`;
       for (const r of healthRows) {
-        healthMap.set(
-          Number(r.id),
-          r.last_cycle_at ? (r.last_cycle_at as Date).toISOString() : null
-        );
+        healthMap.set(Number(r.id), {
+          lastCycleAt: r.last_cycle_at ? (r.last_cycle_at as Date).toISOString() : null,
+          discardedAt: r.discarded_at ? (r.discarded_at as Date).toISOString() : null,
+          discardReason: (r.discard_reason as string) || null,
+        });
       }
     } catch {
-      // Column doesn't exist yet — all agents show as "never processed"
+      // Columns don't exist yet
     }
 
     return rows.map((row) => {
@@ -105,10 +107,116 @@ export function getAgentLeaderboard(): Promise<AgentLeaderboardRow[]> {
         winRate: tradeCount > 0 ? wins / tradeCount : 0,
         totalTokenCost: Number(row.total_token_cost),
         openPositions: Number(row.open_positions),
-        lastCycleAt: healthMap.get(Number(row.id)) ?? null,
+        lastCycleAt: healthMap.get(Number(row.id))?.lastCycleAt ?? null,
+        discardedAt: healthMap.get(Number(row.id))?.discardedAt ?? null,
+        discardReason: healthMap.get(Number(row.id))?.discardReason ?? null,
       };
     });
   });
+}
+
+/**
+ * Fetch discarded agents for the "Discarded" tab.
+ */
+export function getDiscardedAgents(): Promise<AgentLeaderboardRow[]> {
+  return cached("agents:discarded", 60, async () => {
+    const rows = await sql`
+      SELECT
+        a.id,
+        a.name,
+        a.display_name,
+        a.strategy_archetype,
+        a.timeframe,
+        a.engine,
+        a.source,
+        a.scan_model,
+        a.trade_model,
+        a.evolution_model,
+        a.status,
+        a.initial_balance,
+        a.discarded_at,
+        a.discard_reason,
+        p.cash_balance,
+        p.total_equity,
+        p.total_realized_pnl,
+        p.total_fees_paid,
+        (p.total_equity - a.initial_balance) as total_pnl,
+        (SELECT COUNT(*) FROM agent_trades WHERE agent_id = a.id) as trade_count,
+        (SELECT COUNT(*) FILTER (WHERE pnl > 0) FROM agent_trades WHERE agent_id = a.id) as wins,
+        (
+          SELECT COALESCE(SUM(estimated_cost_usd), 0)
+          FROM agent_token_usage WHERE agent_id = a.id
+        ) as total_token_cost,
+        (SELECT COUNT(*) FROM agent_positions WHERE agent_id = a.id) as open_positions
+      FROM agents a
+      JOIN agent_portfolios p ON a.id = p.agent_id
+      WHERE a.status = 'discarded'
+      ORDER BY a.discarded_at DESC
+    `;
+
+    return rows.map((row) => {
+      const tradeCount = Number(row.trade_count);
+      const wins = Number(row.wins);
+
+      return {
+        id: Number(row.id),
+        name: row.name as string,
+        displayName: row.display_name as string,
+        strategyArchetype: row.strategy_archetype as StrategyArchetype,
+        timeframe: row.timeframe as AgentTimeframe,
+        engine: (row.engine as AgentEngine) || "llm",
+        source: (row.source as AgentSource) || "technical",
+        scanModel: row.scan_model as string,
+        tradeModel: row.trade_model as string,
+        evolutionModel: row.evolution_model as string,
+        status: row.status as AgentStatus,
+        initialBalance: Number(row.initial_balance),
+        cashBalance: Number(row.cash_balance),
+        totalEquity: Number(row.total_equity),
+        totalRealizedPnl: Number(row.total_realized_pnl),
+        totalFeesPaid: Number(row.total_fees_paid),
+        totalPnl: Number(row.total_pnl),
+        tradeCount,
+        wins,
+        winRate: tradeCount > 0 ? wins / tradeCount : 0,
+        totalTokenCost: Number(row.total_token_cost),
+        openPositions: Number(row.open_positions),
+        lastCycleAt: null,
+        discardedAt: row.discarded_at ? (row.discarded_at as Date).toISOString() : null,
+        discardReason: (row.discard_reason as string) || null,
+      };
+    });
+  });
+}
+
+/**
+ * Re-activate a discarded agent (set back to active).
+ */
+export async function reactivateAgent(agentId: number): Promise<void> {
+  const rows = await sql`
+    UPDATE agents
+    SET status = 'active', discarded_at = NULL, discard_reason = NULL
+    WHERE id = ${agentId} AND status = 'discarded'
+    RETURNING id
+  `;
+  if (rows.length === 0) {
+    throw new Error(`Agent ${agentId} not found or not discarded`);
+  }
+}
+
+/**
+ * Permanently delete an agent and all associated data.
+ */
+export async function deleteAgent(agentId: number): Promise<void> {
+  // Delete in dependency order
+  await sql`DELETE FROM agent_token_usage WHERE agent_id = ${agentId}`;
+  await sql`DELETE FROM agent_memories WHERE agent_id = ${agentId}`;
+  await sql`DELETE FROM agent_decisions WHERE agent_id = ${agentId}`;
+  await sql`DELETE FROM agent_trades WHERE agent_id = ${agentId}`;
+  await sql`DELETE FROM agent_positions WHERE agent_id = ${agentId}`;
+  await sql`DELETE FROM agent_prompts WHERE agent_id = ${agentId}`;
+  await sql`DELETE FROM agent_portfolios WHERE agent_id = ${agentId}`;
+  await sql`DELETE FROM agents WHERE id = ${agentId}`;
 }
 
 /**
@@ -151,15 +259,19 @@ export async function getAgentDetail(
 
   if (rows.length === 0) return null;
 
-  // Fetch health data separately — column may not exist until migration 008 runs
+  // Fetch health + discard data separately — columns may not exist until migrations run
   let lastCycleAt: string | null = null;
+  let discardedAt: string | null = null;
+  let discardReason: string | null = null;
   try {
-    const healthRows = await sql`SELECT last_cycle_at FROM agents WHERE id = ${agentId}`;
-    if (healthRows.length > 0 && healthRows[0].last_cycle_at) {
-      lastCycleAt = (healthRows[0].last_cycle_at as Date).toISOString();
+    const healthRows = await sql`SELECT last_cycle_at, discarded_at, discard_reason FROM agents WHERE id = ${agentId}`;
+    if (healthRows.length > 0) {
+      lastCycleAt = healthRows[0].last_cycle_at ? (healthRows[0].last_cycle_at as Date).toISOString() : null;
+      discardedAt = healthRows[0].discarded_at ? (healthRows[0].discarded_at as Date).toISOString() : null;
+      discardReason = (healthRows[0].discard_reason as string) || null;
     }
   } catch {
-    // Column doesn't exist yet
+    // Columns don't exist yet
   }
 
   const row = rows[0];
@@ -190,6 +302,8 @@ export async function getAgentDetail(
     totalTokenCost: Number(row.total_token_cost),
     openPositions: Number(row.open_positions),
     lastCycleAt,
+    discardedAt,
+    discardReason,
     createdAt: (row.created_at as Date).toISOString(),
   };
 }
@@ -603,7 +717,7 @@ export async function toggleAgentStatus(
   const rows = await sql`
     UPDATE agents
     SET status = CASE WHEN status = 'active' THEN 'paused' ELSE 'active' END
-    WHERE id = ${agentId}
+    WHERE id = ${agentId} AND status != 'discarded'
     RETURNING status
   `;
 

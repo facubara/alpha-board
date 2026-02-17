@@ -212,7 +212,7 @@ export const AGENT_SOURCE_LABELS: Record<AgentSource, string> = {
   hybrid: "Hybrid",
 };
 
-export type AgentStatus = "active" | "paused";
+export type AgentStatus = "active" | "paused" | "discarded";
 
 // =============================================================================
 // Agent Detail Types
@@ -242,6 +242,8 @@ export interface AgentDetail {
   totalTokenCost: number;
   openPositions: number;
   lastCycleAt: string | null;
+  discardedAt: string | null;
+  discardReason: string | null;
   createdAt: string;
 }
 
@@ -389,6 +391,8 @@ export interface AgentLeaderboardRow {
   totalTokenCost: number;
   openPositions: number;
   lastCycleAt: string | null;
+  discardedAt: string | null;
+  discardReason: string | null;
 }
 
 // =============================================================================

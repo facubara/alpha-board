@@ -14,7 +14,7 @@ from datetime import datetime, timezone, date
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import selectinload
@@ -48,6 +48,15 @@ from src.notifications.models import (
 from src.notifications.service import NotificationService
 
 logger = logging.getLogger(__name__)
+
+# Agent pruning thresholds (configurable via env in future)
+PRUNING_MIN_TRADES = 20  # Don't evaluate until this many trades
+PRUNING_MAX_DRAWDOWN_PCT = 50.0  # Discard if drawdown exceeds this
+PRUNING_MIN_WIN_RATE = 0.15  # Flag if below 15%
+PRUNING_HEALTH_THRESHOLD = 30  # Score 0-100; discard below this
+# Weights for composite score
+PRUNING_WEIGHT_DRAWDOWN = 0.60
+PRUNING_WEIGHT_WIN_RATE = 0.40
 
 
 class AgentOrchestrator:
@@ -301,10 +310,83 @@ class AgentOrchestrator:
                                 agent, "evolved", old_version, new_prompt.version,
                             )
 
+        # Evaluate health for auto-discard (only after trades close)
+        if closed_trades:
+            await self._evaluate_agent_health(agent)
+
         # Update health timestamp
         agent.last_cycle_at = datetime.now(timezone.utc)
 
         return result
+
+    async def _evaluate_agent_health(self, agent: Agent) -> None:
+        """Evaluate agent health and auto-discard if below threshold.
+
+        Only evaluates after PRUNING_MIN_TRADES completed trades.
+        Composite score based on drawdown and win rate.
+        """
+        # Count completed trades
+        trade_count_result = await self.session.execute(
+            select(func.count()).select_from(AgentTrade).where(
+                AgentTrade.agent_id == agent.id
+            )
+        )
+        trade_count = trade_count_result.scalar() or 0
+
+        if trade_count < PRUNING_MIN_TRADES:
+            return
+
+        # Get portfolio for drawdown calculation
+        portfolio_result = await self.session.execute(
+            select(AgentPortfolio).where(AgentPortfolio.agent_id == agent.id)
+        )
+        portfolio = portfolio_result.scalar_one_or_none()
+        if not portfolio or portfolio.peak_equity <= 0:
+            return
+
+        # Calculate metrics
+        drawdown_pct = float(
+            (portfolio.peak_equity - portfolio.total_equity) / portfolio.peak_equity * 100
+        )
+
+        win_count_result = await self.session.execute(
+            select(func.count()).select_from(AgentTrade).where(
+                AgentTrade.agent_id == agent.id,
+                AgentTrade.pnl > 0,
+            )
+        )
+        win_count = win_count_result.scalar() or 0
+        win_rate = win_count / trade_count if trade_count > 0 else 0.0
+
+        # Composite score (0-100)
+        # Drawdown component: 100 at 0% drawdown, 0 at >= max threshold
+        drawdown_score = max(0.0, 100.0 * (1.0 - drawdown_pct / PRUNING_MAX_DRAWDOWN_PCT))
+        # Win rate component: 0 at 0%, 100 at 50%+ (scaled linearly)
+        win_rate_score = min(100.0, win_rate * 200.0)
+
+        health_score = (
+            PRUNING_WEIGHT_DRAWDOWN * drawdown_score
+            + PRUNING_WEIGHT_WIN_RATE * win_rate_score
+        )
+
+        if health_score < PRUNING_HEALTH_THRESHOLD:
+            reasons = []
+            if drawdown_pct > PRUNING_MAX_DRAWDOWN_PCT:
+                reasons.append(f"Drawdown {drawdown_pct:.1f}% exceeds {PRUNING_MAX_DRAWDOWN_PCT:.0f}% limit")
+            if win_rate < PRUNING_MIN_WIN_RATE:
+                reasons.append(f"Win rate {win_rate:.1%} below {PRUNING_MIN_WIN_RATE:.0%} minimum")
+            reasons.append(f"Health score {health_score:.0f}/100 below {PRUNING_HEALTH_THRESHOLD} threshold")
+
+            reason = "; ".join(reasons)
+            agent.status = "discarded"
+            agent.discarded_at = datetime.now(timezone.utc)
+            agent.discard_reason = reason
+
+            logger.warning(
+                f"Auto-discarded agent {agent.name}: {reason} "
+                f"(trades={trade_count}, drawdown={drawdown_pct:.1f}%, "
+                f"win_rate={win_rate:.1%})"
+            )
 
     async def _execute_action(
         self,

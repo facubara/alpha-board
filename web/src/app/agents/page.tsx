@@ -1,5 +1,6 @@
-import { getAgentLeaderboard } from "@/lib/queries/agents";
+import { getAgentLeaderboard, getDiscardedAgents } from "@/lib/queries/agents";
 import { AgentLeaderboard } from "@/components/agents";
+import { DiscardedAgents } from "@/components/agents/discarded-agents";
 
 /**
  * Agents Leaderboard Page (Server Component)
@@ -11,7 +12,10 @@ import { AgentLeaderboard } from "@/components/agents";
 export const revalidate = 60;
 
 export default async function AgentsPage() {
-  const agents = await getAgentLeaderboard();
+  const [agents, discarded] = await Promise.all([
+    getAgentLeaderboard(),
+    getDiscardedAgents().catch(() => []),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -20,6 +24,9 @@ export default async function AgentsPage() {
         <h1 className="text-xl font-semibold text-primary">Agent Arena</h1>
         <p className="mt-1 text-sm text-secondary">
           {agents.length} AI trading agents competing in simulated markets
+          {discarded.length > 0 && (
+            <span className="text-muted"> · {discarded.length} discarded</span>
+          )}
         </p>
       </div>
 
@@ -30,6 +37,9 @@ export default async function AgentsPage() {
 
       {/* Leaderboard */}
       <AgentLeaderboard agents={agents} />
+
+      {/* Discarded agents section */}
+      {discarded.length > 0 && <DiscardedAgents agents={discarded} />}
     </div>
   );
 }

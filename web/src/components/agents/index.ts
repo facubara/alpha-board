@@ -12,3 +12,4 @@ export { ComparisonView } from "./comparison-view";
 export { ComparisonEquityChart } from "./comparison-equity-chart";
 export { ComparisonMetrics } from "./comparison-metrics";
 export { ComparisonTrades } from "./comparison-trades";
+export { DiscardedAgents } from "./discarded-agents";

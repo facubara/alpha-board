@@ -57,7 +57,10 @@ app.include_router(sse_router)
 scheduler = AsyncIOScheduler()
 
 # Pipeline runner instance
-runner = PipelineRunner(min_volume_usd=settings.min_volume_usd)
+runner = PipelineRunner(
+    min_volume_usd=settings.min_volume_usd,
+    top_symbols_limit=settings.top_symbols_limit,
+)
 
 # Track last run times and results for each timeframe
 last_runs: dict[str, datetime] = {}

@@ -187,7 +187,7 @@ class Agent(Base):
     evolution_model: Mapped[str] = mapped_column(
         String(50), nullable=False, default="claude-opus-4-5-20251101"
     )
-    status: Mapped[str] = mapped_column(String(10), nullable=False, default="active")
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="active")
     engine: Mapped[str] = mapped_column(String(10), nullable=False, default="llm")
     source: Mapped[str] = mapped_column(String(20), nullable=False, server_default="technical")
     initial_balance: Mapped[Decimal] = mapped_column(
@@ -195,6 +195,8 @@ class Agent(Base):
     )
     evolution_trade_threshold: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=10)
     last_cycle_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
+    discarded_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
+    discard_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
