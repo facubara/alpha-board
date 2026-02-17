@@ -26,6 +26,8 @@ class SymbolData:
     quote_volume_24h: float = 0.0
     price_change_pct: float | None = None
     volume_change_pct: float | None = None
+    price_change_abs: float | None = None
+    volume_change_abs: float | None = None
     funding_rate: float | None = None
 
 
@@ -183,6 +185,8 @@ class Ranker:
             signals["_market"] = {
                 "price_change_pct": self._sanitize_for_json(sym_data.price_change_pct),
                 "volume_change_pct": self._sanitize_for_json(sym_data.volume_change_pct),
+                "price_change_abs": self._sanitize_for_json(sym_data.price_change_abs),
+                "volume_change_abs": self._sanitize_for_json(sym_data.volume_change_abs),
                 "funding_rate": self._sanitize_for_json(sym_data.funding_rate),
             }
             snapshot = RankedSnapshot(

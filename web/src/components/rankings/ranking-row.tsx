@@ -29,6 +29,30 @@ interface RankingRowProps {
 }
 
 /**
+ * Format absolute price change with smart precision.
+ * >=$1: 2 decimals. <$1: up to 6 significant digits.
+ */
+function formatPriceAbs(value: number): string {
+  const abs = Math.abs(value);
+  if (abs >= 1000) return `$${(value / 1000).toFixed(1)}k`;
+  if (abs >= 1) return `$${value.toFixed(2)}`;
+  if (abs >= 0.01) return `$${value.toFixed(4)}`;
+  return `$${value.toFixed(6)}`;
+}
+
+/**
+ * Format absolute volume change in compact notation.
+ */
+function formatVolumeAbs(value: number): string {
+  const abs = Math.abs(value);
+  const sign = value >= 0 ? "" : "-";
+  if (abs >= 1_000_000_000) return `${sign}$${(Math.abs(value) / 1_000_000_000).toFixed(1)}B`;
+  if (abs >= 1_000_000) return `${sign}$${(Math.abs(value) / 1_000_000).toFixed(1)}M`;
+  if (abs >= 1_000) return `${sign}$${(Math.abs(value) / 1_000).toFixed(1)}K`;
+  return `${sign}$${Math.abs(value).toFixed(0)}`;
+}
+
+/**
  * Get score text color based on value.
  */
 function getScoreColor(score: number): string {
@@ -115,6 +139,18 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
           )}
         </TableCell>
 
+        {/* Price Δ absolute (hidden until lg) */}
+        <TableCell className="hidden w-24 text-right font-mono text-sm tabular-nums lg:table-cell">
+          {snapshot.priceChangeAbs != null ? (
+            <span className={snapshot.priceChangeAbs >= 0 ? "text-bullish" : "text-bearish"}>
+              {snapshot.priceChangeAbs >= 0 ? "+" : ""}
+              {formatPriceAbs(snapshot.priceChangeAbs)}
+            </span>
+          ) : (
+            <span className="text-muted">—</span>
+          )}
+        </TableCell>
+
         {/* Vol % (hidden on mobile) */}
         <TableCell className="hidden w-20 text-right font-mono text-sm tabular-nums md:table-cell">
           {snapshot.volumeChangePct != null ? (
@@ -124,6 +160,18 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
                 ? `${(snapshot.volumeChangePct / 1000).toFixed(1)}k`
                 : snapshot.volumeChangePct.toFixed(0)}
               %
+            </span>
+          ) : (
+            <span className="text-muted">—</span>
+          )}
+        </TableCell>
+
+        {/* Vol Δ absolute (hidden until lg) */}
+        <TableCell className="hidden w-24 text-right font-mono text-sm tabular-nums lg:table-cell">
+          {snapshot.volumeChangeAbs != null ? (
+            <span className={snapshot.volumeChangeAbs >= 0 ? "text-bullish" : "text-bearish"}>
+              {snapshot.volumeChangeAbs >= 0 ? "+" : ""}
+              {formatVolumeAbs(snapshot.volumeChangeAbs)}
             </span>
           ) : (
             <span className="text-muted">—</span>
@@ -160,7 +208,7 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
       {/* Expanded indicator breakdown */}
       {isExpanded && (
         <TableRow className="bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
-          <TableCell colSpan={9} className="px-4 py-0">
+          <TableCell colSpan={11} className="px-4 py-0">
             {/* Mobile: show highlights in expanded view */}
             {snapshot.highlights.length > 0 && (
               <div className="border-b border-[var(--border-subtle)] py-2 xl:hidden">

@@ -301,14 +301,18 @@ class PipelineRunner:
                         # Compute price/volume variation (candle-over-candle)
                         price_change_pct = None
                         volume_change_pct = None
+                        price_change_abs = None
+                        volume_change_abs = None
                         if len(df) >= 2:
                             prev_close = float(df.iloc[-2]["close"])
                             curr_close = float(df.iloc[-1]["close"])
+                            price_change_abs = curr_close - prev_close
                             if prev_close != 0:
                                 price_change_pct = (curr_close - prev_close) / prev_close * 100
 
                             prev_vol = float(df.iloc[-2]["volume"])
                             curr_vol = float(df.iloc[-1]["volume"])
+                            volume_change_abs = curr_vol - prev_vol
                             if prev_vol != 0:
                                 volume_change_pct = (curr_vol - prev_vol) / prev_vol * 100
 
@@ -320,6 +324,8 @@ class PipelineRunner:
                                 quote_volume_24h=float(sym.quote_volume_24h or 0),
                                 price_change_pct=price_change_pct,
                                 volume_change_pct=volume_change_pct,
+                                price_change_abs=price_change_abs,
+                                volume_change_abs=volume_change_abs,
                                 funding_rate=funding_rates.get(sym.symbol),
                             )
                         )

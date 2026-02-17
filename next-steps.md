@@ -639,3 +639,81 @@ Below active incidents, a chronological list of resolved incidents from the past
 - Evolution context injects fleet lessons (always active)
 - Decision context injection gated by `FLEET_LESSONS_IN_CONTEXT` env var
 - UI: Collapsible section on agents page with category filters (strength/mistake/pattern) and per-lesson removal
+
+---
+
+## 17. Absolute Price & Volume Change in Rankings — `COMPLETED`
+
+**What:** Add absolute (dollar/unit) price and volume change columns alongside the existing percentage columns in the rankings table across all six timeframes. Currently only candle-over-candle percentage changes are shown — this adds the raw magnitude so users can see *how much* moved, not just the relative shift.
+
+**Why:** Percentage changes alone hide scale. A 5% move on BTC ($96k → $100.8k, +$4.8k) is a very different signal than 5% on a $0.02 altcoin (+$0.001). Absolute values let users instantly gauge the dollar magnitude of moves and compare volume in real terms (e.g., "$42M → $68M" vs "+62%"). This is especially useful for position sizing intuition and spotting volume anomalies.
+
+**New columns per timeframe:**
+
+| Column | Description | Example |
+|--------|-------------|---------|
+| Price Δ | Absolute price change (current close − previous close) | +$4,823.50 |
+| Vol Δ | Absolute volume change (current candle volume − previous candle volume) in quote currency | +$26.1M |
+
+**Implementation notes:**
+
+### Worker — Compute absolute changes
+
+File: `worker/src/pipeline/runner.py`
+
+The pipeline already computes `price_change_pct` and `volume_change_pct` from the last two candles. Add two new fields computed at the same point:
+
+```python
+price_change_abs = curr_close - prev_close  # raw dollar change
+volume_change_abs = curr_vol - prev_vol      # raw volume change (quote currency)
+```
+
+Store both in the existing `indicator_signals` JSONB on the `snapshots` table under keys `price_change_abs` and `volume_change_abs` (same pattern as `funding_rate`). Alternatively, add to the `SymbolData` dataclass and persist as top-level JSONB fields — whichever matches the existing `price_change_pct` storage path.
+
+### Worker — SymbolData / persistence
+
+File: `worker/src/pipeline/runner.py` (SymbolData dataclass)
+
+Add `price_change_abs: float | None` and `volume_change_abs: float | None` fields. Pass them through to snapshot persistence, stored in the same JSONB column or market data blob where `price_change_pct` lives.
+
+### Web — Types
+
+File: `web/src/lib/types.ts`
+
+Add to `RankingSnapshot`:
+```ts
+priceChangeAbs: number | null;
+volumeChangeAbs: number | null;
+```
+
+### Web — Query
+
+File: `web/src/lib/queries/rankings.ts`
+
+Extract the new fields from the JSONB/market data, same pattern as `priceChangePct`.
+
+### Web — Table display
+
+File: `web/src/components/rankings/ranking-row.tsx`
+
+Add two new cells next to the existing percentage columns:
+- **Price Δ**: Format with `$` prefix, sign, and smart precision (2 decimals for >$1, 4+ decimals for sub-cent tokens). Color: green positive, red negative.
+- **Vol Δ**: Format with `$` prefix and compact notation ($1.2M, $340K). Color: green positive, red negative.
+
+File: `web/src/components/rankings/rankings-table.tsx`
+
+Add column headers "Price Δ" and "Vol Δ". Make them sortable (same pattern as existing price/volume columns).
+
+### Design notes
+- On mobile, absolute columns can share a cell with percentage via a stacked layout (% on top, abs below) or be hidden behind horizontal scroll.
+- Consider a compact format: `+$4.8k (+5.0%)` in a single cell if table width becomes a concern.
+
+### Summary
+
+| Component | Change |
+|-----------|--------|
+| `worker/src/pipeline/runner.py` | Compute `price_change_abs`, `volume_change_abs` from candle data |
+| `web/src/lib/types.ts` | Add `priceChangeAbs`, `volumeChangeAbs` to `RankingSnapshot` |
+| `web/src/lib/queries/rankings.ts` | Extract new fields from snapshot data |
+| `web/src/components/rankings/ranking-row.tsx` | Render absolute change cells with formatting |
+| `web/src/components/rankings/rankings-table.tsx` | Add column headers + sort support |

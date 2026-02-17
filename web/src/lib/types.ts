@@ -64,6 +64,8 @@ export interface RankingSnapshot {
   indicatorSignals: IndicatorSignal[];
   priceChangePct: number | null;
   volumeChangePct: number | null;
+  priceChangeAbs: number | null;
+  volumeChangeAbs: number | null;
   fundingRate: number | null;
   computedAt: string; // ISO timestamp
   runId: string;

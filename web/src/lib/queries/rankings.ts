@@ -79,6 +79,8 @@ export async function getTimeframeRankings(
         : [],
       priceChangePct: market?.price_change_pct ?? null,
       volumeChangePct: market?.volume_change_pct ?? null,
+      priceChangeAbs: market?.price_change_abs ?? null,
+      volumeChangeAbs: market?.volume_change_abs ?? null,
       fundingRate: market?.funding_rate ?? null,
       computedAt: (row.computed_at as Date).toISOString(),
       runId: row.run_id as string,

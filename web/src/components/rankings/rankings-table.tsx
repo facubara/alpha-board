@@ -31,7 +31,7 @@ import { RankingRow } from "./ranking-row";
 import { CandleCountdown } from "./candle-countdown";
 import { formatRelativeTime } from "@/lib/utils";
 
-type SortField = "rank" | "symbol" | "score" | "confidence" | "priceChange" | "volumeChange" | "fundingRate";
+type SortField = "rank" | "symbol" | "score" | "confidence" | "priceChange" | "volumeChange" | "priceChangeAbs" | "volumeChangeAbs" | "fundingRate";
 type SortDirection = "asc" | "desc";
 
 interface RankingsTableProps {
@@ -116,6 +116,12 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
           break;
         case "volumeChange":
           comparison = (a.volumeChangePct ?? -Infinity) - (b.volumeChangePct ?? -Infinity);
+          break;
+        case "priceChangeAbs":
+          comparison = (a.priceChangeAbs ?? -Infinity) - (b.priceChangeAbs ?? -Infinity);
+          break;
+        case "volumeChangeAbs":
+          comparison = (a.volumeChangeAbs ?? -Infinity) - (b.volumeChangeAbs ?? -Infinity);
           break;
         case "fundingRate":
           comparison = (a.fundingRate ?? -Infinity) - (b.fundingRate ?? -Infinity);
@@ -241,10 +247,22 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                     Price %<SortIndicator field="priceChange" />
                   </TableHead>
                   <TableHead
+                    className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                    onClick={() => handleSort("priceChangeAbs")}
+                  >
+                    Price Δ<SortIndicator field="priceChangeAbs" />
+                  </TableHead>
+                  <TableHead
                     className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
                     onClick={() => handleSort("volumeChange")}
                   >
                     Vol %<SortIndicator field="volumeChange" />
+                  </TableHead>
+                  <TableHead
+                    className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                    onClick={() => handleSort("volumeChangeAbs")}
+                  >
+                    Vol Δ<SortIndicator field="volumeChangeAbs" />
                   </TableHead>
                   <TableHead
                     className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
