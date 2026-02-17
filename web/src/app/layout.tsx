@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { HeaderAuth } from "@/components/auth/header-auth";
+import { ConsensusBannerWrapper } from "@/components/consensus-banner-wrapper";
 import { NavLinks } from "@/components/nav-links";
 import "./globals.css";
 
@@ -57,6 +58,9 @@ export default function RootLayout({
               </div>
             </div>
           </header>
+
+          {/* Consensus ticker banner */}
+          <ConsensusBannerWrapper />
 
           {/* Main content */}
           <main className="mx-auto max-w-[1200px] px-4 py-6 sm:px-8">

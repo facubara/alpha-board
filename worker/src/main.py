@@ -254,6 +254,72 @@ async def _broadcast_agent_update() -> None:
         logger.exception(f"Failed to broadcast agent update: {e}")
 
 
+async def _broadcast_consensus() -> None:
+    """Query open positions grouped by symbol/source/direction and publish consensus to SSE."""
+    try:
+        async with async_session() as session:
+            result = await session.execute(
+                select(
+                    Symbol.symbol,
+                    Agent.source,
+                    AgentPosition.direction,
+                    func.count().label("agent_count"),
+                )
+                .join(Agent, Agent.id == AgentPosition.agent_id)
+                .join(Symbol, Symbol.id == AgentPosition.symbol_id)
+                .where(Agent.status == "active")
+                .group_by(Symbol.symbol, Agent.source, AgentPosition.direction)
+            )
+            rows = result.all()
+
+            # Build lookup: { symbol -> { source -> { long: n, short: n } } }
+            lookup: dict[str, dict[str, dict[str, int]]] = {}
+            for symbol, source, direction, count in rows:
+                lookup.setdefault(symbol, {}).setdefault(source, {"long": 0, "short": 0})
+                lookup[symbol][source][direction] += count
+
+            def compute_consensus(filter_sources: list[str] | None) -> list[dict]:
+                items = []
+                for symbol, source_map in lookup.items():
+                    total_longs = 0
+                    total_shorts = 0
+                    for source, counts in source_map.items():
+                        if filter_sources is None or source in filter_sources:
+                            total_longs += counts["long"]
+                            total_shorts += counts["short"]
+
+                    total = total_longs + total_shorts
+                    if total < 2:
+                        continue
+
+                    majority = max(total_longs, total_shorts)
+                    consensus_pct = round(majority / total * 100)
+                    if consensus_pct < 50:
+                        continue
+
+                    items.append({
+                        "symbol": symbol,
+                        "direction": "long" if total_longs >= total_shorts else "short",
+                        "consensusPct": consensus_pct,
+                        "longCount": total_longs,
+                        "shortCount": total_shorts,
+                        "totalAgents": total,
+                    })
+
+                items.sort(key=lambda x: x["consensusPct"], reverse=True)
+                return items
+
+            await event_bus.publish("consensus", {
+                "type": "consensus_update",
+                "technical": compute_consensus(["technical"]),
+                "tweet": compute_consensus(["tweet"]),
+                "mixed": compute_consensus(None),
+            })
+            logger.debug("Broadcast consensus update")
+    except Exception as e:
+        logger.exception(f"Failed to broadcast consensus update: {e}")
+
+
 async def run_timeframe_pipeline(timeframe: str):
     """Run the pipeline for a single timeframe.
 
@@ -303,6 +369,7 @@ async def run_timeframe_pipeline(timeframe: str):
             # Broadcast updates to SSE subscribers
             await _broadcast_ranking_update(timeframe)
             await _broadcast_agent_update()
+            await _broadcast_consensus()
 
         elif result["status"] == "skipped":
             logger.info(f"Skipped {timeframe}: {result.get('reason')}")
@@ -896,8 +963,9 @@ async def run_twitter_poll():
                     except Exception as e:
                         logger.exception(f"Tweet agent cycle failed for {tf}: {e}")
 
-                # Broadcast updated leaderboard after tweet agents run
+                # Broadcast updated leaderboard and consensus after tweet agents run
                 await _broadcast_agent_update()
+                await _broadcast_consensus()
         except Exception as e:
             logger.exception(f"Tweet agent execution failed: {e}")
 
@@ -1195,9 +1263,13 @@ async def on_startup():
         replace_existing=True,
     )
 
-    # Periodic agent leaderboard broadcast for live PnL updates
+    # Periodic agent leaderboard + consensus broadcast for live updates
+    async def _broadcast_agents_and_consensus():
+        await _broadcast_agent_update()
+        await _broadcast_consensus()
+
     scheduler.add_job(
-        _broadcast_agent_update,
+        _broadcast_agents_and_consensus,
         trigger=IntervalTrigger(seconds=settings.sse_agent_broadcast_seconds),
         id="sse_agent_broadcast",
         name=f"SSE agent broadcast (every {settings.sse_agent_broadcast_seconds}s)",

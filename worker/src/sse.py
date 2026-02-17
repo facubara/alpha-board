@@ -80,3 +80,16 @@ async def sse_tweets() -> StreamingResponse:
             "X-Accel-Buffering": "no",
         },
     )
+
+
+@router.get("/consensus")
+async def sse_consensus() -> StreamingResponse:
+    """Stream agent position consensus updates."""
+    return StreamingResponse(
+        _event_stream("consensus"),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )

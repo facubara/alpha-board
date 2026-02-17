@@ -113,6 +113,11 @@
   --radius: 6px;
 }
 
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -175,6 +180,15 @@
   }
   .bg-elevated {
     background-color: var(--bg-elevated);
+  }
+
+  /* Marquee animation for consensus banner */
+  .marquee-container {
+    animation: marquee 30s linear infinite;
+  }
+
+  .marquee-content {
+    flex-shrink: 0;
   }
 
   /* Transition helper */
