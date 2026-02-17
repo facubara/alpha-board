@@ -1073,7 +1073,7 @@ Add a `reconcile_pnl(agent_id)` method that:
 
 ---
 
-## 20. LLM Cost Control — Per-Section Toggles — `IN PROGRESS`
+## 20. LLM Cost Control — Per-Section Toggles — `COMPLETED`
 
 **What:** Per-section toggle controls for all 6 LLM/rule call sites (trade decisions, evolution, post-mortem, memory, tweet sentiment, rule-based), with cost breakdown per section and visibility on both a new `/settings` page and read-only badges on `/status`.
 
