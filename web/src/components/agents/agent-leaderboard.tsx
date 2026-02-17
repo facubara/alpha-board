@@ -99,14 +99,30 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
 
   // Live state: initialized from server-fetched data, updated via SSE
   const [agentsData, setAgentsData] = useState<AgentLeaderboardRow[]>(agents);
+  const sseActiveRef = useRef(false);
 
   // Sync when server-fetched prop changes (e.g. after router.refresh())
+  // but only if SSE hasn't taken over yet — SSE provides live PnL data
+  // that is more accurate than the stale DB values in the server prop.
   useEffect(() => {
-    setAgentsData(agents);
+    if (!sseActiveRef.current) {
+      setAgentsData(agents);
+    } else {
+      // SSE is active — only sync status changes (pause/resume) from server,
+      // but keep SSE's live PnL values
+      setAgentsData((prev) => {
+        const serverStatusMap = new Map(agents.map((a) => [a.id, a.status]));
+        return prev.map((a) => ({
+          ...a,
+          status: serverStatusMap.get(a.id) ?? a.status,
+        }));
+      });
+    }
   }, [agents]);
 
   const handleSSEMessage = useCallback((event: AgentSSEEvent) => {
     if (event.type === "agent_update" && event.agents) {
+      sseActiveRef.current = true;
       // SSE may not include source — preserve from existing data
       setAgentsData((prev) => {
         const sourceMap = new Map(prev.map((a) => [a.id, a.source]));
