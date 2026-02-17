@@ -1,6 +1,6 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-17 (Status Page)
+**Last Updated:** 2026-02-17 (Consensus Fix)
 **Current Phase:** Complete (all 15 phases done) + Post-launch features
 
 ---
@@ -162,12 +162,11 @@ None — all decisions resolved.
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-17 17:00 | Post-launch | Fix consensus denominator + marquee animation |
 | 2026-02-17 12:00 | Post-launch | Smart Pruning (#13) |
 | 2026-02-17 00:30 | Post-launch | Consensus Ticker Banner (#10) |
 | 2026-02-16 09:25 | Post-launch | Twitter Feed & Tweet Agents (#9) |
 | 2026-02-15 23:00 | Post-launch | Redis Caching Layer (#7) — Upstash |
-| 2026-02-13 00:20 | Post-launch | Symbol cross-ref (#8) + candle countdown |
-| 2026-02-12 20:00 | Post-launch | Agent Comparison Mode (#6) |
 
 ---
 
