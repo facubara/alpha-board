@@ -350,7 +350,7 @@ Two sub-columns:
 
 ---
 
-## 13. Smart Pruning — Symbol List Limit & Agent Auto-Discard — `PENDING`
+## 13. Smart Pruning — Symbol List Limit & Agent Auto-Discard — `COMPLETED`
 
 **What:** Two related sub-features for managing scale: (a) limit the rankings to the top N symbols by volume, and (b) automatically discard agents that fall below a composite performance threshold.
 

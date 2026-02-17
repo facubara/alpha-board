@@ -71,6 +71,7 @@
 - [x] **Consensus Ticker Banner** — Post-launch feature
 - [x] **Notification System** — Post-launch feature
 - [x] **Rankings Table Columns** — Post-launch feature
+- [x] **Smart Pruning (Symbol Limit & Agent Auto-Discard)** — Post-launch feature
 
 ---
 
@@ -119,6 +120,10 @@
 | 15 | Strategy pattern | ABC base class with per-archetype registry |
 | 15 | Rule agent naming | `rb-{archetype}-{tf}` prefix convention |
 | 15 | Skip memory/evolution | Guard in orchestrator for rule agents |
+| 13 | Symbol limit | Top 100 by volume (configurable via `TOP_SYMBOLS_LIMIT`) |
+| 13 | Composite health score | Drawdown 60% + win rate 40%, threshold 30/100 |
+| 13 | Min trades gate | 20 trades before evaluation |
+| 13 | Discard UX | Collapsible section with re-activate and delete actions |
 
 ---
 
@@ -138,6 +143,7 @@
 | 10 | Consensus Ticker Banner | Done |
 | 11 | Notification System | Done |
 | 12 | Rankings Table Columns | Done |
+| 13 | Smart Pruning (Symbol Limit & Agent Auto-Discard) | Done |
 
 ## Open Decisions
 
@@ -149,6 +155,7 @@ None — all decisions resolved.
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-17 12:00 | Post-launch | Smart Pruning (#13) |
 | 2026-02-17 00:30 | Post-launch | Consensus Ticker Banner (#10) |
 | 2026-02-16 09:25 | Post-launch | Twitter Feed & Tweet Agents (#9) |
 | 2026-02-15 23:00 | Post-launch | Redis Caching Layer (#7) — Upstash |
