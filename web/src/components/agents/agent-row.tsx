@@ -11,8 +11,10 @@
  * - Semantic colors for PnL (green/red)
  */
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Pause, Play } from "lucide-react";
+
+const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
@@ -79,7 +81,22 @@ function getHealthStatus(
 export function AgentRow({ agent, showCheckbox, selected, onSelect }: AgentRowProps) {
   const [status, setStatus] = useState(agent.status);
   const [toggling, setToggling] = useState(false);
+  const [spinnerFrame, setSpinnerFrame] = useState(0);
+  const spinnerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { requireAuth } = useAuth();
+
+  useEffect(() => {
+    if (toggling) {
+      spinnerRef.current = setInterval(() => {
+        setSpinnerFrame((f) => (f + 1) % SPINNER_FRAMES.length);
+      }, 80);
+    } else {
+      if (spinnerRef.current) clearInterval(spinnerRef.current);
+    }
+    return () => {
+      if (spinnerRef.current) clearInterval(spinnerRef.current);
+    };
+  }, [toggling]);
 
   const handleToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -227,13 +244,14 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect }: AgentRowPr
           disabled={toggling}
           className={cn(
             "flex h-7 w-7 items-center justify-center rounded-md transition-colors-fast",
-            "hover:bg-[var(--bg-muted)]",
-            toggling && "opacity-50"
+            "hover:bg-[var(--bg-muted)]"
           )}
-          title={isPaused ? "Resume agent" : "Pause agent"}
-          aria-label={isPaused ? "Resume agent" : "Pause agent"}
+          title={toggling ? "Updating..." : isPaused ? "Resume agent" : "Pause agent"}
+          aria-label={toggling ? "Updating..." : isPaused ? "Resume agent" : "Pause agent"}
         >
-          {isPaused ? (
+          {toggling ? (
+            <span className="font-mono text-sm text-secondary">{SPINNER_FRAMES[spinnerFrame]}</span>
+          ) : isPaused ? (
             <Play className="h-3.5 w-3.5 text-secondary" />
           ) : (
             <Pause className="h-3.5 w-3.5 text-secondary" />
