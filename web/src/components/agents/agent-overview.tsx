@@ -50,6 +50,26 @@ export function AgentOverview({
             : "text-secondary",
     },
     {
+      label: "Realized PnL",
+      value: formatUsd(agent.totalRealizedPnl, true),
+      color:
+        agent.totalRealizedPnl > 0
+          ? "text-bullish"
+          : agent.totalRealizedPnl < 0
+            ? "text-bearish"
+            : "text-secondary",
+    },
+    {
+      label: "Unrealized PnL",
+      value: formatUsd(agent.unrealizedPnl, true),
+      color:
+        agent.unrealizedPnl > 0
+          ? "text-bullish"
+          : agent.unrealizedPnl < 0
+            ? "text-bearish"
+            : "text-secondary",
+    },
+    {
       label: "Return",
       value:
         agent.initialBalance > 0
@@ -114,6 +134,7 @@ export function AgentOverview({
                   <TableHead className="text-right text-xs font-medium text-secondary">SL</TableHead>
                   <TableHead className="text-right text-xs font-medium text-secondary">TP</TableHead>
                   <TableHead className="text-right text-xs font-medium text-secondary">uPnL</TableHead>
+                  <TableHead className="hidden text-right text-xs font-medium text-muted lg:table-cell">Opened</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -156,6 +177,9 @@ export function AgentOverview({
                     >
                       {pos.unrealizedPnl >= 0 ? "+" : ""}
                       {pos.unrealizedPnl.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell">
+                      {new Date(pos.openedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false })}
                     </TableCell>
                   </TableRow>
                 ))}

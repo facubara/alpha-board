@@ -782,3 +782,291 @@ Each chip gets a tooltip explaining the pattern:
 - Tooltips should feel native to the dark e-ink aesthetic — no bright backgrounds or jarring animations.
 - On mobile/touch: tooltips trigger on tap (Radix handles this automatically).
 - Keep tooltip text concise (1–2 sentences max).
+
+---
+
+## 19. Agent Integrity Audit & Telegram Parity — `COMPLETED`
+
+**What:** Thorough end-to-end audit of the agent system ensuring PnL accuracy, proper lifecycle behavior, clear data presentation, and Telegram notification parity with the web UI. Every number on the site must be verifiable against raw trades, and every Telegram message must match what the site shows.
+
+**Why:** The agent fleet is the core product. If PnL numbers don't add up, timestamps are missing, or Telegram shows different data than the site, trust in the system collapses. This is a hardening pass — no new features, just making the existing system bulletproof.
+
+---
+
+### 19.1 — Differentiate Unrealized PnL (uPnL) vs Realized PnL
+
+**Current state:** The `AgentPortfolio` table has `total_realized_pnl` and `total_equity`, but the web UI only shows a single "Total PnL" value computed as `total_equity - initial_balance`. This conflates realized gains from closed trades with paper gains from open positions.
+
+**Changes:**
+
+#### Web types (`web/src/lib/types.ts`)
+Add to `AgentDetail`:
+```ts
+realizedPnl: number;    // sum of all closed trade PnLs
+unrealizedPnl: number;  // sum of all open position uPnLs
+```
+
+#### Web query (`web/src/lib/queries/agents.ts`)
+Return both values from the portfolio query:
+```sql
+p.total_realized_pnl as realized_pnl,
+(p.total_equity - p.cash_balance - p.total_realized_pnl) as unrealized_pnl
+```
+Or simpler: sum `unrealized_pnl` from `agent_positions` for the open uPnL.
+
+#### Agent leaderboard (`web/src/components/agents/agent-leaderboard.tsx`)
+- Add columns or sub-labels: **Realized PnL** and **uPnL** (unrealized) alongside the existing Total PnL.
+- Color coding: realized = solid green/red, unrealized = dimmed/italic green/red to visually distinguish.
+
+#### Agent overview tab (`web/src/components/agents/agent-overview.tsx`)
+- Metrics grid: split "Total PnL" into three cards:
+  - **Total PnL** (equity − initial balance, as today)
+  - **Realized PnL** (from closed trades only)
+  - **Unrealized PnL** (from open positions)
+- Tooltips on each explaining the difference.
+
+#### Open positions table
+- Already shows `uPnL` per position — keep as-is but ensure the sum matches the portfolio-level `unrealizedPnl`.
+
+---
+
+### 19.2 — Paused Agents Stop Computing PnL
+
+**Current state:** The orchestrator filters `status == "active"` so paused agents don't run cycles. However, their open positions still have stale `unrealized_pnl` values from the last cycle they ran. This means:
+- A paused agent with open positions shows a frozen uPnL that drifts from reality.
+- If resumed, the first cycle updates uPnL and may trigger unexpected SL/TP hits at prices that moved significantly.
+
+**Changes:**
+
+#### Option A — Force-close on pause (recommended)
+When an agent is paused (via API or admin action), automatically close all open positions at current market price. This:
+- Crystallizes all PnL into realized
+- Eliminates stale uPnL confusion
+- Makes the "paused" state clean (no positions, no ongoing risk)
+
+Implementation:
+- Add `POST /agents/{id}/pause` endpoint in worker
+- Endpoint: set `status = "paused"`, call `portfolio_manager.close_all_positions(agent_id, current_prices, reason="agent_paused")`
+- Log trades with `exit_reason = "agent_paused"`
+- Send Telegram notification: "Agent {name} paused — {N} positions closed"
+
+#### Option B — Keep positions but update uPnL
+If we want paused agents to keep positions:
+- Add paused agent IDs to the price update loop (separate from decision cycle)
+- Update `unrealized_pnl` every cycle even for paused agents
+- But never call the decision engine or check SL/TP
+- Show a "PAUSED" badge next to uPnL values
+
+**Recommendation:** Option A is simpler and avoids confusion.
+
+#### Web UI
+- Add a pause/unpause button on the agent detail page (admin only)
+- Show `pausedAt` timestamp when agent is paused
+- Paused agents should be visually dimmed in the leaderboard
+
+---
+
+### 19.3 — Agent Unique IDs (UUID)
+
+**Current state:** Agents have integer auto-increment IDs (1, 2, 3...). These work fine internally but are fragile for:
+- Cross-system references (Telegram messages referencing agent #5 could collide if DB is ever reset)
+- External integrations (webhook callbacks, audit logs)
+- Multi-instance deployments
+
+**Changes:**
+
+#### Database migration (018)
+- Add `uuid` column to `agents` table: `UUID DEFAULT gen_random_uuid()`, unique, not null
+- Backfill existing agents with generated UUIDs
+- Add index on `uuid`
+
+#### Worker models (`worker/src/models/db.py`)
+- Add `uuid: Mapped[str] = mapped_column(UUID, server_default=text("gen_random_uuid()"), unique=True)`
+
+#### Telegram messages
+- Include short UUID prefix in all agent notifications: `[a3f7b2] Momentum 15m #1 opened LONG...`
+- This makes messages greppable and cross-referenceable
+
+#### Web UI
+- Show UUID (truncated to 8 chars) in agent detail header
+- Add copy-to-clipboard on click
+- Agent URLs can optionally use UUID: `/agents/a3f7b2c4-...` (keep integer ID as primary route)
+
+#### API responses
+- Include `uuid` field in all agent API responses alongside `id`
+
+---
+
+### 19.4 — Timestamps Visible on All Agent Actions
+
+**Current state:** Trade history shows `closedAt` as relative time ("5 hours ago"). But:
+- Decision timestamps (`decided_at`) are not shown in the Reasoning tab
+- Position `opened_at` is shown but only as relative time
+- No absolute timestamps anywhere (important for audit/debugging)
+
+**Changes:**
+
+#### Trade history tab (`web/src/components/agents/trade-history.tsx`)
+- Show both absolute and relative timestamps:
+  - `Opened: Feb 17, 14:32 UTC (3h ago)`
+  - `Closed: Feb 17, 17:45 UTC (12m ago)`
+- Add `openedAt` column (currently only `closedAt` is displayed)
+- Show trade duration prominently (already have `duration_minutes`)
+
+#### Reasoning tab (`web/src/components/agents/agent-reasoning.tsx`)
+- Add `decided_at` timestamp to each decision entry
+- Show both absolute and relative time
+- For hold decisions: show timestamp + "HOLD — no action taken"
+
+#### Open positions table (`web/src/components/agents/agent-overview.tsx`)
+- Show `opened_at` as absolute timestamp
+- Show duration: "Open for 2h 15m"
+
+#### Agent detail header
+- Show `created_at` (agent creation date)
+- Show `last_cycle_at` (last time agent ran a decision cycle)
+- If discarded: show `discarded_at` + `discard_reason`
+
+---
+
+### 19.5 — Telegram Notification Parity with Web UI
+
+**Current state:** Telegram sends notifications for trade opens, closes, equity alerts, evolutions, and daily digests. But:
+- Telegram messages don't include the agent UUID (only name)
+- No link back to the web UI from Telegram messages
+- PnL in Telegram messages may not match the web (different calculation timing)
+- No Telegram notification for agent pause/unpause
+- No Telegram notification for agent discard (auto-pruning)
+- Daily digest doesn't include per-agent uPnL breakdown
+
+**Changes:**
+
+#### Message templates (`worker/src/notifications/templates.py`)
+
+**Trade opened message — add:**
+- Agent UUID prefix: `[a3f7b2]`
+- Link to agent page: `<a href="https://alpha-board.com/agents/{id}">View agent →</a>`
+- Current portfolio cash after trade
+- Number of open positions after this trade
+
+**Trade closed message — add:**
+- Agent UUID prefix
+- Link to agent page
+- Cumulative realized PnL (not just this trade's PnL)
+- Updated equity after close
+- Win/loss streak count
+
+**Daily digest — add:**
+- Per-agent breakdown: name, uuid, equity, realized PnL, uPnL, open positions count
+- Fleet totals: total equity, total realized PnL, total uPnL
+- Best/worst performer of the day
+- Agents paused/discarded in the last 24h
+
+**New notifications — add:**
+- `notify_agent_paused(agent, positions_closed, reason)`
+- `notify_agent_discarded(agent, health_score, reason, post_mortem_summary)`
+- Add corresponding preference toggles: `notify_agent_paused`, `notify_agent_discarded`
+
+#### Notification service (`worker/src/notifications/service.py`)
+- Add methods for new notification types
+- Ensure PnL values sent to Telegram use the **exact same calculation** as the web query (snapshot at notification time, not a different formula)
+
+---
+
+### 19.6 — PnL Integrity Verification
+
+**Goal:** Mathematical proof that `total_pnl = sum(trade.pnl) + sum(position.unrealized_pnl)` at all times.
+
+**Changes:**
+
+#### Worker — PnL reconciliation check (`worker/src/agents/portfolio.py`)
+Add a `reconcile_pnl(agent_id)` method that:
+1. Sums all `agent_trades.pnl` for the agent → `sum_realized`
+2. Sums all `agent_positions.unrealized_pnl` → `sum_unrealized`
+3. Compares `sum_realized` with `portfolio.total_realized_pnl`
+4. Compares `sum_realized + sum_unrealized + initial_balance` with `portfolio.total_equity`
+5. If discrepancy > $0.01, logs a WARNING with full breakdown
+6. Returns `(is_consistent: bool, discrepancy: float, details: dict)`
+
+#### Scheduler — periodic reconciliation
+- Add a scheduled job: `CronTrigger(hour=1, minute=0)` — runs daily at 01:00 UTC
+- Reconciles all active agents
+- Sends Telegram alert if any agent has a PnL discrepancy
+
+#### API endpoint
+- `GET /agents/{id}/reconcile` — on-demand reconciliation for debugging
+- Returns detailed breakdown: sum of trades, sum of uPnL, portfolio values, discrepancy
+
+#### Web UI — reconciliation indicator
+- On agent detail page, show a small checkmark or warning icon next to PnL values
+- Green check = last reconciliation passed
+- Yellow warning = minor discrepancy (<$1)
+- Red alert = significant discrepancy (>$1)
+
+---
+
+### 19.7 — Telegram ↔ Site Cross-Verification Test Plan
+
+**Manual verification checklist** (to be performed after implementation):
+
+1. **Open trade test:**
+   - Trigger a trade open on a test agent
+   - Verify Telegram message shows: agent UUID, symbol, direction, entry price, position size, SL/TP
+   - Navigate to agent page on site → verify same values in open positions table
+   - Verify timestamps match (Telegram vs site, both in UTC)
+
+2. **Close trade test:**
+   - Wait for or trigger a trade close (agent decision, SL, or TP)
+   - Verify Telegram message shows: PnL, exit price, exit reason, cumulative realized PnL
+   - Navigate to agent trade history → verify same PnL, same exit price, same reason
+   - Verify the leaderboard PnL updated to reflect the closed trade
+
+3. **PnL reconciliation test:**
+   - For an agent with 5+ closed trades and 1+ open position:
+   - Sum all trade PnLs manually from trade history tab
+   - Note the uPnL from open positions
+   - Verify: Realized PnL on site = sum of trade PnLs
+   - Verify: Total PnL on site = Realized PnL + uPnL
+   - Verify: Telegram daily digest shows same numbers
+
+4. **Pause test:**
+   - Pause an agent with open positions
+   - Verify Telegram notification sent with positions closed count
+   - Verify site shows agent as paused with all positions closed
+   - Verify PnL reflects the forced-close trades
+
+5. **Discard test:**
+   - Find or create an agent approaching health threshold
+   - Verify auto-discard triggers
+   - Verify Telegram notification with health score and reason
+   - Verify site shows discarded status with timestamp and reason
+
+---
+
+### File Summary
+
+| Action | File |
+|--------|------|
+| Create | `worker/alembic/versions/018_agent_uuid.py` |
+| Modify | `worker/src/models/db.py` — Add UUID column to Agent |
+| Modify | `worker/src/agents/orchestrator.py` — Pause endpoint, discard notifications |
+| Modify | `worker/src/agents/portfolio.py` — Add `reconcile_pnl()`, pause force-close |
+| Modify | `worker/src/notifications/templates.py` — UUID prefix, links, new message types |
+| Modify | `worker/src/notifications/service.py` — New notification methods, PnL parity |
+| Modify | `worker/src/main.py` — Add reconciliation scheduler job, pause/unpause routes |
+| Create | `worker/src/health/routes.py` or new `worker/src/agents/routes.py` — Reconcile + pause endpoints |
+| Modify | `web/src/lib/types.ts` — Add `uuid`, `realizedPnl`, `unrealizedPnl` fields |
+| Modify | `web/src/lib/queries/agents.ts` — Return realized/unrealized PnL separately |
+| Modify | `web/src/components/agents/agent-leaderboard.tsx` — uPnL vs realized columns |
+| Modify | `web/src/components/agents/agent-overview.tsx` — Split PnL cards, absolute timestamps |
+| Modify | `web/src/components/agents/agent-detail.tsx` — UUID display, pause button, timestamps |
+| Modify | `web/src/components/agents/trade-history.tsx` — Absolute timestamps, openedAt column |
+
+### Priority order
+1. **19.6** — PnL reconciliation (foundational — must verify integrity first)
+2. **19.1** — uPnL vs realized PnL separation (depends on correct numbers)
+3. **19.4** — Timestamps on all actions (needed for audit trail)
+4. **19.3** — Agent UUIDs (needed before Telegram updates)
+5. **19.5** — Telegram parity (depends on UUID + correct PnL)
+6. **19.2** — Paused agent behavior (depends on portfolio force-close)
+7. **19.7** — Cross-verification testing (final validation of everything above)

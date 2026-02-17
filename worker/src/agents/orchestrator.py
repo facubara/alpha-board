@@ -41,6 +41,8 @@ from src.agents.memory import MemoryManager
 from src.agents.evolution import EvolutionManager
 from src.notifications.equity import check_equity_alerts
 from src.notifications.models import (
+    AgentDiscardedEvent,
+    AgentPausedEvent,
     EvolutionEvent,
     TradeClosedEvent,
     TradeOpenedEvent,
@@ -388,6 +390,20 @@ class AgentOrchestrator:
                 f"win_rate={win_rate:.1%})"
             )
 
+            # Send discard notification
+            try:
+                discard_event = AgentDiscardedEvent(
+                    agent_name=agent.name,
+                    engine=agent.engine,
+                    agent_id=agent.id,
+                    agent_uuid=str(agent.uuid) if agent.uuid else "",
+                    health_score=health_score,
+                    reason=reason,
+                )
+                await self.notification_service.notify_agent_discarded(discard_event)
+            except Exception:
+                logger.debug(f"Failed to send discard notification for {agent.name}", exc_info=True)
+
             # Trigger post-mortem analysis for LLM agents
             if agent.engine == "llm":
                 from src.agents.postmortem import PostMortemAnalyzer
@@ -677,10 +693,22 @@ class AgentOrchestrator:
         execution: ExecutionResult,
     ) -> None:
         try:
+            # Get portfolio for cash_after and position count
+            portfolio = await self.session.execute(
+                select(AgentPortfolio).where(AgentPortfolio.agent_id == agent.id)
+            )
+            p = portfolio.scalar_one_or_none()
+            from src.models.db import AgentPosition
+            pos_count_result = await self.session.execute(
+                select(func.count()).select_from(AgentPosition).where(AgentPosition.agent_id == agent.id)
+            )
+            pos_count = pos_count_result.scalar() or 0
+
             event = TradeOpenedEvent(
                 agent_name=agent.name,
                 engine=agent.engine,
                 agent_id=agent.id,
+                agent_uuid=str(agent.uuid) if agent.uuid else "",
                 symbol=decision.action.symbol or "",
                 direction="long" if decision.action.action == ActionType.OPEN_LONG else "short",
                 entry_price=Decimal(str(execution.details.get("entry_price", 0))),
@@ -688,6 +716,8 @@ class AgentOrchestrator:
                 stop_loss=Decimal(str(execution.details["stop_loss"])) if execution.details.get("stop_loss") else None,
                 take_profit=Decimal(str(execution.details["take_profit"])) if execution.details.get("take_profit") else None,
                 confidence=decision.action.confidence,
+                cash_after=p.cash_balance if p else None,
+                open_positions_count=pos_count,
             )
             await self.notification_service.notify_trade_opened(event)
         except Exception:
@@ -696,10 +726,17 @@ class AgentOrchestrator:
     async def _notify_trade_closed(self, agent: Agent, trade: AgentTrade) -> None:
         try:
             pnl_pct = float(trade.pnl / trade.position_size * 100) if trade.position_size else 0.0
+            # Get cumulative realized PnL and equity
+            portfolio = await self.session.execute(
+                select(AgentPortfolio).where(AgentPortfolio.agent_id == agent.id)
+            )
+            p = portfolio.scalar_one_or_none()
+
             event = TradeClosedEvent(
                 agent_name=agent.name,
                 engine=agent.engine,
                 agent_id=agent.id,
+                agent_uuid=str(agent.uuid) if agent.uuid else "",
                 symbol=trade.symbol.symbol if trade.symbol else "UNKNOWN",
                 direction=trade.direction,
                 entry_price=trade.entry_price,
@@ -709,6 +746,8 @@ class AgentOrchestrator:
                 position_size=trade.position_size,
                 duration_minutes=trade.duration_minutes,
                 exit_reason=trade.exit_reason,
+                cumulative_realized_pnl=p.total_realized_pnl if p else None,
+                equity_after=p.total_equity if p else None,
             )
             await self.notification_service.notify_trade_closed(event)
         except Exception:
@@ -747,6 +786,7 @@ class AgentOrchestrator:
                 agent_name=agent.name,
                 engine=agent.engine,
                 agent_id=agent.id,
+                agent_uuid=str(agent.uuid) if agent.uuid else "",
                 event_type=event_type,
                 old_version=old_version,
                 new_version=new_version,

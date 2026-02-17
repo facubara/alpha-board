@@ -9,7 +9,6 @@
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { formatRelativeTime } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -54,7 +53,8 @@ export function TradeHistory({ trades }: TradeHistoryProps) {
             <TableHead className="text-right text-xs font-medium text-secondary">PnL</TableHead>
             <TableHead className="hidden text-xs font-medium text-secondary md:table-cell">Exit</TableHead>
             <TableHead className="hidden text-right text-xs font-medium text-secondary lg:table-cell">Dur</TableHead>
-            <TableHead className="hidden text-right text-xs font-medium text-muted lg:table-cell">When</TableHead>
+            <TableHead className="hidden text-right text-xs font-medium text-muted lg:table-cell">Opened</TableHead>
+            <TableHead className="hidden text-right text-xs font-medium text-muted lg:table-cell">Closed</TableHead>
             <TableHead className="w-8" />
           </TableRow>
         </TableHeader>
@@ -153,8 +153,11 @@ function TradeRow({
         <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell">
           {formatDuration(trade.durationMinutes)}
         </TableCell>
-        <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell">
-          {formatRelativeTime(trade.closedAt)}
+        <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell" title={new Date(trade.openedAt).toISOString()}>
+          {new Date(trade.openedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false })}
+        </TableCell>
+        <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell" title={new Date(trade.closedAt).toISOString()}>
+          {new Date(trade.closedAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false })}
         </TableCell>
         <TableCell className="w-8">
           <ChevronRight
@@ -167,7 +170,7 @@ function TradeRow({
       </TableRow>
       {isExpanded && (
         <TableRow className="bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
-          <TableCell colSpan={10} className="px-4 py-3">
+          <TableCell colSpan={11} className="px-4 py-3">
             <p className="text-sm leading-relaxed text-secondary">
               {trade.reasoningSummary || "No reasoning recorded for this trade."}
             </p>

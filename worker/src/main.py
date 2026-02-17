@@ -222,8 +222,12 @@ async def _broadcast_agent_update() -> None:
                 live_equity = float(portfolio.cash_balance) + positions_value + float(live_unrealized_pnl)
                 live_pnl = live_equity - float(agent.initial_balance)
 
+                realized_pnl = float(portfolio.total_realized_pnl)
+                unrealized_pnl = round(live_pnl - realized_pnl, 2)
+
                 agents.append({
                     "id": agent.id,
+                    "uuid": str(agent.uuid) if hasattr(agent, "uuid") and agent.uuid else None,
                     "name": agent.name,
                     "displayName": agent.display_name,
                     "strategyArchetype": agent.strategy_archetype,
@@ -236,7 +240,8 @@ async def _broadcast_agent_update() -> None:
                     "initialBalance": float(agent.initial_balance),
                     "cashBalance": float(portfolio.cash_balance),
                     "totalEquity": round(live_equity, 2),
-                    "totalRealizedPnl": float(portfolio.total_realized_pnl),
+                    "totalRealizedPnl": realized_pnl,
+                    "unrealizedPnl": unrealized_pnl,
                     "totalFeesPaid": float(portfolio.total_fees_paid),
                     "totalPnl": round(live_pnl, 2),
                     "tradeCount": trade_count,
@@ -1162,6 +1167,115 @@ async def trigger_tweet_analysis():
     return result
 
 
+async def run_pnl_reconciliation():
+    """Scheduled job: reconcile PnL for all active agents."""
+    from src.agents.portfolio import PortfolioManager
+
+    logger.info("Running PnL reconciliation")
+    try:
+        async with async_session() as session:
+            result = await session.execute(
+                select(Agent).where(Agent.status.in_(["active", "paused"]))
+            )
+            agents = result.scalars().all()
+            pm = PortfolioManager(session)
+            inconsistencies = []
+            for agent in agents:
+                report = await pm.reconcile_pnl(agent.id)
+                if not report["is_consistent"]:
+                    inconsistencies.append({
+                        "agent_id": agent.id,
+                        "agent_name": agent.name,
+                        **report,
+                    })
+            if inconsistencies:
+                logger.warning(f"PnL reconciliation found {len(inconsistencies)} inconsistencies: {inconsistencies}")
+            else:
+                logger.info(f"PnL reconciliation passed for {len(agents)} agents")
+    except Exception as e:
+        logger.exception(f"PnL reconciliation failed: {e}")
+
+
+@app.get("/reconcile")
+async def reconcile():
+    """Run PnL reconciliation for all agents and return results."""
+    from src.agents.portfolio import PortfolioManager
+
+    results = []
+    async with async_session() as session:
+        result = await session.execute(
+            select(Agent).where(Agent.status.in_(["active", "paused"]))
+        )
+        agents = result.scalars().all()
+        pm = PortfolioManager(session)
+        for agent in agents:
+            report = await pm.reconcile_pnl(agent.id)
+            results.append({
+                "agent_id": agent.id,
+                "agent_name": agent.name,
+                **report,
+            })
+    return {
+        "total": len(results),
+        "consistent": sum(1 for r in results if r["is_consistent"]),
+        "inconsistent": sum(1 for r in results if not r["is_consistent"]),
+        "agents": results,
+    }
+
+
+@app.post("/agents/{agent_id}/pause")
+async def pause_agent(agent_id: int):
+    """Pause an agent, closing all open positions and sending notification."""
+    from src.agents.portfolio import PortfolioManager
+    from src.notifications.models import AgentPausedEvent
+    from src.notifications.service import NotificationService
+
+    async with async_session() as session:
+        agent_result = await session.execute(
+            select(Agent).where(Agent.id == agent_id)
+        )
+        agent = agent_result.scalar_one_or_none()
+        if not agent:
+            raise HTTPException(status_code=404, detail="Agent not found")
+        if agent.status != "active":
+            raise HTTPException(status_code=400, detail=f"Agent is {agent.status}, not active")
+
+        # Fetch live prices
+        live_prices = await _fetch_live_prices()
+
+        # Close all positions
+        pm = PortfolioManager(session)
+        closed = await pm.close_all_positions(agent.id, live_prices)
+
+        total_realized = sum(c.details.get("pnl", 0) for c in closed)
+
+        # Update agent status
+        agent.status = "paused"
+        await session.commit()
+
+        # Send notification
+        try:
+            ns = NotificationService(session)
+            event = AgentPausedEvent(
+                agent_name=agent.name,
+                engine=agent.engine,
+                agent_id=agent.id,
+                agent_uuid=str(agent.uuid) if agent.uuid else "",
+                positions_closed=len(closed),
+                realized_pnl_from_close=Decimal(str(total_realized)),
+            )
+            await ns.notify_agent_paused(event)
+        except Exception:
+            logger.debug(f"Failed to send pause notification for {agent.name}", exc_info=True)
+
+        return {
+            "agent_id": agent.id,
+            "status": "paused",
+            "positions_closed": len(closed),
+            "realized_pnl": float(total_realized),
+        }
+
+
 async def run_health_checks():
     """Scheduled job: run health checks for all services."""
     from src.health.checker import ServiceHealthChecker
@@ -1325,6 +1439,15 @@ async def on_startup():
         trigger=CronTrigger(hour=0, minute=5),
         id="health_daily_rollup",
         name="Health daily rollup + cleanup",
+        replace_existing=True,
+    )
+
+    # PnL reconciliation (daily at 01:00 UTC)
+    scheduler.add_job(
+        run_pnl_reconciliation,
+        trigger=CronTrigger(hour=1, minute=0),
+        id="pnl_reconciliation",
+        name="PnL reconciliation (daily at 01:00)",
         replace_existing=True,
     )
 

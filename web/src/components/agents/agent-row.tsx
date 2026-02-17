@@ -183,6 +183,7 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect }: AgentRowPr
           agent.totalPnl < 0 && "text-bearish",
           agent.totalPnl === 0 && "text-secondary"
         )}
+        title={`Realized: ${formatPnl(agent.totalRealizedPnl)} | Unrealized: ${formatPnl(agent.unrealizedPnl)}`}
       >
         {formatPnl(agent.totalPnl)}
       </TableCell>

@@ -222,6 +222,7 @@ export type AgentStatus = "active" | "paused" | "discarded";
 
 export interface AgentDetail {
   id: number;
+  uuid: string | null;
   name: string;
   displayName: string;
   strategyArchetype: StrategyArchetype;
@@ -236,6 +237,7 @@ export interface AgentDetail {
   cashBalance: number;
   totalEquity: number;
   totalRealizedPnl: number;
+  unrealizedPnl: number;
   totalFeesPaid: number;
   totalPnl: number;
   tradeCount: number;
@@ -371,6 +373,7 @@ export interface BacktestTrade {
 
 export interface AgentLeaderboardRow {
   id: number;
+  uuid: string | null;
   name: string;
   displayName: string;
   strategyArchetype: StrategyArchetype;
@@ -385,6 +388,7 @@ export interface AgentLeaderboardRow {
   cashBalance: number;
   totalEquity: number;
   totalRealizedPnl: number;
+  unrealizedPnl: number;
   totalFeesPaid: number;
   totalPnl: number;
   tradeCount: number;

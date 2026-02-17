@@ -13,6 +13,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.models.db import NotificationPreference
 from src.notifications.client import TelegramClient
 from src.notifications.models import (
+    AgentDiscardedEvent,
+    AgentPausedEvent,
     DailyDigestData,
     EquityAlertEvent,
     EvolutionEvent,
@@ -132,6 +134,30 @@ class NotificationService:
             await self.client.send_message(text)
         except Exception:
             logger.exception("Error sending evolution notification")
+
+    async def notify_agent_paused(self, event: AgentPausedEvent) -> None:
+        try:
+            if not self.client.is_configured:
+                return
+            prefs = await self._get_preferences()
+            if not prefs or not prefs.enabled:
+                return
+            text = templates.agent_paused_message(event)
+            await self.client.send_message(text)
+        except Exception:
+            logger.exception("Error sending agent paused notification")
+
+    async def notify_agent_discarded(self, event: AgentDiscardedEvent) -> None:
+        try:
+            if not self.client.is_configured:
+                return
+            prefs = await self._get_preferences()
+            if not prefs or not prefs.enabled:
+                return
+            text = templates.agent_discarded_message(event)
+            await self.client.send_message(text)
+        except Exception:
+            logger.exception("Error sending agent discarded notification")
 
     async def send_daily_digest(self, data: DailyDigestData) -> None:
         try:

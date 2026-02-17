@@ -540,6 +540,99 @@ class PortfolioManager:
         )
         return list(result.scalars().all())
 
+    async def close_all_positions(
+        self,
+        agent_id: int,
+        current_prices: dict[str, Decimal],
+        exit_reason: str = "agent_paused",
+    ) -> list[ExecutionResult]:
+        """Close all open positions for an agent (used on pause).
+
+        Returns list of execution results for each closed position.
+        """
+        results: list[ExecutionResult] = []
+        positions = await self._get_open_positions(agent_id)
+
+        for position in positions:
+            symbol_result = await self.session.execute(
+                select(Symbol).where(Symbol.id == position.symbol_id)
+            )
+            symbol = symbol_result.scalar_one()
+            current_price = current_prices.get(symbol.symbol)
+            if not current_price:
+                continue
+
+            result = await self.close_position(
+                agent_id, symbol.symbol, current_price, exit_reason
+            )
+            results.append(result)
+
+        return results
+
+    async def reconcile_pnl(self, agent_id: int) -> dict:
+        """Verify PnL integrity for an agent.
+
+        Checks that:
+        - portfolio.total_realized_pnl == sum(agent_trades.pnl)
+        - portfolio.total_equity == cash + positions_value + unrealized
+
+        Returns dict with is_consistent, discrepancy, and details.
+        """
+        from sqlalchemy import func as sqlfunc
+
+        portfolio = await self._get_portfolio(agent_id)
+        if not portfolio:
+            return {"is_consistent": False, "error": "No portfolio found"}
+
+        # Sum all trade PnLs
+        trade_sum_result = await self.session.execute(
+            select(sqlfunc.coalesce(sqlfunc.sum(AgentTrade.pnl), Decimal("0.00"))).where(
+                AgentTrade.agent_id == agent_id
+            )
+        )
+        sum_realized = trade_sum_result.scalar() or Decimal("0.00")
+
+        # Sum unrealized PnL from open positions
+        positions = await self._get_open_positions(agent_id)
+        sum_unrealized = sum(p.unrealized_pnl or Decimal("0.00") for p in positions)
+        positions_value = sum(p.position_size for p in positions)
+
+        # Check realized PnL matches
+        realized_discrepancy = float(abs(sum_realized - portfolio.total_realized_pnl))
+
+        # Check equity matches
+        expected_equity = portfolio.cash_balance + positions_value + sum_unrealized
+        equity_discrepancy = float(abs(expected_equity - portfolio.total_equity))
+
+        is_consistent = realized_discrepancy < 0.01 and equity_discrepancy < 0.01
+
+        details = {
+            "is_consistent": is_consistent,
+            "realized": {
+                "sum_trades": float(sum_realized),
+                "portfolio_value": float(portfolio.total_realized_pnl),
+                "discrepancy": realized_discrepancy,
+            },
+            "equity": {
+                "cash_balance": float(portfolio.cash_balance),
+                "positions_value": float(positions_value),
+                "sum_unrealized": float(sum_unrealized),
+                "expected_equity": float(expected_equity),
+                "portfolio_equity": float(portfolio.total_equity),
+                "discrepancy": equity_discrepancy,
+            },
+            "open_positions": len(positions),
+        }
+
+        if not is_consistent:
+            logger.warning(
+                f"PnL discrepancy for agent {agent_id}: "
+                f"realized_diff=${realized_discrepancy:.4f}, "
+                f"equity_diff=${equity_discrepancy:.4f}"
+            )
+
+        return details
+
     async def _get_symbol_id(self, symbol: str) -> int | None:
         """Get symbol ID by name."""
         result = await self.session.execute(

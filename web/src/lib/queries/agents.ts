@@ -65,15 +65,16 @@ export function getAgentLeaderboard(): Promise<AgentLeaderboardRow[]> {
       ORDER BY (p.total_equity - a.initial_balance) DESC
     `;
 
-    // Fetch health + discard data separately — columns may not exist until migrations run
-    const healthMap = new Map<number, { lastCycleAt: string | null; discardedAt: string | null; discardReason: string | null }>();
+    // Fetch health + discard + uuid data separately — columns may not exist until migrations run
+    const healthMap = new Map<number, { lastCycleAt: string | null; discardedAt: string | null; discardReason: string | null; uuid: string | null }>();
     try {
-      const healthRows = await sql`SELECT id, last_cycle_at, discarded_at, discard_reason FROM agents`;
+      const healthRows = await sql`SELECT id, last_cycle_at, discarded_at, discard_reason, uuid FROM agents`;
       for (const r of healthRows) {
         healthMap.set(Number(r.id), {
           lastCycleAt: r.last_cycle_at ? (r.last_cycle_at as Date).toISOString() : null,
           discardedAt: r.discarded_at ? (r.discarded_at as Date).toISOString() : null,
           discardReason: (r.discard_reason as string) || null,
+          uuid: (r.uuid as string) || null,
         });
       }
     } catch {
@@ -83,9 +84,12 @@ export function getAgentLeaderboard(): Promise<AgentLeaderboardRow[]> {
     return rows.map((row) => {
       const tradeCount = Number(row.trade_count);
       const wins = Number(row.wins);
+      const totalPnl = Number(row.total_pnl);
+      const totalRealizedPnl = Number(row.total_realized_pnl);
 
       return {
         id: Number(row.id),
+        uuid: healthMap.get(Number(row.id))?.uuid ?? null,
         name: row.name as string,
         displayName: row.display_name as string,
         strategyArchetype: row.strategy_archetype as StrategyArchetype,
@@ -99,9 +103,10 @@ export function getAgentLeaderboard(): Promise<AgentLeaderboardRow[]> {
         initialBalance: Number(row.initial_balance),
         cashBalance: Number(row.cash_balance),
         totalEquity: Number(row.total_equity),
-        totalRealizedPnl: Number(row.total_realized_pnl),
+        totalRealizedPnl,
+        unrealizedPnl: totalPnl - totalRealizedPnl,
         totalFeesPaid: Number(row.total_fees_paid),
-        totalPnl: Number(row.total_pnl),
+        totalPnl,
         tradeCount,
         wins,
         winRate: tradeCount > 0 ? wins / tradeCount : 0,
@@ -157,9 +162,12 @@ export function getDiscardedAgents(): Promise<AgentLeaderboardRow[]> {
     return rows.map((row) => {
       const tradeCount = Number(row.trade_count);
       const wins = Number(row.wins);
+      const totalPnl = Number(row.total_pnl);
+      const totalRealizedPnl = Number(row.total_realized_pnl);
 
       return {
         id: Number(row.id),
+        uuid: null,
         name: row.name as string,
         displayName: row.display_name as string,
         strategyArchetype: row.strategy_archetype as StrategyArchetype,
@@ -173,9 +181,10 @@ export function getDiscardedAgents(): Promise<AgentLeaderboardRow[]> {
         initialBalance: Number(row.initial_balance),
         cashBalance: Number(row.cash_balance),
         totalEquity: Number(row.total_equity),
-        totalRealizedPnl: Number(row.total_realized_pnl),
+        totalRealizedPnl,
+        unrealizedPnl: totalPnl - totalRealizedPnl,
         totalFeesPaid: Number(row.total_fees_paid),
-        totalPnl: Number(row.total_pnl),
+        totalPnl,
         tradeCount,
         wins,
         winRate: tradeCount > 0 ? wins / tradeCount : 0,
@@ -259,16 +268,18 @@ export async function getAgentDetail(
 
   if (rows.length === 0) return null;
 
-  // Fetch health + discard data separately — columns may not exist until migrations run
+  // Fetch health + discard + uuid data separately — columns may not exist until migrations run
   let lastCycleAt: string | null = null;
   let discardedAt: string | null = null;
   let discardReason: string | null = null;
+  let uuid: string | null = null;
   try {
-    const healthRows = await sql`SELECT last_cycle_at, discarded_at, discard_reason FROM agents WHERE id = ${agentId}`;
+    const healthRows = await sql`SELECT last_cycle_at, discarded_at, discard_reason, uuid FROM agents WHERE id = ${agentId}`;
     if (healthRows.length > 0) {
       lastCycleAt = healthRows[0].last_cycle_at ? (healthRows[0].last_cycle_at as Date).toISOString() : null;
       discardedAt = healthRows[0].discarded_at ? (healthRows[0].discarded_at as Date).toISOString() : null;
       discardReason = (healthRows[0].discard_reason as string) || null;
+      uuid = (healthRows[0].uuid as string) || null;
     }
   } catch {
     // Columns don't exist yet
@@ -277,9 +288,12 @@ export async function getAgentDetail(
   const row = rows[0];
   const tradeCount = Number(row.trade_count);
   const wins = Number(row.wins);
+  const totalPnl = Number(row.total_pnl);
+  const totalRealizedPnl = Number(row.total_realized_pnl);
 
   return {
     id: Number(row.id),
+    uuid,
     name: row.name as string,
     displayName: row.display_name as string,
     strategyArchetype: row.strategy_archetype as StrategyArchetype,
@@ -293,9 +307,10 @@ export async function getAgentDetail(
     initialBalance: Number(row.initial_balance),
     cashBalance: Number(row.cash_balance),
     totalEquity: Number(row.total_equity),
-    totalRealizedPnl: Number(row.total_realized_pnl),
+    totalRealizedPnl,
+    unrealizedPnl: totalPnl - totalRealizedPnl,
     totalFeesPaid: Number(row.total_fees_paid),
-    totalPnl: Number(row.total_pnl),
+    totalPnl,
     tradeCount,
     wins,
     winRate: tradeCount > 0 ? wins / tradeCount : 0,

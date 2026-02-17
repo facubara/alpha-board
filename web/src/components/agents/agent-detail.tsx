@@ -97,6 +97,11 @@ export function AgentDetail({
             >
               {agent.status}
             </span>
+            {agent.uuid && (
+              <span className="font-mono text-xs text-muted" title={agent.uuid}>
+                {agent.uuid.slice(0, 8)}
+              </span>
+            )}
           </div>
         </div>
 
@@ -109,17 +114,31 @@ export function AgentDetail({
             </p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-muted">PnL</p>
+            <p className="text-xs text-muted">Realized</p>
             <p
               className={cn(
                 "font-mono text-sm font-semibold",
-                agent.totalPnl > 0 && "text-bullish",
-                agent.totalPnl < 0 && "text-bearish",
-                agent.totalPnl === 0 && "text-secondary"
+                agent.totalRealizedPnl > 0 && "text-bullish",
+                agent.totalRealizedPnl < 0 && "text-bearish",
+                agent.totalRealizedPnl === 0 && "text-secondary"
               )}
             >
-              {agent.totalPnl >= 0 ? "+" : ""}
-              {agent.totalPnl.toFixed(2)}
+              {agent.totalRealizedPnl >= 0 ? "+" : ""}
+              {agent.totalRealizedPnl.toFixed(2)}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-muted">Unrealized</p>
+            <p
+              className={cn(
+                "font-mono text-sm font-semibold",
+                agent.unrealizedPnl > 0 && "text-bullish",
+                agent.unrealizedPnl < 0 && "text-bearish",
+                agent.unrealizedPnl === 0 && "text-secondary"
+              )}
+            >
+              {agent.unrealizedPnl >= 0 ? "+" : ""}
+              {agent.unrealizedPnl.toFixed(2)}
             </p>
           </div>
         </div>

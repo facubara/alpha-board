@@ -147,6 +147,10 @@
 | 12 | Rankings Table Columns | Done |
 | 13 | Smart Pruning (Symbol Limit & Agent Auto-Discard) | Done |
 | 15 | System Status Page | Done |
+| 16 | Fleet Lessons | Done |
+| 17 | Absolute Price & Volume Change | Done |
+| 18 | Tooltips | Done |
+| 19 | Agent Integrity Audit & Telegram Parity | Done |
 
 ## Open Decisions
 

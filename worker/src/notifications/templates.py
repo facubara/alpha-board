@@ -5,6 +5,8 @@ contains too many special characters (., -, %, $) that would need escaping.
 """
 
 from src.notifications.models import (
+    AgentDiscardedEvent,
+    AgentPausedEvent,
     DailyDigestData,
     EquityAlertEvent,
     EvolutionEvent,
@@ -12,9 +14,20 @@ from src.notifications.models import (
     TradeOpenedEvent,
 )
 
+SITE_URL = "https://alpha-board.com"
+
 
 def _engine_tag(engine: str) -> str:
     return f"[{engine.upper()}]"
+
+
+def _uuid_tag(uuid: str) -> str:
+    """Short UUID prefix for cross-referencing."""
+    return f"[{uuid[:8]}]" if uuid else ""
+
+
+def _agent_link(agent_id: int, agent_name: str) -> str:
+    return f'<a href="{SITE_URL}/agents/{agent_id}">{agent_name}</a>'
 
 
 def _format_price(price) -> str:
@@ -46,8 +59,8 @@ def _format_duration(minutes: int) -> str:
 def trade_opened_message(event: TradeOpenedEvent) -> str:
     direction_emoji = "\U0001f4c8" if event.direction == "long" else "\U0001f4c9"
     lines = [
-        f"{direction_emoji} <b>Trade Opened</b> {_engine_tag(event.engine)}",
-        f"Agent: <b>{event.agent_name}</b>",
+        f"{direction_emoji} <b>Trade Opened</b> {_engine_tag(event.engine)} {_uuid_tag(event.agent_uuid)}",
+        f"Agent: {_agent_link(event.agent_id, event.agent_name)}",
         f"Symbol: <b>{event.symbol}</b> ({event.direction.upper()})",
         f"Entry: {_format_price(event.entry_price)}",
         f"Size: ${float(event.position_size):,.2f}",
@@ -58,6 +71,10 @@ def trade_opened_message(event: TradeOpenedEvent) -> str:
         lines.append(f"TP: {_format_price(event.take_profit)}")
     if event.confidence is not None:
         lines.append(f"Confidence: {event.confidence:.0%}")
+    if event.cash_after is not None:
+        lines.append(f"Cash remaining: ${float(event.cash_after):,.2f}")
+    if event.open_positions_count is not None:
+        lines.append(f"Open positions: {event.open_positions_count}")
     return "\n".join(lines)
 
 
@@ -65,14 +82,18 @@ def trade_closed_message(event: TradeClosedEvent) -> str:
     pnl_float = float(event.pnl)
     emoji = "\U0001f7e2" if pnl_float >= 0 else "\U0001f534"
     lines = [
-        f"{emoji} <b>Trade Closed</b> {_engine_tag(event.engine)}",
-        f"Agent: <b>{event.agent_name}</b>",
+        f"{emoji} <b>Trade Closed</b> {_engine_tag(event.engine)} {_uuid_tag(event.agent_uuid)}",
+        f"Agent: {_agent_link(event.agent_id, event.agent_name)}",
         f"Symbol: <b>{event.symbol}</b> ({event.direction.upper()})",
         f"Entry: {_format_price(event.entry_price)} \u2192 Exit: {_format_price(event.exit_price)}",
         f"PnL: <b>${_format_pnl(event.pnl)}</b> ({_format_pnl(event.pnl_pct)}%)",
         f"Duration: {_format_duration(event.duration_minutes)}",
         f"Reason: {event.exit_reason.replace('_', ' ').title()}",
     ]
+    if event.cumulative_realized_pnl is not None:
+        lines.append(f"Cumulative realized: ${_format_pnl(event.cumulative_realized_pnl)}")
+    if event.equity_after is not None:
+        lines.append(f"Equity: ${float(event.equity_after):,.2f}")
     return "\n".join(lines)
 
 
@@ -88,8 +109,8 @@ def equity_alert_message(event: EquityAlertEvent) -> str:
         title = f"Drawdown Alert ({event.drawdown_pct:.1f}%)" if event.drawdown_pct else "Drawdown Alert"
 
     lines = [
-        f"{emoji} <b>{title}</b>",
-        f"Agent: <b>{event.agent_name}</b> {_engine_tag(event.engine)}",
+        f"{emoji} <b>{title}</b> {_uuid_tag(event.agent_uuid)}",
+        f"Agent: {_agent_link(event.agent_id, event.agent_name)} {_engine_tag(event.engine)}",
         f"Equity: <b>${float(event.equity):,.2f}</b>",
         f"Return: {_format_pnl(event.return_pct)}%",
     ]
@@ -109,9 +130,32 @@ def evolution_message(event: EvolutionEvent) -> str:
         version_text = f"v{event.old_version} \u2192 v{event.new_version}"
 
     lines = [
-        f"{emoji} <b>{title}</b>",
-        f"Agent: <b>{event.agent_name}</b> {_engine_tag(event.engine)}",
+        f"{emoji} <b>{title}</b> {_uuid_tag(event.agent_uuid)}",
+        f"Agent: {_agent_link(event.agent_id, event.agent_name)} {_engine_tag(event.engine)}",
         f"Version: {version_text}",
+    ]
+    return "\n".join(lines)
+
+
+def agent_paused_message(event: AgentPausedEvent) -> str:
+    lines = [
+        f"\u23f8\ufe0f <b>Agent Paused</b> {_engine_tag(event.engine)} {_uuid_tag(event.agent_uuid)}",
+        f"Agent: {_agent_link(event.agent_id, event.agent_name)}",
+    ]
+    if event.positions_closed > 0:
+        lines.append(f"Positions closed: {event.positions_closed}")
+        lines.append(f"Realized from close: ${_format_pnl(event.realized_pnl_from_close)}")
+    else:
+        lines.append("No open positions to close")
+    return "\n".join(lines)
+
+
+def agent_discarded_message(event: AgentDiscardedEvent) -> str:
+    lines = [
+        f"\U0001f5d1\ufe0f <b>Agent Discarded</b> {_engine_tag(event.engine)} {_uuid_tag(event.agent_uuid)}",
+        f"Agent: {_agent_link(event.agent_id, event.agent_name)}",
+        f"Health: {event.health_score:.0f}/100",
+        f"Reason: {event.reason}",
     ]
     return "\n".join(lines)
 
@@ -133,6 +177,10 @@ def daily_digest_message(data: DailyDigestData) -> str:
         f"<b>Trades Today:</b> {data.total_trades_today}",
         f"W/L: {data.winning_trades}/{data.losing_trades} ({win_rate})",
         f"PnL: {pnl_emoji} <b>${_format_pnl(data.total_pnl)}</b>",
+        "",
+        f"<b>Fleet PnL Breakdown:</b>",
+        f"  Realized: ${_format_pnl(data.total_realized_pnl)}",
+        f"  Unrealized: ${_format_pnl(data.total_unrealized_pnl)}",
     ]
 
     if data.best_agent_name:
@@ -148,5 +196,11 @@ def daily_digest_message(data: DailyDigestData) -> str:
 
     if data.evolutions_today > 0:
         lines.append(f"\U0001f9ec Evolutions: {data.evolutions_today}")
+    if data.agents_paused_today > 0:
+        lines.append(f"\u23f8\ufe0f Paused: {data.agents_paused_today}")
+    if data.agents_discarded_today > 0:
+        lines.append(f"\U0001f5d1\ufe0f Discarded: {data.agents_discarded_today}")
+
+    lines.append(f'\n<a href="{SITE_URL}/agents">View all agents \u2192</a>')
 
     return "\n".join(lines)
