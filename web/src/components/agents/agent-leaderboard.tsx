@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useSSE } from "@/hooks/use-sse";
+import { PauseModal } from "./pause-modal";
 import {
   Table,
   TableBody,
@@ -171,32 +172,18 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     };
   }, [symbolSearch]);
 
-  const [pausingLlm, setPausingLlm] = useState(false);
-  const [pauseLlmResult, setPauseLlmResult] = useState<string | null>(null);
+  const [pauseModalOpen, setPauseModalOpen] = useState(false);
   const { requireAuth } = useAuth();
 
   const handlePauseAllLlm = useCallback(() => {
-    if (pausingLlm) return;
-    requireAuth(async () => {
-      setPausingLlm(true);
-      setPauseLlmResult(null);
-      try {
-        const res = await fetch("/api/agents/pause-llm", { method: "POST" });
-        if (res.ok) {
-          const data = await res.json();
-          setPauseLlmResult(`${data.paused} LLM agent${data.paused !== 1 ? "s" : ""} paused`);
-          // Reload to reflect updated statuses
-          setTimeout(() => window.location.reload(), 1500);
-        } else {
-          setPauseLlmResult("Failed to pause");
-        }
-      } catch {
-        setPauseLlmResult("Failed to pause");
-      } finally {
-        setPausingLlm(false);
-      }
+    requireAuth(() => {
+      setPauseModalOpen(true);
     });
-  }, [pausingLlm, requireAuth]);
+  }, [requireAuth]);
+
+  const handlePauseComplete = useCallback(() => {
+    router.refresh();
+  }, [router]);
 
   const filtered = useMemo(() => {
     let result = [...agentsData];
@@ -392,20 +379,15 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
             <GitCompareArrows className="h-3.5 w-3.5" />
             Compare
           </button>
-          {pauseLlmResult && (
-            <span className="text-xs text-secondary">{pauseLlmResult}</span>
-          )}
           <button
             onClick={handlePauseAllLlm}
-            disabled={pausingLlm}
             className={cn(
               "flex items-center gap-1.5 rounded-md border border-[var(--border-default)] px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
-              "text-bearish hover:bg-[var(--bearish-subtle)]",
-              pausingLlm && "opacity-50"
+              "text-bearish hover:bg-[var(--bearish-subtle)]"
             )}
           >
             <PauseCircle className="h-3.5 w-3.5" />
-            {pausingLlm ? "Pausing..." : "Pause All LLM"}
+            Pause All LLM
           </button>
         </div>
       </div>
@@ -553,6 +535,13 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
           </button>
         </div>
       )}
+
+      {/* Progressive pause modal */}
+      <PauseModal
+        open={pauseModalOpen}
+        onClose={() => setPauseModalOpen(false)}
+        onComplete={handlePauseComplete}
+      />
     </div>
   );
 }

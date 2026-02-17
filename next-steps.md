@@ -1087,3 +1087,19 @@ Add a `reconcile_pnl(agent_id)` method that:
 - `/settings` page with toggle switches, enabled/disabled badges, and alltime + 30d cost breakdown per section
 - `/status` page enhanced with read-only LLM Services panel showing enabled/disabled at a glance
 - Settings nav link added
+
+---
+
+## 21. Progressive Pause All LLM Agents — `COMPLETED`
+
+**What:** Replace the atomic "Pause All LLM" button with a progressive modal that pauses agents one by one, showing an ASCII spinner, progress bar, and current agent name. Includes localStorage-based resume so if something fails mid-way, the user can retry from the last successfully paused agent.
+
+**Why:** The old approach paused all ~76 LLM agents in a single SQL query with no feedback during the operation and no way to recover if something failed. The progressive approach gives real-time visibility into what's happening and resilience against partial failures.
+
+**Implementation:**
+- New `GET /api/agents/active-llm` endpoint returns list of active LLM agent IDs and names
+- New `POST /api/agents/[id]/pause` endpoint pauses a single agent by ID
+- New `pauseSingleAgent()` and `getActiveLlmAgents()` query functions
+- `<PauseModal>` client component with ASCII spinner animation, progress bar, and localStorage-based resume
+- Leaderboard wired to open modal instead of calling bulk pause API
+- Old bulk `/api/agents/pause-llm` endpoint kept as fallback

@@ -601,6 +601,35 @@ export async function pauseAllLlmAgents(): Promise<number> {
 }
 
 /**
+ * Get all active LLM-engine agents (id + name).
+ * Used by the progressive pause modal to enumerate agents before pausing.
+ */
+export async function getActiveLlmAgents(): Promise<{ id: number; name: string }[]> {
+  const rows = await sql`
+    SELECT id, display_name as name
+    FROM agents
+    WHERE engine = 'llm' AND status = 'active'
+    ORDER BY id
+  `;
+  return rows.map((r) => ({ id: Number(r.id), name: r.name as string }));
+}
+
+/**
+ * Pause a single agent by ID.
+ * Returns the agent's id and name if it was active, or null if not found/already paused.
+ */
+export async function pauseSingleAgent(id: number): Promise<{ id: number; name: string } | null> {
+  const rows = await sql`
+    UPDATE agents
+    SET status = 'paused'
+    WHERE id = ${id} AND status = 'active'
+    RETURNING id, display_name as name
+  `;
+  if (rows.length === 0) return null;
+  return { id: Number(rows[0].id), name: rows[0].name as string };
+}
+
+/**
  * Fetch comparison data for multiple agents (max 4).
  * Fetches detail + trades in parallel for each agent.
  */
