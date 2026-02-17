@@ -1,5 +1,11 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { BacktestRun } from "@/lib/types";
+import { useAuth } from "@/components/auth/auth-provider";
+import { cancelBacktest } from "@/app/backtest/actions";
 
 interface BacktestListProps {
   runs: BacktestRun[];
@@ -14,6 +20,8 @@ const STATUS_STYLES: Record<string, string> = {
     "bg-[var(--bullish-strong)]/10 text-[var(--bullish-strong)] border-[var(--bullish-strong)]/20",
   failed:
     "bg-[var(--bearish-strong)]/10 text-[var(--bearish-strong)] border-[var(--bearish-strong)]/20",
+  cancelled:
+    "bg-gray-500/10 text-gray-400 border-gray-500/20",
 };
 
 function StatusBadge({ status }: { status: string }) {
@@ -41,6 +49,19 @@ function formatDate(iso: string): string {
 }
 
 export function BacktestList({ runs }: BacktestListProps) {
+  const router = useRouter();
+  const { requireAuth } = useAuth();
+  const [cancellingId, setCancellingId] = useState<number | null>(null);
+
+  async function handleCancel(runId: number) {
+    requireAuth(async () => {
+      setCancellingId(runId);
+      await cancelBacktest(runId);
+      setCancellingId(null);
+      router.refresh();
+    });
+  }
+
   if (runs.length === 0) {
     return (
       <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-8 text-center">
@@ -66,6 +87,7 @@ export function BacktestList({ runs }: BacktestListProps) {
             <th className="px-3 py-2 font-medium text-right">Win%</th>
             <th className="px-3 py-2 font-medium text-right">Drawdown</th>
             <th className="px-3 py-2 font-medium">Status</th>
+            <th className="px-3 py-2 font-medium"></th>
           </tr>
         </thead>
         <tbody>
@@ -74,6 +96,7 @@ export function BacktestList({ runs }: BacktestListProps) {
               run.totalTrades > 0
                 ? ((run.winningTrades / run.totalTrades) * 100).toFixed(0)
                 : "-";
+            const canCancel = run.status === "pending" || run.status === "running";
 
             return (
               <tr
@@ -123,6 +146,27 @@ export function BacktestList({ runs }: BacktestListProps) {
                 </td>
                 <td className="px-3 py-2">
                   <StatusBadge status={run.status} />
+                </td>
+                <td className="px-3 py-2">
+                  {canCancel && (
+                    <button
+                      onClick={() => handleCancel(run.id)}
+                      disabled={cancellingId === run.id}
+                      className="rounded p-1 text-muted transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-[var(--bearish-strong)] disabled:opacity-50"
+                      title="Cancel backtest"
+                    >
+                      {cancellingId === run.id ? (
+                        <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                      ) : (
+                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      )}
+                    </button>
+                  )}
                 </td>
               </tr>
             );

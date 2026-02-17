@@ -8,6 +8,7 @@ Provides:
 - Daily retention cleanup for old partitions
 """
 
+import asyncio
 import json
 import logging
 import time
@@ -18,7 +19,7 @@ import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
-from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel as PydanticBaseModel
 from sqlalchemy import select, func, text
@@ -68,6 +69,9 @@ runner = PipelineRunner(
 last_runs: dict[str, datetime] = {}
 last_results: dict[str, dict] = {}
 start_time = time.monotonic()
+
+# Track running backtest asyncio tasks by run_id
+_running_backtest_tasks: dict[int, asyncio.Task] = {}
 
 
 class _DecimalEncoder(json.JSONEncoder):
@@ -762,16 +766,14 @@ async def _run_backtest(run_id: int, config_dict: dict) -> None:
     from src.backtest.engine import BacktestEngine, BacktestConfig
 
     config = BacktestConfig(**config_dict)
-    engine = BacktestEngine()
+    bt_engine = BacktestEngine()
 
     async with async_session() as session:
-        await engine.run(config, session, run_id=run_id)
+        await bt_engine.run(config, session, run_id=run_id)
 
 
 @app.post("/backtest")
-async def create_backtest(
-    request: BacktestRequest, background_tasks: BackgroundTasks
-):
+async def create_backtest(request: BacktestRequest):
     """Launch a backtest as a background task. Returns run_id immediately."""
     from src.agents.strategies import STRATEGY_REGISTRY
 
@@ -827,9 +829,42 @@ async def create_backtest(
         "initial_balance": request.initial_balance,
     }
 
-    background_tasks.add_task(_run_backtest, run_id, config_dict)
+    task = asyncio.create_task(_run_backtest(run_id, config_dict))
+    _running_backtest_tasks[run_id] = task
+    task.add_done_callback(lambda t: _running_backtest_tasks.pop(run_id, None))
 
     return {"run_id": run_id, "status": "pending"}
+
+
+@app.post("/backtest/{run_id}/cancel")
+async def cancel_backtest(run_id: int):
+    """Cancel a running backtest."""
+    task = _running_backtest_tasks.get(run_id)
+    if not task:
+        # Check if it exists in DB but no running task (worker restarted?)
+        async with async_session() as session:
+            result = await session.execute(
+                select(BacktestRun).where(BacktestRun.id == run_id)
+            )
+            run = result.scalar_one_or_none()
+            if not run:
+                raise HTTPException(404, "Backtest not found")
+            if run.status in ("completed", "failed", "cancelled"):
+                return {"status": run.status, "message": "Already finished"}
+            # Mark as cancelled in DB if no running task
+            run.status = "cancelled"
+            run.error_message = "Cancelled by user"
+            run.completed_at = datetime.now(timezone.utc)
+            await session.commit()
+            return {"status": "cancelled"}
+
+    task.cancel()
+    # Wait briefly for cancellation to propagate
+    try:
+        await asyncio.wait_for(asyncio.shield(task), timeout=5.0)
+    except (asyncio.CancelledError, asyncio.TimeoutError):
+        pass
+    return {"status": "cancelled"}
 
 
 @app.get("/backtest")

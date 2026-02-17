@@ -6,6 +6,7 @@ indicator -> scoring -> strategy pipeline.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -132,6 +133,10 @@ class BacktestEngine:
 
             # 3. Bar-by-bar loop (starting after warmup)
             for i in range(WARMUP_BARS, len(candles)):
+                # Periodic cancellation check — yields to event loop
+                if i % 50 == 0:
+                    await asyncio.sleep(0)
+
                 candle = candles[i]
                 timestamp = candle.open_time
                 close_price = float(candle.close)
@@ -266,6 +271,14 @@ class BacktestEngine:
             )
 
             return BacktestResult(run_id=run_id, status="completed", stats=stats)
+
+        except asyncio.CancelledError:
+            logger.info(f"Backtest {run_id} cancelled by user")
+            run.status = "cancelled"
+            run.error_message = "Cancelled by user"
+            run.completed_at = datetime.now(timezone.utc)
+            await session.commit()
+            return BacktestResult(run_id=run_id, status="cancelled", error="Cancelled by user")
 
         except Exception as e:
             logger.exception(f"Backtest {run_id} failed: {e}")

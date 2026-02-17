@@ -3,6 +3,7 @@
 import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import { launchBacktest } from "@/app/backtest/actions";
+import { useAuth } from "@/components/auth/auth-provider";
 import { STRATEGY_ARCHETYPES, STRATEGY_ARCHETYPE_LABELS, TIMEFRAMES } from "@/lib/types";
 
 const POPULAR_SYMBOLS = [
@@ -21,20 +22,23 @@ export function NewBacktestForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
+  const { requireAuth } = useAuth();
 
   function handleSubmit(formData: FormData) {
     setError(null);
     setSuccess(null);
 
-    startTransition(async () => {
-      const result = await launchBacktest(formData);
+    requireAuth(() => {
+      startTransition(async () => {
+        const result = await launchBacktest(formData);
 
-      if (result.error) {
-        setError(result.error);
-      } else {
-        setSuccess(`Backtest #${result.runId} launched`);
-        router.refresh();
-      }
+        if (result.error) {
+          setError(result.error);
+        } else {
+          setSuccess(`Backtest #${result.runId} launched`);
+          router.refresh();
+        }
+      });
     });
   }
 

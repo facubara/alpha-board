@@ -44,3 +44,26 @@ export async function launchBacktest(formData: FormData) {
     return { error: `Failed to reach worker: ${(e as Error).message}` };
   }
 }
+
+export async function cancelBacktest(runId: number) {
+  if (!WORKER_URL) {
+    return { error: "Worker URL not configured" };
+  }
+
+  try {
+    const response = await fetch(`${WORKER_URL}/backtest/${runId}/cancel`, {
+      method: "POST",
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => null);
+      return { error: data?.detail || `Worker returned ${response.status}` };
+    }
+
+    const data = await response.json();
+    revalidatePath("/backtest");
+    return { status: data.status };
+  } catch (e) {
+    return { error: `Failed to cancel backtest: ${(e as Error).message}` };
+  }
+}

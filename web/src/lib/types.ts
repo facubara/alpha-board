@@ -346,7 +346,7 @@ export interface BacktestRun {
   maxDrawdownPct: number | null;
   sharpeRatio: number | null;
   equityCurve: { timestamp: string; equity: number }[] | null;
-  status: "pending" | "running" | "completed" | "failed";
+  status: "pending" | "running" | "completed" | "failed" | "cancelled";
   errorMessage: string | null;
   startedAt: string;
   completedAt: string | null;
