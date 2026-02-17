@@ -33,6 +33,13 @@ Do NOT skip visual verification for UI changes. Use Playwright MCP — don't jus
 ### Worker/API changes
 When changes affect the worker (`worker/`), verify by hitting the relevant API endpoint (e.g., `/health`, `/debug/agents/{timeframe}`, `/trigger/{timeframe}`) using WebFetch after deploy.
 
+## URLs
+
+- **Production site**: https://alpha-board.com
+- **Worker API**: https://alpha-worker.fly.dev
+
+Always use `https://alpha-board.com` for Playwright verification — never guess the URL.
+
 ## Architecture
 
 - **worker/** — Python FastAPI worker on Fly.io (APScheduler, Binance pipeline, agent orchestrator)
