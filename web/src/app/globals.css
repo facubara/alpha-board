@@ -115,7 +115,7 @@
 
 @keyframes marquee {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(calc(-1 * var(--marquee-width, 50%))); }
 }
 
 @layer base {
@@ -184,7 +184,8 @@
 
   /* Marquee animation for consensus banner */
   .marquee-container {
-    animation: marquee 30s linear infinite;
+    animation: marquee var(--marquee-duration, 30s) linear infinite;
+    width: max-content;
   }
 
   .marquee-content {

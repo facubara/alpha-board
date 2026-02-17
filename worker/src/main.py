@@ -272,6 +272,7 @@ async def _broadcast_consensus() -> None:
     """Query open positions grouped by symbol/source/direction and publish consensus to SSE."""
     try:
         async with async_session() as session:
+            # Query 1: open positions grouped by symbol/source/direction
             result = await session.execute(
                 select(
                     Symbol.symbol,
@@ -286,6 +287,20 @@ async def _broadcast_consensus() -> None:
             )
             rows = result.all()
 
+            # Query 2: total active agents per source (denominator)
+            agent_count_result = await session.execute(
+                select(Agent.source, func.count().label("agent_count"))
+                .where(Agent.status == "active")
+                .group_by(Agent.source)
+            )
+            agent_count_rows = agent_count_result.all()
+
+            agent_counts: dict[str, int] = {}
+            total_all_agents = 0
+            for source, count in agent_count_rows:
+                agent_counts[source] = count
+                total_all_agents += count
+
             # Build lookup: { symbol -> { source -> { long: n, short: n } } }
             lookup: dict[str, dict[str, dict[str, int]]] = {}
             for symbol, source, direction, count in rows:
@@ -293,6 +308,15 @@ async def _broadcast_consensus() -> None:
                 lookup[symbol][source][direction] += count
 
             def compute_consensus(filter_sources: list[str] | None) -> list[dict]:
+                # Compute total active agents for the filtered sources
+                if filter_sources is None:
+                    total_active = total_all_agents
+                else:
+                    total_active = sum(agent_counts.get(s, 0) for s in filter_sources)
+
+                if total_active < 2:
+                    return []
+
                 items = []
                 for symbol, source_map in lookup.items():
                     total_longs = 0
@@ -302,12 +326,12 @@ async def _broadcast_consensus() -> None:
                             total_longs += counts["long"]
                             total_shorts += counts["short"]
 
-                    total = total_longs + total_shorts
-                    if total < 2:
+                    positioned = total_longs + total_shorts
+                    if positioned == 0:
                         continue
 
                     majority = max(total_longs, total_shorts)
-                    consensus_pct = round(majority / total * 100)
+                    consensus_pct = round(majority / total_active * 100)
                     if consensus_pct < 50:
                         continue
 
@@ -317,7 +341,7 @@ async def _broadcast_consensus() -> None:
                         "consensusPct": consensus_pct,
                         "longCount": total_longs,
                         "shortCount": total_shorts,
-                        "totalAgents": total,
+                        "totalAgents": total_active,
                     })
 
                 items.sort(key=lambda x: x["consensusPct"], reverse=True)

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useSSE } from "@/hooks/use-sse";
 import type { ConsensusData, ConsensusItem } from "@/lib/types";
 
@@ -25,6 +25,19 @@ function ConsensusRow({
   label: string;
   items: ConsensusItem[];
 }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const content = contentRef.current;
+    const container = containerRef.current;
+    if (!content || !container) return;
+
+    const width = content.scrollWidth;
+    container.style.setProperty("--marquee-width", `${width}px`);
+    container.style.setProperty("--marquee-duration", `${Math.max(width / 50, 10)}s`);
+  }, [items]);
+
   if (items.length === 0) return null;
 
   return (
@@ -33,8 +46,8 @@ function ConsensusRow({
         {label}
       </span>
       <div className="overflow-hidden flex-1">
-        <div className="marquee-container flex hover:[animation-play-state:paused]">
-          <div className="marquee-content flex gap-3 pr-3">
+        <div ref={containerRef} className="marquee-container flex hover:[animation-play-state:paused]">
+          <div ref={contentRef} className="marquee-content flex gap-3 pr-3">
             {items.map((item) => (
               <ConsensusItemPill key={item.symbol} item={item} />
             ))}
