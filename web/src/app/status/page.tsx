@@ -12,8 +12,8 @@ import { StatusPage } from "@/components/status/status-page";
 export const revalidate = 60;
 
 export default async function StatusRoute() {
-  let data;
-  let llmSections;
+  let data: Awaited<ReturnType<typeof getStatusData>> | null;
+  let llmSections: Awaited<ReturnType<typeof getLlmSettings>>;
   try {
     [data, llmSections] = await Promise.all([
       getStatusData(),
