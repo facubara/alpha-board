@@ -24,3 +24,27 @@ export function formatRelativeTime(timestamp: string | Date): string {
 
   return date.toLocaleDateString();
 }
+
+const SHORT_DT_OPTS: Intl.DateTimeFormatOptions = {
+  month: "short",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+};
+
+/**
+ * Format a timestamp for display: UTC as primary text, local time in tooltip.
+ * Returns { utc, local, iso } so callers can render both.
+ */
+export function formatTimestamp(timestamp: string | Date): {
+  utc: string;
+  local: string;
+  iso: string;
+} {
+  const date =
+    typeof timestamp === "string" ? new Date(timestamp) : timestamp;
+  const utc = date.toLocaleString("en-US", { ...SHORT_DT_OPTS, timeZone: "UTC" }) + " UTC";
+  const local = date.toLocaleString("en-US", SHORT_DT_OPTS);
+  return { utc, local, iso: date.toISOString() };
+}
