@@ -30,6 +30,8 @@ interface AgentRowProps {
   showCheckbox?: boolean;
   selected?: boolean;
   onSelect?: (id: number) => void;
+  liveUpnl?: boolean;
+  upnlSpinner?: string;
 }
 
 function formatPnl(value: number): string {
@@ -78,7 +80,7 @@ function getHealthStatus(
   return { color: "bg-[var(--text-muted)]", label: `Inactive ${Math.round(ageMinutes)}m ago` };
 }
 
-export function AgentRow({ agent, showCheckbox, selected, onSelect }: AgentRowProps) {
+export function AgentRow({ agent, showCheckbox, selected, onSelect, liveUpnl, upnlSpinner }: AgentRowProps) {
   const [status, setStatus] = useState(agent.status);
   const [toggling, setToggling] = useState(false);
   const [spinnerFrame, setSpinnerFrame] = useState(0);
@@ -205,16 +207,17 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect }: AgentRowPr
         {formatPnl(agent.totalRealizedPnl)}
       </TableCell>
 
-      {/* Unrealized PnL */}
+      {/* Unrealized PnL — only from SSE (live prices), spinner until available */}
       <TableCell
         className={cn(
           "hidden text-right font-mono text-sm tabular-nums sm:table-cell",
-          agent.unrealizedPnl > 0 && "text-bullish",
-          agent.unrealizedPnl < 0 && "text-bearish",
-          agent.unrealizedPnl === 0 && "text-secondary"
+          !liveUpnl && "text-muted",
+          liveUpnl && agent.unrealizedPnl > 0 && "text-bullish",
+          liveUpnl && agent.unrealizedPnl < 0 && "text-bearish",
+          liveUpnl && agent.unrealizedPnl === 0 && "text-secondary"
         )}
       >
-        {formatPnl(agent.unrealizedPnl)}
+        {liveUpnl ? formatPnl(agent.unrealizedPnl) : upnlSpinner}
       </TableCell>
 
       {/* Win Rate */}

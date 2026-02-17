@@ -65,6 +65,7 @@ interface AgentSSEEvent {
 }
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
+const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
 export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   const router = useRouter();
@@ -99,13 +100,23 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
 
   // Live state: initialized from server-fetched data, updated via SSE
   const [agentsData, setAgentsData] = useState<AgentLeaderboardRow[]>(agents);
-  const sseActiveRef = useRef(false);
+  const [sseActive, setSseActive] = useState(false);
+
+  // Shared spinner for uPnL cells while waiting for SSE
+  const [upnlSpinnerFrame, setUpnlSpinnerFrame] = useState(0);
+  useEffect(() => {
+    if (sseActive) return;
+    const id = setInterval(() => {
+      setUpnlSpinnerFrame((f) => (f + 1) % SPINNER_FRAMES.length);
+    }, 80);
+    return () => clearInterval(id);
+  }, [sseActive]);
 
   // Sync when server-fetched prop changes (e.g. after router.refresh())
   // but only if SSE hasn't taken over yet — SSE provides live PnL data
   // that is more accurate than the stale DB values in the server prop.
   useEffect(() => {
-    if (!sseActiveRef.current) {
+    if (!sseActive) {
       setAgentsData(agents);
     } else {
       // SSE is active — only sync status changes (pause/resume) from server,
@@ -118,11 +129,11 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
         }));
       });
     }
-  }, [agents]);
+  }, [agents, sseActive]);
 
   const handleSSEMessage = useCallback((event: AgentSSEEvent) => {
     if (event.type === "agent_update" && event.agents) {
-      sseActiveRef.current = true;
+      setSseActive(true);
       // SSE may not include source — preserve from existing data
       setAgentsData((prev) => {
         const sourceMap = new Map(prev.map((a) => [a.id, a.source]));
@@ -537,6 +548,8 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
                   showCheckbox={compareMode}
                   selected={selectedIds.has(agent.id)}
                   onSelect={handleSelectAgent}
+                  liveUpnl={sseActive}
+                  upnlSpinner={SPINNER_FRAMES[upnlSpinnerFrame]}
                 />
               ))}
             </TableBody>
