@@ -23,9 +23,9 @@ interface AgentOverviewProps {
   trades: AgentTrade[];
   positions: AgentPosition[];
   sseActive?: boolean;
-  liveUnrealizedPnl?: number;
-  liveTotalPnl?: number;
-  liveTotalEquity?: number;
+  displayUpnl?: number;
+  displayTotalPnl?: number;
+  displayEquity?: number;
   upnlSpinner?: string;
 }
 
@@ -43,14 +43,14 @@ export function AgentOverview({
   trades,
   positions,
   sseActive = false,
-  liveUnrealizedPnl = 0,
-  liveTotalPnl = 0,
-  liveTotalEquity = 0,
+  displayUpnl,
+  displayTotalPnl,
+  displayEquity,
   upnlSpinner,
 }: AgentOverviewProps) {
-  const upnl = sseActive ? liveUnrealizedPnl : agent.unrealizedPnl;
-  const totalPnl = sseActive ? liveTotalPnl : agent.totalPnl;
-  const equity = sseActive ? liveTotalEquity : agent.totalEquity;
+  const upnl = displayUpnl ?? agent.unrealizedPnl;
+  const totalPnl = displayTotalPnl ?? agent.totalPnl;
+  const equity = displayEquity ?? agent.totalEquity;
 
   const metrics = [
     {
@@ -65,14 +65,14 @@ export function AgentOverview({
     },
     {
       label: "uPnL",
-      value: sseActive ? formatUsd(upnl, true) : upnlSpinner ?? "—",
-      color: !sseActive
-        ? "text-muted"
-        : upnl > 0
+      value: formatUsd(upnl, true),
+      color:
+        upnl > 0
           ? "text-bullish"
           : upnl < 0
             ? "text-bearish"
             : "text-secondary",
+      spinner: !sseActive ? upnlSpinner : undefined,
     },
     {
       label: "Total PnL",
@@ -123,6 +123,9 @@ export function AgentOverview({
             <p className="text-xs text-muted">{m.label}</p>
             <p className={cn("font-mono text-lg font-semibold", m.color)}>
               {m.value}
+              {"spinner" in m && m.spinner && (
+                <span className="ml-1 text-sm text-muted">{m.spinner}</span>
+              )}
             </p>
           </div>
         ))}

@@ -65,7 +65,7 @@ export function AgentDetail({
   const [liveTotalPnl, setLiveTotalPnl] = useState(agent.totalPnl);
   const [liveTotalEquity, setLiveTotalEquity] = useState(agent.totalEquity);
 
-  // ASCII spinner for uPnL while waiting for SSE
+  // ASCII spinner shown next to uPnL while waiting for SSE live data
   const [spinnerFrame, setSpinnerFrame] = useState(0);
   useEffect(() => {
     if (sseActive) return;
@@ -95,6 +95,11 @@ export function AgentDetail({
     enabled: !!WORKER_URL,
     onMessage: handleSSEMessage,
   });
+
+  // Show DB value immediately, upgrade to SSE live value when available
+  const displayUpnl = sseActive ? liveUnrealizedPnl : agent.unrealizedPnl;
+  const displayTotalPnl = sseActive ? liveTotalPnl : agent.totalPnl;
+  const displayEquity = sseActive ? liveTotalEquity : agent.totalEquity;
 
   return (
     <div className="space-y-6">
@@ -158,7 +163,7 @@ export function AgentDetail({
           <div className="text-right">
             <p className="text-xs text-muted">Equity</p>
             <p className="font-mono text-sm font-semibold text-primary">
-              ${(sseActive ? liveTotalEquity : agent.totalEquity).toFixed(2)}
+              ${displayEquity.toFixed(2)}
             </p>
           </div>
           <div className="text-right">
@@ -180,15 +185,16 @@ export function AgentDetail({
             <p
               className={cn(
                 "font-mono text-sm font-semibold",
-                !sseActive && "text-muted",
-                sseActive && liveUnrealizedPnl > 0 && "text-bullish",
-                sseActive && liveUnrealizedPnl < 0 && "text-bearish",
-                sseActive && liveUnrealizedPnl === 0 && "text-secondary"
+                displayUpnl > 0 && "text-bullish",
+                displayUpnl < 0 && "text-bearish",
+                displayUpnl === 0 && "text-secondary"
               )}
             >
-              {sseActive
-                ? `${liveUnrealizedPnl >= 0 ? "+" : ""}${liveUnrealizedPnl.toFixed(2)}`
-                : SPINNER_FRAMES[spinnerFrame]}
+              {displayUpnl >= 0 ? "+" : ""}
+              {displayUpnl.toFixed(2)}
+              {!sseActive && (
+                <span className="ml-1 text-muted">{SPINNER_FRAMES[spinnerFrame]}</span>
+              )}
             </p>
           </div>
         </div>
@@ -248,9 +254,9 @@ export function AgentDetail({
             trades={trades}
             positions={positions}
             sseActive={sseActive}
-            liveUnrealizedPnl={liveUnrealizedPnl}
-            liveTotalPnl={liveTotalPnl}
-            liveTotalEquity={liveTotalEquity}
+            displayUpnl={displayUpnl}
+            displayTotalPnl={displayTotalPnl}
+            displayEquity={displayEquity}
             upnlSpinner={SPINNER_FRAMES[spinnerFrame]}
           />
         </TabsContent>
