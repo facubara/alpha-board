@@ -3,10 +3,11 @@
 /**
  * AgentOverview Tab
  *
- * Equity curve, key metrics grid, and open positions table.
+ * Equity curve, key metrics grid, and open positions table with live uPnL.
  */
 
 import { cn, formatTimestamp } from "@/lib/utils";
+import { calculatePositionUpnl } from "@/hooks/use-live-upnl";
 import {
   Table,
   TableBody,
@@ -18,15 +19,16 @@ import {
 import type { AgentDetail, AgentTrade, AgentPosition } from "@/lib/types";
 import { EquityChart } from "./equity-chart";
 
+const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+
 interface AgentOverviewProps {
   agent: AgentDetail;
   trades: AgentTrade[];
   positions: AgentPosition[];
-  sseActive?: boolean;
-  liveUnrealizedPnl?: number;
+  prices: Map<string, number>;
+  pricesReady: boolean;
   displayTotalPnl?: number;
   displayEquity?: number;
-  upnlSpinner?: string;
 }
 
 function formatUsd(value: number, showSign = false): string {
@@ -42,14 +44,36 @@ export function AgentOverview({
   agent,
   trades,
   positions,
-  sseActive = false,
-  liveUnrealizedPnl = 0,
+  prices,
+  pricesReady,
   displayTotalPnl,
   displayEquity,
-  upnlSpinner,
 }: AgentOverviewProps) {
   const totalPnl = displayTotalPnl ?? agent.totalPnl;
   const equity = displayEquity ?? agent.totalEquity;
+
+  // Calculate live uPnL sum for the metrics grid
+  let liveUpnlSum: number | undefined = undefined;
+  if (pricesReady && positions.length === 0) {
+    liveUpnlSum = 0;
+  } else if (pricesReady) {
+    let sum = 0;
+    let allPriced = true;
+    for (const pos of positions) {
+      const pnl = calculatePositionUpnl(pos, prices.get(pos.symbol));
+      if (pnl === undefined) {
+        allPriced = false;
+        break;
+      }
+      sum += pnl;
+    }
+    if (allPriced) liveUpnlSum = sum;
+  }
+
+  // Use the display upnl derived from live equity calc (passed from parent)
+  // For the metrics grid, we use the totalPnl - realized to get display upnl
+  const displayUpnl = totalPnl - agent.totalRealizedPnl;
+  const hasLiveData = pricesReady && liveUpnlSum !== undefined;
 
   const metrics = [
     {
@@ -64,12 +88,12 @@ export function AgentOverview({
     },
     {
       label: "uPnL",
-      value: sseActive ? formatUsd(liveUnrealizedPnl, true) : (upnlSpinner ?? "—"),
-      color: !sseActive
+      value: hasLiveData ? formatUsd(displayUpnl, true) : SPINNER_FRAMES[0],
+      color: !hasLiveData
         ? "text-muted"
-        : liveUnrealizedPnl > 0
+        : displayUpnl > 0
           ? "text-bullish"
-          : liveUnrealizedPnl < 0
+          : displayUpnl < 0
             ? "text-bearish"
             : "text-secondary",
     },
@@ -152,51 +176,59 @@ export function AgentOverview({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {positions.map((pos) => (
-                  <TableRow key={pos.id} className="h-10 hover:bg-[var(--bg-elevated)]">
-                    <TableCell className="font-mono text-sm font-semibold text-primary">
-                      {pos.symbol}
-                    </TableCell>
-                    <TableCell>
-                      <span
+                {positions.map((pos) => {
+                  const liveUpnl = calculatePositionUpnl(pos, prices.get(pos.symbol));
+                  const upnlValue = pricesReady && liveUpnl !== undefined ? liveUpnl : undefined;
+                  const displayValue = upnlValue ?? pos.unrealizedPnl;
+
+                  return (
+                    <TableRow key={pos.id} className="h-10 hover:bg-[var(--bg-elevated)]">
+                      <TableCell className="font-mono text-sm font-semibold text-primary">
+                        {pos.symbol}
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className={cn(
+                            "rounded px-1.5 py-0.5 text-xs font-medium",
+                            pos.direction === "long"
+                              ? "bg-[var(--bullish-subtle)] text-bullish"
+                              : "bg-[var(--bearish-subtle)] text-bearish"
+                          )}
+                        >
+                          {pos.direction.toUpperCase()}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                        {pos.entryPrice.toPrecision(6)}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                        ${pos.positionSize.toFixed(2)}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-sm tabular-nums text-muted">
+                        {pos.stopLoss ? pos.stopLoss.toPrecision(6) : "—"}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-sm tabular-nums text-muted">
+                        {pos.takeProfit ? pos.takeProfit.toPrecision(6) : "—"}
+                      </TableCell>
+                      <TableCell
                         className={cn(
-                          "rounded px-1.5 py-0.5 text-xs font-medium",
-                          pos.direction === "long"
-                            ? "bg-[var(--bullish-subtle)] text-bullish"
-                            : "bg-[var(--bearish-subtle)] text-bearish"
+                          "text-right font-mono text-sm font-semibold tabular-nums",
+                          upnlValue === undefined && "text-muted",
+                          upnlValue !== undefined && displayValue > 0 && "text-bullish",
+                          upnlValue !== undefined && displayValue < 0 && "text-bearish",
+                          upnlValue !== undefined && displayValue === 0 && "text-secondary"
                         )}
                       >
-                        {pos.direction.toUpperCase()}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
-                      {pos.entryPrice.toPrecision(6)}
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
-                      ${pos.positionSize.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-sm tabular-nums text-muted">
-                      {pos.stopLoss ? pos.stopLoss.toPrecision(6) : "—"}
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-sm tabular-nums text-muted">
-                      {pos.takeProfit ? pos.takeProfit.toPrecision(6) : "—"}
-                    </TableCell>
-                    <TableCell
-                      className={cn(
-                        "text-right font-mono text-sm font-semibold tabular-nums",
-                        pos.unrealizedPnl > 0 && "text-bullish",
-                        pos.unrealizedPnl < 0 && "text-bearish",
-                        pos.unrealizedPnl === 0 && "text-secondary"
-                      )}
-                    >
-                      {pos.unrealizedPnl >= 0 ? "+" : ""}
-                      {pos.unrealizedPnl.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell" title={`Local: ${formatTimestamp(pos.openedAt).local}`}>
-                      {formatTimestamp(pos.openedAt).utc}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        {upnlValue === undefined
+                          ? SPINNER_FRAMES[0]
+                          : `${displayValue >= 0 ? "+" : ""}${displayValue.toFixed(2)}`}
+                      </TableCell>
+                      <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell" title={`Local: ${formatTimestamp(pos.openedAt).local}`}>
+                        {formatTimestamp(pos.openedAt).utc}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>

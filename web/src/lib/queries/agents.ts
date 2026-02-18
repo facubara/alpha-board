@@ -753,6 +753,42 @@ export async function getSymbolAgentActivity(
 }
 
 /**
+ * Fetch all open positions across all agents.
+ * Used by leaderboard to calculate live uPnL client-side.
+ */
+export async function getAllOpenPositions(): Promise<AgentPosition[]> {
+  const rows = await sql`
+    SELECT
+      pos.id,
+      pos.agent_id,
+      sym.symbol,
+      pos.direction,
+      pos.entry_price,
+      pos.position_size,
+      pos.stop_loss,
+      pos.take_profit,
+      pos.opened_at,
+      pos.unrealized_pnl
+    FROM agent_positions pos
+    JOIN symbols sym ON sym.id = pos.symbol_id
+    ORDER BY pos.agent_id, pos.opened_at DESC
+  `;
+
+  return rows.map((row) => ({
+    id: Number(row.id),
+    agentId: Number(row.agent_id),
+    symbol: row.symbol as string,
+    direction: row.direction as "long" | "short",
+    entryPrice: Number(row.entry_price),
+    positionSize: Number(row.position_size),
+    stopLoss: row.stop_loss ? Number(row.stop_loss) : null,
+    takeProfit: row.take_profit ? Number(row.take_profit) : null,
+    openedAt: (row.opened_at as Date).toISOString(),
+    unrealizedPnl: Number(row.unrealized_pnl),
+  }));
+}
+
+/**
  * Toggle an agent's status between active and paused.
  */
 export async function toggleAgentStatus(

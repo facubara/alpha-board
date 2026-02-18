@@ -30,8 +30,7 @@ interface AgentRowProps {
   showCheckbox?: boolean;
   selected?: boolean;
   onSelect?: (id: number) => void;
-  liveUpnl?: boolean;
-  upnlSpinner?: string;
+  upnlValue?: number;
 }
 
 function formatPnl(value: number): string {
@@ -80,7 +79,7 @@ function getHealthStatus(
   return { color: "bg-[var(--text-muted)]", label: `Inactive ${Math.round(ageMinutes)}m ago` };
 }
 
-export function AgentRow({ agent, showCheckbox, selected, onSelect, liveUpnl, upnlSpinner }: AgentRowProps) {
+export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }: AgentRowProps) {
   const [status, setStatus] = useState(agent.status);
   const [toggling, setToggling] = useState(false);
   const [spinnerFrame, setSpinnerFrame] = useState(0);
@@ -123,6 +122,7 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, liveUpnl, up
 
   const isPaused = status === "paused";
   const health = getHealthStatus(agent.lastCycleAt, agent.timeframe);
+  const hasUpnl = upnlValue !== undefined;
 
   return (
     <TableRow
@@ -207,17 +207,17 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, liveUpnl, up
         {formatPnl(agent.totalRealizedPnl)}
       </TableCell>
 
-      {/* Unrealized PnL — only from SSE (live prices), spinner until available */}
+      {/* Unrealized PnL — from client-side Binance price calculation */}
       <TableCell
         className={cn(
           "hidden text-right font-mono text-sm tabular-nums sm:table-cell",
-          !liveUpnl && "text-muted",
-          liveUpnl && agent.unrealizedPnl > 0 && "text-bullish",
-          liveUpnl && agent.unrealizedPnl < 0 && "text-bearish",
-          liveUpnl && agent.unrealizedPnl === 0 && "text-secondary"
+          !hasUpnl && "text-muted",
+          hasUpnl && upnlValue > 0 && "text-bullish",
+          hasUpnl && upnlValue < 0 && "text-bearish",
+          hasUpnl && upnlValue === 0 && "text-secondary"
         )}
       >
-        {liveUpnl ? formatPnl(agent.unrealizedPnl) : upnlSpinner}
+        {hasUpnl ? formatPnl(upnlValue) : SPINNER_FRAMES[0]}
       </TableCell>
 
       {/* Win Rate */}
