@@ -22,6 +22,11 @@ interface AgentOverviewProps {
   agent: AgentDetail;
   trades: AgentTrade[];
   positions: AgentPosition[];
+  sseActive?: boolean;
+  liveUnrealizedPnl?: number;
+  liveTotalPnl?: number;
+  liveTotalEquity?: number;
+  upnlSpinner?: string;
 }
 
 function formatUsd(value: number, showSign = false): string {
@@ -37,7 +42,16 @@ export function AgentOverview({
   agent,
   trades,
   positions,
+  sseActive = false,
+  liveUnrealizedPnl = 0,
+  liveTotalPnl = 0,
+  liveTotalEquity = 0,
+  upnlSpinner,
 }: AgentOverviewProps) {
+  const upnl = sseActive ? liveUnrealizedPnl : agent.unrealizedPnl;
+  const totalPnl = sseActive ? liveTotalPnl : agent.totalPnl;
+  const equity = sseActive ? liveTotalEquity : agent.totalEquity;
+
   const metrics = [
     {
       label: "Realized PnL",
@@ -51,21 +65,22 @@ export function AgentOverview({
     },
     {
       label: "uPnL",
-      value: formatUsd(agent.unrealizedPnl, true),
-      color:
-        agent.unrealizedPnl > 0
+      value: sseActive ? formatUsd(upnl, true) : upnlSpinner ?? "—",
+      color: !sseActive
+        ? "text-muted"
+        : upnl > 0
           ? "text-bullish"
-          : agent.unrealizedPnl < 0
+          : upnl < 0
             ? "text-bearish"
             : "text-secondary",
     },
     {
       label: "Total PnL",
-      value: formatUsd(agent.totalPnl, true),
+      value: formatUsd(totalPnl, true),
       color:
-        agent.totalPnl > 0
+        totalPnl > 0
           ? "text-bullish"
-          : agent.totalPnl < 0
+          : totalPnl < 0
             ? "text-bearish"
             : "text-secondary",
     },
@@ -73,18 +88,18 @@ export function AgentOverview({
       label: "Return",
       value:
         agent.initialBalance > 0
-          ? `${((agent.totalPnl / agent.initialBalance) * 100).toFixed(2)}%`
+          ? `${((totalPnl / agent.initialBalance) * 100).toFixed(2)}%`
           : "—",
       color:
-        agent.totalPnl > 0
+        totalPnl > 0
           ? "text-bullish"
-          : agent.totalPnl < 0
+          : totalPnl < 0
             ? "text-bearish"
             : "text-secondary",
     },
     { label: "Win Rate", value: agent.tradeCount > 0 ? formatPercent(agent.winRate) : "—", color: "text-primary" },
     { label: "Total Trades", value: String(agent.tradeCount), color: "text-primary" },
-    { label: "Equity", value: formatUsd(agent.totalEquity), color: "text-primary" },
+    { label: "Equity", value: formatUsd(equity), color: "text-primary" },
     { label: "Cash", value: formatUsd(agent.cashBalance), color: "text-secondary" },
     { label: "Fees Paid", value: formatUsd(agent.totalFeesPaid), color: "text-muted" },
     { label: "Token Cost", value: agent.engine === "rule" ? "—" : formatUsd(agent.totalTokenCost), color: "text-muted" },

@@ -6,8 +6,10 @@
  * Tabbed view for a single agent: Overview, Trade History, Reasoning, Prompt, Model Config.
  */
 
+import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSSE } from "@/hooks/use-sse";
 import {
   STRATEGY_ARCHETYPE_LABELS,
   AGENT_TIMEFRAME_LABELS,
@@ -20,6 +22,7 @@ import type {
   AgentPromptVersion,
   AgentPosition,
   AgentTokenUsageSummary,
+  AgentLeaderboardRow,
 } from "@/lib/types";
 import { AgentOverview } from "./agent-overview";
 import { TradeHistory } from "./trade-history";
@@ -28,6 +31,14 @@ import { PromptEditor } from "./prompt-editor";
 import { PromptHistory } from "./prompt-history";
 import { ModelConfig } from "./model-config";
 import { AgentChart } from "./agent-chart";
+
+interface AgentSSEEvent {
+  type: string;
+  agents?: AgentLeaderboardRow[];
+}
+
+const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
+const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
 interface AgentDetailProps {
   agent: AgentDetailType;
@@ -47,6 +58,43 @@ export function AgentDetail({
   tokenUsage,
 }: AgentDetailProps) {
   const activePrompt = promptHistory.find((p) => p.isActive) ?? null;
+
+  // Live uPnL via SSE (same as agent leaderboard)
+  const [sseActive, setSseActive] = useState(false);
+  const [liveUnrealizedPnl, setLiveUnrealizedPnl] = useState(agent.unrealizedPnl);
+  const [liveTotalPnl, setLiveTotalPnl] = useState(agent.totalPnl);
+  const [liveTotalEquity, setLiveTotalEquity] = useState(agent.totalEquity);
+
+  // ASCII spinner for uPnL while waiting for SSE
+  const [spinnerFrame, setSpinnerFrame] = useState(0);
+  useEffect(() => {
+    if (sseActive) return;
+    const id = setInterval(() => {
+      setSpinnerFrame((f) => (f + 1) % SPINNER_FRAMES.length);
+    }, 80);
+    return () => clearInterval(id);
+  }, [sseActive]);
+
+  const handleSSEMessage = useCallback(
+    (event: AgentSSEEvent) => {
+      if (event.type === "agent_update" && event.agents) {
+        setSseActive(true);
+        const match = event.agents.find((a) => a.id === agent.id);
+        if (match) {
+          setLiveUnrealizedPnl(match.unrealizedPnl);
+          setLiveTotalPnl(match.totalPnl);
+          setLiveTotalEquity(match.totalEquity);
+        }
+      }
+    },
+    [agent.id]
+  );
+
+  useSSE<AgentSSEEvent>({
+    url: `${WORKER_URL}/sse/agents`,
+    enabled: !!WORKER_URL,
+    onMessage: handleSSEMessage,
+  });
 
   return (
     <div className="space-y-6">
@@ -110,7 +158,7 @@ export function AgentDetail({
           <div className="text-right">
             <p className="text-xs text-muted">Equity</p>
             <p className="font-mono text-sm font-semibold text-primary">
-              ${agent.totalEquity.toFixed(2)}
+              ${(sseActive ? liveTotalEquity : agent.totalEquity).toFixed(2)}
             </p>
           </div>
           <div className="text-right">
@@ -132,13 +180,15 @@ export function AgentDetail({
             <p
               className={cn(
                 "font-mono text-sm font-semibold",
-                agent.unrealizedPnl > 0 && "text-bullish",
-                agent.unrealizedPnl < 0 && "text-bearish",
-                agent.unrealizedPnl === 0 && "text-secondary"
+                !sseActive && "text-muted",
+                sseActive && liveUnrealizedPnl > 0 && "text-bullish",
+                sseActive && liveUnrealizedPnl < 0 && "text-bearish",
+                sseActive && liveUnrealizedPnl === 0 && "text-secondary"
               )}
             >
-              {agent.unrealizedPnl >= 0 ? "+" : ""}
-              {agent.unrealizedPnl.toFixed(2)}
+              {sseActive
+                ? `${liveUnrealizedPnl >= 0 ? "+" : ""}${liveUnrealizedPnl.toFixed(2)}`
+                : SPINNER_FRAMES[spinnerFrame]}
             </p>
           </div>
         </div>
@@ -197,6 +247,11 @@ export function AgentDetail({
             agent={agent}
             trades={trades}
             positions={positions}
+            sseActive={sseActive}
+            liveUnrealizedPnl={liveUnrealizedPnl}
+            liveTotalPnl={liveTotalPnl}
+            liveTotalEquity={liveTotalEquity}
+            upnlSpinner={SPINNER_FRAMES[spinnerFrame]}
           />
         </TabsContent>
 
