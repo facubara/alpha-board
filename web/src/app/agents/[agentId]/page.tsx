@@ -8,7 +8,6 @@ import {
   getAgentOpenPositions,
   getAgentTokenUsage,
 } from "@/lib/queries/agents";
-import { AGENT_TIMEFRAME_LABELS } from "@/lib/types";
 import { AgentDetail } from "@/components/agents/agent-detail";
 
 /**
@@ -34,9 +33,8 @@ export async function generateMetadata({
   if (!agent) {
     return { title: "Agent Not Found | Alpha Board" };
   }
-  const tf = AGENT_TIMEFRAME_LABELS[agent.timeframe].toUpperCase();
   return {
-    title: `${agent.displayName} (${tf}) | Alpha Board`,
+    title: `${agent.displayName} | Alpha Board`,
   };
 }
 
