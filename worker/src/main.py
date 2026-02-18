@@ -30,6 +30,7 @@ from src.agents.rule_executor import RuleBasedExecutor
 from src.cache import cache_delete, get_redis
 from src.config import settings
 from src.db import async_session, engine
+from src.llm_settings import load_llm_settings
 from src.events import event_bus
 from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, BacktestRun, BacktestTrade, Snapshot, Symbol, Tweet, TweetSignal, TwitterAccount
 from src.notifications.digest import send_daily_digest_job
@@ -1011,6 +1012,7 @@ async def run_twitter_poll():
     logger.info("Running Twitter poll")
     try:
         async with async_session() as session:
+            await load_llm_settings(session)
             poller = TwitterPoller(session)
             result = await poller.poll()
             last_twitter_poll = datetime.now(timezone.utc)
@@ -1178,6 +1180,7 @@ async def trigger_twitter():
     from src.twitter.poller import TwitterPoller
 
     async with async_session() as session:
+        await load_llm_settings(session)
         poller = TwitterPoller(session)
         result = await poller.poll()
 

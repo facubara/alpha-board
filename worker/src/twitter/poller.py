@@ -11,6 +11,7 @@ from src.config import settings
 from src.events import event_bus
 from src.models.db import Tweet, TwitterAccount
 from src.twitter.client import TwitterClient
+from src.twitter.filter import TweetRelevanceFilter
 from src.llm_settings import is_enabled
 
 logger = logging.getLogger(__name__)
@@ -55,6 +56,19 @@ class TwitterPoller:
         except Exception as e:
             logger.exception(f"Twitter poll failed: {e}")
             return {"new_tweets": 0, "accounts_polled": len(accounts), "errors": [str(e)]}
+
+        # 3b. Filter irrelevant tweets
+        filter_stats = None
+        if settings.tweet_filter_enabled and raw_tweets:
+            relevance_filter = TweetRelevanceFilter()
+            llm_filter_on = is_enabled("tweet_relevance_filter")
+            raw_tweets, filter_stats = relevance_filter.filter_tweets(
+                raw_tweets, llm_enabled=llm_filter_on
+            )
+            logger.info(
+                f"Tweet filter: {filter_stats.passed}/{filter_stats.total} passed "
+                f"({filter_stats.dropped_keyword} keyword, {filter_stats.dropped_llm} LLM)"
+            )
 
         # 4. Persist new tweets (ON CONFLICT DO NOTHING)
         new_count = 0
@@ -129,6 +143,15 @@ class TwitterPoller:
             "accounts_polled": len(accounts),
             "errors": errors,
         }
+        if filter_stats:
+            summary["filter"] = {
+                "total": filter_stats.total,
+                "passed": filter_stats.passed,
+                "dropped_keyword": filter_stats.dropped_keyword,
+                "dropped_llm": filter_stats.dropped_llm,
+                "ambiguous_kept": filter_stats.ambiguous_kept,
+                "llm_cost": round(filter_stats.llm_cost, 6),
+            }
         if analysis_result:
             summary["analysis"] = analysis_result
 
