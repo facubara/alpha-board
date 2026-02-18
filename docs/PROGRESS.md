@@ -1,6 +1,6 @@
 # Alpha Board — Progress Tracker
 
-**Last Updated:** 2026-02-17 (Consensus Fix)
+**Last Updated:** 2026-02-18 (Tweet Relevance Filter)
 **Current Phase:** Complete (all 15 phases done) + Post-launch features
 
 ---
@@ -74,6 +74,10 @@
 - [x] **Smart Pruning (Symbol Limit & Agent Auto-Discard)** — Post-launch feature
 - [x] **Fleet Lessons (Learn from Discarded Agents)** — Post-launch feature
 - [x] **System Status Page** — Post-launch feature
+- [x] **LLM Cost Control** — Post-launch feature
+- [x] **Progressive Pause All LLM** — Post-launch feature
+- [x] **Client-Side Binance uPnL** — Post-launch feature
+- [x] **Tweet Relevance Filter** — Post-launch feature
 
 ---
 
@@ -151,6 +155,10 @@
 | 17 | Absolute Price & Volume Change | Done |
 | 18 | Tooltips | Done |
 | 19 | Agent Integrity Audit & Telegram Parity | Done |
+| 20 | LLM Cost Control — Per-Section Toggles | Done |
+| 21 | Progressive Pause All LLM Agents | Done |
+| 22 | Client-Side Binance Price Fetching | Done |
+| 23 | Tweet Relevance Filter | Done |
 
 ## Open Decisions
 
@@ -162,11 +170,11 @@ None — all decisions resolved.
 
 | Date | Session | Goal |
 |------|---------|------|
+| 2026-02-18 18:00 | Post-launch | Tweet Relevance Filter (#23) |
+| 2026-02-18 | Post-launch | Client-Side Binance uPnL (#22) |
 | 2026-02-17 17:00 | Post-launch | Fix consensus denominator + marquee animation |
 | 2026-02-17 12:00 | Post-launch | Smart Pruning (#13) |
 | 2026-02-17 00:30 | Post-launch | Consensus Ticker Banner (#10) |
-| 2026-02-16 09:25 | Post-launch | Twitter Feed & Tweet Agents (#9) |
-| 2026-02-15 23:00 | Post-launch | Redis Caching Layer (#7) — Upstash |
 
 ---
 
