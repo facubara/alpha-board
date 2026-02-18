@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   getAgentDetail,
@@ -7,6 +8,7 @@ import {
   getAgentOpenPositions,
   getAgentTokenUsage,
 } from "@/lib/queries/agents";
+import { AGENT_TIMEFRAME_LABELS } from "@/lib/types";
 import { AgentDetail } from "@/components/agents/agent-detail";
 
 /**
@@ -17,6 +19,26 @@ import { AgentDetail } from "@/components/agents/agent-detail";
  */
 
 export const revalidate = 30;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ agentId: string }>;
+}): Promise<Metadata> {
+  const { agentId } = await params;
+  const id = Number(agentId);
+  if (!Number.isInteger(id) || id <= 0) {
+    return { title: "Agent Not Found | Alpha Board" };
+  }
+  const agent = await getAgentDetail(id);
+  if (!agent) {
+    return { title: "Agent Not Found | Alpha Board" };
+  }
+  const tf = AGENT_TIMEFRAME_LABELS[agent.timeframe].toUpperCase();
+  return {
+    title: `${agent.displayName} (${tf}) | Alpha Board`,
+  };
+}
 
 export default async function AgentDetailPage({
   params,
