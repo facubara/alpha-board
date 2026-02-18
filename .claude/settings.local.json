@@ -55,7 +55,10 @@
       "WebSearch",
       "WebFetch(domain:tradingview.github.io)",
       "Bash(git status:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "WebFetch(domain:api.binance.com)",
+      "Bash(fly secrets set:*)",
+      "Bash(powershell -Command \"Invoke-RestMethod -Uri ''https://alpha-worker.fly.dev/twitter/poll'' -Method POST | ConvertTo-Json -Depth 5\")"
     ]
   }
 }
