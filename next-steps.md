@@ -1120,3 +1120,20 @@ Add a `reconcile_pnl(agent_id)` method that:
 - `agent-overview.tsx` — positions table shows live per-position uPnL (was static DB values)
 - `agent-leaderboard.tsx` — fetches all positions on mount, calculates per-agent uPnL client-side; SSE stays for non-price data (status, realized PnL, trade counts)
 - `agent-row.tsx` — accepts computed `upnlValue: number | undefined` prop instead of SSE-based `liveUpnl` boolean
+
+---
+
+## 23. Tweet Relevance Filter (Keyword + LLM Fallback) — `COMPLETED`
+
+**What:** Two-tier relevance filter at tweet ingestion time. Tier 1 is a free keyword/regex heuristic check (~120 crypto/trading terms). Tier 2 is a cheap Claude Haiku yes/no call for ambiguous tweets (~$0.0001/tweet). Irrelevant tweets are discarded before hitting the DB.
+
+**Why:** Tweets from tracked accounts often include personal updates, memes, and unrelated content that clutters the feed, wastes LLM analysis cost (Haiku sentiment runs on every tweet), and degrades signal quality for the 48 tweet-based agents.
+
+**Implementation:**
+- `worker/src/twitter/filter.py` — `TweetRelevanceFilter` class with keyword matching (tickers, price patterns, ~120 trading/market/crypto terms), negative pattern detection (personal life, unrelated promos), and LLM fallback via Haiku
+- `worker/alembic/versions/020_tweet_relevance_filter_setting.py` — adds `tweet_relevance_filter` row to `llm_settings` table
+- `worker/src/config.py` — `tweet_filter_enabled` env var (master switch, default off)
+- `worker/src/twitter/poller.py` — filter step between tweet fetch and DB persist, filter stats in poll response
+- `worker/src/main.py` — `load_llm_settings()` calls in both scheduled and manual poll paths
+- Two-gate design: `TWEET_FILTER_ENABLED` env var controls entire filter; `tweet_relevance_filter` DB toggle controls just the LLM fallback
+- Settings page automatically shows the new toggle (no frontend changes needed)
