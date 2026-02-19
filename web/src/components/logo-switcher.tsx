@@ -41,7 +41,7 @@ export function LogoSwitcher() {
           key={LOGOS[index].key}
           src={LOGOS[index].src}
           alt="Alpha Board"
-          className="h-8 w-auto rounded-sm"
+          className="h-[38px] w-auto rounded-sm"
           style={{ visibility: mounted ? "visible" : "hidden" }}
         />
       </Link>
