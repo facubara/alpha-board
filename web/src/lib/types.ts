@@ -592,6 +592,34 @@ export interface ConsensusData {
 }
 
 // =============================================================================
+// Trade Notification (live sidebar)
+// =============================================================================
+
+export interface TradeNotification {
+  id: string;
+  type: "trade_opened" | "trade_closed";
+  agentName: string;
+  agentId: number;
+  agentUuid: string;
+  engine: AgentEngine;
+  symbol: string;
+  direction: "long" | "short";
+  entryPrice: number;
+  exitPrice: number | null;
+  positionSize: number;
+  pnl: number | null;
+  pnlPct: number | null;
+  exitReason: string | null;
+  durationMinutes: number | null;
+  stopLoss: number | null;
+  takeProfit: number | null;
+  confidence: number | null;
+  reasoningSummary: string | null;
+  timestamp: string;
+  isRead: boolean;
+}
+
+// =============================================================================
 // Chart Types
 // =============================================================================
 

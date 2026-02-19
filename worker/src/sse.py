@@ -93,3 +93,16 @@ async def sse_consensus() -> StreamingResponse:
             "X-Accel-Buffering": "no",
         },
     )
+
+
+@router.get("/trades")
+async def sse_trades() -> StreamingResponse:
+    """Stream live trade open/close events."""
+    return StreamingResponse(
+        _event_stream("trades"),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )

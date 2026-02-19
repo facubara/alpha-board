@@ -738,6 +738,25 @@ class AgentOrchestrator:
                 open_positions_count=pos_count,
             )
             await self.notification_service.notify_trade_opened(event)
+
+            # Broadcast to SSE for live trade feed
+            from src.events import event_bus
+            await event_bus.publish("trades", {
+                "type": "trade_opened",
+                "agentName": agent.display_name or agent.name,
+                "agentId": agent.id,
+                "agentUuid": str(agent.uuid) if agent.uuid else "",
+                "engine": agent.engine,
+                "symbol": decision.action.symbol or "",
+                "direction": "long" if decision.action.action == ActionType.OPEN_LONG else "short",
+                "entryPrice": float(execution.details.get("entry_price", 0)),
+                "positionSize": float(execution.details.get("position_size", 0)),
+                "stopLoss": float(execution.details["stop_loss"]) if execution.details.get("stop_loss") else None,
+                "takeProfit": float(execution.details["take_profit"]) if execution.details.get("take_profit") else None,
+                "confidence": decision.action.confidence,
+                "reasoningSummary": decision.reasoning_summary,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
         except Exception:
             logger.debug(f"Failed to send trade opened notification for {agent.name}", exc_info=True)
 
@@ -768,6 +787,39 @@ class AgentOrchestrator:
                 equity_after=p.total_equity if p else None,
             )
             await self.notification_service.notify_trade_closed(event)
+
+            # Broadcast to SSE for live trade feed
+            reasoning_summary = None
+            if trade.close_decision_id:
+                dec_result = await self.session.execute(
+                    select(AgentDecision.reasoning_summary).where(AgentDecision.id == trade.close_decision_id)
+                )
+                reasoning_summary = dec_result.scalar()
+            elif trade.decision_id:
+                dec_result = await self.session.execute(
+                    select(AgentDecision.reasoning_summary).where(AgentDecision.id == trade.decision_id)
+                )
+                reasoning_summary = dec_result.scalar()
+
+            from src.events import event_bus
+            await event_bus.publish("trades", {
+                "type": "trade_closed",
+                "agentName": agent.display_name or agent.name,
+                "agentId": agent.id,
+                "agentUuid": str(agent.uuid) if agent.uuid else "",
+                "engine": agent.engine,
+                "symbol": trade.symbol.symbol if trade.symbol else "UNKNOWN",
+                "direction": trade.direction,
+                "entryPrice": float(trade.entry_price),
+                "exitPrice": float(trade.exit_price),
+                "pnl": float(trade.pnl),
+                "pnlPct": pnl_pct,
+                "positionSize": float(trade.position_size),
+                "durationMinutes": trade.duration_minutes,
+                "exitReason": trade.exit_reason,
+                "reasoningSummary": reasoning_summary,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
         except Exception:
             logger.debug(f"Failed to send trade closed notification for {agent.name}", exc_info=True)
 
