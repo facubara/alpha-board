@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { ChevronDown, ChevronRight, ArrowUpRight } from "lucide-react";
 import type { TradeNotification } from "@/lib/types";
 
 function timeAgo(timestamp: string): string {
@@ -40,7 +41,7 @@ export function TradeItem({ trade }: { trade: TradeNotification }) {
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-start gap-2 text-left"
       >
-        {/* Direction pill */}
+        {/* Action + Direction pill */}
         <span
           className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none ${
             isLong
@@ -48,7 +49,7 @@ export function TradeItem({ trade }: { trade: TradeNotification }) {
               : "bg-red-500/20 text-red-400"
           }`}
         >
-          {trade.direction}
+          {isOpen ? "Open" : "Close"} {trade.direction}
         </span>
 
         {/* Content */}
@@ -64,11 +65,19 @@ export function TradeItem({ trade }: { trade: TradeNotification }) {
 
           <div className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)]">
             <span className="truncate">{trade.agentName}</span>
-            {isOpen ? (
-              <span className="shrink-0 rounded bg-blue-500/20 px-1 py-px text-[10px] text-blue-400">
-                OPEN
+            {trade.leaderboardRank && (
+              <span className="shrink-0 text-[10px] text-[var(--text-tertiary)]">
+                #{trade.leaderboardRank}
               </span>
-            ) : (
+            )}
+            <Link
+              href={`/agents/${trade.agentId}`}
+              onClick={(e) => e.stopPropagation()}
+              className="shrink-0 rounded p-0.5 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+            >
+              <ArrowUpRight className="h-3 w-3" />
+            </Link>
+            {!isOpen && (
               <>
                 <span
                   className={`shrink-0 font-mono font-medium ${

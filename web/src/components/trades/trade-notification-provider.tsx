@@ -34,6 +34,7 @@ interface TradeSSEEvent {
   takeProfit?: number | null;
   confidence?: number | null;
   reasoningSummary?: string | null;
+  leaderboardRank?: number | null;
   timestamp?: string;
 }
 
@@ -109,6 +110,7 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
       takeProfit: data.takeProfit ?? null,
       confidence: data.confidence ?? null,
       reasoningSummary: data.reasoningSummary ?? null,
+      leaderboardRank: data.leaderboardRank ?? null,
       timestamp: data.timestamp || new Date().toISOString(),
       isRead: sidebarOpenRef.current,
     };

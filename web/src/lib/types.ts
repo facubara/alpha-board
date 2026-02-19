@@ -615,6 +615,7 @@ export interface TradeNotification {
   takeProfit: number | null;
   confidence: number | null;
   reasoningSummary: string | null;
+  leaderboardRank: number | null;
   timestamp: string;
   isRead: boolean;
 }
