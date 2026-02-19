@@ -38,6 +38,7 @@ export function LogoSwitcher() {
     <div className="flex items-center gap-1.5">
       <Link href="/" aria-label="Home">
         <img
+          key={LOGOS[index].key}
           src={LOGOS[index].src}
           alt="Alpha Board"
           className="h-8 w-auto rounded-sm"
