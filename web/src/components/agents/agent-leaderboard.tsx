@@ -4,11 +4,8 @@
  * AgentLeaderboard Component
  *
  * Main agent leaderboard table with sorting, timeframe/archetype filtering.
- * Per DESIGN_SYSTEM.md:
- * - Dense table layout (40px rows)
- * - Monospace for all numbers
- * - Semantic colors for PnL only
- * - E-ink aesthetic, no decoration
+ * SSE stays connected for non-price agent data (status, realized PnL, trade counts).
+ * uPnL is calculated client-side from Binance prices + open positions.
  */
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
@@ -17,6 +14,8 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useSSE } from "@/hooks/use-sse";
+import { useBinancePrices } from "@/hooks/use-binance-prices";
+import { calculateAgentUpnl } from "@/hooks/use-live-upnl";
 import { PauseModal } from "./pause-modal";
 import {
   Table,
@@ -28,6 +27,7 @@ import {
 import type {
   AgentEngine,
   AgentLeaderboardRow,
+  AgentPosition,
   AgentSource,
   AgentTimeframe,
   StrategyArchetype,
@@ -65,7 +65,6 @@ interface AgentSSEEvent {
 }
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
-const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
 export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   const router = useRouter();
@@ -102,25 +101,13 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   const [agentsData, setAgentsData] = useState<AgentLeaderboardRow[]>(agents);
   const [sseActive, setSseActive] = useState(false);
 
-  // Shared spinner for uPnL cells while waiting for SSE
-  const [upnlSpinnerFrame, setUpnlSpinnerFrame] = useState(0);
-  useEffect(() => {
-    if (sseActive) return;
-    const id = setInterval(() => {
-      setUpnlSpinnerFrame((f) => (f + 1) % SPINNER_FRAMES.length);
-    }, 80);
-    return () => clearInterval(id);
-  }, [sseActive]);
-
   // Sync when server-fetched prop changes (e.g. after router.refresh())
-  // but only if SSE hasn't taken over yet — SSE provides live PnL data
-  // that is more accurate than the stale DB values in the server prop.
   useEffect(() => {
     if (!sseActive) {
       setAgentsData(agents);
     } else {
       // SSE is active — only sync status changes (pause/resume) from server,
-      // but keep SSE's live PnL values
+      // but keep SSE's live values
       setAgentsData((prev) => {
         const serverStatusMap = new Map(agents.map((a) => [a.id, a.status]));
         return prev.map((a) => ({
@@ -134,7 +121,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   const handleSSEMessage = useCallback((event: AgentSSEEvent) => {
     if (event.type === "agent_update" && event.agents) {
       setSseActive(true);
-      // SSE may not include source — preserve from existing data
+      // SSE updates non-price agent data; uPnL from SSE is ignored (client-side calc takes precedence)
       setAgentsData((prev) => {
         const sourceMap = new Map(prev.map((a) => [a.id, a.source]));
         return event.agents!.map((a) => ({
@@ -150,6 +137,52 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     enabled: !!WORKER_URL,
     onMessage: handleSSEMessage,
   });
+
+  // ─── Client-side uPnL: fetch all open positions + poll Binance prices ───
+  const [allPositions, setAllPositions] = useState<Record<number, AgentPosition[]>>({});
+
+  useEffect(() => {
+    const fetchPositions = () => {
+      fetch("/api/positions/all")
+        .then((res) => res.ok ? res.json() : {})
+        .then((data: Record<number, AgentPosition[]>) => setAllPositions(data))
+        .catch(() => {});
+    };
+
+    fetchPositions();
+    // Re-fetch positions every 30s to pick up new opens/closes
+    const id = setInterval(fetchPositions, 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Extract unique symbols across all positions
+  const allSymbols = useMemo(() => {
+    const symbols = new Set<string>();
+    for (const positions of Object.values(allPositions)) {
+      for (const pos of positions) {
+        symbols.add(pos.symbol);
+      }
+    }
+    return [...symbols];
+  }, [allPositions]);
+
+  const { prices, pricesReady } = useBinancePrices(allSymbols);
+
+  // Pre-compute per-agent uPnL
+  const agentUpnlMap = useMemo(() => {
+    const map = new Map<number, number | undefined>();
+    if (!pricesReady) return map;
+
+    for (const agent of agentsData) {
+      const positions = allPositions[agent.id];
+      if (!positions || positions.length === 0) {
+        map.set(agent.id, 0);
+      } else {
+        map.set(agent.id, calculateAgentUpnl(positions, prices));
+      }
+    }
+    return map;
+  }, [agentsData, allPositions, prices, pricesReady]);
 
   const [timeframeFilter, setTimeframeFilter] = useState<
     AgentTimeframe | "all"
@@ -548,8 +581,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
                   showCheckbox={compareMode}
                   selected={selectedIds.has(agent.id)}
                   onSelect={handleSelectAgent}
-                  liveUpnl={sseActive}
-                  upnlSpinner={SPINNER_FRAMES[upnlSpinnerFrame]}
+                  upnlValue={agentUpnlMap.get(agent.id)}
                 />
               ))}
             </TableBody>

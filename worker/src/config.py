@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     evolution_enabled: bool = True
     tweet_agents_enabled: bool = False
     fleet_lessons_in_context: bool = False
+    tweet_filter_enabled: bool = False
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

@@ -4,10 +4,14 @@
  * AgentDetail Component
  *
  * Tabbed view for a single agent: Overview, Trade History, Reasoning, Prompt, Model Config.
+ * Uses client-side Binance price fetching for live uPnL (no SSE dependency).
  */
 
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useBinancePrices } from "@/hooks/use-binance-prices";
+import { useLiveUpnl } from "@/hooks/use-live-upnl";
 import {
   STRATEGY_ARCHETYPE_LABELS,
   AGENT_TIMEFRAME_LABELS,
@@ -29,6 +33,8 @@ import { PromptHistory } from "./prompt-history";
 import { ModelConfig } from "./model-config";
 import { AgentChart } from "./agent-chart";
 
+const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+
 interface AgentDetailProps {
   agent: AgentDetailType;
   trades: AgentTrade[];
@@ -47,6 +53,21 @@ export function AgentDetail({
   tokenUsage,
 }: AgentDetailProps) {
   const activePrompt = promptHistory.find((p) => p.isActive) ?? null;
+
+  // Extract unique symbols from open positions for Binance price polling
+  const symbols = useMemo(
+    () => [...new Set(positions.map((p) => p.symbol))],
+    [positions]
+  );
+
+  const { prices, pricesReady } = useBinancePrices(symbols);
+  const { upnl, totalPnl, equity } = useLiveUpnl(positions, prices, pricesReady, agent);
+
+  // Display values: prefer live, fall back to DB
+  const displayUpnl = upnl ?? agent.unrealizedPnl;
+  const displayTotalPnl = totalPnl ?? agent.totalPnl;
+  const displayEquity = equity ?? agent.totalEquity;
+  const isLive = upnl !== undefined;
 
   return (
     <div className="space-y-6">
@@ -110,7 +131,7 @@ export function AgentDetail({
           <div className="text-right">
             <p className="text-xs text-muted">Equity</p>
             <p className="font-mono text-sm font-semibold text-primary">
-              ${agent.totalEquity.toFixed(2)}
+              ${displayEquity.toFixed(2)}
             </p>
           </div>
           <div className="text-right">
@@ -132,13 +153,15 @@ export function AgentDetail({
             <p
               className={cn(
                 "font-mono text-sm font-semibold",
-                agent.unrealizedPnl > 0 && "text-bullish",
-                agent.unrealizedPnl < 0 && "text-bearish",
-                agent.unrealizedPnl === 0 && "text-secondary"
+                !isLive && "text-muted",
+                isLive && displayUpnl > 0 && "text-bullish",
+                isLive && displayUpnl < 0 && "text-bearish",
+                isLive && displayUpnl === 0 && "text-secondary"
               )}
             >
-              {agent.unrealizedPnl >= 0 ? "+" : ""}
-              {agent.unrealizedPnl.toFixed(2)}
+              {isLive
+                ? `${displayUpnl >= 0 ? "+" : ""}${displayUpnl.toFixed(2)}`
+                : SPINNER_FRAMES[0]}
             </p>
           </div>
         </div>
@@ -197,6 +220,10 @@ export function AgentDetail({
             agent={agent}
             trades={trades}
             positions={positions}
+            prices={prices}
+            pricesReady={pricesReady}
+            displayTotalPnl={displayTotalPnl}
+            displayEquity={displayEquity}
           />
         </TabsContent>
 
