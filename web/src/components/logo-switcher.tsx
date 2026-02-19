@@ -5,12 +5,12 @@ import Link from "next/link";
 import { RefreshCw } from "lucide-react";
 
 const LOGOS = [
-  { key: "ascii", src: "/logos/ascii-logo.svg" },
-  { key: "blockify", src: "/logos/blockify-logo.svg" },
-  { key: "crosshatch", src: "/logos/crosshatch-logo.svg" },
-  { key: "dithering", src: "/logos/dithering-logo.svg" },
-  { key: "dots", src: "/logos/dots-logo.svg" },
-  { key: "vhs", src: "/logos/vhs-logo.svg" },
+  { key: "ascii", src: "/logos/ascii-logo.png" },
+  { key: "crosshatch", src: "/logos/crosshatch-logo.png" },
+  { key: "dots", src: "/logos/dots-logo.png" },
+  { key: "halftone", src: "/logos/halftone-logo.png" },
+  { key: "edge-detection", src: "/logos/edge-detection-logo.png" },
+  { key: "vhs", src: "/logos/vhs-logo.png" },
 ] as const;
 
 const STORAGE_KEY = "alpha-board:logo-variant";
