@@ -1,0 +1,56 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { RefreshCw } from "lucide-react";
+
+const LOGOS = [
+  { key: "ascii", src: "/logos/ascii-logo.svg" },
+  { key: "blockify", src: "/logos/blockify-logo.svg" },
+  { key: "crosshatch", src: "/logos/crosshatch-logo.svg" },
+  { key: "dithering", src: "/logos/dithering-logo.svg" },
+  { key: "dots", src: "/logos/dots-logo.svg" },
+  { key: "vhs", src: "/logos/vhs-logo.svg" },
+] as const;
+
+const STORAGE_KEY = "alpha-board:logo-variant";
+
+export function LogoSwitcher() {
+  const [index, setIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const found = LOGOS.findIndex((l) => l.key === stored);
+      if (found !== -1) setIndex(found);
+    }
+    setMounted(true);
+  }, []);
+
+  function cycle() {
+    const next = (index + 1) % LOGOS.length;
+    setIndex(next);
+    localStorage.setItem(STORAGE_KEY, LOGOS[next].key);
+  }
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <Link href="/" aria-label="Home">
+        <img
+          src={LOGOS[index].src}
+          alt="Alpha Board"
+          className="h-8 w-auto rounded-sm"
+          style={{ visibility: mounted ? "visible" : "hidden" }}
+        />
+      </Link>
+      <button
+        onClick={cycle}
+        aria-label="Switch logo variant"
+        className="rounded p-1 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-raised)] hover:text-[var(--text-primary)]"
+      >
+        <RefreshCw size={12} />
+      </button>
+    </div>
+  );
+}

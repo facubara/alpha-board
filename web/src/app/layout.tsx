@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { HeaderAuth } from "@/components/auth/header-auth";
 import { ConsensusBannerWrapper } from "@/components/consensus-banner-wrapper";
+import { LogoSwitcher } from "@/components/logo-switcher";
 import { NavLinks } from "@/components/nav-links";
 import { TradeNotificationWrapper, SidebarToggleButton, TradeSidebar, TradeToast } from "@/components/trades";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -48,12 +48,7 @@ export default function RootLayout({
           <header className="sticky top-0 z-50 h-14 border-b border-[var(--border-default)] bg-[var(--bg-base)]">
             <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between px-4 sm:px-8">
               {/* Logo */}
-              <Link
-                href="/"
-                className="font-mono text-lg font-semibold tracking-tight text-primary"
-              >
-                Alpha Board
-              </Link>
+              <LogoSwitcher />
 
               {/* Navigation */}
               <div className="flex items-center gap-1">
