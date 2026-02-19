@@ -55,7 +55,26 @@
       "WebSearch",
       "WebFetch(domain:tradingview.github.io)",
       "Bash(git status:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "WebFetch(domain:docs.x.com)",
+      "mcp__playwright__browser_fill_form",
+      "WebFetch(domain:devcommunity.x.com)",
+      "WebFetch(domain:gigazine.net)",
+      "WebFetch(domain:superframeworks.com)",
+      "Bash(fly machine list:*)",
+      "Bash(fly machines list:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(where:*)",
+      "Bash('C:/Program Files/GitHub CLI/gh.exe' api repos/facubara/alpha-board/commits/b6f1f9f/check-runs --jq '.check_runs[] | \"\"\\\\\\(.name\\): \\\\\\(.status\\) \\\\\\(.conclusion\\)\"\"')",
+      "Bash(cmd.exe /c \"where gh\")",
+      "mcp__ide__getDiagnostics",
+      "Bash(gh run list:*)",
+      "mcp__playwright__browser_install",
+      "Bash(taskkill:*)",
+      "WebFetch(domain:api.vercel.com)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/facubara/alpha-board/deployments --jq '.[0:3] | .[] | {environment: .environment, created_at: .created_at, sha: .sha[0:8]}')",
+      "Bash(npx next lint:*)",
+      "Bash(DATABASE_URL=\"postgresql://user:pass@ep-test-123.us-east-1.aws.neon.tech/dbname?sslmode=require\" npx next build:*)"
     ]
   }
 }
