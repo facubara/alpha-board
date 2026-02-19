@@ -67,11 +67,15 @@ interface Props {
 export function TradeNotificationProvider({ initialTrades, children }: Props) {
   const [trades, setTrades] = useState<TradeNotification[]>(initialTrades);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [sidebarOpen, setSidebarOpen] = useState(() => {
-    if (typeof window === "undefined") return true;
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Sync with localStorage after hydration to avoid mismatch
+  useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored === null ? true : stored === "true";
-  });
+    if (stored !== null) {
+      setSidebarOpen(stored === "true");
+    }
+  }, []);
   const [latestToast, setLatestToast] = useState<TradeNotification | null>(
     null
   );
