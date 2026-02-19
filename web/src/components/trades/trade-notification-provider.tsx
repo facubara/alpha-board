@@ -46,6 +46,7 @@ interface TradeNotificationContextValue {
   markAllRead: () => void;
   latestToast: TradeNotification | null;
   dismissToast: () => void;
+  exchangeEnabled: boolean;
 }
 
 const TradeNotificationContext =
@@ -69,6 +70,18 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
   const [trades, setTrades] = useState<TradeNotification[]>(initialTrades);
   const [unreadCount, setUnreadCount] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [exchangeEnabled, setExchangeEnabled] = useState(false);
+
+  // Fetch exchange settings once on mount
+  useEffect(() => {
+    if (!WORKER_URL) return;
+    fetch(`${WORKER_URL}/exchange/settings`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.configured && data.enabled) setExchangeEnabled(true);
+      })
+      .catch(() => {});
+  }, []);
 
   // Sync with localStorage after hydration to avoid mismatch
   useEffect(() => {
@@ -169,6 +182,7 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
         markAllRead,
         latestToast,
         dismissToast,
+        exchangeEnabled,
       }}
     >
       {children}

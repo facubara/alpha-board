@@ -6,6 +6,7 @@
 
 import { getLlmSettings, getLlmCosts } from "@/lib/queries/settings";
 import { SettingsPage } from "@/components/settings/settings-page";
+import { ExchangeSettingsSection } from "@/components/settings/exchange-settings";
 
 export const revalidate = 60;
 
@@ -33,6 +34,9 @@ export default async function SettingsRoute() {
           No LLM settings found. The migration may not have run yet.
         </div>
       )}
+
+      {/* Exchange / Copy-Trade settings */}
+      <ExchangeSettingsSection />
     </div>
   );
 }

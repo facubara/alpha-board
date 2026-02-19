@@ -805,3 +805,29 @@ export interface FleetLesson {
   isActive: boolean;
   createdAt: string;
 }
+
+// =============================================================================
+// Exchange / Copy-Trade Types
+// =============================================================================
+
+export interface ExchangeSettings {
+  configured: boolean;
+  enabled?: boolean;
+  maskedApiKey?: string;
+  tradingMode?: "spot" | "futures" | "both";
+  defaultLeverage?: number;
+  maxPositionUsd?: number;
+  updatedAt?: string;
+}
+
+export interface TradeExecuteResult {
+  status: "filled" | "error";
+  orderId?: string;
+  symbol?: string;
+  direction?: string;
+  market?: string;
+  size?: number;
+  slOrderId?: string | null;
+  tpOrderId?: string | null;
+  error?: string;
+}

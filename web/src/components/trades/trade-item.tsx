@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronRight, ArrowUpRight } from "lucide-react";
 import type { TradeNotification } from "@/lib/types";
+import { CopyTradeButton } from "./copy-trade-button";
 
 function timeAgo(timestamp: string): string {
   const seconds = Math.floor(
@@ -24,7 +25,13 @@ function formatPrice(n: number): string {
   return n.toPrecision(4);
 }
 
-export function TradeItem({ trade }: { trade: TradeNotification }) {
+export function TradeItem({
+  trade,
+  exchangeEnabled = false,
+}: {
+  trade: TradeNotification;
+  exchangeEnabled?: boolean;
+}) {
   const [expanded, setExpanded] = useState(false);
   const isOpen = trade.type === "trade_opened";
   const isLong = trade.direction === "long";
@@ -155,6 +162,9 @@ export function TradeItem({ trade }: { trade: TradeNotification }) {
               </span>
             )}
           </div>
+
+          {/* Copy trade button */}
+          <CopyTradeButton trade={trade} exchangeEnabled={exchangeEnabled} />
 
           {/* Reasoning */}
           {trade.reasoningSummary && (

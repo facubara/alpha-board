@@ -5,7 +5,7 @@ import { useTradeNotifications } from "./trade-notification-provider";
 import { TradeItem } from "./trade-item";
 
 export function TradeSidebar() {
-  const { trades, sidebarOpen, toggleSidebar, markAllRead } =
+  const { trades, sidebarOpen, toggleSidebar, markAllRead, exchangeEnabled } =
     useTradeNotifications();
 
   return (
@@ -58,7 +58,13 @@ export function TradeSidebar() {
               No trades yet
             </div>
           ) : (
-            trades.map((trade) => <TradeItem key={trade.id} trade={trade} />)
+            trades.map((trade) => (
+              <TradeItem
+                key={trade.id}
+                trade={trade}
+                exchangeEnabled={exchangeEnabled}
+              />
+            ))
           )}
         </div>
       </aside>

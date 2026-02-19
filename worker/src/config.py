@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     # Redis (Upstash)
     redis_url: str = ""  # Empty = caching disabled
 
+    # Exchange (Binance copy-trade)
+    exchange_encryption_key: str = ""
+
     # CORS
     cors_origins: str = "https://alpha-board.com,https://www.alpha-board.com,http://localhost:3000"
 

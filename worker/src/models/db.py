@@ -627,6 +627,50 @@ class TweetSignal(Base):
 # =============================================================================
 
 
+# =============================================================================
+# Exchange / Copy-Trade Tables
+# =============================================================================
+
+
+class ExchangeSettings(Base):
+    """Single-row exchange configuration with encrypted API keys."""
+
+    __tablename__ = "exchange_settings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    encrypted_api_key: Mapped[str | None] = mapped_column(Text)
+    encrypted_api_secret: Mapped[str | None] = mapped_column(Text)
+    trading_mode: Mapped[str] = mapped_column(String(10), nullable=False, server_default="futures")
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="false")
+    default_leverage: Mapped[int] = mapped_column(Integer, nullable=False, server_default="1")
+    max_position_usd: Mapped[Decimal] = mapped_column(
+        Numeric(14, 2), nullable=False, server_default="100.00"
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+class TradeExecution(Base):
+    """Audit log of every copy-trade attempt."""
+
+    __tablename__ = "trade_executions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    symbol: Mapped[str] = mapped_column(String(30), nullable=False)
+    direction: Mapped[str] = mapped_column(String(5), nullable=False)
+    market: Mapped[str] = mapped_column(String(10), nullable=False)
+    quote_qty: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    leverage: Mapped[int | None] = mapped_column(Integer)
+    binance_order_id: Mapped[str | None] = mapped_column(String(50))
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+    error: Mapped[str | None] = mapped_column(Text)
+    response: Mapped[dict | None] = mapped_column(JSONB)
+    executed_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
 class ServiceHealthCheck(Base):
     """Raw health check results. Retained 7 days."""
 

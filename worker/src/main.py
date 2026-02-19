@@ -37,6 +37,7 @@ from src.notifications.digest import send_daily_digest_job
 from src.health.routes import router as status_router
 from src.notifications.routes import router as notifications_router
 from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner, compute_and_persist_regime
+from src.exchange.routes import router as exchange_router
 from src.sse import router as sse_router
 
 logging.basicConfig(
@@ -51,10 +52,11 @@ app = FastAPI(title="Alpha Worker", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["*"],
 )
 
+app.include_router(exchange_router)
 app.include_router(notifications_router)
 app.include_router(sse_router)
 app.include_router(status_router)
