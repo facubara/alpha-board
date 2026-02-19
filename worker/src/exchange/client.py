@@ -32,6 +32,14 @@ KLINES_TTL: dict[str, int] = {
 
 FUTURES_BASE_URL = "https://fapi.binance.com"
 
+BLOCKED_BASE_ASSETS = {
+    # Stablecoins — no alpha trading stablecoin vs stablecoin
+    "USDC", "BUSD", "TUSD", "USDP", "USDD", "DAI", "FDUSD", "USDS", "PYUSD",
+    # Fiat currencies
+    "EUR", "GBP", "AUD", "BRL", "UAH", "ZAR", "TRY", "PLN", "RON", "ARS",
+    "AEUR",
+}
+
 
 class BinanceAPIError(Exception):
     """Raised when Binance API returns an error."""
@@ -202,6 +210,7 @@ class BinanceClient:
                 sym.get("quoteAsset") == "USDT"
                 and sym.get("status") == "TRADING"
                 and sym.get("isSpotTradingAllowed", False)
+                and sym.get("baseAsset") not in BLOCKED_BASE_ASSETS
             ):
                 usdt_symbols[sym["symbol"]] = {
                     "symbol": sym["symbol"],
