@@ -47,9 +47,10 @@ export function LogoSwitcher() {
       <button
         onClick={cycle}
         aria-label="Switch logo variant"
-        className="rounded p-1 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-raised)] hover:text-[var(--text-primary)]"
+        title="Switch logo variant"
+        className="rounded p-1.5 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-raised)] hover:text-[var(--text-primary)]"
       >
-        <RefreshCw size={12} />
+        <RefreshCw size={16} />
       </button>
     </div>
   );
