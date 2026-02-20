@@ -1137,3 +1137,17 @@ Add a `reconcile_pnl(agent_id)` method that:
 - `worker/src/main.py` — `load_llm_settings()` calls in both scheduled and manual poll paths
 - Two-gate design: `TWEET_FILTER_ENABLED` env var controls entire filter; `tweet_relevance_filter` DB toggle controls just the LLM fallback
 - Settings page automatically shows the new toggle (no frontend changes needed)
+
+---
+
+## 24. Updates Feed — Product Changelog Page — `COMPLETED`
+
+**What:** A static `/updates` page showing a chronological product changelog — what's been shipped recently. Entries are manually authored (date + title + description) and stored as a TypeScript array in the codebase.
+
+**Why:** Alpha Board had no way to communicate new features and changes to users. The updates page gives users a simple, browsable feed of what's been shipped without requiring a CMS or database.
+
+**Implementation:**
+- `web/src/lib/data/changelog.ts` — `ChangelogEntry` type and `changelog` array with 8 seed entries covering recent features
+- `web/src/components/updates/updates-list.tsx` — Server component that groups entries by month with muted uppercase section headers and bordered cards
+- `web/src/app/updates/page.tsx` — Static page following the status page pattern with SEO metadata
+- `web/src/components/nav-links.tsx` — Added "Updates" nav link between Status and Settings
