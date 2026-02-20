@@ -118,6 +118,12 @@
   100% { transform: translateX(calc(-1 * var(--marquee-width, 50%))); }
 }
 
+@keyframes trade-highlight {
+  0% { background-color: rgba(34, 197, 94, 0.15); box-shadow: inset 3px 0 0 var(--bullish-strong); }
+  70% { background-color: rgba(34, 197, 94, 0.08); box-shadow: inset 3px 0 0 var(--bullish-strong); }
+  100% { background-color: transparent; box-shadow: inset 3px 0 0 transparent; }
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -190,6 +196,11 @@
 
   .marquee-content {
     flex-shrink: 0;
+  }
+
+  /* Trade highlight animation for ranking rows */
+  .animate-trade-highlight {
+    animation: trade-highlight 5s ease-out forwards;
   }
 
   /* Transition helper */

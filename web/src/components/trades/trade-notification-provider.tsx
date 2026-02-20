@@ -47,6 +47,7 @@ interface TradeNotificationContextValue {
   latestToast: TradeNotification | null;
   dismissToast: () => void;
   exchangeEnabled: boolean;
+  highlightedSymbols: Set<string>;
 }
 
 const TradeNotificationContext =
@@ -71,6 +72,12 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [exchangeEnabled, setExchangeEnabled] = useState(false);
+  const [highlightedSymbols, setHighlightedSymbols] = useState<Set<string>>(
+    new Set()
+  );
+  const highlightTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(
+    new Map()
+  );
 
   // Fetch exchange settings once on mount
   useEffect(() => {
@@ -130,6 +137,25 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
 
     setTrades((prev) => [notification, ...prev].slice(0, MAX_TRADES));
 
+    // Highlight the traded symbol for 5 seconds
+    const sym = notification.symbol;
+    if (sym) {
+      // Clear existing timer for this symbol if any
+      const existing = highlightTimers.current.get(sym);
+      if (existing) clearTimeout(existing);
+
+      setHighlightedSymbols((prev) => new Set(prev).add(sym));
+      const timer = setTimeout(() => {
+        setHighlightedSymbols((prev) => {
+          const next = new Set(prev);
+          next.delete(sym);
+          return next;
+        });
+        highlightTimers.current.delete(sym);
+      }, 5000);
+      highlightTimers.current.set(sym, timer);
+    }
+
     if (!sidebarOpenRef.current) {
       setUnreadCount((c) => c + 1);
       setLatestToast(notification);
@@ -167,8 +193,10 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
   }, []);
 
   useEffect(() => {
+    const timers = highlightTimers.current;
     return () => {
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      timers.forEach((t) => clearTimeout(t));
     };
   }, []);
 
@@ -183,6 +211,7 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
         latestToast,
         dismissToast,
         exchangeEnabled,
+        highlightedSymbols,
       }}
     >
       {children}

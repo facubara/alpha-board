@@ -31,6 +31,7 @@ import { TimeframeSelector } from "./timeframe-selector";
 import { RankingRow } from "./ranking-row";
 import { CandleCountdown } from "./candle-countdown";
 import { formatRelativeTime } from "@/lib/utils";
+import { useTradeNotifications } from "@/components/trades/trade-notification-provider";
 
 type SortField = "rank" | "symbol" | "score" | "confidence" | "priceChange" | "volumeChange" | "priceChangeAbs" | "volumeChangeAbs" | "fundingRate";
 type SortDirection = "asc" | "desc";
@@ -51,6 +52,7 @@ const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
 export function RankingsTable({ data, className }: RankingsTableProps) {
   const { timeframe, setTimeframe } = useTimeframe("1h");
+  const { highlightedSymbols } = useTradeNotifications();
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState<SortField>("rank");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
@@ -315,7 +317,7 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
               </TableHeader>
               <TableBody>
                 {filteredAndSorted.map((snapshot) => (
-                  <RankingRow key={snapshot.id} snapshot={snapshot} />
+                  <RankingRow key={snapshot.id} snapshot={snapshot} highlighted={highlightedSymbols.has(snapshot.symbol)} />
                 ))}
               </TableBody>
             </Table>

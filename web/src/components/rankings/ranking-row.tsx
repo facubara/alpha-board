@@ -25,6 +25,7 @@ import { SymbolAgentSummary } from "./symbol-agent-summary";
 
 interface RankingRowProps {
   snapshot: RankingSnapshot;
+  highlighted?: boolean;
   className?: string;
 }
 
@@ -61,7 +62,7 @@ function getScoreColor(score: number): string {
   return "text-muted";
 }
 
-export function RankingRow({ snapshot, className }: RankingRowProps) {
+export function RankingRow({ snapshot, highlighted, className }: RankingRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -71,6 +72,7 @@ export function RankingRow({ snapshot, className }: RankingRowProps) {
         className={cn(
           "group/row h-10 cursor-pointer transition-colors-fast hover:bg-[var(--bg-elevated)] sm:h-10",
           isExpanded && "bg-[var(--bg-surface)]",
+          highlighted && "animate-trade-highlight",
           className
         )}
         onClick={() => setIsExpanded(!isExpanded)}

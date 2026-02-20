@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronRight, ArrowUpRight } from "lucide-react";
 import type { TradeNotification } from "@/lib/types";
@@ -19,6 +19,15 @@ function timeAgo(timestamp: string): string {
   return `${days}d ago`;
 }
 
+function useTimeAgo(timestamp: string): string {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 10_000);
+    return () => clearInterval(id);
+  }, []);
+  return timeAgo(timestamp);
+}
+
 function formatPrice(n: number): string {
   if (n >= 1000) return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
   if (n >= 1) return n.toFixed(4);
@@ -33,6 +42,7 @@ export function TradeItem({
   exchangeEnabled?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const age = useTimeAgo(trade.timestamp);
   const isOpen = trade.type === "trade_opened";
   const isLong = trade.direction === "long";
   const isProfitable = trade.pnl !== null && trade.pnl > 0;
@@ -66,7 +76,7 @@ export function TradeItem({
               {trade.symbol.replace("USDT", "")}
             </span>
             <span className="shrink-0 text-[10px] text-[var(--text-tertiary)]">
-              {timeAgo(trade.timestamp)}
+              {age}
             </span>
           </div>
 
