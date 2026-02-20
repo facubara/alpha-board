@@ -168,6 +168,7 @@ export function AgentOverview({
                   <TableHead className="text-xs font-medium text-secondary">Symbol</TableHead>
                   <TableHead className="text-xs font-medium text-secondary">Dir</TableHead>
                   <TableHead className="text-right text-xs font-medium text-secondary">Entry</TableHead>
+                  <TableHead className="text-right text-xs font-medium text-secondary">Mark</TableHead>
                   <TableHead className="text-right text-xs font-medium text-secondary">Size</TableHead>
                   <TableHead className="text-right text-xs font-medium text-secondary">SL</TableHead>
                   <TableHead className="text-right text-xs font-medium text-secondary">TP</TableHead>
@@ -200,6 +201,11 @@ export function AgentOverview({
                       </TableCell>
                       <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
                         {pos.entryPrice.toPrecision(6)}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                        {pricesReady && prices.get(pos.symbol) !== undefined
+                          ? prices.get(pos.symbol)!.toPrecision(6)
+                          : SPINNER_FRAMES[0]}
                       </TableCell>
                       <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
                         ${pos.positionSize.toFixed(2)}
