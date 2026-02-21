@@ -727,3 +727,213 @@ class ServiceIncident(Base):
     __table_args__ = (
         Index("idx_incidents_service_time", "service", started_at.desc()),
     )
+
+
+# =============================================================================
+# Memecoin Tables
+# =============================================================================
+
+
+class MemecoinToken(Base):
+    """Successful memecoin tokens (historical reference data)."""
+
+    __tablename__ = "memecoin_tokens"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    mint_address: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    name: Mapped[str | None] = mapped_column(String(200))
+    symbol: Mapped[str | None] = mapped_column(String(20))
+    image_uri: Mapped[str | None] = mapped_column(Text)
+    creator_wallet: Mapped[str | None] = mapped_column(String(64))
+    launchpad: Mapped[str | None] = mapped_column(String(50))
+    peak_mcap_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
+    current_mcap_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
+    status: Mapped[str] = mapped_column(String(30), nullable=False, server_default="active")
+    first_seen_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
+    metadata_: Mapped[dict] = mapped_column("metadata", JSONB, nullable=False, server_default="{}")
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    __table_args__ = (
+        Index("idx_memecoin_tokens_symbol", "symbol"),
+        Index("idx_memecoin_tokens_mcap", peak_mcap_usd.desc()),
+    )
+
+
+class WatchWallet(Base):
+    """Cross-referenced wallets (scored leaderboard)."""
+
+    __tablename__ = "watch_wallets"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    address: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    label: Mapped[str | None] = mapped_column(String(100))
+    source: Mapped[str] = mapped_column(String(50), nullable=False)
+    score: Mapped[Decimal] = mapped_column(Numeric(5, 2), nullable=False, server_default="0")
+    hit_count: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    total_tokens_traded: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    win_rate: Mapped[Decimal | None] = mapped_column(Numeric(5, 2))
+    avg_entry_rank: Mapped[int | None] = mapped_column(Integer)
+    tokens_summary: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="true")
+    stats: Mapped[dict] = mapped_column(JSONB, nullable=False, server_default="{}")
+    added_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    last_refreshed_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
+
+    # Relationships
+    activity: Mapped[list["WatchWalletActivity"]] = relationship(back_populates="wallet")
+
+    __table_args__ = (
+        Index("idx_watch_wallets_score", score.desc()),
+        Index("idx_watch_wallets_source", "source"),
+    )
+
+
+class WatchWalletActivity(Base):
+    """Live activity from watched wallets."""
+
+    __tablename__ = "watch_wallet_activity"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    wallet_id: Mapped[int] = mapped_column(Integer, ForeignKey("watch_wallets.id"), nullable=False)
+    token_mint: Mapped[str] = mapped_column(String(64), nullable=False)
+    token_symbol: Mapped[str | None] = mapped_column(String(20))
+    token_name: Mapped[str | None] = mapped_column(String(200))
+    direction: Mapped[str] = mapped_column(String(10), nullable=False)
+    amount_sol: Mapped[Decimal | None] = mapped_column(Numeric(20, 9))
+    price_usd: Mapped[Decimal | None] = mapped_column(Numeric(30, 18))
+    tx_signature: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
+    block_time: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    detected_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    metadata_: Mapped[dict] = mapped_column("metadata", JSONB, nullable=False, server_default="{}")
+
+    # Relationships
+    wallet: Mapped["WatchWallet"] = relationship(back_populates="activity")
+
+    __table_args__ = (
+        Index("idx_ww_activity_wallet", "wallet_id", block_time.desc()),
+        Index("idx_ww_activity_token", "token_mint", block_time.desc()),
+        Index("idx_ww_activity_detected", detected_at.desc()),
+    )
+
+
+class MemecoinTwitterAccount(Base):
+    """Tracked memecoin-focused Twitter accounts (separate from main Twitter)."""
+
+    __tablename__ = "memecoin_twitter_accounts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    handle: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
+    display_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    category: Mapped[str] = mapped_column(String(20), nullable=False)
+    is_vip: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="false")
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="true")
+    added_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    # Relationships
+    tweets: Mapped[list["MemecoinTweet"]] = relationship(back_populates="account")
+
+
+class MemecoinTweet(Base):
+    """Ingested tweets from memecoin-tracked accounts."""
+
+    __tablename__ = "memecoin_tweets"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    account_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("memecoin_twitter_accounts.id"), nullable=False
+    )
+    tweet_id: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    metrics: Mapped[dict] = mapped_column(JSONB, nullable=False, server_default="{}")
+    ingested_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    # Relationships
+    account: Mapped["MemecoinTwitterAccount"] = relationship(back_populates="tweets")
+    signal: Mapped["MemecoinTweetSignal | None"] = relationship(back_populates="tweet", uselist=False)
+    token_matches: Mapped[list["MemecoinTweetToken"]] = relationship(back_populates="tweet")
+
+    __table_args__ = (
+        Index("idx_mc_tweets_account", "account_id", created_at.desc()),
+        Index("idx_mc_tweets_created", created_at.desc()),
+    )
+
+
+class MemecoinTweetToken(Base):
+    """Token matches discovered from memecoin tweets."""
+
+    __tablename__ = "memecoin_tweet_tokens"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    tweet_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("memecoin_tweets.id"), nullable=False
+    )
+    token_mint: Mapped[str | None] = mapped_column(String(64))
+    token_symbol: Mapped[str] = mapped_column(String(20), nullable=False)
+    token_name: Mapped[str | None] = mapped_column(String(200))
+    source: Mapped[str] = mapped_column(String(20), nullable=False)
+    dexscreener_url: Mapped[str | None] = mapped_column(Text)
+    market_cap_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
+    price_usd: Mapped[Decimal | None] = mapped_column(Numeric(30, 18))
+    liquidity_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
+    matched_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    metadata_: Mapped[dict] = mapped_column("metadata", JSONB, nullable=False, server_default="{}")
+
+    # Relationships
+    tweet: Mapped["MemecoinTweet"] = relationship(back_populates="token_matches")
+
+    __table_args__ = (
+        Index("idx_mc_tweet_tokens_tweet", "tweet_id"),
+        Index("idx_mc_tweet_tokens_symbol", "token_symbol"),
+    )
+
+
+class MemecoinTweetSignal(Base):
+    """LLM-generated sentiment analysis for memecoin tweets."""
+
+    __tablename__ = "memecoin_tweet_signals"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    tweet_id: Mapped[int] = mapped_column(
+        BigInteger, ForeignKey("memecoin_tweets.id"), unique=True, nullable=False
+    )
+    sentiment_score: Mapped[Decimal] = mapped_column(Numeric(4, 3), nullable=False)
+    setup_type: Mapped[str | None] = mapped_column(String(30))
+    confidence: Mapped[Decimal] = mapped_column(
+        Numeric(4, 3), nullable=False, server_default="0.500"
+    )
+    symbols_mentioned: Mapped[list[str]] = mapped_column(
+        ARRAY(String), nullable=False, server_default="{}"
+    )
+    reasoning: Mapped[str] = mapped_column(Text, nullable=False)
+    model_used: Mapped[str] = mapped_column(String(50), nullable=False)
+    input_tokens: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    output_tokens: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    estimated_cost_usd: Mapped[Decimal] = mapped_column(
+        Numeric(8, 4), nullable=False, server_default="0.0000"
+    )
+    analyzed_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    # Relationships
+    tweet: Mapped["MemecoinTweet"] = relationship(back_populates="signal")
+
+    __table_args__ = (
+        Index("idx_mc_signals_analyzed", analyzed_at.desc()),
+    )

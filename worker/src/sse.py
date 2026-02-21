@@ -106,3 +106,16 @@ async def sse_trades() -> StreamingResponse:
             "X-Accel-Buffering": "no",
         },
     )
+
+
+@router.get("/memecoins")
+async def sse_memecoins() -> StreamingResponse:
+    """Stream memecoin wallet activity and tweet updates."""
+    return StreamingResponse(
+        _event_stream("memecoins"),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )

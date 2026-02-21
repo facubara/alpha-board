@@ -831,3 +831,113 @@ export interface TradeExecuteResult {
   tpOrderId?: string | null;
   error?: string;
 }
+
+// =============================================================================
+// Memecoin Types
+// =============================================================================
+
+export type MemecoinCategory = "caller" | "influencer" | "degen" | "news";
+
+export const MEMECOIN_CATEGORIES: MemecoinCategory[] = [
+  "caller",
+  "influencer",
+  "degen",
+  "news",
+];
+
+export const MEMECOIN_CATEGORY_LABELS: Record<MemecoinCategory, string> = {
+  caller: "Caller",
+  influencer: "Influencer",
+  degen: "Degen",
+  news: "News",
+};
+
+export interface WatchWallet {
+  id: number;
+  address: string;
+  label: string | null;
+  source: string;
+  score: number;
+  hitCount: number;
+  winRate: number | null;
+  avgEntryRank: number | null;
+  totalTokensTraded: number;
+  tokensSummary: {
+    symbol: string;
+    mint: string;
+    entry_rank: number;
+    peak_mcap: number | null;
+  }[];
+  isActive: boolean;
+  stats: Record<string, unknown>;
+  addedAt: string;
+  lastRefreshedAt: string | null;
+}
+
+export interface WalletActivity {
+  id: number;
+  walletId: number;
+  walletAddress: string;
+  walletLabel: string | null;
+  tokenMint: string;
+  tokenSymbol: string | null;
+  tokenName: string | null;
+  direction: "buy" | "sell";
+  amountSol: number | null;
+  priceUsd: number | null;
+  txSignature: string;
+  blockTime: string;
+  detectedAt: string;
+}
+
+export interface MemecoinTwitterAccount {
+  id: number;
+  handle: string;
+  displayName: string;
+  category: MemecoinCategory;
+  isVip: boolean;
+  isActive: boolean;
+  addedAt: string;
+  tweetCount?: number;
+}
+
+export interface MemecoinTokenMatch {
+  id: number;
+  tweetId?: number;
+  tokenMint: string | null;
+  tokenSymbol: string;
+  tokenName: string | null;
+  source: "keyword" | "llm";
+  dexscreenerUrl: string | null;
+  marketCapUsd: number | null;
+  priceUsd: number | null;
+  liquidityUsd: number | null;
+  matchedAt: string;
+}
+
+export interface MemecoinTweetData {
+  id: number;
+  tweetId: string;
+  accountHandle: string;
+  accountDisplayName: string;
+  accountCategory: MemecoinCategory;
+  isVip: boolean;
+  text: string;
+  createdAt: string;
+  metrics: {
+    like_count?: number;
+    retweet_count?: number;
+    reply_count?: number;
+    media_urls?: string[];
+  };
+  ingestedAt: string;
+  signal?: TweetSignal;
+  tokenMatches?: MemecoinTokenMatch[];
+}
+
+export interface MemecoinStats {
+  walletsTracked: number;
+  avgHitRate: number;
+  tweetsToday: number;
+  tokenMatchesToday: number;
+}

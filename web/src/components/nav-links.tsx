@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { href: "/", label: "Rankings" },
   { href: "/agents", label: "Agents" },
   { href: "/tweets", label: "Tweets" },
+  { href: "/memecoins", label: "Memecoins" },
   { href: "/backtest", label: "Backtest" },
   { href: "/analytics", label: "Analytics" },
   { href: "/status", label: "Status" },

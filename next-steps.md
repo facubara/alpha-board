@@ -1151,3 +1151,704 @@ Add a `reconcile_pnl(agent_id)` method that:
 - `web/src/components/updates/updates-list.tsx` — Server component that groups entries by month with muted uppercase section headers and bordered cards
 - `web/src/app/updates/page.tsx` — Static page following the status page pattern with SEO metadata
 - `web/src/components/nav-links.tsx` — Added "Updates" nav link between Status and Settings
+
+---
+
+## 25. Memecoins Tab — Wallet Cross-Referencing & Memecoin Twitter Intelligence — `COMPLETED`
+
+**What:** A new top-level "Memecoins" tab that tracks real-time Solana memecoin launches (Pump.fun, PumpSwap, LetsBonk, Raydium LaunchLab), identifies smart wallets that are consistently early on winners, and powers a new fleet of memecoin-specific agents that can copy-trade those wallets on Solana.
+
+**Why:** Memecoins on Solana are the highest-alpha, highest-risk segment of crypto. The current system tracks Binance perpetuals — adding Solana memecoins opens an entirely new asset class with different dynamics: bonding curves, graduation events, dev wallet behavior, sniper detection, and social narrative velocity. The alpha edge comes from tracking wallets that are provably early on 10x+ tokens and replicating their entries with sub-second latency.
+
+---
+
+### Phase 1 — Solana Infrastructure & Data Ingestion
+
+**Goal:** Set up the foundational Solana RPC infrastructure and start ingesting new token launches from the major launchpads in real-time.
+
+#### 1.1 — Solana RPC Provider Setup
+
+Choose one primary provider (recommendation: **Helius** for best Solana-specific tooling):
+
+| Provider | Why | Cost |
+|----------|-----|------|
+| **Helius** (recommended) | Enhanced WebSockets (1.5-2x faster than standard), LaserStream gRPC, webhooks, DAS API, excellent Pump.fun/Raydium docs | Free: 1M credits/mo. Paid: $49–$999/mo. Dedicated gRPC: $2,900/mo |
+| **Shyft** | RabbitStream (shred-level, ~10ms faster than gRPC), multi-region failover, no bandwidth caps | From $1,800/mo dedicated |
+| **QuickNode** | Streams, Metis Marketplace add-ons, `/new-pools` REST endpoint | Free: 10M credits/mo |
+
+**Implementation:**
+- Add Solana RPC config to `worker/src/config.py`: `SOLANA_RPC_URL`, `SOLANA_WS_URL`, `HELIUS_API_KEY`
+- Install `solders` (Solana SDK for Python) and `websockets` packages
+- New module: `worker/src/solana/client.py` — wraps RPC calls (getTransaction, getAccountInfo, etc.)
+
+#### 1.2 — New Token Launch Listener
+
+Monitor the major launchpad programs for new token creation events:
+
+| Program | Address | Event |
+|---------|---------|-------|
+| Pump.fun | `6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P` | `create` instruction → new token mint |
+| PumpSwap AMM | `pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA` | `create_pool` → token graduated to AMM |
+| Raydium AMM | `675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8` | `initialize2` → new liquidity pool |
+| LetsBonk.fun | `LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj` | Token creation on Bonk launchpad |
+
+**Implementation:**
+- New module: `worker/src/solana/launch_listener.py`
+- Use Helius Enhanced WebSocket `logsSubscribe` to monitor program logs for creation events
+- Parse transaction data to extract: token mint address, creator wallet, token metadata (name, symbol, image URI), initial supply, bonding curve parameters
+- Alternatively, use Helius webhooks for a more reliable push-based approach
+- For highest speed (copy trading phase): upgrade to Yellowstone gRPC via Helius LaserStream or Shyft
+
+#### 1.3 — Database Schema
+
+**Migration: `worker/alembic/versions/02X_memecoins.py`**
+
+```sql
+-- Memecoin tokens tracked
+CREATE TABLE memecoin_tokens (
+    id BIGSERIAL PRIMARY KEY,
+    mint_address VARCHAR(64) UNIQUE NOT NULL,       -- Solana token mint address
+    name VARCHAR(200),
+    symbol VARCHAR(20),
+    image_uri TEXT,
+    creator_wallet VARCHAR(64) NOT NULL,
+    launchpad VARCHAR(50) NOT NULL,                  -- 'pump_fun', 'pumpswap', 'raydium', 'letsbonk', 'believe'
+    status VARCHAR(30) NOT NULL DEFAULT 'bonding',   -- 'bonding', 'graduated', 'rugged', 'dead'
+    bonding_curve_progress NUMERIC(5,2),             -- 0-100%
+    graduation_tx VARCHAR(128),                      -- tx signature when graduated
+    created_at TIMESTAMPTZ NOT NULL,
+    graduated_at TIMESTAMPTZ,
+    discovered_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    metadata JSONB DEFAULT '{}'                      -- flexible: lp_burned, holder_count, etc.
+);
+
+CREATE INDEX idx_memecoin_tokens_creator ON memecoin_tokens (creator_wallet);
+CREATE INDEX idx_memecoin_tokens_status ON memecoin_tokens (status);
+CREATE INDEX idx_memecoin_tokens_launchpad ON memecoin_tokens (launchpad);
+CREATE INDEX idx_memecoin_tokens_created ON memecoin_tokens (created_at DESC);
+
+-- Price/volume snapshots (sampled periodically)
+CREATE TABLE memecoin_snapshots (
+    id BIGSERIAL PRIMARY KEY,
+    token_id BIGINT NOT NULL REFERENCES memecoin_tokens(id),
+    price_sol NUMERIC(30,18),                        -- price in SOL
+    price_usd NUMERIC(30,18),                        -- price in USD
+    market_cap_usd NUMERIC(20,2),
+    volume_24h_usd NUMERIC(20,2),
+    holder_count INTEGER,
+    liquidity_usd NUMERIC(20,2),
+    buy_count_5m INTEGER,
+    sell_count_5m INTEGER,
+    snapped_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+) PARTITION BY RANGE (snapped_at);
+
+CREATE INDEX idx_memecoin_snapshots_token ON memecoin_snapshots (token_id, snapped_at DESC);
+
+-- Smart wallets being tracked
+CREATE TABLE smart_wallets (
+    id SERIAL PRIMARY KEY,
+    address VARCHAR(64) UNIQUE NOT NULL,
+    label VARCHAR(100),                              -- 'sniper', 'kol', 'smart_money', 'insider', 'whale'
+    category VARCHAR(50),                            -- 'top_trader', 'early_buyer', 'kol', 'fund'
+    source VARCHAR(50),                              -- 'gmgn', 'birdeye', 'manual', 'discovered'
+    stats JSONB DEFAULT '{}',                        -- win_rate, avg_roi, total_trades, pnl_7d, pnl_30d
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    added_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    last_refreshed_at TIMESTAMPTZ
+);
+
+CREATE INDEX idx_smart_wallets_category ON smart_wallets (category);
+
+-- Activity log for tracked wallets
+CREATE TABLE smart_wallet_trades (
+    id BIGSERIAL PRIMARY KEY,
+    wallet_id INTEGER NOT NULL REFERENCES smart_wallets(id),
+    token_id BIGINT REFERENCES memecoin_tokens(id),
+    mint_address VARCHAR(64) NOT NULL,               -- in case token not yet in our DB
+    direction VARCHAR(10) NOT NULL,                  -- 'buy' or 'sell'
+    amount_sol NUMERIC(20,9),
+    amount_tokens NUMERIC(30,0),
+    price_sol NUMERIC(30,18),
+    tx_signature VARCHAR(128) NOT NULL,
+    block_time TIMESTAMPTZ NOT NULL,
+    detected_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    was_copied BOOLEAN DEFAULT FALSE,                -- whether our copy agent acted on this
+    metadata JSONB DEFAULT '{}'                      -- slippage, pool, etc.
+) PARTITION BY RANGE (block_time);
+
+CREATE INDEX idx_sw_trades_wallet ON smart_wallet_trades (wallet_id, block_time DESC);
+CREATE INDEX idx_sw_trades_token ON smart_wallet_trades (mint_address, block_time DESC);
+```
+
+#### 1.4 — Token Data Enrichment
+
+After a new token is discovered, enrich it with data from multiple free/cheap APIs:
+
+| Data Point | Source | Endpoint |
+|------------|--------|----------|
+| Price, volume, liquidity | DEXScreener (free, no auth) | `GET /latest/dex/tokens/{mintAddress}` |
+| Price history (OHLCV) | Birdeye ($250/mo) | `GET /defi/price_historical?address={mint}&type=5m` |
+| Holder count | Helius DAS API | `GET /v0/addresses/{mint}/balances` |
+| Token metadata | Helius | `GET /v0/token-metadata?mint={address}` |
+| Creator wallet history | Solscan or Helius | Previous token deployments by same wallet |
+| Rug pull risk score | DeFade (free) | `defade.org` analysis |
+
+**Implementation:**
+- New module: `worker/src/solana/enricher.py` — `TokenEnricher` class
+- Runs on a schedule (every 1-5 min for active tokens, hourly for older ones)
+- Persists enriched data to `memecoin_snapshots` and updates `memecoin_tokens.metadata`
+- Rate-limit aware: DEXScreener 300 req/min, Birdeye based on plan
+
+---
+
+### Phase 2 — Smart Wallet Discovery & Tracking
+
+**Goal:** Identify wallets that are consistently early on successful memecoins, track their activity in real-time, and build a "smart money" leaderboard.
+
+#### 2.1 — Wallet Discovery Pipeline
+
+Three sources for discovering alpha wallets:
+
+**Source A — GMGN.AI Wallet Rankings**
+- GMGN labels wallets as: top snipers, KOLs, smart traders, insider traders
+- Sortable by: 1D/7D/30D PnL, win rate, ROI
+- Scrape or use GMGN API (requires volume threshold for API access, otherwise use Apify scraper)
+- Filter criteria: >60% win rate over 30 days, >50 trades, >$10k realized PnL
+
+**Source B — On-Chain Analysis (First Buyers of Winners)**
+- For tokens that hit >$1M market cap:
+  1. Query the first 70 buyers (from transaction history)
+  2. Check each buyer's overall track record (% of tokens bought that later 10x'd)
+  3. Wallets with >20% hit rate on 10x+ tokens are flagged as "smart money"
+- Use Birdeye Wallet PnL API: `GET /wallet/token_performance?wallet={address}`
+- Or Helius transaction history: `GET /v0/addresses/{address}/transactions`
+
+**Source C — Dune Analytics Community Dashboards**
+- Dashboard: "Solana Alpha Wallet Signals for Copy Trading"
+- Query `dex_solana.bot_trades` for profitable bot wallets
+- Export top performers periodically
+
+**Implementation:**
+- New module: `worker/src/solana/wallet_discovery.py` — `WalletDiscovery` class
+- Scheduled job: runs daily, discovers new candidate wallets
+- Scoring formula per wallet:
+  ```python
+  score = (win_rate * 0.3) + (avg_roi * 0.25) + (total_pnl_normalized * 0.2) + (consistency * 0.15) + (early_entry_pct * 0.1)
+  ```
+  Where `early_entry_pct` = % of trades where the wallet was in the first 100 buyers
+- Wallets above threshold → inserted into `smart_wallets` table with stats
+- Admin UI: manually add/remove wallets, adjust categories
+
+#### 2.2 — Real-Time Wallet Monitoring
+
+Once smart wallets are identified, monitor their on-chain activity in real-time:
+
+**Detection Methods (ordered by latency):**
+
+| Method | Latency | Cost | Implementation |
+|--------|---------|------|----------------|
+| Helius Enhanced WebSocket `transactionSubscribe` | ~200-500ms | Included in plan | Filter by wallet address, parse for DEX swap instructions |
+| Helius Webhooks | ~1-3s | Included in plan | Push-based, more reliable, auto-retry |
+| Yellowstone gRPC (via Helius LaserStream) | ~50-100ms | $2,900/mo dedicated | Fastest, subscribe to account changes |
+| Shyft RabbitStream | ~10ms faster than gRPC | $1,800/mo | Shred-level, lowest latency possible |
+
+**Recommended approach for MVP:** Helius Webhooks (reliable, included in standard plan)
+**Recommended for production copy trading:** Yellowstone gRPC via Helius or Shyft (speed matters for frontrunning prevention)
+
+**Implementation:**
+- New module: `worker/src/solana/wallet_monitor.py` — `WalletMonitor` class
+- On startup: register Helius webhooks for all active `smart_wallets` addresses
+- Webhook handler endpoint: `POST /webhooks/solana/wallet-activity`
+- Parse incoming transactions:
+  1. Identify if it's a swap (check for Raydium, PumpSwap, Jupiter program interactions)
+  2. Extract: token mint, direction (buy/sell), amount in SOL, token amount
+  3. Look up or create `memecoin_tokens` entry
+  4. Insert into `smart_wallet_trades`
+  5. Emit event for copy trading agents (Phase 4)
+- Handle webhook failures: Helius retries 3x, fallback to polling `getSignaturesForAddress` every 30s
+
+#### 2.3 — Wallet Stats Refresh
+
+- Scheduled job: every 6 hours, refresh stats for all active smart wallets
+- Recalculate: win rate, avg ROI, PnL (7d/30d), total trades, best token, consistency score
+- Use Birdeye Wallet PnL API or aggregate from `smart_wallet_trades`
+- Auto-deactivate wallets that drop below performance threshold (win rate < 30% over 60 days)
+- Auto-discover new wallets from recent 10x token first-buyers
+
+---
+
+### Phase 3 — Memecoins Dashboard (Web)
+
+**Goal:** Build the `/memecoins` tab with three main views: Live Launches, Smart Wallets, and Agent Performance.
+
+#### 3.1 — Navigation & Layout
+
+- Add "Memecoins" to `nav-links.tsx` (between Tweets and Analytics, or as a top-level tab)
+- Route: `web/src/app/memecoins/page.tsx`
+- Three sub-tabs within the page:
+  1. **Live Launches** — Real-time feed of new tokens
+  2. **Smart Wallets** — Leaderboard of tracked wallets with their recent trades
+  3. **Agents** — Memecoin-specific agent performance (once Phase 4 is built)
+
+#### 3.2 — Live Launches View
+
+A real-time feed of new Solana memecoin launches, updating via SSE.
+
+**Table columns:**
+
+| Column | Description |
+|--------|-------------|
+| Token | Name + symbol + image (from metadata) |
+| Launchpad | Pump.fun / PumpSwap / Raydium / LetsBonk badge |
+| Age | Time since creation (e.g., "3m ago", "2h ago") |
+| Status | Bonding / Graduated / Rugged badge |
+| Progress | Bonding curve fill % (visual bar, only for bonding status) |
+| Price | Current price in SOL and USD |
+| Mkt Cap | Current market cap in USD |
+| Holders | Number of unique holders |
+| Liquidity | Total liquidity in USD (post-graduation) |
+| Volume 5m | Buy/sell count and volume in last 5 minutes |
+| Smart $ | Number of tracked smart wallets that bought this token (with wallet labels on hover) |
+| Dev | Creator wallet (truncated, clickable to Solscan) + badge if known serial deployer |
+
+**Filters:**
+- Launchpad (multi-select)
+- Status (bonding / graduated / all)
+- Min market cap
+- Min holders
+- "Smart money only" toggle — only show tokens where ≥1 smart wallet bought
+- Age range (last 1h, 6h, 24h, 7d)
+
+**Sorting:** By age (newest first default), market cap, volume, holder count, smart money count
+
+**Real-time updates:**
+- SSE endpoint: `worker/src/api/memecoins.py` → `/sse/memecoins/launches`
+- Emits new token events as they're detected by the launch listener
+- Client component with `useEventSource` hook
+
+**Token detail (expandable row or click-through):**
+- Price chart (5m candles from Birdeye or DEXScreener)
+- Holder distribution (top 10 wallets + % held)
+- Creator wallet analysis (previous launches, rug history)
+- Smart wallet entries (which tracked wallets bought, when, at what price)
+- Link to Solscan, DEXScreener, Birdeye for the token
+
+#### 3.3 — Smart Wallets View
+
+A leaderboard of tracked smart wallets with their performance metrics and recent trades.
+
+**Wallet leaderboard columns:**
+
+| Column | Description |
+|--------|-------------|
+| Wallet | Address (truncated) + label badge (sniper / KOL / smart money / whale) |
+| Category | top_trader / early_buyer / kol / fund |
+| Win Rate | % of token buys that were profitable (30d) |
+| Avg ROI | Average return on investment per trade (30d) |
+| PnL 7d | Realized PnL last 7 days (SOL + USD) |
+| PnL 30d | Realized PnL last 30 days (SOL + USD) |
+| Trades | Total trade count (30d) |
+| Best Token | Highest ROI token in last 30 days |
+| Last Active | Time since last trade |
+| Source | How the wallet was discovered (GMGN / on-chain / manual) |
+| Actions | Toggle copy-trading on/off (for Phase 4) |
+
+**Wallet detail (expandable):**
+- Recent trades table: token, direction, amount SOL, entry price, current price, ROI, timestamp
+- Token hit rate chart: % of buys that 2x, 5x, 10x, 50x, 100x
+- Activity heatmap: when is this wallet most active (hour of day / day of week)
+
+**Admin actions:**
+- Add wallet manually (paste address)
+- Remove wallet
+- Change category/label
+- Force stats refresh
+
+#### 3.4 — API Endpoints (Worker)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/memecoins/tokens` | GET | Paginated list of tracked tokens with filters |
+| `/api/memecoins/tokens/{mint}` | GET | Single token detail with snapshots and smart wallet entries |
+| `/api/memecoins/wallets` | GET | Smart wallet leaderboard with stats |
+| `/api/memecoins/wallets/{address}` | GET | Single wallet detail with recent trades |
+| `/api/memecoins/wallets` | POST | Add a new wallet to track (admin) |
+| `/api/memecoins/wallets/{address}` | DELETE | Remove a tracked wallet (admin) |
+| `/api/memecoins/stats` | GET | Aggregate stats: tokens tracked, graduated %, avg time to graduation, total smart wallet PnL |
+| `/sse/memecoins/launches` | GET (SSE) | Real-time new token launch events |
+| `/sse/memecoins/wallet-trades` | GET (SSE) | Real-time smart wallet trade events |
+| `/webhooks/solana/wallet-activity` | POST | Helius webhook receiver for wallet transactions |
+
+#### 3.5 — Components
+
+| Component | File |
+|-----------|------|
+| `<MemecoinsPage>` | `web/src/app/memecoins/page.tsx` |
+| `<LaunchesTable>` | `web/src/components/memecoins/launches-table.tsx` |
+| `<LaunchRow>` | `web/src/components/memecoins/launch-row.tsx` |
+| `<TokenDetail>` | `web/src/components/memecoins/token-detail.tsx` |
+| `<WalletLeaderboard>` | `web/src/components/memecoins/wallet-leaderboard.tsx` |
+| `<WalletRow>` | `web/src/components/memecoins/wallet-row.tsx` |
+| `<WalletDetail>` | `web/src/components/memecoins/wallet-detail.tsx` |
+| `<BondingCurveBar>` | `web/src/components/memecoins/bonding-curve-bar.tsx` |
+| `<LaunchpadBadge>` | `web/src/components/memecoins/launchpad-badge.tsx` |
+| `<SmartMoneyIndicator>` | `web/src/components/memecoins/smart-money-indicator.tsx` |
+
+---
+
+### Phase 4 — Memecoin Agents & Copy Trading
+
+**Goal:** Create a fleet of memecoin-specific agents that trade on Solana, including copy-trading agents that replicate smart wallet entries.
+
+#### 4.1 — Solana Wallet & Swap Infrastructure
+
+Before agents can trade, we need a Solana wallet and swap execution layer:
+
+**Wallet setup:**
+- Generate or import a Solana keypair for the agent treasury
+- Store encrypted private key in environment variable (`SOLANA_AGENT_PRIVATE_KEY`)
+- Fund with SOL for gas fees + trading capital
+- Track SOL balance as part of agent portfolio
+
+**Swap execution via Jupiter Aggregator:**
+```python
+# worker/src/solana/swap.py
+
+class JupiterSwapper:
+    QUOTE_URL = "https://quote-api.jup.ag/v6/quote"
+    SWAP_URL = "https://public.jupiterapi.com/swap"
+
+    async def get_quote(self, input_mint: str, output_mint: str, amount_lamports: int, slippage_bps: int = 100):
+        """Get best swap route from Jupiter."""
+        params = {
+            "inputMint": input_mint,
+            "outputMint": output_mint,
+            "amount": str(amount_lamports),
+            "slippageBps": slippage_bps
+        }
+        # Returns route with expected output, price impact, fees
+
+    async def execute_swap(self, quote_response: dict, user_public_key: str):
+        """Build, sign, and send swap transaction."""
+        # 1. POST to /swap with quote + public key → get serialized tx
+        # 2. Deserialize, sign with agent keypair
+        # 3. Send via RPC with priority fees for faster inclusion
+        # 4. Confirm transaction
+        # 5. Return tx signature + actual amounts
+```
+
+**Priority fees:** Use Helius priority fee API to estimate competitive fees for fast inclusion.
+
+**Safety guards:**
+- Max position size per token (e.g., 0.5 SOL)
+- Max total exposure (e.g., 10 SOL across all positions)
+- Slippage protection (reject if price impact > 5%)
+- Rug pull detection: check if LP is burned before buying
+- Honeypot detection: simulate a sell before buying (can we actually sell this token?)
+
+#### 4.2 — Copy Trading Agent
+
+The highest-alpha agent type: monitors smart wallets and replicates their entries.
+
+**Strategy:**
+1. **Trigger:** Smart wallet trade detected via webhook (Phase 2.2)
+2. **Filter:** Only copy BUY signals (ignore sells initially). Only copy if:
+   - Wallet win rate > 50%
+   - Token has > 10 holders
+   - Token age > 2 minutes (avoid honeypots)
+   - No more than 30% of supply held by top wallet (rug risk)
+   - LP is burned or locked
+3. **Size:** Position size proportional to wallet confidence score:
+   - Top-tier wallets (>70% win rate): 0.3 SOL
+   - Mid-tier (50-70% win rate): 0.15 SOL
+   - Configurable per wallet via `smart_wallets.metadata`
+4. **Exit rules:**
+   - Take profit at 2x, 5x, 10x (partial exits: sell 30% at 2x, 30% at 5x, remaining at 10x)
+   - Stop loss at -50% (memecoins are volatile, tight stops get chopped)
+   - Time-based exit: sell if no 2x within 24 hours
+   - Copy the smart wallet's sell (if the tracked wallet sells, we sell too)
+5. **Latency target:** < 2 seconds from smart wallet tx confirmation to our swap submission
+
+**Implementation:**
+- New agent source: `source = 'memecoin'` in agents table
+- New archetype: `copy_trader`
+- Engine: `rule` (no LLM needed — speed is critical, decisions are mechanical)
+- New module: `worker/src/solana/copy_agent.py` — `CopyTradingAgent` class
+- Listens to `smart_wallet_trades` events from wallet monitor
+- Executes via `JupiterSwapper`
+- Logs trades to `agent_trades` (same schema, with `exit_reason` values like `copy_sell`, `take_profit_2x`, `stop_loss`, `time_exit`)
+
+#### 4.3 — Memecoin-Native Agent Archetypes
+
+Beyond copy trading, create agents that use on-chain signals:
+
+| Archetype | Strategy | Engine |
+|-----------|----------|--------|
+| `memecoin_sniper` | Buy tokens within 60s of launch if creator wallet has track record + bonding curve filling fast | Rule |
+| `memecoin_graduation` | Buy tokens approaching graduation (>80% bonding curve progress) before they migrate to AMM (graduation pump) | Rule |
+| `memecoin_momentum` | Buy tokens with accelerating volume and smart wallet accumulation; ride momentum with trailing stop | Rule + LLM |
+| `memecoin_contrarian` | Fade tokens that dumped >70% from ATH but still have strong holder base and smart wallet holding | LLM |
+| `copy_trader` | Replicate smart wallet entries with configurable filters and exit rules (described above) | Rule |
+
+**Agent fleet:**
+- 5 archetypes × 1 engine (rule for speed-sensitive, LLM for analysis-heavy) = 5-10 agents initially
+- No timeframe dimension (memecoins are event-driven, not candle-driven)
+- Separate portfolio with SOL denomination (not USDT like Binance agents)
+
+#### 4.4 — Portfolio Management (SOL-denominated)
+
+Extend `PortfolioManager` for Solana:
+- Track balances in SOL (not USDT)
+- Track actual on-chain positions (token balances in wallet)
+- Reconcile DB state with on-chain balances periodically
+- Compute PnL in both SOL and USD terms
+- Handle gas fees as trading costs
+
+**Database changes:**
+- Add `denomination` column to `agent_portfolios` (`USDT` or `SOL`)
+- Add `chain` column to agents table (`binance` or `solana`)
+- Add `gas_fees_paid` to `agent_trades` for Solana trades
+
+#### 4.5 — Telegram Notifications
+
+New notification templates for memecoin events:
+- **New smart wallet entry:** "[SMART $] 🔵 Wallet `abc...xyz` (72% WR) bought 0.5 SOL of $TOKENNAME — 3m old, 42 holders, $12k mcap"
+- **Copy trade executed:** "[COPY] Copied wallet `abc...xyz` → bought 0.15 SOL of $TOKENNAME at $0.00023 — watching for 2x"
+- **Copy trade exit:** "[COPY] Sold $TOKENNAME → +3.2x (0.48 SOL profit) — exit: take_profit_5x"
+- **Daily memecoin digest:** Tokens tracked, copy trades made, total PnL, best/worst trade, active positions
+
+---
+
+### Phase 5 — Alpha Signals & Analytics
+
+**Goal:** Surface actionable alpha signals from the data collected in Phases 1-4.
+
+#### 5.1 — Alpha Signal Detection
+
+Automated detection of high-conviction signals:
+
+| Signal | Description | Detection Method |
+|--------|-------------|-----------------|
+| **Smart Money Convergence** | 3+ tracked wallets buy the same token within 10 minutes | Aggregate `smart_wallet_trades` by token, window = 10min |
+| **Serial Dev Launch** | Creator wallet has launched 2+ tokens that hit >$100k mcap | Join `memecoin_tokens.creator_wallet` with historical success rate |
+| **Graduation Imminent** | Bonding curve > 85% filled, accelerating | Monitor `bonding_curve_progress` rate of change |
+| **Volume Spike** | 5-minute volume > 10x the token's average | Compare current `volume_5m` to rolling average |
+| **KOL Mention** | Known crypto influencer tweeted about a token (cross-reference with tweet_signals) | Match `tweets.symbols_mentioned` with `memecoin_tokens.symbol` |
+| **Bundle/Sniper Alert** | >30% of supply acquired by bundled transactions in first block | Parse early transactions for bundled buy patterns |
+
+**Implementation:**
+- New module: `worker/src/solana/signals.py` — `AlphaSignalDetector` class
+- Runs every 1-2 minutes on active tokens
+- Stores detected signals in `memecoin_signals` table (token_id, signal_type, confidence, metadata, detected_at)
+- Feeds into agent context for LLM-based memecoin agents
+- Emits via SSE for dashboard real-time display
+
+#### 5.2 — Dashboard Analytics (Memecoins Sub-tab)
+
+Add analytics specific to the memecoin vertical:
+
+- **Token Funnel:** How many tokens launched → graduated → hit $100k → hit $1M → sustained
+- **Smart Wallet Leaderboard:** Ranked by ROI, win rate, consistency
+- **Copy Trade Performance:** Equity curve, win rate, avg multiplier, best/worst trade
+- **Signal Backtesting:** Historical hit rate per signal type (e.g., "Smart Money Convergence" signals led to 2x+ returns 34% of the time)
+- **Launchpad Comparison:** Success rate by launchpad (% of tokens that graduate, avg time to graduation, avg max market cap)
+
+---
+
+### Phase 6 — Risk Management & Safety
+
+**Goal:** Prevent catastrophic losses from rug pulls, honeypots, and market manipulation.
+
+#### 6.1 — Pre-Trade Safety Checks
+
+Before any agent executes a buy:
+
+| Check | Method | Block if |
+|-------|--------|----------|
+| **Honeypot detection** | Simulate a sell transaction via Jupiter | Sell simulation fails or >50% price impact |
+| **LP burn verification** | Check if LP tokens are burned (not held by dev) | LP tokens held by creator wallet |
+| **Holder concentration** | Check top 10 wallet balances | Any single wallet holds >20% of supply |
+| **Token age** | Check `created_at` timestamp | Token < 2 minutes old (avoid sandwich attacks) |
+| **Dev wallet history** | Check creator's previous token launches | >50% of previous launches rugged |
+| **Mint authority** | Check if mint authority is revoked | Mint authority still active (can inflate supply) |
+
+**Implementation:**
+- New module: `worker/src/solana/safety.py` — `SafetyChecker` class
+- Called by all memecoin agents before executing any buy
+- Returns `(is_safe: bool, risk_score: float, warnings: list[str])`
+- Log all safety check results for post-hoc analysis
+
+#### 6.2 — Portfolio-Level Risk Limits
+
+| Limit | Default | Configurable |
+|-------|---------|:---:|
+| Max single position size | 0.5 SOL | Yes |
+| Max total memecoin exposure | 10 SOL | Yes |
+| Max concurrent positions | 20 | Yes |
+| Max loss per day | 3 SOL | Yes |
+| Max loss per week | 10 SOL | Yes |
+| Circuit breaker: pause all agents if | Weekly loss > 50% of capital | Yes |
+
+---
+
+### Implementation Priority
+
+| Phase | Dependencies | Effort | Alpha Value |
+|-------|-------------|--------|-------------|
+| **Phase 1** — Infra & ingestion | None | High (RPC setup, schema, listeners) | Low (data only) |
+| **Phase 2** — Smart wallet discovery | Phase 1 | Medium | Medium (intelligence layer) |
+| **Phase 3** — Dashboard | Phase 1, 2 | Medium | Medium (visibility) |
+| **Phase 4** — Agents & copy trading | Phase 1, 2 | High (swap infra, real money) | **Very High** (actual alpha) |
+| **Phase 5** — Signals & analytics | Phase 1-4 | Medium | High (signal refinement) |
+| **Phase 6** — Safety | Phase 4 | Medium | **Critical** (loss prevention) |
+
+**Recommended order:** Phase 1 → Phase 2 → Phase 6 (safety before trading) → Phase 4 → Phase 3 → Phase 5
+
+---
+
+### Cost Estimates
+
+#### Solana RPC Provider (pick one)
+
+| Provider | Plan | Price/mo | Credits/mo | RPC RPS | gRPC Mainnet | Enhanced WS | Webhooks |
+|----------|------|----------|-----------|---------|:---:|:---:|:---:|
+| **Helius** | Free | $0 | 1M | 10 | No | No | Yes |
+| **Helius** | Developer | $49 | 10M | 50 | No | No | Yes |
+| **Helius** | Business | $499 | 100M | 200 | No | Yes | Yes |
+| **Helius** | Professional | $999 | 200M | 500 | Yes (LaserStream) | Yes | Yes |
+| **Helius** | Dedicated Node | $2,900+ | Custom | Custom | Yes | Yes | Yes |
+| **Shyft** | Build | $199 | Unlimited | 100 | Yes + RabbitStream | N/A | N/A |
+| **Shyft** | Grow | $349 | Unlimited | 150 | Yes + RabbitStream | N/A | N/A |
+| **Shyft** | Accelerate | $649 | Unlimited | 400 | Yes + RabbitStream | N/A | N/A |
+| **Shyft** | Dedicated gRPC | $1,800+ | Unlimited | Custom | Yes (shred-level) | N/A | N/A |
+| **QuickNode** | Free Trial | $0 | 10M | 15 | Metered | N/A | 1 webhook |
+| **QuickNode** | Build | $49 | 80M | 50 | Metered | N/A | 5 webhooks |
+| **QuickNode** | Scale | $499 | 950M | 250 | Metered | N/A | 20 webhooks |
+
+Helius overage: $5 per 1M credits. QuickNode overage: ~$0.55/1M credits. Shyft: no overages (unlimited).
+
+**Recommendation by phase:**
+- **Phase 1-2 (data ingestion, no trading):** Helius Developer at **$49/mo** — 10M credits, webhooks for wallet monitoring, WebSockets for launch detection.
+- **Phase 4 MVP (copy trading, paper):** Helius Developer still sufficient.
+- **Phase 4 production (real copy trading):** Upgrade to Helius Professional at **$999/mo** for LaserStream gRPC (~50-100ms latency) or Shyft Build at **$199/mo** for RabbitStream gRPC (~10ms faster than standard gRPC, unlimited credits).
+
+#### Token & DEX Data APIs
+
+| Provider | Plan | Price/mo | What You Get | Rate Limit |
+|----------|------|----------|-------------|------------|
+| **DEXScreener** | Free | $0 | Token price, pairs, volume, liquidity. No auth needed. | 60 req/min |
+| **Birdeye (BDS)** | Lite | $39 | Token price, OHLCV, trades, wallet portfolio/history | 15 RPS, 1.5M CUs |
+| **Birdeye (BDS)** | Premium Plus | $250 | Everything in Lite + WebSocket (500 connections), higher CUs | 50 RPS, 20M CUs |
+| **Birdeye (BDS)** | Business | $699 | Everything + batch APIs, 2000 WS connections | 100 RPS, 100M CUs |
+| **Bitquery** | Developer (Free) | $0 | GraphQL API trial, 2 active streams, 10 rows/req | 10 req/min, 1K points |
+| **Bitquery** | Commercial | Contact sales | Full streaming, Kafka, SQL exports | Custom |
+
+Birdeye overage: Lite $23/1M CUs, Premium Plus $9.9/1M CUs, Business $6.9/1M CUs.
+
+**Recommendation:** Start with **DEXScreener (free)** for token price/volume data. Add **Birdeye Lite ($39/mo)** when wallet PnL tracking is needed (Phase 2). Upgrade to **Birdeye Premium Plus ($250/mo)** only if WebSocket real-time data is required.
+
+#### Wallet Intelligence & Tracking
+
+| Provider | Plan | Price/mo | Solana Wallets | Key Features |
+|----------|------|----------|---------------|-------------|
+| **Cielo** | Free | $0 | 50 | Wallet profiles, PnL, trading, 120 alerts/hr, 1 TG bot |
+| **Cielo** | Pro | $59 | 200 | Wallet Discovery dashboard, 1000 alerts/hr, 4 TG bots |
+| **Cielo** | Whale | $199 | 1,000 | Full API access, 3000 alerts/hr, 18 TG bots |
+| **Nansen** | Free | $0 | N/A | Basic analytics, AI search, wallet/entity analytics |
+| **Nansen** | Pro | $69 (monthly) / $49 (annual) | N/A | 300M+ labeled addresses, Smart Money filters, PnL, alerts |
+| **GMGN** | N/A | N/A | N/A | **No public API.** IP whitelist for active traders only. 2 req/s. Unstable/unofficial. |
+
+**Recommendation:** Start with **Cielo Free (50 wallets)** for MVP smart wallet tracking. Upgrade to **Cielo Pro ($59/mo)** for Wallet Discovery dashboard (200 wallets). Add **Nansen Pro ($49-69/mo)** for labeled wallet intelligence if manual discovery isn't enough.
+
+#### Swap Execution
+
+| Provider | Price | Fee Model | Notes |
+|----------|-------|-----------|-------|
+| **Jupiter Ultra API** | Free | 5-10 bps per swap (0.05-0.10%) | RPC-less, handles everything. 50-400ms landing via Jupiter Beam. Recommended. |
+| **Jupiter Metis API** | Free | No swap fee | Requires your own RPC. More control, more complexity. |
+| **Solana base tx fee** | 0.000005 SOL (~$0.001) | Per signature | Always charged |
+| **Solana priority fee** | Variable | Per compute unit | Low: ~$0.002, Medium: ~$0.005, High: ~$0.009 per 200K CU tx |
+| **Jito tip (MEV protection)** | 0.0001-0.001 SOL | Per tx | Optional. Prevents sandwich attacks. $0.02-$0.20 at current SOL price. |
+
+**Estimated per-trade cost:** $0.003-$0.03 in gas/priority fees + 5-10 bps Jupiter fee on swap value.
+**At 50 copy trades/day:** ~$0.15-$1.50/day in gas = **$5-45/mo** in transaction fees.
+
+#### Total Cost Scenarios
+
+**Scenario A — MVP (Data collection + paper trading, no real money)**
+
+| Service | Plan | Cost/mo |
+|---------|------|---------|
+| Helius | Developer | $49 |
+| DEXScreener | Free | $0 |
+| Cielo | Free | $0 |
+| Jupiter | Free (no real trades) | $0 |
+| **Total** | | **$49/mo** |
+
+**Scenario B — Production (Smart wallet tracking + copy trading)**
+
+| Service | Plan | Cost/mo |
+|---------|------|---------|
+| Helius | Developer | $49 |
+| Birdeye | Lite | $39 |
+| Cielo | Pro | $59 |
+| DEXScreener | Free | $0 |
+| Jupiter swap fees | ~50 trades/day | ~$15-30 |
+| Solana gas fees | ~50 txs/day | ~$5-15 |
+| **Total** | | **$167-192/mo** |
+
+**Scenario C — Full Alpha (Low-latency gRPC + full intelligence stack)**
+
+| Service | Plan | Cost/mo |
+|---------|------|---------|
+| Shyft | Build (gRPC + RabbitStream) | $199 |
+| Birdeye | Premium Plus (WebSocket) | $250 |
+| Cielo | Whale (API + 1000 wallets) | $199 |
+| Nansen | Pro (labeled addresses) | $49 |
+| DEXScreener | Free | $0 |
+| Jupiter swap fees | ~100 trades/day | ~$30-60 |
+| Solana gas + Jito tips | ~100 txs/day | ~$30-90 |
+| **Total** | | **$757-847/mo** |
+
+**Scenario D — Maximum Speed (Dedicated gRPC for sub-50ms copy trading)**
+
+| Service | Plan | Cost/mo |
+|---------|------|---------|
+| Helius | Dedicated Node | $2,900 |
+| Birdeye | Business | $699 |
+| Cielo | Whale | $199 |
+| Nansen | Pro | $49 |
+| Jupiter + gas + Jito | ~200 trades/day | ~$100-200 |
+| **Total** | | **$3,947-4,047/mo** |
+
+---
+
+### File Summary
+
+| Component | Location |
+|-----------|----------|
+| Migration (4 tables) | `worker/alembic/versions/02X_memecoins.py` |
+| Solana RPC client | `worker/src/solana/client.py` |
+| Launch listener | `worker/src/solana/launch_listener.py` |
+| Token enricher | `worker/src/solana/enricher.py` |
+| Wallet discovery | `worker/src/solana/wallet_discovery.py` |
+| Wallet monitor | `worker/src/solana/wallet_monitor.py` |
+| Jupiter swapper | `worker/src/solana/swap.py` |
+| Copy trading agent | `worker/src/solana/copy_agent.py` |
+| Alpha signal detector | `worker/src/solana/signals.py` |
+| Safety checker | `worker/src/solana/safety.py` |
+| Memecoin API routes | `worker/src/api/memecoins.py` |
+| Webhook handler | `worker/src/api/webhooks.py` |
+| Memecoins page | `web/src/app/memecoins/page.tsx` |
+| Launches table | `web/src/components/memecoins/launches-table.tsx` |
+| Wallet leaderboard | `web/src/components/memecoins/wallet-leaderboard.tsx` |
+| Token detail | `web/src/components/memecoins/token-detail.tsx` |
+| Nav link | `web/src/components/nav-links.tsx` |
+
+### Key Technical Decisions to Make Before Starting
+
+1. **Helius vs Shyft vs QuickNode** — Primary Solana RPC provider. Helius recommended for best docs and Pump.fun-specific tooling.
+2. **Webhook vs WebSocket vs gRPC** — For wallet monitoring. Webhooks for MVP (simpler), gRPC for production copy trading (faster).
+3. **Real money vs paper trading** — Start with paper trading (simulated swaps, no on-chain execution) to validate strategies before risking capital.
+4. **Birdeye vs free alternatives** — Birdeye at $250/mo provides the best wallet PnL data. Alternative: aggregate from on-chain transactions (free but more complex).
+5. **Dedicated gRPC node** — Only needed if copy trading latency under 100ms is critical. Start without, upgrade if strategies prove profitable.

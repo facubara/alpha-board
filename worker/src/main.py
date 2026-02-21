@@ -32,7 +32,13 @@ from src.config import settings
 from src.db import async_session, engine
 from src.llm_settings import load_llm_settings
 from src.events import event_bus
-from src.models.db import Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage, BacktestRun, BacktestTrade, Snapshot, Symbol, Tweet, TweetSignal, TwitterAccount
+from src.models.db import (
+    Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage,
+    BacktestRun, BacktestTrade, MemecoinToken, MemecoinTweet,
+    MemecoinTweetSignal, MemecoinTweetToken, MemecoinTwitterAccount,
+    Snapshot, Symbol, Tweet, TweetSignal, TwitterAccount,
+    WatchWallet, WatchWalletActivity,
+)
 from src.notifications.digest import send_daily_digest_job
 from src.health.routes import router as status_router
 from src.notifications.routes import router as notifications_router
@@ -52,7 +58,7 @@ app = FastAPI(title="Alpha Worker", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
-    allow_methods=["GET", "POST", "DELETE"],
+    allow_methods=["GET", "POST", "DELETE", "PATCH"],
     allow_headers=["*"],
 )
 
@@ -1340,6 +1346,525 @@ async def pause_agent(agent_id: int):
         }
 
 
+# =============================================================================
+# Memecoin Endpoints
+# =============================================================================
+
+
+class MemecoinWalletRequest(PydanticBaseModel):
+    """Request body for manually adding a wallet."""
+    address: str
+    label: str = ""
+
+
+class MemecoinTokenRequest(PydanticBaseModel):
+    """Request body for manually adding a token."""
+    mint_address: str
+
+
+class MemecoinTwitterAccountRequest(PydanticBaseModel):
+    """Request body for adding a memecoin Twitter account."""
+    handle: str
+    display_name: str
+    category: str
+    is_vip: bool = False
+
+
+last_memecoin_twitter_poll: datetime | None = None
+
+
+async def run_memecoin_twitter_poll():
+    """Scheduled job: poll X API for memecoin tweets."""
+    global last_memecoin_twitter_poll
+    from src.memecoins.twitter_poller import MemecoinTwitterPoller
+
+    logger.info("Running memecoin Twitter poll")
+    try:
+        async with async_session() as session:
+            await load_llm_settings(session)
+            poller = MemecoinTwitterPoller(session)
+            result = await poller.poll()
+            last_memecoin_twitter_poll = datetime.now(timezone.utc)
+            logger.info(f"Memecoin Twitter poll complete: {result}")
+    except Exception as e:
+        logger.exception(f"Memecoin Twitter poll failed: {e}")
+
+
+@app.get("/memecoins/wallets")
+async def list_watch_wallets(limit: int = 50, offset: int = 0):
+    """List watch wallets sorted by score."""
+    limit = min(limit, 200)
+    async with async_session() as session:
+        result = await session.execute(
+            select(WatchWallet)
+            .where(WatchWallet.is_active == True)  # noqa: E712
+            .order_by(WatchWallet.score.desc())
+            .offset(offset)
+            .limit(limit)
+        )
+        wallets = result.scalars().all()
+
+        return [
+            {
+                "id": w.id,
+                "address": w.address,
+                "label": w.label,
+                "source": w.source,
+                "score": float(w.score),
+                "hitCount": w.hit_count,
+                "winRate": float(w.win_rate) if w.win_rate else None,
+                "avgEntryRank": w.avg_entry_rank,
+                "totalTokensTraded": w.total_tokens_traded,
+                "tokensSummary": w.tokens_summary,
+                "isActive": w.is_active,
+                "stats": w.stats,
+                "addedAt": w.added_at.isoformat(),
+                "lastRefreshedAt": w.last_refreshed_at.isoformat() if w.last_refreshed_at else None,
+            }
+            for w in wallets
+        ]
+
+
+@app.get("/memecoins/wallets/{address}")
+async def get_watch_wallet(address: str):
+    """Get single wallet detail with recent activity."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(WatchWallet).where(WatchWallet.address == address)
+        )
+        wallet = result.scalar_one_or_none()
+        if not wallet:
+            raise HTTPException(404, "Wallet not found")
+
+        # Get recent activity
+        activity_result = await session.execute(
+            select(WatchWalletActivity)
+            .where(WatchWalletActivity.wallet_id == wallet.id)
+            .order_by(WatchWalletActivity.block_time.desc())
+            .limit(50)
+        )
+        activities = activity_result.scalars().all()
+
+        return {
+            "id": wallet.id,
+            "address": wallet.address,
+            "label": wallet.label,
+            "source": wallet.source,
+            "score": float(wallet.score),
+            "hitCount": wallet.hit_count,
+            "winRate": float(wallet.win_rate) if wallet.win_rate else None,
+            "avgEntryRank": wallet.avg_entry_rank,
+            "totalTokensTraded": wallet.total_tokens_traded,
+            "tokensSummary": wallet.tokens_summary,
+            "isActive": wallet.is_active,
+            "stats": wallet.stats,
+            "addedAt": wallet.added_at.isoformat(),
+            "lastRefreshedAt": wallet.last_refreshed_at.isoformat() if wallet.last_refreshed_at else None,
+            "recentActivity": [
+                {
+                    "id": a.id,
+                    "tokenMint": a.token_mint,
+                    "tokenSymbol": a.token_symbol,
+                    "tokenName": a.token_name,
+                    "direction": a.direction,
+                    "amountSol": float(a.amount_sol) if a.amount_sol else None,
+                    "priceUsd": float(a.price_usd) if a.price_usd else None,
+                    "txSignature": a.tx_signature,
+                    "blockTime": a.block_time.isoformat(),
+                    "detectedAt": a.detected_at.isoformat(),
+                }
+                for a in activities
+            ],
+        }
+
+
+@app.post("/memecoins/wallets")
+async def add_watch_wallet(request: MemecoinWalletRequest):
+    """Manually add a wallet to watch."""
+    address = request.address.strip()
+    if not address or len(address) > 64:
+        raise HTTPException(400, "Invalid address")
+
+    async with async_session() as session:
+        existing = await session.execute(
+            select(WatchWallet).where(WatchWallet.address == address)
+        )
+        if existing.scalar_one_or_none():
+            raise HTTPException(409, "Wallet already tracked")
+
+        wallet = WatchWallet(
+            address=address,
+            label=request.label or None,
+            source="manual",
+        )
+        session.add(wallet)
+        await session.commit()
+        await session.refresh(wallet)
+
+        return {
+            "id": wallet.id,
+            "address": wallet.address,
+            "label": wallet.label,
+            "source": wallet.source,
+            "score": float(wallet.score),
+            "addedAt": wallet.added_at.isoformat(),
+        }
+
+
+@app.delete("/memecoins/wallets/{address}")
+async def delete_watch_wallet(address: str):
+    """Remove a watched wallet."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(WatchWallet).where(WatchWallet.address == address)
+        )
+        wallet = result.scalar_one_or_none()
+        if not wallet:
+            raise HTTPException(404, "Wallet not found")
+
+        wallet.is_active = False
+        await session.commit()
+        return {"status": "deactivated", "address": address}
+
+
+@app.post("/memecoins/wallets/refresh")
+async def refresh_wallets():
+    """Trigger manual wallet cross-reference refresh."""
+    if not settings.helius_api_key:
+        raise HTTPException(400, "Helius API key not configured")
+
+    from src.memecoins.wallet_discovery import WalletDiscoveryPipeline
+
+    async with async_session() as session:
+        pipeline = WalletDiscoveryPipeline(session)
+        result = await pipeline.run()
+
+    return result
+
+
+@app.get("/memecoins/tokens")
+async def list_memecoin_tokens(limit: int = 50):
+    """List tracked successful tokens."""
+    limit = min(limit, 200)
+    async with async_session() as session:
+        result = await session.execute(
+            select(MemecoinToken)
+            .order_by(MemecoinToken.peak_mcap_usd.desc())
+            .limit(limit)
+        )
+        tokens = result.scalars().all()
+        return [
+            {
+                "id": t.id,
+                "mintAddress": t.mint_address,
+                "name": t.name,
+                "symbol": t.symbol,
+                "launchpad": t.launchpad,
+                "peakMcapUsd": float(t.peak_mcap_usd) if t.peak_mcap_usd else None,
+                "currentMcapUsd": float(t.current_mcap_usd) if t.current_mcap_usd else None,
+                "status": t.status,
+                "createdAt": t.created_at.isoformat(),
+            }
+            for t in tokens
+        ]
+
+
+@app.post("/memecoins/tokens")
+async def add_memecoin_token(request: MemecoinTokenRequest):
+    """Manually add a token to track."""
+    from sqlalchemy.dialects.postgresql import insert as pg_insert
+
+    mint = request.mint_address.strip()
+    if not mint or len(mint) > 64:
+        raise HTTPException(400, "Invalid mint address")
+
+    async with async_session() as session:
+        stmt = pg_insert(MemecoinToken).values(
+            mint_address=mint,
+            status="active",
+        ).on_conflict_do_nothing(index_elements=["mint_address"])
+        await session.execute(stmt)
+        await session.commit()
+
+        result = await session.execute(
+            select(MemecoinToken).where(MemecoinToken.mint_address == mint)
+        )
+        token = result.scalar_one_or_none()
+        if not token:
+            raise HTTPException(500, "Failed to add token")
+
+        return {
+            "id": token.id,
+            "mintAddress": token.mint_address,
+            "symbol": token.symbol,
+            "status": token.status,
+        }
+
+
+@app.get("/memecoins/activity")
+async def get_wallet_activity(limit: int = 50):
+    """Get recent wallet activity across all watched wallets."""
+    limit = min(limit, 200)
+    async with async_session() as session:
+        result = await session.execute(
+            select(WatchWalletActivity, WatchWallet)
+            .join(WatchWallet, WatchWallet.id == WatchWalletActivity.wallet_id)
+            .order_by(WatchWalletActivity.detected_at.desc())
+            .limit(limit)
+        )
+        rows = result.all()
+
+        return [
+            {
+                "id": a.id,
+                "walletId": a.wallet_id,
+                "walletAddress": w.address,
+                "walletLabel": w.label,
+                "tokenMint": a.token_mint,
+                "tokenSymbol": a.token_symbol,
+                "tokenName": a.token_name,
+                "direction": a.direction,
+                "amountSol": float(a.amount_sol) if a.amount_sol else None,
+                "priceUsd": float(a.price_usd) if a.price_usd else None,
+                "txSignature": a.tx_signature,
+                "blockTime": a.block_time.isoformat(),
+                "detectedAt": a.detected_at.isoformat(),
+            }
+            for a, w in rows
+        ]
+
+
+@app.post("/webhooks/helius/wallet-activity")
+async def helius_webhook(request_data: list[dict] | dict = []):
+    """Helius webhook handler for wallet swap activity. Always returns 200."""
+    from src.memecoins.wallet_monitor import WalletMonitor
+
+    events = request_data if isinstance(request_data, list) else [request_data]
+    if not events:
+        return {"processed": 0}
+
+    try:
+        async with async_session() as session:
+            monitor = WalletMonitor(session)
+            result = await monitor.handle_webhook(events)
+            return result
+    except Exception as e:
+        logger.exception(f"Webhook processing failed: {e}")
+        return {"processed": 0, "error": str(e)}
+
+
+MEMECOIN_TWITTER_CATEGORIES = ["caller", "influencer", "degen", "news"]
+
+
+@app.get("/memecoins/twitter/accounts")
+async def list_memecoin_twitter_accounts():
+    """List memecoin twitter accounts."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(MemecoinTwitterAccount).order_by(
+                MemecoinTwitterAccount.added_at.desc()
+            )
+        )
+        accounts = result.scalars().all()
+
+        account_list = []
+        for a in accounts:
+            tweet_count_result = await session.execute(
+                select(func.count())
+                .select_from(MemecoinTweet)
+                .where(MemecoinTweet.account_id == a.id)
+            )
+            tweet_count = tweet_count_result.scalar() or 0
+
+            account_list.append({
+                "id": a.id,
+                "handle": a.handle,
+                "displayName": a.display_name,
+                "category": a.category,
+                "isVip": a.is_vip,
+                "isActive": a.is_active,
+                "addedAt": a.added_at.isoformat(),
+                "tweetCount": tweet_count,
+            })
+
+        return account_list
+
+
+@app.post("/memecoins/twitter/accounts")
+async def add_memecoin_twitter_account(request: MemecoinTwitterAccountRequest):
+    """Add a memecoin Twitter account."""
+    if request.category not in MEMECOIN_TWITTER_CATEGORIES:
+        raise HTTPException(
+            400,
+            f"Invalid category. Must be one of: {MEMECOIN_TWITTER_CATEGORIES}",
+        )
+
+    handle = request.handle.lstrip("@").lower()
+    if not handle or len(handle) > 30:
+        raise HTTPException(400, "Invalid handle")
+
+    async with async_session() as session:
+        existing = await session.execute(
+            select(MemecoinTwitterAccount).where(
+                MemecoinTwitterAccount.handle == handle
+            )
+        )
+        if existing.scalar_one_or_none():
+            raise HTTPException(409, "Account already tracked")
+
+        account = MemecoinTwitterAccount(
+            handle=handle,
+            display_name=request.display_name,
+            category=request.category,
+            is_vip=request.is_vip,
+        )
+        session.add(account)
+        await session.commit()
+        await session.refresh(account)
+
+        return {
+            "id": account.id,
+            "handle": account.handle,
+            "displayName": account.display_name,
+            "category": account.category,
+            "isVip": account.is_vip,
+            "isActive": account.is_active,
+            "addedAt": account.added_at.isoformat(),
+        }
+
+
+@app.delete("/memecoins/twitter/accounts/{account_id}")
+async def delete_memecoin_twitter_account(account_id: int):
+    """Remove a memecoin Twitter account."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(MemecoinTwitterAccount).where(
+                MemecoinTwitterAccount.id == account_id
+            )
+        )
+        account = result.scalar_one_or_none()
+        if not account:
+            raise HTTPException(404, "Account not found")
+
+        await session.delete(account)
+        await session.commit()
+        return {"status": "deleted", "id": account_id}
+
+
+@app.patch("/memecoins/twitter/accounts/{account_id}")
+async def toggle_memecoin_vip(account_id: int):
+    """Toggle VIP status for a memecoin Twitter account."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(MemecoinTwitterAccount).where(
+                MemecoinTwitterAccount.id == account_id
+            )
+        )
+        account = result.scalar_one_or_none()
+        if not account:
+            raise HTTPException(404, "Account not found")
+
+        account.is_vip = not account.is_vip
+        await session.commit()
+
+        return {
+            "id": account.id,
+            "handle": account.handle,
+            "isVip": account.is_vip,
+        }
+
+
+@app.get("/memecoins/twitter/feed")
+async def memecoin_twitter_feed(limit: int = 50, offset: int = 0):
+    """Get recent memecoin tweets with token matches and signals."""
+    limit = min(limit, 200)
+    async with async_session() as session:
+        result = await session.execute(
+            select(MemecoinTweet, MemecoinTwitterAccount, MemecoinTweetSignal)
+            .join(
+                MemecoinTwitterAccount,
+                MemecoinTwitterAccount.id == MemecoinTweet.account_id,
+            )
+            .outerjoin(
+                MemecoinTweetSignal,
+                MemecoinTweetSignal.tweet_id == MemecoinTweet.id,
+            )
+            .order_by(MemecoinTweet.created_at.desc())
+            .offset(offset)
+            .limit(limit)
+        )
+        rows = result.all()
+
+        feed = []
+        for tweet, account, signal in rows:
+            # Fetch token matches for this tweet
+            token_result = await session.execute(
+                select(MemecoinTweetToken).where(
+                    MemecoinTweetToken.tweet_id == tweet.id
+                )
+            )
+            token_matches = token_result.scalars().all()
+
+            item = {
+                "id": tweet.id,
+                "tweetId": tweet.tweet_id,
+                "accountHandle": account.handle,
+                "accountDisplayName": account.display_name,
+                "accountCategory": account.category,
+                "isVip": account.is_vip,
+                "text": tweet.text,
+                "createdAt": tweet.created_at.isoformat(),
+                "metrics": tweet.metrics,
+                "ingestedAt": tweet.ingested_at.isoformat(),
+                "tokenMatches": [
+                    {
+                        "id": tm.id,
+                        "tokenMint": tm.token_mint,
+                        "tokenSymbol": tm.token_symbol,
+                        "tokenName": tm.token_name,
+                        "source": tm.source,
+                        "dexscreenerUrl": tm.dexscreener_url,
+                        "marketCapUsd": float(tm.market_cap_usd) if tm.market_cap_usd else None,
+                        "priceUsd": float(tm.price_usd) if tm.price_usd else None,
+                        "liquidityUsd": float(tm.liquidity_usd) if tm.liquidity_usd else None,
+                        "matchedAt": tm.matched_at.isoformat(),
+                    }
+                    for tm in token_matches
+                ],
+            }
+
+            if signal:
+                item["signal"] = {
+                    "sentimentScore": float(signal.sentiment_score),
+                    "setupType": signal.setup_type,
+                    "confidence": float(signal.confidence),
+                    "symbolsMentioned": signal.symbols_mentioned or [],
+                    "reasoning": signal.reasoning,
+                }
+
+            feed.append(item)
+
+        return feed
+
+
+@app.post("/memecoins/twitter/poll")
+async def trigger_memecoin_twitter():
+    """Manually trigger a memecoin Twitter poll."""
+    if not settings.twitter_bearer_token:
+        raise HTTPException(400, "Twitter bearer token not configured")
+
+    from src.memecoins.twitter_poller import MemecoinTwitterPoller
+
+    async with async_session() as session:
+        await load_llm_settings(session)
+        poller = MemecoinTwitterPoller(session)
+        result = await poller.poll()
+
+    global last_memecoin_twitter_poll
+    last_memecoin_twitter_poll = datetime.now(timezone.utc)
+    return result
+
+
 async def run_health_checks():
     """Scheduled job: run health checks for all services."""
     from src.health.checker import ServiceHealthChecker
@@ -1514,6 +2039,30 @@ async def on_startup():
         name="PnL reconciliation (daily at 01:00)",
         replace_existing=True,
     )
+
+    # Memecoin wallet discovery (gated on feature flag)
+    if settings.memecoin_enabled and settings.helius_api_key:
+        from src.memecoins.wallet_discovery import run_wallet_discovery
+
+        scheduler.add_job(
+            run_wallet_discovery,
+            trigger=IntervalTrigger(minutes=settings.memecoin_wallet_poll_minutes),
+            id="wallet_discovery",
+            name=f"Wallet cross-reference (every {settings.memecoin_wallet_poll_minutes}m)",
+            replace_existing=True,
+            max_instances=1,
+        )
+
+    # Memecoin Twitter polling (gated on feature flag)
+    if settings.memecoin_twitter_enabled and settings.twitter_bearer_token:
+        scheduler.add_job(
+            run_memecoin_twitter_poll,
+            trigger=IntervalTrigger(minutes=settings.memecoin_twitter_poll_minutes),
+            id="memecoin_twitter_poll",
+            name=f"Memecoin Twitter poll (every {settings.memecoin_twitter_poll_minutes}m)",
+            replace_existing=True,
+            max_instances=1,
+        )
 
     # Twitter polling (gated on feature flag)
     if settings.twitter_polling_enabled and settings.twitter_bearer_token:

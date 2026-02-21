@@ -42,6 +42,14 @@ class Settings(BaseSettings):
     tweet_analysis_enabled: bool = False
     tweet_analysis_model: str = "claude-haiku-4-5-20251001"
 
+    # Memecoins
+    helius_api_key: str = ""
+    memecoin_enabled: bool = False
+    memecoin_wallet_poll_minutes: int = 360  # wallet cross-ref refresh: every 6h
+    memecoin_twitter_enabled: bool = False
+    memecoin_twitter_poll_minutes: int = 5
+    memecoin_webhook_secret: str = ""
+
     # Feature flags
     agents_enabled: bool = True
     evolution_enabled: bool = True
