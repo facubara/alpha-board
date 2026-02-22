@@ -215,9 +215,9 @@ function MemecoinTweetCard({ tweet }: { tweet: MemecoinTweetData }) {
                 <img
                   src={url}
                   alt=""
-                  className="w-full rounded-md border border-[var(--border-default)] object-cover"
+                  className="w-full rounded-md border border-[var(--border-default)] object-contain bg-black/20"
                   style={{
-                    maxHeight: mediaUrls.length === 1 ? "300px" : "200px",
+                    maxHeight: mediaUrls.length === 1 ? "512px" : "260px",
                   }}
                   loading="lazy"
                 />
