@@ -25,7 +25,7 @@ export async function POST(
   }
 
   const body = await request.json();
-  const { scan_model, trade_model, evolution_model, max_positions } = body;
+  const { scan_model, trade_model, evolution_model } = body;
 
   // Validate all three models
   for (const [key, value] of Object.entries({
@@ -47,21 +47,8 @@ export async function POST(
     }
   }
 
-  // Validate max_positions (optional, 1-20)
-  let validatedMaxPositions: number | undefined;
-  if (max_positions !== undefined) {
-    const mp = Number(max_positions);
-    if (!Number.isInteger(mp) || mp < 1 || mp > 20) {
-      return NextResponse.json(
-        { error: "max_positions must be an integer between 1 and 20" },
-        { status: 400 }
-      );
-    }
-    validatedMaxPositions = mp;
-  }
-
   try {
-    await updateAgentModels(id, scan_model, trade_model, evolution_model, validatedMaxPositions);
+    await updateAgentModels(id, scan_model, trade_model, evolution_model);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Agent not found" }, { status: 404 });

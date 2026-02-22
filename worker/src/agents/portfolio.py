@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 # Trading constraints
 MAX_POSITION_SIZE_PCT = Decimal("0.25")  # 25% of equity
-MAX_CONCURRENT_POSITIONS = 20  # Safety ceiling — actual limit is per-agent from DB
+MAX_CONCURRENT_POSITIONS = 20  # Safety ceiling — cash is the real governor
 TRADING_FEE_PCT = Decimal("0.001")  # 0.1% per trade (entry + exit)
 
 
@@ -50,7 +50,6 @@ class PortfolioManager:
         agent_id: int,
         action: TradeAction,
         current_prices: dict[str, Decimal],
-        max_positions: int = 5,
     ) -> ValidationResult:
         """Validate if an action can be executed.
 
@@ -79,7 +78,7 @@ class PortfolioManager:
 
         if action.action in (ActionType.OPEN_LONG, ActionType.OPEN_SHORT):
             return await self._validate_open(
-                action, portfolio, positions, current_prices, warnings, max_positions
+                action, portfolio, positions, current_prices, warnings
             )
         elif action.action == ActionType.CLOSE:
             return await self._validate_close(action, positions, warnings)
@@ -93,7 +92,6 @@ class PortfolioManager:
         positions: list[AgentPosition],
         current_prices: dict[str, Decimal],
         warnings: list[str],
-        max_positions: int = 5,
     ) -> ValidationResult:
         """Validate open position action."""
         # Check symbol
@@ -110,12 +108,11 @@ class PortfolioManager:
                 error_message=f"No current price available for {action.symbol}",
             )
 
-        # Check concurrent positions limit (per-agent, clamped to safety ceiling)
-        effective_max = min(max_positions, MAX_CONCURRENT_POSITIONS)
-        if len(positions) >= effective_max:
+        # Check concurrent positions safety ceiling
+        if len(positions) >= MAX_CONCURRENT_POSITIONS:
             return ValidationResult(
                 is_valid=False,
-                error_message=f"Maximum {effective_max} concurrent positions reached",
+                error_message=f"Maximum {MAX_CONCURRENT_POSITIONS} concurrent positions reached",
             )
 
         # Check not already in position for this symbol

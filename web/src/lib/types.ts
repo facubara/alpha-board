@@ -229,7 +229,6 @@ export interface AgentDetail {
   timeframe: AgentTimeframe;
   engine: AgentEngine;
   source: AgentSource;
-  maxPositions: number;
   scanModel: string;
   tradeModel: string;
   evolutionModel: string;

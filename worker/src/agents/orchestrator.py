@@ -448,11 +448,9 @@ class AgentOrchestrator:
         """
         action = decision.action
 
-        # Validate action — look up agent's max_positions
-        agent_obj = await self.session.get(Agent, agent_id)
-        agent_max = agent_obj.max_positions if agent_obj else 5
+        # Validate action
         validation = await self.portfolio_manager.validate_action(
-            agent_id, action, current_prices, max_positions=agent_max
+            agent_id, action, current_prices
         )
 
         if not validation.is_valid:

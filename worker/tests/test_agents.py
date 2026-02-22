@@ -362,8 +362,8 @@ class TestAgentDecisionResult:
 class TestPortfolioManagerValidation:
     """Tests for portfolio validation logic."""
 
-    def test_max_positions_limit(self):
-        """Should reject when max positions reached."""
+    def test_safety_ceiling_positions_limit(self):
+        """Should reject when safety ceiling (20) positions reached."""
         # This would need mocked session - placeholder
         pass
 

@@ -200,7 +200,6 @@ class Agent(Base):
     initial_balance: Mapped[Decimal] = mapped_column(
         Numeric(12, 2), nullable=False, default=Decimal("10000.00")
     )
-    max_positions: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=5)
     evolution_trade_threshold: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=10)
     last_cycle_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
     discarded_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)

@@ -65,11 +65,8 @@ class BaseRuleStrategy(ABC):
         return any(p.symbol == symbol for p in context.portfolio.open_positions)
 
     def _can_open(self, context: AgentContext) -> bool:
-        """Check if agent can open a new position (uses context.portfolio.max_positions)."""
-        return (
-            context.portfolio.position_count < context.portfolio.max_positions
-            and context.portfolio.available_for_new_position > 0
-        )
+        """Check if agent can open a new position (cash is the governor)."""
+        return context.portfolio.available_for_new_position > 0
 
     def _regime_allows_direction(self, context: AgentContext, direction: str) -> bool:
         """Block longs in strong bear trend, shorts in strong bull trend.

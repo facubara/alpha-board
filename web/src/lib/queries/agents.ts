@@ -268,20 +268,18 @@ export async function getAgentDetail(
 
   if (rows.length === 0) return null;
 
-  // Fetch health + discard + uuid + max_positions data separately — columns may not exist until migrations run
+  // Fetch health + discard + uuid data separately — columns may not exist until migrations run
   let lastCycleAt: string | null = null;
   let discardedAt: string | null = null;
   let discardReason: string | null = null;
   let uuid: string | null = null;
-  let maxPositions = 5;
   try {
-    const healthRows = await sql`SELECT last_cycle_at, discarded_at, discard_reason, uuid, max_positions FROM agents WHERE id = ${agentId}`;
+    const healthRows = await sql`SELECT last_cycle_at, discarded_at, discard_reason, uuid FROM agents WHERE id = ${agentId}`;
     if (healthRows.length > 0) {
       lastCycleAt = healthRows[0].last_cycle_at ? (healthRows[0].last_cycle_at as Date).toISOString() : null;
       discardedAt = healthRows[0].discarded_at ? (healthRows[0].discarded_at as Date).toISOString() : null;
       discardReason = (healthRows[0].discard_reason as string) || null;
       uuid = (healthRows[0].uuid as string) || null;
-      maxPositions = Number(healthRows[0].max_positions) || 5;
     }
   } catch {
     // Columns don't exist yet
@@ -302,7 +300,6 @@ export async function getAgentDetail(
     timeframe: row.timeframe as AgentTimeframe,
     engine: (row.engine as AgentEngine) || "llm",
     source: (row.source as AgentSource) || "technical",
-    maxPositions,
     scanModel: row.scan_model as string,
     tradeModel: row.trade_model as string,
     evolutionModel: row.evolution_model as string,
@@ -575,26 +572,15 @@ export async function updateAgentModels(
   agentId: number,
   scanModel: string,
   tradeModel: string,
-  evolutionModel: string,
-  maxPositions?: number
+  evolutionModel: string
 ): Promise<void> {
-  if (maxPositions !== undefined) {
-    const rows = await sql`
-      UPDATE agents
-      SET scan_model = ${scanModel}, trade_model = ${tradeModel}, evolution_model = ${evolutionModel}, max_positions = ${maxPositions}
-      WHERE id = ${agentId}
-      RETURNING id
-    `;
-    if (rows.length === 0) throw new Error("Agent not found");
-  } else {
-    const rows = await sql`
-      UPDATE agents
-      SET scan_model = ${scanModel}, trade_model = ${tradeModel}, evolution_model = ${evolutionModel}
-      WHERE id = ${agentId}
-      RETURNING id
-    `;
-    if (rows.length === 0) throw new Error("Agent not found");
-  }
+  const rows = await sql`
+    UPDATE agents
+    SET scan_model = ${scanModel}, trade_model = ${tradeModel}, evolution_model = ${evolutionModel}
+    WHERE id = ${agentId}
+    RETURNING id
+  `;
+  if (rows.length === 0) throw new Error("Agent not found");
 }
 
 /**

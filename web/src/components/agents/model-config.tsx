@@ -44,7 +44,6 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
   const [scanModel, setScanModel] = useState(agent.scanModel);
   const [tradeModel, setTradeModel] = useState(agent.tradeModel);
   const [evolutionModel, setEvolutionModel] = useState(agent.evolutionModel);
-  const [maxPositions, setMaxPositions] = useState(agent.maxPositions);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const { requireAuth } = useAuth();
@@ -52,8 +51,7 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
   const isDirty =
     scanModel !== agent.scanModel ||
     tradeModel !== agent.tradeModel ||
-    evolutionModel !== agent.evolutionModel ||
-    maxPositions !== agent.maxPositions;
+    evolutionModel !== agent.evolutionModel;
 
   const handleSave = () => {
     if (!isDirty || saving) return;
@@ -68,7 +66,6 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
             scan_model: scanModel,
             trade_model: tradeModel,
             evolution_model: evolutionModel,
-            max_positions: maxPositions,
           }),
         });
         if (res.ok) {
@@ -103,26 +100,6 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
           >
             {saving ? "Saving..." : "Save"}
           </button>
-        </div>
-      </div>
-
-      {/* Max Positions */}
-      <div className="space-y-4">
-        <h3 className="text-sm font-medium text-secondary">Position Limit</h3>
-        <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3">
-          <label className="block text-sm font-medium text-primary">Max Open Positions</label>
-          <p className="mb-2 text-xs text-muted">Maximum concurrent positions this agent can hold (1-20)</p>
-          <input
-            type="number"
-            min={1}
-            max={20}
-            value={maxPositions}
-            onChange={(e) => {
-              const v = Math.max(1, Math.min(20, Number(e.target.value) || 1));
-              setMaxPositions(v);
-            }}
-            className="w-24 rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 font-mono text-xs text-primary outline-none focus:border-[var(--border-strong)]"
-          />
         </div>
       </div>
 
