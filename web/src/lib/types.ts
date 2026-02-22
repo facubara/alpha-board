@@ -941,3 +941,15 @@ export interface MemecoinStats {
   tweetsToday: number;
   tokenMatchesToday: number;
 }
+
+export interface TrendingToken {
+  rank: number;
+  tokenSymbol: string;
+  tokenName: string | null;
+  tokenMint: string;
+  mentionCount: number;
+  marketCapUsd: number | null;
+  priceUsd: number | null;
+  liquidityUsd: number | null;
+  birdeyeUrl: string;
+}

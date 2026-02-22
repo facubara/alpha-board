@@ -13,6 +13,7 @@ import type {
   MemecoinTweetData,
   MemecoinTokenMatch,
   MemecoinStats,
+  TrendingToken,
   TweetSetupType,
 } from "@/lib/types";
 
@@ -240,4 +241,61 @@ export async function getMemecoinStats(): Promise<MemecoinStats> {
     tweetsToday: Number(row?.tweets_today ?? 0),
     tokenMatchesToday: Number(row?.token_matches_today ?? 0),
   };
+}
+
+/**
+ * Get trending tokens by mention count in the last N hours.
+ * Deduplicates copies by picking the highest-liquidity mint per symbol.
+ */
+export async function getTrendingTokens(
+  hours: number = 24
+): Promise<TrendingToken[]> {
+  const rows = await sql`
+    WITH best_mint AS (
+      SELECT DISTINCT ON (UPPER(token_symbol))
+        token_symbol,
+        token_name,
+        token_mint,
+        market_cap_usd,
+        price_usd,
+        liquidity_usd
+      FROM memecoin_tweet_tokens
+      WHERE token_mint IS NOT NULL
+      ORDER BY UPPER(token_symbol), liquidity_usd DESC NULLS LAST
+    ),
+    mention_counts AS (
+      SELECT
+        UPPER(token_symbol) AS symbol_key,
+        COUNT(DISTINCT tweet_id) AS mention_count
+      FROM memecoin_tweet_tokens
+      WHERE matched_at > NOW() - make_interval(hours => ${hours})
+      GROUP BY UPPER(token_symbol)
+    )
+    SELECT
+      bm.token_symbol,
+      bm.token_name,
+      bm.token_mint,
+      bm.market_cap_usd,
+      bm.price_usd,
+      bm.liquidity_usd,
+      mc.mention_count
+    FROM mention_counts mc
+    JOIN best_mint bm ON UPPER(bm.token_symbol) = mc.symbol_key
+    ORDER BY mc.mention_count DESC, bm.liquidity_usd DESC NULLS LAST
+    LIMIT 20
+  `;
+
+  return rows.map((row, i) => ({
+    rank: i + 1,
+    tokenSymbol: row.token_symbol as string,
+    tokenName: (row.token_name as string) || null,
+    tokenMint: row.token_mint as string,
+    mentionCount: Number(row.mention_count),
+    marketCapUsd:
+      row.market_cap_usd != null ? Number(row.market_cap_usd) : null,
+    priceUsd: row.price_usd != null ? Number(row.price_usd) : null,
+    liquidityUsd:
+      row.liquidity_usd != null ? Number(row.liquidity_usd) : null,
+    birdeyeUrl: `https://birdeye.so/token/${row.token_mint}?chain=solana`,
+  }));
 }

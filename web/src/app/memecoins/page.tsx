@@ -4,8 +4,10 @@ import {
   getMemecoinTwitterAccounts,
   getRecentMemecoinTweets,
   getMemecoinStats,
+  getTrendingTokens,
 } from "@/lib/queries/memecoins";
 import { StatsBar } from "@/components/memecoins/stats-bar";
+import { TrendingTokens } from "@/components/memecoins/trending-tokens";
 import { WalletLeaderboard } from "@/components/memecoins/wallet-leaderboard";
 import { WalletActivityFeed } from "@/components/memecoins/wallet-activity-feed";
 import { MemecoinAccountManager } from "@/components/memecoins/memecoin-account-manager";
@@ -22,13 +24,14 @@ import { MemecoinTweetFeed } from "@/components/memecoins/memecoin-tweet-feed";
 export const revalidate = 60;
 
 export default async function MemecoinsPage() {
-  const [wallets, walletActivity, twitterAccounts, tweets, stats] =
+  const [wallets, walletActivity, twitterAccounts, tweets, stats, trendingTokens] =
     await Promise.all([
       getWatchWallets(),
       getRecentWalletActivity(50),
       getMemecoinTwitterAccounts(),
       getRecentMemecoinTweets(50),
       getMemecoinStats(),
+      getTrendingTokens(24),
     ]);
 
   return (
@@ -43,6 +46,15 @@ export default async function MemecoinsPage() {
 
       {/* Stats */}
       <StatsBar stats={stats} />
+
+      {/* Trending Tokens */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-lg font-medium text-primary">Trending Tokens</h2>
+          <p className="mt-0.5 text-xs text-muted">Most mentioned tokens in the last 24 hours</p>
+        </div>
+        <TrendingTokens tokens={trendingTokens} />
+      </section>
 
       {/* Section 1: Watch Wallets */}
       <section className="space-y-4">
