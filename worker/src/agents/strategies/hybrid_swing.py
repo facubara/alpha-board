@@ -14,8 +14,6 @@ class HybridSwingStrategy(BaseRuleStrategy):
     Falls back to pure technical when tweet_context is None.
     """
 
-    MAX_CONCURRENT = 3
-
     def evaluate(self, context: AgentContext) -> TradeAction:
         # 1. Check exits first
         close = self._check_exits(context)
@@ -23,7 +21,7 @@ class HybridSwingStrategy(BaseRuleStrategy):
             return close
 
         # 2. Can we open?
-        if not self._can_open(context, max_positions=self.MAX_CONCURRENT):
+        if not self._can_open(context):
             return self._hold(0.1)
 
         tc = context.tweet_context

@@ -127,6 +127,7 @@ class PortfolioSummary(BaseModel):
     total_fees_paid: Decimal
     open_positions: list[PositionInfo]
     position_count: int
+    max_positions: int = 5
     available_for_new_position: Decimal  # Cash available considering constraints
 
 

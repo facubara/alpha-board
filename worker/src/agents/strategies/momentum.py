@@ -20,11 +20,7 @@ class MomentumStrategy(BaseRuleStrategy):
         if not self._can_open(context):
             return self._hold(0.1)
 
-        # 3. Don't overtrade: be selective with 3+ open positions
-        if context.portfolio.position_count >= 3:
-            return self._hold(0.1)
-
-        # 4. Scan rankings for entry signals
+        # 3. Scan rankings for entry signals
         for r in context.primary_timeframe_rankings:
             if self._has_position(context, r.symbol):
                 continue

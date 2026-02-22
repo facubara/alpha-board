@@ -64,10 +64,10 @@ class BaseRuleStrategy(ABC):
         """Check if agent already holds a position in this symbol."""
         return any(p.symbol == symbol for p in context.portfolio.open_positions)
 
-    def _can_open(self, context: AgentContext, max_positions: int = 5) -> bool:
-        """Check if agent can open a new position."""
+    def _can_open(self, context: AgentContext) -> bool:
+        """Check if agent can open a new position (uses context.portfolio.max_positions)."""
         return (
-            context.portfolio.position_count < max_positions
+            context.portfolio.position_count < context.portfolio.max_positions
             and context.portfolio.available_for_new_position > 0
         )
 

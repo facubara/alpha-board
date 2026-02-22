@@ -11,8 +11,6 @@ from src.agents.strategies.base import BaseRuleStrategy
 class CrossConfluenceStrategy(BaseRuleStrategy):
     """Only trade when multiple timeframes agree."""
 
-    MAX_CONCURRENT = 3
-
     def evaluate(self, context: AgentContext) -> TradeAction:
         # 1. Check exits
         close = self._check_exits(context)
@@ -20,7 +18,7 @@ class CrossConfluenceStrategy(BaseRuleStrategy):
             return close
 
         # 2. Can we open?
-        if not self._can_open(context, max_positions=self.MAX_CONCURRENT):
+        if not self._can_open(context):
             return self._hold(0.1)
 
         cf = context.cross_timeframe_confluence

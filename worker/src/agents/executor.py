@@ -239,7 +239,7 @@ Cash: ${portfolio.cash_balance}
 Total equity: ${portfolio.total_equity}
 Realized PnL: ${portfolio.total_realized_pnl}
 Available for new position: ${portfolio.available_for_new_position}
-Open positions ({portfolio.position_count}/5):
+Open positions ({portfolio.position_count}/{portfolio.max_positions}):
 {positions_str}
 
 === PERFORMANCE ===

@@ -20,11 +20,7 @@ class BreakoutStrategy(BaseRuleStrategy):
         if not self._can_open(context):
             return self._hold(0.1)
 
-        # 3. Be very selective: skip if 2+ open positions already
-        if context.portfolio.position_count >= 2:
-            return self._hold(0.1)
-
-        # 4. Scan for breakout setups
+        # 3. Scan for breakout setups
         for r in context.primary_timeframe_rankings:
             if self._has_position(context, r.symbol):
                 continue

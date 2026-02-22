@@ -205,14 +205,12 @@ export function AgentDetail({
           >
             {agent.engine === "rule" ? "Rules" : "Prompt"}
           </TabsTrigger>
-          {agent.engine !== "rule" && (
-            <TabsTrigger
-              value="config"
-              className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary"
-            >
-              Config
-            </TabsTrigger>
-          )}
+          <TabsTrigger
+            value="config"
+            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary"
+          >
+            Config
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="pt-4">

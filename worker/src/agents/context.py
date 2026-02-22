@@ -69,7 +69,9 @@ class ContextBuilder:
             AgentContext with all data needed for decision-making.
         """
         # Fetch portfolio and positions
-        portfolio = await self._get_portfolio_summary(agent.id, current_prices or {})
+        portfolio = await self._get_portfolio_summary(
+            agent.id, current_prices or {}, max_positions=agent.max_positions
+        )
 
         # Fetch performance stats
         performance = await self._get_performance_stats(agent.id)
@@ -123,6 +125,7 @@ class ContextBuilder:
         self,
         agent_id: int,
         current_prices: dict[str, Decimal],
+        max_positions: int = 5,
     ) -> PortfolioSummary:
         """Get portfolio summary for an agent."""
         # Fetch portfolio
@@ -185,9 +188,9 @@ class ContextBuilder:
             )
 
         # Calculate available for new position
-        # Max 25% of equity, max 5 concurrent positions
+        # Max 25% of equity, max `max_positions` concurrent positions
         max_position_size = portfolio.total_equity * Decimal("0.25")
-        positions_available = 5 - len(positions)
+        positions_available = max_positions - len(positions)
         available = min(portfolio.cash_balance, max_position_size) if positions_available > 0 else Decimal("0.00")
 
         return PortfolioSummary(
@@ -198,6 +201,7 @@ class ContextBuilder:
             total_fees_paid=portfolio.total_fees_paid,
             open_positions=positions,
             position_count=len(positions),
+            max_positions=max_positions,
             available_for_new_position=available,
         )
 
