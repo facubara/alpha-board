@@ -6,6 +6,18 @@ export type ChangelogEntry = {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-02-22",
+    title: "Trending Tokens",
+    description:
+      "Ranked table of the most-mentioned tokens from the Twitter feed in the last 24 hours. Deduplicates copy tokens by picking the highest-liquidity mint per symbol, with direct Birdeye links.",
+  },
+  {
+    date: "2026-02-21",
+    title: "Memecoins Tab — Wallet Intel & Twitter Feed",
+    description:
+      "New Memecoins page with wallet cross-referencing leaderboard, live activity feed, tracked Twitter accounts, tweet ingestion with token discovery, and real-time stats.",
+  },
+  {
     date: "2026-02-20",
     title: "Tweet Relevance Filter",
     description:
