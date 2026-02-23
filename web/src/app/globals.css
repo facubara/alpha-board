@@ -58,6 +58,7 @@
   --text-primary: #E8E8E8;
   --text-secondary: #A0A0A0;
   --text-muted: #6B6B6B;
+  --text-tertiary: #808080;
   --text-ghost: #404040;
 
   /* Borders */
@@ -151,6 +152,9 @@
   }
   .text-muted {
     color: var(--text-muted);
+  }
+  .text-tertiary {
+    color: var(--text-tertiary);
   }
   .text-ghost {
     color: var(--text-ghost);

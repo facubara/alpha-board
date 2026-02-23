@@ -1852,3 +1852,22 @@ Birdeye overage: Lite $23/1M CUs, Premium Plus $9.9/1M CUs, Business $6.9/1M CUs
 3. **Real money vs paper trading** — Start with paper trading (simulated swaps, no on-chain execution) to validate strategies before risking capital.
 4. **Birdeye vs free alternatives** — Birdeye at $250/mo provides the best wallet PnL data. Alternative: aggregate from on-chain transactions (free but more complex).
 5. **Dedicated gRPC node** — Only needed if copy trading latency under 100ms is critical. Start without, upgrade if strategies prove profitable.
+
+---
+
+## Memecoins Section — UX Improvements — `COMPLETED`
+
+### Always-Visible VIP/Delete Buttons + Confirmation — `COMPLETED`
+VIP star and delete buttons on account pills are now always visible (no hover required). Delete shows inline "Delete? Yes / No" confirmation.
+
+### Trade Feed Visibility Fix — `COMPLETED`
+Added missing `--text-tertiary` CSS variable. Trade sidebar text bumped to `--text-muted` for readability.
+
+### Token Detail Modal — `COMPLETED`
+Clicking a trending token opens a modal showing all accounts that mentioned it, with category badges, VIP indicators, and tweet snippets.
+
+### Account Profile Modal — `COMPLETED`
+Clicking an account pill opens a modal with call history: tokens mentioned, first-mention date, match-time mcap, ATH mcap, and color-coded multiplier.
+
+### Smart Token Detection (CA + URL Extraction) — `COMPLETED`
+Two-phase token extraction: Phase 1 resolves contract addresses from DexScreener/Birdeye/Pump.fun URLs and raw CAs. Phase 2 falls back to symbol search, skipping symbols already resolved via Phase 1. Fixes the $CTO collision problem.

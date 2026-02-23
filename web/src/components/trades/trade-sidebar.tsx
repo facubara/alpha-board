@@ -30,7 +30,7 @@ export function TradeSidebar() {
             <h2 className="text-sm font-medium text-[var(--text-primary)]">
               Trade Feed
             </h2>
-            <span className="text-[10px] text-[var(--text-tertiary)]">
+            <span className="text-[10px] text-[var(--text-muted)]">
               {trades.length} trades
             </span>
           </div>
@@ -54,7 +54,7 @@ export function TradeSidebar() {
         {/* Trade list */}
         <div className="h-[calc(100%-2.5rem)] overflow-y-auto">
           {trades.length === 0 ? (
-            <div className="flex h-32 items-center justify-center text-sm text-[var(--text-tertiary)]">
+            <div className="flex h-32 items-center justify-center text-sm text-[var(--text-muted)]">
               No trades yet
             </div>
           ) : (

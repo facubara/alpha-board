@@ -942,6 +942,28 @@ export interface MemecoinStats {
   tokenMatchesToday: number;
 }
 
+export interface TokenMention {
+  tweetId: string;
+  tweetText: string;
+  createdAt: string;
+  accountHandle: string;
+  accountDisplayName: string;
+  accountCategory: MemecoinCategory;
+  isVip: boolean;
+  source: "keyword" | "llm";
+}
+
+export interface AccountCallHistoryItem {
+  tokenMint: string;
+  tokenSymbol: string;
+  tokenName: string | null;
+  firstMentionedAt: string;
+  mentionCount: number;
+  matchTimeMcap: number | null;
+  matchTimePrice: number | null;
+  athMcap: number | null;
+}
+
 export interface TrendingToken {
   rank: number;
   tokenSymbol: string;

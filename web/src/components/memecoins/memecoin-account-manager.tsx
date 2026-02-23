@@ -5,11 +5,11 @@
  * Includes VIP toggle per account.
  */
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2, Plus, Star } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
-import type { MemecoinTwitterAccount, MemecoinCategory } from "@/lib/types";
+import type { MemecoinTwitterAccount, MemecoinCategory, AccountCallHistoryItem } from "@/lib/types";
 import { MEMECOIN_CATEGORIES, MEMECOIN_CATEGORY_LABELS } from "@/lib/types";
 
 const CATEGORY_BADGE_COLORS: Record<MemecoinCategory, string> = {
@@ -37,6 +37,10 @@ export function MemecoinAccountManager({
   const [isVip, setIsVip] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<MemecoinTwitterAccount | null>(null);
+  const [callHistory, setCallHistory] = useState<AccountCallHistoryItem[]>([]);
+  const [loadingCalls, setLoadingCalls] = useState(false);
 
   async function doAdd() {
     if (!handle.trim()) return;
@@ -121,6 +125,21 @@ export function MemecoinAccountManager({
     requireAuth(() => doToggleVip(id));
   }
 
+  const handleAccountClick = useCallback(async (account: MemecoinTwitterAccount) => {
+    setSelectedAccount(account);
+    setLoadingCalls(true);
+    try {
+      const res = await fetch(`/api/memecoins/twitter/accounts/${account.id}/calls`);
+      if (res.ok) {
+        setCallHistory(await res.json());
+      }
+    } catch {
+      // silent
+    } finally {
+      setLoadingCalls(false);
+    }
+  }, []);
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
@@ -196,7 +215,8 @@ export function MemecoinAccountManager({
           {accounts.map((account) => (
             <div
               key={account.id}
-              className="group flex items-center gap-2 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-1.5"
+              onClick={() => handleAccountClick(account)}
+              className="flex cursor-pointer items-center gap-2 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-1.5 transition-colors-fast hover:bg-[var(--bg-elevated)]"
             >
               <span className="text-sm text-primary">@{account.handle}</span>
               <span
@@ -213,27 +233,137 @@ export function MemecoinAccountManager({
                 <span className="text-xs text-muted">{account.tweetCount}</span>
               )}
               <button
-                onClick={() => handleToggleVip(account.id)}
+                onClick={(e) => { e.stopPropagation(); handleToggleVip(account.id); }}
                 className={`ml-1 transition-colors ${
                   account.isVip
                     ? "text-yellow-400 hover:text-yellow-300"
-                    : "text-muted opacity-0 group-hover:opacity-100 hover:text-yellow-400"
+                    : "text-muted hover:text-yellow-400"
                 }`}
                 title={account.isVip ? "Remove VIP" : "Set as VIP"}
               >
                 <Star className="h-3 w-3" />
               </button>
-              <button
-                onClick={() => handleDelete(account.id)}
-                className="text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-400"
-                title="Remove account"
-              >
-                <Trash2 className="h-3 w-3" />
-              </button>
+              {deletingId === account.id ? (
+                <span className="ml-1 flex items-center gap-1 text-xs" onClick={(e) => e.stopPropagation()}>
+                  <span className="text-red-400">Delete?</span>
+                  <button
+                    onClick={() => { handleDelete(account.id); setDeletingId(null); }}
+                    className="font-medium text-red-400 hover:text-red-300"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setDeletingId(null)}
+                    className="font-medium text-muted hover:text-primary"
+                  >
+                    No
+                  </button>
+                </span>
+              ) : (
+                <button
+                  onClick={(e) => { e.stopPropagation(); setDeletingId(account.id); }}
+                  className="text-muted transition-colors hover:text-red-400"
+                  title="Remove account"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
+              )}
             </div>
           ))}
         </div>
       )}
+
+      {/* Account Call History Modal */}
+      {selectedAccount && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60"
+          onClick={(e) => { if (e.target === e.currentTarget) setSelectedAccount(null); }}
+          onKeyDown={(e) => { if (e.key === "Escape") setSelectedAccount(null); }}
+        >
+          <div className="w-full max-w-2xl max-h-[80vh] overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-base)] shadow-lg flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-[var(--border-default)] px-4 py-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-primary">@{selectedAccount.handle}</span>
+                <span className={`rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${CATEGORY_BADGE_COLORS[selectedAccount.category]}`}>
+                  {MEMECOIN_CATEGORY_LABELS[selectedAccount.category]}
+                </span>
+                {selectedAccount.isVip && <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />}
+                {selectedAccount.tweetCount != null && (
+                  <span className="text-xs text-muted">{selectedAccount.tweetCount} tweets</span>
+                )}
+              </div>
+              <button onClick={() => setSelectedAccount(null)} className="text-muted hover:text-primary text-lg leading-none">&times;</button>
+            </div>
+            {/* Body */}
+            <div className="overflow-y-auto p-4">
+              <h4 className="mb-2 text-xs font-medium text-secondary">Call History</h4>
+              {loadingCalls ? (
+                <p className="text-xs text-muted py-4 text-center">Loading...</p>
+              ) : callHistory.length === 0 ? (
+                <p className="text-xs text-muted py-4 text-center">No token calls found.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-[var(--border-default)] text-muted">
+                        <th className="px-2 py-1.5 text-left font-medium">Token</th>
+                        <th className="px-2 py-1.5 text-left font-medium">First Mentioned</th>
+                        <th className="px-2 py-1.5 text-right font-medium">Mentions</th>
+                        <th className="px-2 py-1.5 text-right font-medium">Match MCap</th>
+                        <th className="px-2 py-1.5 text-right font-medium">ATH MCap</th>
+                        <th className="px-2 py-1.5 text-right font-medium">Multiplier</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {callHistory.map((item) => {
+                        const mult = item.athMcap && item.matchTimeMcap && item.matchTimeMcap > 0
+                          ? item.athMcap / item.matchTimeMcap
+                          : null;
+                        return (
+                          <tr key={item.tokenMint} className="border-b border-[var(--border-subtle)]">
+                            <td className="px-2 py-1.5">
+                              <a
+                                href={`https://birdeye.so/token/${item.tokenMint}?chain=solana`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-mono font-semibold text-primary hover:underline"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                ${item.tokenSymbol}
+                              </a>
+                              {item.tokenName && <span className="ml-1 text-muted">{item.tokenName}</span>}
+                            </td>
+                            <td className="px-2 py-1.5 text-secondary">{new Date(item.firstMentionedAt).toLocaleDateString()}</td>
+                            <td className="px-2 py-1.5 text-right text-secondary">{item.mentionCount}</td>
+                            <td className="px-2 py-1.5 text-right text-secondary font-mono">
+                              {item.matchTimeMcap != null ? formatMcap(item.matchTimeMcap) : "—"}
+                            </td>
+                            <td className="px-2 py-1.5 text-right text-secondary font-mono">
+                              {item.athMcap != null ? formatMcap(item.athMcap) : "—"}
+                            </td>
+                            <td className={`px-2 py-1.5 text-right font-mono font-semibold ${
+                              mult == null ? "text-muted" : mult >= 2 ? "text-bullish" : mult >= 1 ? "text-neutral-signal" : "text-bearish"
+                            }`}>
+                              {mult != null ? `${mult.toFixed(1)}x` : "—"}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
+}
+
+function formatMcap(n: number): string {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n.toFixed(0)}`;
 }

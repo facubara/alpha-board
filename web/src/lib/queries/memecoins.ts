@@ -14,6 +14,8 @@ import type {
   MemecoinTokenMatch,
   MemecoinStats,
   TrendingToken,
+  TokenMention,
+  AccountCallHistoryItem,
   TweetSetupType,
 } from "@/lib/types";
 
@@ -297,5 +299,102 @@ export async function getTrendingTokens(
     liquidityUsd:
       row.liquidity_usd != null ? Number(row.liquidity_usd) : null,
     birdeyeUrl: `https://birdeye.so/token/${row.token_mint}?chain=solana`,
+  }));
+}
+
+/**
+ * Get tweets mentioning a specific token symbol within a time window.
+ */
+export async function getTweetsByToken(
+  tokenSymbol: string,
+  hours: number = 72
+): Promise<TokenMention[]> {
+  const rows = await sql`
+    SELECT
+      mt.tweet_id,
+      mt.text AS tweet_text,
+      mt.created_at,
+      mta.handle AS account_handle,
+      mta.display_name AS account_display_name,
+      mta.category AS account_category,
+      mta.is_vip,
+      mtt.source
+    FROM memecoin_tweet_tokens mtt
+    JOIN memecoin_tweets mt ON mt.id = mtt.tweet_id
+    JOIN memecoin_twitter_accounts mta ON mta.id = mt.account_id
+    WHERE UPPER(mtt.token_symbol) = UPPER(${tokenSymbol})
+      AND mt.created_at > NOW() - make_interval(hours => ${hours})
+    ORDER BY mt.created_at DESC
+    LIMIT 50
+  `;
+
+  return rows.map((row) => ({
+    tweetId: row.tweet_id as string,
+    tweetText: row.tweet_text as string,
+    createdAt: (row.created_at as Date).toISOString(),
+    accountHandle: row.account_handle as string,
+    accountDisplayName: row.account_display_name as string,
+    accountCategory: row.account_category as MemecoinCategory,
+    isVip: row.is_vip as boolean,
+    source: row.source as "keyword" | "llm",
+  }));
+}
+
+/**
+ * Get call history for a specific account — tokens they mentioned, with ATH data.
+ */
+export async function getAccountCallHistory(
+  accountId: number
+): Promise<AccountCallHistoryItem[]> {
+  const rows = await sql`
+    WITH account_tokens AS (
+      SELECT
+        mtt.token_mint,
+        mtt.token_symbol,
+        mtt.token_name,
+        mtt.matched_at,
+        mtt.market_cap_usd,
+        mtt.price_usd,
+        ROW_NUMBER() OVER (PARTITION BY mtt.token_mint ORDER BY mtt.matched_at ASC) AS rn,
+        COUNT(*) OVER (PARTITION BY mtt.token_mint) AS mention_count
+      FROM memecoin_tweet_tokens mtt
+      JOIN memecoin_tweets mt ON mt.id = mtt.tweet_id
+      WHERE mt.account_id = ${accountId}
+        AND mtt.token_mint IS NOT NULL
+    ),
+    ath_data AS (
+      SELECT
+        token_mint,
+        MAX(market_cap_usd) AS ath_mcap
+      FROM memecoin_tweet_tokens
+      WHERE token_mint IS NOT NULL
+        AND market_cap_usd IS NOT NULL
+      GROUP BY token_mint
+    )
+    SELECT
+      at.token_mint,
+      at.token_symbol,
+      at.token_name,
+      at.matched_at AS first_mentioned_at,
+      at.mention_count,
+      at.market_cap_usd AS match_time_mcap,
+      at.price_usd AS match_time_price,
+      ad.ath_mcap
+    FROM account_tokens at
+    LEFT JOIN ath_data ad ON ad.token_mint = at.token_mint
+    WHERE at.rn = 1
+    ORDER BY at.matched_at DESC
+    LIMIT 50
+  `;
+
+  return rows.map((row) => ({
+    tokenMint: row.token_mint as string,
+    tokenSymbol: row.token_symbol as string,
+    tokenName: (row.token_name as string) || null,
+    firstMentionedAt: (row.first_mentioned_at as Date).toISOString(),
+    mentionCount: Number(row.mention_count),
+    matchTimeMcap: row.match_time_mcap != null ? Number(row.match_time_mcap) : null,
+    matchTimePrice: row.match_time_price != null ? Number(row.match_time_price) : null,
+    athMcap: row.ath_mcap != null ? Number(row.ath_mcap) : null,
   }));
 }
