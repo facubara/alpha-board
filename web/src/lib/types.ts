@@ -532,6 +532,8 @@ export interface TwitterAccount {
   handle: string;
   displayName: string;
   category: TwitterAccountCategory;
+  followersCount: number | null;
+  bio: string | null;
   isActive: boolean;
   addedAt: string;
   tweetCount?: number;
@@ -895,6 +897,8 @@ export interface MemecoinTwitterAccount {
   handle: string;
   displayName: string;
   category: MemecoinCategory;
+  followersCount: number | null;
+  bio: string | null;
   isVip: boolean;
   isActive: boolean;
   addedAt: string;

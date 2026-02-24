@@ -17,6 +17,8 @@ export async function getTwitterAccounts(): Promise<TwitterAccount[]> {
       ta.handle,
       ta.display_name,
       ta.category,
+      ta.followers_count,
+      ta.bio,
       ta.is_active,
       ta.added_at,
       COUNT(t.id) AS tweet_count
@@ -31,6 +33,8 @@ export async function getTwitterAccounts(): Promise<TwitterAccount[]> {
     handle: row.handle as string,
     displayName: row.display_name as string,
     category: row.category as TwitterAccountCategory,
+    followersCount: row.followers_count != null ? Number(row.followers_count) : null,
+    bio: (row.bio as string) || null,
     isActive: row.is_active as boolean,
     addedAt: (row.added_at as Date).toISOString(),
     tweetCount: Number(row.tweet_count),

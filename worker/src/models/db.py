@@ -544,6 +544,8 @@ class TwitterAccount(Base):
     handle: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
     display_name: Mapped[str] = mapped_column(String(100), nullable=False)
     category: Mapped[str] = mapped_column(String(20), nullable=False)
+    followers_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    bio: Mapped[str | None] = mapped_column(Text, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     added_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
@@ -834,6 +836,8 @@ class MemecoinTwitterAccount(Base):
     handle: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
     display_name: Mapped[str] = mapped_column(String(100), nullable=False)
     category: Mapped[str] = mapped_column(String(20), nullable=False)
+    followers_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    bio: Mapped[str | None] = mapped_column(Text, nullable=True)
     is_vip: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="false")
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="true")
     added_at: Mapped[datetime] = mapped_column(

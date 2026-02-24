@@ -1227,6 +1227,8 @@ async def _insert_user(session, user: dict, progress: dict):
         return
 
     display_name = user.get("name", handle)
+    followers = user.get("public_metrics", {}).get("followers_count")
+    bio = user.get("description", "") or None
 
     if table == "memecoin":
         existing = await session.execute(
@@ -1234,21 +1236,31 @@ async def _insert_user(session, user: dict, progress: dict):
                 MemecoinTwitterAccount.handle == handle
             )
         )
-        if existing.scalar_one_or_none():
+        row = existing.scalar_one_or_none()
+        if row:
+            if row.followers_count is None and followers is not None:
+                row.followers_count = followers
+                row.bio = bio
             progress["skipped_existing"] += 1
             return
         session.add(MemecoinTwitterAccount(
             handle=handle, display_name=display_name, category=category,
+            followers_count=followers, bio=bio,
         ))
     else:
         existing = await session.execute(
             select(TwitterAccount).where(TwitterAccount.handle == handle)
         )
-        if existing.scalar_one_or_none():
+        row = existing.scalar_one_or_none()
+        if row:
+            if row.followers_count is None and followers is not None:
+                row.followers_count = followers
+                row.bio = bio
             progress["skipped_existing"] += 1
             return
         session.add(TwitterAccount(
             handle=handle, display_name=display_name, category=category,
+            followers_count=followers, bio=bio,
         ))
 
     progress["inserted"] += 1

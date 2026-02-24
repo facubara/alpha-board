@@ -2,15 +2,23 @@
 
 /**
  * MemecoinAccountManager — CRUD for memecoin Twitter accounts.
- * Includes VIP toggle per account.
+ * Collapsible sorted table with VIP toggle, follower counts, and bios.
  */
 
-import { useState, useTransition, useCallback } from "react";
+import { useState, useMemo, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2, Plus, Star } from "lucide-react";
+import { Trash2, Plus, Star, ChevronDown, ChevronUp } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
 import type { MemecoinTwitterAccount, MemecoinCategory, AccountCallHistoryItem } from "@/lib/types";
 import { MEMECOIN_CATEGORIES, MEMECOIN_CATEGORY_LABELS } from "@/lib/types";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const CATEGORY_BADGE_COLORS: Record<MemecoinCategory, string> = {
   caller: "bg-orange-500/10 text-orange-400 border-orange-500/20",
@@ -19,8 +27,24 @@ const CATEGORY_BADGE_COLORS: Record<MemecoinCategory, string> = {
   news: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
 };
 
+type SortField = "handle" | "category" | "followers" | "tweets" | "bio";
+type SortDirection = "asc" | "desc";
+
 interface MemecoinAccountManagerProps {
   initialAccounts: MemecoinTwitterAccount[];
+}
+
+function formatFollowers(n: number | null): string {
+  if (n == null) return "—";
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return String(n);
+}
+
+function formatMcap(n: number): string {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n.toFixed(0)}`;
 }
 
 export function MemecoinAccountManager({
@@ -31,6 +55,7 @@ export function MemecoinAccountManager({
   const [accounts, setAccounts] =
     useState<MemecoinTwitterAccount[]>(initialAccounts);
   const [showForm, setShowForm] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [handle, setHandle] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [category, setCategory] = useState<MemecoinCategory>("caller");
@@ -41,6 +66,52 @@ export function MemecoinAccountManager({
   const [selectedAccount, setSelectedAccount] = useState<MemecoinTwitterAccount | null>(null);
   const [callHistory, setCallHistory] = useState<AccountCallHistoryItem[]>([]);
   const [loadingCalls, setLoadingCalls] = useState(false);
+  const [sortField, setSortField] = useState<SortField>("followers");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+
+  const sorted = useMemo(() => {
+    const list = [...accounts];
+    list.sort((a, b) => {
+      let cmp = 0;
+      switch (sortField) {
+        case "handle":
+          cmp = a.handle.localeCompare(b.handle);
+          break;
+        case "category":
+          cmp = a.category.localeCompare(b.category);
+          break;
+        case "followers":
+          cmp = (a.followersCount ?? -1) - (b.followersCount ?? -1);
+          break;
+        case "tweets":
+          cmp = (a.tweetCount ?? 0) - (b.tweetCount ?? 0);
+          break;
+        case "bio":
+          cmp = (a.bio ?? "").localeCompare(b.bio ?? "");
+          break;
+      }
+      return sortDirection === "asc" ? cmp : -cmp;
+    });
+    return list;
+  }, [accounts, sortField, sortDirection]);
+
+  function handleSort(field: SortField) {
+    if (sortField === field) {
+      setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection(field === "handle" || field === "category" ? "asc" : "desc");
+    }
+  }
+
+  function SortIcon({ field }: { field: SortField }) {
+    if (sortField !== field) return null;
+    return sortDirection === "asc" ? (
+      <ChevronUp className="inline h-3 w-3" />
+    ) : (
+      <ChevronDown className="inline h-3 w-3" />
+    );
+  }
 
   async function doAdd() {
     if (!handle.trim()) return;
@@ -143,11 +214,15 @@ export function MemecoinAccountManager({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-primary">
-          Tracked Accounts ({accounts.length})
-        </h3>
         <button
-          onClick={() => setShowForm((v) => !v)}
+          onClick={() => setExpanded((v) => !v)}
+          className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-secondary transition-colors"
+        >
+          {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          Tracked Accounts ({accounts.length})
+        </button>
+        <button
+          onClick={() => { setShowForm((v) => !v); if (!expanded) setExpanded(true); }}
           className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
         >
           <Plus className="h-3 w-3" />
@@ -205,72 +280,128 @@ export function MemecoinAccountManager({
         </div>
       )}
 
-      {/* Account list */}
-      {accounts.length === 0 ? (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-6 text-center text-sm text-muted">
-          No memecoin accounts tracked yet.
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-2">
-          {accounts.map((account) => (
-            <div
-              key={account.id}
-              onClick={() => handleAccountClick(account)}
-              className="flex cursor-pointer items-center gap-2 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-1.5 transition-colors-fast hover:bg-[var(--bg-elevated)]"
-            >
-              <span className="text-sm text-primary">@{account.handle}</span>
-              <span
-                className={`rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${
-                  CATEGORY_BADGE_COLORS[account.category]
-                }`}
-              >
-                {MEMECOIN_CATEGORY_LABELS[account.category]}
-              </span>
-              {account.isVip && (
-                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-              )}
-              {account.tweetCount != null && account.tweetCount > 0 && (
-                <span className="text-xs text-muted">{account.tweetCount}</span>
-              )}
-              <button
-                onClick={(e) => { e.stopPropagation(); handleToggleVip(account.id); }}
-                className={`ml-1 transition-colors ${
-                  account.isVip
-                    ? "text-yellow-400 hover:text-yellow-300"
-                    : "text-muted hover:text-yellow-400"
-                }`}
-                title={account.isVip ? "Remove VIP" : "Set as VIP"}
-              >
-                <Star className="h-3 w-3" />
-              </button>
-              {deletingId === account.id ? (
-                <span className="ml-1 flex items-center gap-1 text-xs" onClick={(e) => e.stopPropagation()}>
-                  <span className="text-red-400">Delete?</span>
-                  <button
-                    onClick={() => { handleDelete(account.id); setDeletingId(null); }}
-                    className="font-medium text-red-400 hover:text-red-300"
+      {/* Account table (collapsible) */}
+      {expanded && (
+        accounts.length === 0 ? (
+          <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-6 text-center text-sm text-muted">
+            No memecoin accounts tracked yet.
+          </div>
+        ) : (
+          <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)]">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-[var(--border-default)]">
+                  <TableHead
+                    className="cursor-pointer select-none text-xs text-muted hover:text-primary"
+                    onClick={() => handleSort("handle")}
                   >
-                    Yes
-                  </button>
-                  <button
-                    onClick={() => setDeletingId(null)}
-                    className="font-medium text-muted hover:text-primary"
+                    Handle <SortIcon field="handle" />
+                  </TableHead>
+                  <TableHead
+                    className="cursor-pointer select-none text-xs text-muted hover:text-primary"
+                    onClick={() => handleSort("category")}
                   >
-                    No
-                  </button>
-                </span>
-              ) : (
-                <button
-                  onClick={(e) => { e.stopPropagation(); setDeletingId(account.id); }}
-                  className="text-muted transition-colors hover:text-red-400"
-                  title="Remove account"
-                >
-                  <Trash2 className="h-3 w-3" />
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
+                    Category <SortIcon field="category" />
+                  </TableHead>
+                  <TableHead
+                    className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
+                    onClick={() => handleSort("followers")}
+                  >
+                    Followers <SortIcon field="followers" />
+                  </TableHead>
+                  <TableHead
+                    className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
+                    onClick={() => handleSort("tweets")}
+                  >
+                    Tweets <SortIcon field="tweets" />
+                  </TableHead>
+                  <TableHead
+                    className="cursor-pointer select-none text-xs text-muted hover:text-primary"
+                    onClick={() => handleSort("bio")}
+                  >
+                    Bio <SortIcon field="bio" />
+                  </TableHead>
+                  <TableHead className="text-xs text-muted w-20" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {sorted.map((account) => (
+                  <TableRow
+                    key={account.id}
+                    className="group cursor-pointer border-[var(--border-subtle)] hover:bg-[var(--bg-elevated)]"
+                    onClick={() => handleAccountClick(account)}
+                  >
+                    <TableCell className="text-sm text-primary font-medium">
+                      <span className="flex items-center gap-1.5">
+                        @{account.handle}
+                        {account.isVip && (
+                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        )}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span
+                        className={`rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${
+                          CATEGORY_BADGE_COLORS[account.category]
+                        }`}
+                      >
+                        {MEMECOIN_CATEGORY_LABELS[account.category]}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right text-xs text-secondary font-mono">
+                      {formatFollowers(account.followersCount)}
+                    </TableCell>
+                    <TableCell className="text-right text-xs text-secondary">
+                      {account.tweetCount ?? 0}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted max-w-[200px] truncate" title={account.bio ?? ""}>
+                      {account.bio ? (account.bio.length > 60 ? account.bio.slice(0, 60) + "..." : account.bio) : "—"}
+                    </TableCell>
+                    <TableCell>
+                      <span className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={() => handleToggleVip(account.id)}
+                          className={`transition-colors ${
+                            account.isVip
+                              ? "text-yellow-400 hover:text-yellow-300"
+                              : "text-muted opacity-0 group-hover:opacity-100 hover:text-yellow-400"
+                          }`}
+                          title={account.isVip ? "Remove VIP" : "Set as VIP"}
+                        >
+                          <Star className="h-3 w-3" />
+                        </button>
+                        {deletingId === account.id ? (
+                          <span className="flex items-center gap-1 text-xs">
+                            <button
+                              onClick={() => { handleDelete(account.id); setDeletingId(null); }}
+                              className="font-medium text-red-400 hover:text-red-300"
+                            >
+                              Yes
+                            </button>
+                            <button
+                              onClick={() => setDeletingId(null)}
+                              className="font-medium text-muted hover:text-primary"
+                            >
+                              No
+                            </button>
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => setDeletingId(account.id)}
+                            className="text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-400"
+                            title="Remove account"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        )}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )
       )}
 
       {/* Account Call History Modal */}
@@ -289,6 +420,9 @@ export function MemecoinAccountManager({
                   {MEMECOIN_CATEGORY_LABELS[selectedAccount.category]}
                 </span>
                 {selectedAccount.isVip && <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />}
+                {selectedAccount.followersCount != null && (
+                  <span className="text-xs text-muted">{formatFollowers(selectedAccount.followersCount)} followers</span>
+                )}
                 {selectedAccount.tweetCount != null && (
                   <span className="text-xs text-muted">{selectedAccount.tweetCount} tweets</span>
                 )}
@@ -360,10 +494,4 @@ export function MemecoinAccountManager({
       )}
     </div>
   );
-}
-
-function formatMcap(n: number): string {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n.toFixed(0)}`;
 }
