@@ -7,6 +7,7 @@
 import { getLlmSettings, getLlmCosts } from "@/lib/queries/settings";
 import { SettingsPage } from "@/components/settings/settings-page";
 import { ExchangeSettingsSection } from "@/components/settings/exchange-settings";
+import { FollowingImport } from "@/components/settings/following-import";
 
 export const revalidate = 60;
 
@@ -37,6 +38,9 @@ export default async function SettingsRoute() {
 
       {/* Exchange / Copy-Trade settings */}
       <ExchangeSettingsSection />
+
+      {/* Twitter Following Import */}
+      <FollowingImport />
     </div>
   );
 }

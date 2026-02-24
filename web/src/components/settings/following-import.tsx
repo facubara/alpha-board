@@ -155,7 +155,8 @@ export function FollowingImport() {
         <div className="space-y-2">
           <p className="text-xs text-muted">
             Upload your <code>following.js</code> from a Twitter data export.
-            Accounts will be looked up via the X API and auto-classified.
+            Accounts will be looked up via the X API and auto-classified
+            into Analyst (Twitter feed) or Degen (Memecoins feed).
           </p>
           <input
             type="file"

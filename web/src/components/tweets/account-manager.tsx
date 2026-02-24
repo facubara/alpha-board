@@ -9,9 +9,8 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2, Plus, Upload, Loader2 } from "lucide-react";
+import { Trash2, Plus, Loader2 } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
-import { FollowingImport } from "@/components/tweets/following-import";
 import type { TwitterAccount, TwitterAccountCategory } from "@/lib/types";
 import { TWITTER_CATEGORIES, TWITTER_CATEGORY_LABELS } from "@/lib/types";
 
@@ -33,7 +32,6 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
   const { requireAuth } = useAuth();
   const [accounts, setAccounts] = useState<TwitterAccount[]>(initialAccounts);
   const [showForm, setShowForm] = useState(false);
-  const [showImport, setShowImport] = useState(false);
   const [handle, setHandle] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [category, setCategory] = useState<TwitterAccountCategory>("analyst");
@@ -101,26 +99,14 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
         <h2 className="text-sm font-medium text-primary">
           Tracked Accounts ({accounts.length})
         </h2>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => { setShowImport((v) => !v); if (showForm) setShowForm(false); }}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
-          >
-            <Upload className="h-3 w-3" />
-            Import Following
-          </button>
-          <button
-            onClick={() => { setShowForm((v) => !v); if (showImport) setShowImport(false); }}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
-          >
-            <Plus className="h-3 w-3" />
-            Add Account
-          </button>
-        </div>
+        <button
+          onClick={() => setShowForm((v) => !v)}
+          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
+        >
+          <Plus className="h-3 w-3" />
+          Add Account
+        </button>
       </div>
-
-      {/* Import following.js */}
-      {showImport && <FollowingImport />}
 
       {/* Add form */}
       {showForm && (

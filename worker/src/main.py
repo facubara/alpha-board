@@ -1163,15 +1163,17 @@ class TwitterImportRequest(PydanticBaseModel):
     account_ids: list[str]
 
 
-def _classify_user(user: dict) -> tuple[str | None, str]:
-    """Classify a Twitter user: 'analyst', 'degen', or None (discard)."""
+def _classify_user(user: dict) -> tuple[str, str | None]:
+    """Classify a Twitter user. Returns (table, category) where table is
+    'twitter' for twitter_accounts, 'memecoin' for memecoin_twitter_accounts,
+    or 'discard' for skip. category is the DB category value."""
     followers = user.get("public_metrics", {}).get("followers_count", 0)
     if followers < 400:
-        return None, "discard"
+        return "discard", None
     text = f"{user.get('name', '')} {user.get('description', '')}"
     if _MEMECOIN_PATTERN.search(text):
-        return "degen", "inserted"
-    return "analyst", "inserted"
+        return "memecoin", "degen"
+    return "twitter", "analyst"
 
 
 async def _run_twitter_import(import_id: int, account_ids: list[str]):
@@ -1243,25 +1245,45 @@ async def _run_twitter_import(import_id: int, account_ids: list[str]):
                             progress["errors"] += 1
                             continue
 
-                        # Check if already in DB
-                        existing = await session.execute(
-                            select(TwitterAccount).where(TwitterAccount.handle == handle)
-                        )
-                        if existing.scalar_one_or_none():
-                            progress["skipped_existing"] += 1
-                            continue
+                        table, category = _classify_user(user)
 
-                        category, reason = _classify_user(user)
-                        if category is None:
+                        if table == "discard":
                             progress["skipped_discard"] += 1
                             continue
 
-                        account = TwitterAccount(
-                            handle=handle,
-                            display_name=user.get("name", handle),
-                            category=category,
-                        )
-                        session.add(account)
+                        display_name = user.get("name", handle)
+
+                        if table == "memecoin":
+                            # Check memecoin_twitter_accounts
+                            existing = await session.execute(
+                                select(MemecoinTwitterAccount).where(
+                                    MemecoinTwitterAccount.handle == handle
+                                )
+                            )
+                            if existing.scalar_one_or_none():
+                                progress["skipped_existing"] += 1
+                                continue
+                            session.add(MemecoinTwitterAccount(
+                                handle=handle,
+                                display_name=display_name,
+                                category=category,
+                            ))
+                        else:
+                            # Check twitter_accounts
+                            existing = await session.execute(
+                                select(TwitterAccount).where(
+                                    TwitterAccount.handle == handle
+                                )
+                            )
+                            if existing.scalar_one_or_none():
+                                progress["skipped_existing"] += 1
+                                continue
+                            session.add(TwitterAccount(
+                                handle=handle,
+                                display_name=display_name,
+                                category=category,
+                            ))
+
                         progress["inserted"] += 1
 
                     await session.commit()
