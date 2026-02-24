@@ -82,6 +82,11 @@ start_time = time.monotonic()
 # Track running backtest asyncio tasks by run_id
 _running_backtest_tasks: dict[int, asyncio.Task] = {}
 
+# Track running twitter import tasks
+_twitter_import_counter = 0
+_running_import_tasks: dict[int, asyncio.Task] = {}
+_import_progress: dict[int, dict] = {}
+
 
 class _DecimalEncoder(json.JSONEncoder):
     """JSON encoder that handles Decimal values."""
@@ -1136,6 +1141,182 @@ async def delete_twitter_account(account_id: int):
         await session.delete(account)
         await session.commit()
         return {"status": "deleted", "id": account_id}
+
+
+# ── Twitter following import ─────────────────────────────────────────────
+
+import re
+import httpx
+
+_MEMECOIN_KEYWORDS = [
+    "memecoin", "meme coin", "degen", "ape", "pump", "moon", "shitcoin",
+    "100x", "1000x", "gem", "call group", "alpha calls", "nfa",
+    "solana degen", "sol degen", "ct degen", "rug", "airdrop hunter",
+]
+_MEMECOIN_PATTERN = re.compile(
+    "|".join(re.escape(kw) for kw in _MEMECOIN_KEYWORDS),
+    re.IGNORECASE,
+)
+
+
+class TwitterImportRequest(PydanticBaseModel):
+    account_ids: list[str]
+
+
+def _classify_user(user: dict) -> tuple[str | None, str]:
+    """Classify a Twitter user: 'analyst', 'degen', or None (discard)."""
+    followers = user.get("public_metrics", {}).get("followers_count", 0)
+    if followers < 400:
+        return None, "discard"
+    text = f"{user.get('name', '')} {user.get('description', '')}"
+    if _MEMECOIN_PATTERN.search(text):
+        return "degen", "inserted"
+    return "analyst", "inserted"
+
+
+async def _run_twitter_import(import_id: int, account_ids: list[str]):
+    """Background task: look up Twitter IDs via API v2 and insert into DB."""
+    progress = _import_progress[import_id]
+    progress["status"] = "running"
+
+    bearer = settings.twitter_bearer_token
+    url = "https://api.twitter.com/2/users"
+    headers = {"Authorization": f"Bearer {bearer}"}
+    fields = "name,username,description,public_metrics"
+
+    batches = [account_ids[i:i + 100] for i in range(0, len(account_ids), 100)]
+    progress["total_batches"] = len(batches)
+
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            for batch_idx, batch in enumerate(batches):
+                progress["current_batch"] = batch_idx + 1
+                retries = 0
+
+                while retries < 3:
+                    resp = await client.get(
+                        url,
+                        headers=headers,
+                        params={"ids": ",".join(batch), "user.fields": fields},
+                    )
+
+                    if resp.status_code == 429:
+                        retry_after = int(resp.headers.get("Retry-After", "60"))
+                        progress["rate_limit_wait"] = retry_after
+                        logger.warning(f"Twitter import rate limited, waiting {retry_after}s")
+                        await asyncio.sleep(retry_after)
+                        progress["rate_limit_wait"] = None
+                        retries += 1
+                        continue
+
+                    if resp.status_code >= 500:
+                        wait = 2 ** retries
+                        logger.warning(f"Twitter API 5xx ({resp.status_code}), retry in {wait}s")
+                        await asyncio.sleep(wait)
+                        retries += 1
+                        continue
+
+                    break
+                else:
+                    # Exhausted retries for this batch
+                    progress["errors"] += len(batch)
+                    progress["processed"] += len(batch)
+                    continue
+
+                if resp.status_code != 200:
+                    progress["errors"] += len(batch)
+                    progress["processed"] += len(batch)
+                    logger.error(f"Twitter import batch failed: HTTP {resp.status_code}")
+                    continue
+
+                body = resp.json()
+                users = body.get("data", [])
+
+                # Count IDs that returned errors (suspended/deleted)
+                api_errors = body.get("errors", [])
+                progress["errors"] += len(api_errors)
+
+                async with async_session() as session:
+                    for user in users:
+                        handle = user.get("username", "")
+                        if not handle:
+                            progress["errors"] += 1
+                            continue
+
+                        # Check if already in DB
+                        existing = await session.execute(
+                            select(TwitterAccount).where(TwitterAccount.handle == handle)
+                        )
+                        if existing.scalar_one_or_none():
+                            progress["skipped_existing"] += 1
+                            continue
+
+                        category, reason = _classify_user(user)
+                        if category is None:
+                            progress["skipped_discard"] += 1
+                            continue
+
+                        account = TwitterAccount(
+                            handle=handle,
+                            display_name=user.get("name", handle),
+                            category=category,
+                        )
+                        session.add(account)
+                        progress["inserted"] += 1
+
+                    await session.commit()
+
+                progress["processed"] += len(batch)
+
+        progress["status"] = "completed"
+    except Exception as e:
+        logger.exception(f"Twitter import {import_id} failed")
+        progress["status"] = "failed"
+        progress["error_message"] = str(e)
+
+
+@app.post("/twitter/import")
+async def start_twitter_import(request: TwitterImportRequest):
+    """Start a bulk import of Twitter accounts by ID."""
+    if not settings.twitter_bearer_token:
+        raise HTTPException(status_code=400, detail="Twitter bearer token not configured")
+
+    if not request.account_ids:
+        raise HTTPException(status_code=400, detail="No account IDs provided")
+
+    global _twitter_import_counter
+    _twitter_import_counter += 1
+    import_id = _twitter_import_counter
+
+    _import_progress[import_id] = {
+        "import_id": import_id,
+        "status": "pending",
+        "total_accounts": len(request.account_ids),
+        "processed": 0,
+        "inserted": 0,
+        "skipped_existing": 0,
+        "skipped_discard": 0,
+        "errors": 0,
+        "current_batch": 0,
+        "total_batches": 0,
+        "rate_limit_wait": None,
+        "error_message": None,
+    }
+
+    task = asyncio.create_task(_run_twitter_import(import_id, request.account_ids))
+    _running_import_tasks[import_id] = task
+    task.add_done_callback(lambda t: _running_import_tasks.pop(import_id, None))
+
+    return {"import_id": import_id, "status": "pending"}
+
+
+@app.get("/twitter/import/{import_id}")
+async def get_twitter_import_progress(import_id: int):
+    """Get progress of a twitter import task."""
+    progress = _import_progress.get(import_id)
+    if not progress:
+        raise HTTPException(status_code=404, detail="Import not found")
+    return progress
 
 
 @app.get("/twitter/feed")

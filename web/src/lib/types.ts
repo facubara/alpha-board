@@ -964,6 +964,25 @@ export interface AccountCallHistoryItem {
   athMcap: number | null;
 }
 
+// =============================================================================
+// Twitter Import Types
+// =============================================================================
+
+export interface TwitterImportProgress {
+  importId: number;
+  status: "pending" | "running" | "completed" | "failed";
+  totalAccounts: number;
+  processed: number;
+  inserted: number;
+  skippedExisting: number;
+  skippedDiscard: number;
+  errors: number;
+  currentBatch: number;
+  totalBatches: number;
+  rateLimitWait: number | null; // seconds remaining, or null
+  errorMessage: string | null;
+}
+
 export interface TrendingToken {
   rank: number;
   tokenSymbol: string;
