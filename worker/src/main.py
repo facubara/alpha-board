@@ -1176,11 +1176,182 @@ def _classify_user(user: dict) -> tuple[str, str | None]:
     return "twitter", "analyst"
 
 
+_GRAPHQL_USER_BY_ID = "https://x.com/i/api/graphql/xc8f1g7BYqr6VTzTbvNLGw/UserByRestId"
+_GRAPHQL_FEATURES = json.dumps({
+    "hidden_profile_subscriptions_enabled": True,
+    "rweb_tipjar_consumption_enabled": True,
+    "responsive_web_graphql_exclude_directive_enabled": True,
+    "verified_phone_label_enabled": False,
+    "highlights_tweets_tab_ui_enabled": True,
+    "responsive_web_twitter_article_notes_tab_enabled": True,
+    "subscriptions_feature_can_gift_premium": True,
+    "creator_subscriptions_tweet_preview_api_enabled": True,
+    "responsive_web_graphql_skip_user_profile_image_extensions_enabled": False,
+    "responsive_web_graphql_timeline_navigation_enabled": True,
+})
+
+
+def _graphql_parse_user(data: dict) -> dict | None:
+    """Parse GraphQL UserByRestId response into a normalized user dict."""
+    try:
+        result = data["data"]["user"]["result"]
+        if result.get("__typename") == "UserUnavailable":
+            return None
+        legacy = result.get("legacy", {})
+        return {
+            "id": result["rest_id"],
+            "username": legacy.get("screen_name", ""),
+            "name": legacy.get("name", ""),
+            "description": legacy.get("description", ""),
+            "public_metrics": {
+                "followers_count": legacy.get("followers_count", 0),
+                "following_count": legacy.get("friends_count", 0),
+                "tweet_count": legacy.get("statuses_count", 0),
+            },
+        }
+    except (KeyError, TypeError):
+        return None
+
+
+async def _insert_user(session, user: dict, progress: dict):
+    """Classify and insert a single user into the appropriate table."""
+    handle = user.get("username", "")
+    if not handle:
+        progress["errors"] += 1
+        return
+
+    table, category = _classify_user(user)
+
+    if table == "discard":
+        progress["skipped_discard"] += 1
+        return
+
+    display_name = user.get("name", handle)
+
+    if table == "memecoin":
+        existing = await session.execute(
+            select(MemecoinTwitterAccount).where(
+                MemecoinTwitterAccount.handle == handle
+            )
+        )
+        if existing.scalar_one_or_none():
+            progress["skipped_existing"] += 1
+            return
+        session.add(MemecoinTwitterAccount(
+            handle=handle, display_name=display_name, category=category,
+        ))
+    else:
+        existing = await session.execute(
+            select(TwitterAccount).where(TwitterAccount.handle == handle)
+        )
+        if existing.scalar_one_or_none():
+            progress["skipped_existing"] += 1
+            return
+        session.add(TwitterAccount(
+            handle=handle, display_name=display_name, category=category,
+        ))
+
+    progress["inserted"] += 1
+
+
 async def _run_twitter_import(import_id: int, account_ids: list[str]):
-    """Background task: look up Twitter IDs via API v2 and insert into DB."""
+    """Background task: look up Twitter IDs and insert into DB.
+
+    Uses GraphQL (cookie auth, no credit limit) if TWITTER_AUTH_TOKEN + TWITTER_CT0
+    are set, otherwise falls back to API v2 (bearer token, credit-limited).
+    """
     progress = _import_progress[import_id]
     progress["status"] = "running"
 
+    use_graphql = bool(settings.twitter_auth_token and settings.twitter_ct0)
+
+    if use_graphql:
+        await _import_via_graphql(import_id, account_ids, progress)
+    else:
+        await _import_via_api_v2(import_id, account_ids, progress)
+
+
+async def _import_via_graphql(import_id: int, account_ids: list[str], progress: dict):
+    """Import users one-by-one via Twitter GraphQL (cookie auth, no credit limit)."""
+    progress["total_batches"] = len(account_ids)  # 1 user per "batch"
+
+    gql_headers = {
+        "Authorization": "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA",
+        "Cookie": f"auth_token={settings.twitter_auth_token}; ct0={settings.twitter_ct0}",
+        "X-Csrf-Token": settings.twitter_ct0,
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "X-Twitter-Active-User": "yes",
+        "X-Twitter-Auth-Type": "OAuth2Session",
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            for i, user_id in enumerate(account_ids):
+                progress["current_batch"] = i + 1
+
+                params = {
+                    "variables": json.dumps({"userId": user_id, "withSafetyModeUserFields": True}),
+                    "features": _GRAPHQL_FEATURES,
+                }
+
+                try:
+                    resp = await client.get(_GRAPHQL_USER_BY_ID, headers=gql_headers, params=params)
+                except httpx.HTTPError as e:
+                    logger.warning(f"GraphQL request error for {user_id}: {e}")
+                    progress["errors"] += 1
+                    progress["processed"] += 1
+                    continue
+
+                if resp.status_code == 429:
+                    retry_after = int(resp.headers.get("Retry-After", "60"))
+                    progress["rate_limit_wait"] = retry_after
+                    logger.warning(f"GraphQL rate limited, waiting {retry_after}s")
+                    await asyncio.sleep(retry_after)
+                    progress["rate_limit_wait"] = None
+                    # Retry this user
+                    try:
+                        resp = await client.get(_GRAPHQL_USER_BY_ID, headers=gql_headers, params=params)
+                    except httpx.HTTPError:
+                        progress["errors"] += 1
+                        progress["processed"] += 1
+                        continue
+
+                if resp.status_code == 403:
+                    progress["status"] = "failed"
+                    progress["error_message"] = "Auth expired (403). Update TWITTER_AUTH_TOKEN and TWITTER_CT0."
+                    logger.error("GraphQL auth expired (403)")
+                    return
+
+                if resp.status_code != 200:
+                    progress["errors"] += 1
+                    progress["processed"] += 1
+                    continue
+
+                user = _graphql_parse_user(resp.json())
+                if not user:
+                    progress["errors"] += 1
+                    progress["processed"] += 1
+                    continue
+
+                async with async_session() as session:
+                    await _insert_user(session, user, progress)
+                    await session.commit()
+
+                progress["processed"] += 1
+
+                # Delay to avoid rate limiting (~500 req/15min)
+                await asyncio.sleep(1.2)
+
+        progress["status"] = "completed"
+    except Exception as e:
+        logger.exception(f"Twitter import {import_id} failed")
+        progress["status"] = "failed"
+        progress["error_message"] = str(e)
+
+
+async def _import_via_api_v2(import_id: int, account_ids: list[str], progress: dict):
+    """Import users in batches via Twitter API v2 (bearer token, credit-limited)."""
     bearer = settings.twitter_bearer_token
     url = "https://api.twitter.com/2/users"
     headers = {"Authorization": f"Bearer {bearer}"}
@@ -1202,10 +1373,10 @@ async def _run_twitter_import(import_id: int, account_ids: list[str]):
                         params={"ids": ",".join(batch), "user.fields": fields},
                     )
 
-                    if resp.status_code == 429:
+                    if resp.status_code in (429, 402):
                         retry_after = int(resp.headers.get("Retry-After", "60"))
                         progress["rate_limit_wait"] = retry_after
-                        logger.warning(f"Twitter import rate limited, waiting {retry_after}s")
+                        logger.warning(f"API v2 rate limited ({resp.status_code}), waiting {retry_after}s")
                         await asyncio.sleep(retry_after)
                         progress["rate_limit_wait"] = None
                         retries += 1
@@ -1220,72 +1391,35 @@ async def _run_twitter_import(import_id: int, account_ids: list[str]):
 
                     break
                 else:
-                    # Exhausted retries for this batch
                     progress["errors"] += len(batch)
                     progress["processed"] += len(batch)
-                    continue
+                    progress["error_message"] = "Rate limit exhausted after retries"
+                    progress["status"] = "failed"
+                    return
 
                 if resp.status_code != 200:
                     progress["errors"] += len(batch)
                     progress["processed"] += len(batch)
-                    logger.error(f"Twitter import batch failed: HTTP {resp.status_code}")
+                    try:
+                        detail = resp.json()
+                    except Exception:
+                        detail = resp.text[:200]
+                    msg = f"HTTP {resp.status_code}: {detail}"
+                    logger.error(f"Twitter import batch failed: {msg}")
+                    progress["error_message"] = msg
+                    if resp.status_code in (401, 403):
+                        progress["status"] = "failed"
+                        return
                     continue
 
                 body = resp.json()
                 users = body.get("data", [])
-
-                # Count IDs that returned errors (suspended/deleted)
                 api_errors = body.get("errors", [])
                 progress["errors"] += len(api_errors)
 
                 async with async_session() as session:
                     for user in users:
-                        handle = user.get("username", "")
-                        if not handle:
-                            progress["errors"] += 1
-                            continue
-
-                        table, category = _classify_user(user)
-
-                        if table == "discard":
-                            progress["skipped_discard"] += 1
-                            continue
-
-                        display_name = user.get("name", handle)
-
-                        if table == "memecoin":
-                            # Check memecoin_twitter_accounts
-                            existing = await session.execute(
-                                select(MemecoinTwitterAccount).where(
-                                    MemecoinTwitterAccount.handle == handle
-                                )
-                            )
-                            if existing.scalar_one_or_none():
-                                progress["skipped_existing"] += 1
-                                continue
-                            session.add(MemecoinTwitterAccount(
-                                handle=handle,
-                                display_name=display_name,
-                                category=category,
-                            ))
-                        else:
-                            # Check twitter_accounts
-                            existing = await session.execute(
-                                select(TwitterAccount).where(
-                                    TwitterAccount.handle == handle
-                                )
-                            )
-                            if existing.scalar_one_or_none():
-                                progress["skipped_existing"] += 1
-                                continue
-                            session.add(TwitterAccount(
-                                handle=handle,
-                                display_name=display_name,
-                                category=category,
-                            ))
-
-                        progress["inserted"] += 1
-
+                        await _insert_user(session, user, progress)
                     await session.commit()
 
                 progress["processed"] += len(batch)
@@ -1300,8 +1434,13 @@ async def _run_twitter_import(import_id: int, account_ids: list[str]):
 @app.post("/twitter/import")
 async def start_twitter_import(request: TwitterImportRequest):
     """Start a bulk import of Twitter accounts by ID."""
-    if not settings.twitter_bearer_token:
-        raise HTTPException(status_code=400, detail="Twitter bearer token not configured")
+    has_graphql = bool(settings.twitter_auth_token and settings.twitter_ct0)
+    has_bearer = bool(settings.twitter_bearer_token)
+    if not has_graphql and not has_bearer:
+        raise HTTPException(
+            status_code=400,
+            detail="No Twitter auth configured. Set TWITTER_AUTH_TOKEN + TWITTER_CT0 (preferred) or TWITTER_BEARER_TOKEN.",
+        )
 
     if not request.account_ids:
         raise HTTPException(status_code=400, detail="No account IDs provided")

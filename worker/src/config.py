@@ -35,6 +35,8 @@ class Settings(BaseSettings):
 
     # Twitter/X
     twitter_bearer_token: str = ""
+    twitter_auth_token: str = ""  # Cookie auth for GraphQL (no credit limit)
+    twitter_ct0: str = ""  # CSRF token for GraphQL
     twitter_polling_enabled: bool = False
     twitter_poll_interval_minutes: int = 5
 

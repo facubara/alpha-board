@@ -147,7 +147,7 @@ export function FollowingImport() {
   return (
     <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 space-y-3">
       <h3 className="text-sm font-medium text-primary">
-        Import from following.js
+        Twitter Following Import
       </h3>
 
       {/* File picker (only show if not started) */}
