@@ -8,7 +8,7 @@
 
 import { useState, useMemo, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2, Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { Trash2, Plus, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
 import type { TwitterAccount, TwitterAccountCategory } from "@/lib/types";
 import { TWITTER_CATEGORIES, TWITTER_CATEGORY_LABELS } from "@/lib/types";
@@ -57,6 +57,8 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
   const [error, setError] = useState<string | null>(null);
   const [sortField, setSortField] = useState<SortField>("followers");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(25);
 
   const sorted = useMemo(() => {
     const list = [...accounts];
@@ -84,6 +86,12 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
     return list;
   }, [accounts, sortField, sortDirection]);
 
+  const totalPages = Math.ceil(sorted.length / pageSize);
+  const paginated = useMemo(
+    () => sorted.slice(page * pageSize, (page + 1) * pageSize),
+    [sorted, page, pageSize]
+  );
+
   function handleSort(field: SortField) {
     if (sortField === field) {
       setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
@@ -91,6 +99,7 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
       setSortField(field);
       setSortDirection(field === "handle" || field === "category" ? "asc" : "desc");
     }
+    setPage(0);
   }
 
   function SortIcon({ field }: { field: SortField }) {
@@ -262,7 +271,7 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sorted.map((account) => (
+                {paginated.map((account) => (
                   <TableRow key={account.id} className="group border-[var(--border-subtle)]">
                     <TableCell className="text-sm text-primary font-medium">
                       @{account.handle}
@@ -298,6 +307,38 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
                 ))}
               </TableBody>
             </Table>
+            {/* Pagination */}
+            <div className="flex items-center justify-between border-t border-[var(--border-default)] px-3 py-2">
+              <div className="flex items-center gap-1.5 text-xs text-muted">
+                <span>Show</span>
+                {[10, 25, 50].map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => { setPageSize(size); setPage(0); }}
+                    className={`rounded px-1.5 py-0.5 ${pageSize === size ? "bg-[var(--bg-elevated)] text-primary font-medium" : "hover:text-primary"}`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 text-xs text-muted">
+                <span>{page * pageSize + 1}–{Math.min((page + 1) * pageSize, sorted.length)} of {sorted.length}</span>
+                <button
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  className="rounded p-0.5 hover:text-primary disabled:opacity-30"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                  disabled={page >= totalPages - 1}
+                  className="rounded p-0.5 hover:text-primary disabled:opacity-30"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
           </div>
         )
       )}
