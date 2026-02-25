@@ -1871,3 +1871,59 @@ Clicking an account pill opens a modal with call history: tokens mentioned, firs
 
 ### Smart Token Detection (CA + URL Extraction) — `COMPLETED`
 Two-phase token extraction: Phase 1 resolves contract addresses from DexScreener/Birdeye/Pump.fun URLs and raw CAs. Phase 2 falls back to symbol search, skipping symbols already resolved via Phase 1. Fixes the $CTO collision problem.
+
+---
+
+## React Doctor: Remaining Improvements — `PENDING`
+
+**What:** Address the remaining react-doctor findings (score 91/100 → target 97+). These require architectural changes or new dependencies.
+
+**Current score:** 91/100 — 14 errors, 21 warnings across 10 files.
+
+### Errors
+
+**1. Replace fetch-in-useEffect with react-query or SWR (4 instances)**
+- `agent-leaderboard.tsx` — positions polling (line 153) and symbol search (line 212)
+- `trade-notification-provider.tsx` — exchange settings fetch (line 83)
+- `pause-modal.tsx` — active agents fetch (line 56)
+
+Install `@tanstack/react-query`, wrap app in `QueryClientProvider`, convert each `useEffect(fetch)` to `useQuery()`.
+
+**2. Fix "value blocks in try/catch" for React Compiler (5 instances)**
+- `exchange-settings.tsx:40` — conditional logic inside try block
+- `account-manager.tsx:129` — conditional logic inside try block
+- `memecoin-account-manager.tsx:146` — conditional logic inside try block
+- `pause-modal.tsx:105, 115` — conditional logic inside try blocks
+
+Extract conditional expressions (`if (!res.ok)`, ternaries, optional chaining) out of try blocks into separate variables or helper functions so the compiler can optimize them.
+
+**3. Eliminate setState-in-useEffect for hydration sync (5 instances)**
+- `exchange-settings.tsx:52` — `fetchSettings` called in effect
+- `agent-leaderboard.tsx:116, 216` — SSE data sync + symbol search debounce
+- `trade-notification-provider.tsx:97` — localStorage sidebar state
+- `logo-switcher.tsx:33` — mounted state
+
+Use `useSyncExternalStore` for localStorage reads. Convert data fetching effects to react-query. For SSE sync, consider deriving state during render instead of syncing via effects.
+
+### Warnings
+
+**4. Consolidate useState calls with useReducer (7 components)**
+- `model-config.tsx`, `exchange-settings.tsx`, `account-manager.tsx`, `agent-leaderboard.tsx`, `memecoin-account-manager.tsx`, `trade-notification-provider.tsx`, `pause-modal.tsx`
+
+Group related state (e.g. form fields, loading/error/result) into `useReducer` to reduce re-render overhead and improve readability.
+
+**5. Break large components into focused sub-components (4 components)**
+- `exchange-settings.tsx` (325 lines)
+- `agent-leaderboard.tsx` (600+ lines)
+- `memecoin-account-manager.tsx` (500+ lines)
+- `pause-modal.tsx` (390 lines)
+
+Extract logical sections (filters, table, modals) into separate components.
+
+**6. Use next/image instead of img (1 instance)**
+- `logo-switcher.tsx:45` — Replace `<img>` with `next/image` for automatic WebP/AVIF, lazy loading, and responsive srcset.
+
+**7. useState-from-props pattern (6 instances)**
+- `discarded-agents.tsx`, `account-manager.tsx`, `agent-leaderboard.tsx`, `memecoin-account-manager.tsx`, `trade-notification-provider.tsx`, `rankings-table.tsx`
+
+These are intentional (local mutation of server-fetched initial data). Consider adding `// eslint-disable-next-line` comments or refactoring to derive state during render where possible.

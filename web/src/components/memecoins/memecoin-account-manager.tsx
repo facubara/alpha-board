@@ -47,6 +47,15 @@ function formatMcap(n: number): string {
   return `$${n.toFixed(0)}`;
 }
 
+function SortIcon({ field, sortField, sortDirection }: { field: SortField; sortField: SortField; sortDirection: SortDirection }) {
+  if (sortField !== field) return null;
+  return sortDirection === "asc" ? (
+    <ChevronUp className="inline h-3 w-3" />
+  ) : (
+    <ChevronDown className="inline h-3 w-3" />
+  );
+}
+
 export function MemecoinAccountManager({
   initialAccounts,
 }: MemecoinAccountManagerProps) {
@@ -111,15 +120,6 @@ export function MemecoinAccountManager({
       setSortDirection(field === "handle" || field === "category" ? "asc" : "desc");
     }
     setPage(0);
-  }
-
-  function SortIcon({ field }: { field: SortField }) {
-    if (sortField !== field) return null;
-    return sortDirection === "asc" ? (
-      <ChevronUp className="inline h-3 w-3" />
-    ) : (
-      <ChevronDown className="inline h-3 w-3" />
-    );
   }
 
   async function doAdd() {
@@ -213,9 +213,8 @@ export function MemecoinAccountManager({
       if (res.ok) {
         setCallHistory(await res.json());
       }
+      setLoadingCalls(false);
     } catch {
-      // silent
-    } finally {
       setLoadingCalls(false);
     }
   }, []);
@@ -304,31 +303,31 @@ export function MemecoinAccountManager({
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary"
                     onClick={() => handleSort("handle")}
                   >
-                    Handle <SortIcon field="handle" />
+                    Handle <SortIcon field="handle" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary"
                     onClick={() => handleSort("category")}
                   >
-                    Category <SortIcon field="category" />
+                    Category <SortIcon field="category" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
                     onClick={() => handleSort("followers")}
                   >
-                    Followers <SortIcon field="followers" />
+                    Followers <SortIcon field="followers" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
                     onClick={() => handleSort("tweets")}
                   >
-                    Tweets <SortIcon field="tweets" />
+                    Tweets <SortIcon field="tweets" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary"
                     onClick={() => handleSort("bio")}
                   >
-                    Bio <SortIcon field="bio" />
+                    Bio <SortIcon field="bio" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead className="text-xs text-muted w-20" />
                 </TableRow>
@@ -367,7 +366,7 @@ export function MemecoinAccountManager({
                       {account.bio ? (account.bio.length > 60 ? account.bio.slice(0, 60) + "..." : account.bio) : "—"}
                     </TableCell>
                     <TableCell>
-                      <span className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                      <span role="group" className="flex items-center gap-1" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => handleToggleVip(account.id)}
                           className={`transition-colors ${
@@ -448,6 +447,7 @@ export function MemecoinAccountManager({
       {/* Account Call History Modal */}
       {selectedAccount && (
         <div
+          role="dialog"
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60"
           onClick={(e) => { if (e.target === e.currentTarget) setSelectedAccount(null); }}
           onKeyDown={(e) => { if (e.key === "Escape") setSelectedAccount(null); }}

@@ -15,16 +15,21 @@ const LOGOS = [
 
 const STORAGE_KEY = "alpha-board:logo-variant";
 
+function getStoredIndex(): number {
+  if (typeof window === "undefined") return 0;
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    const found = LOGOS.findIndex((l) => l.key === stored);
+    if (found !== -1) return found;
+  }
+  return 0;
+}
+
 export function LogoSwitcher() {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(getStoredIndex);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const found = LOGOS.findIndex((l) => l.key === stored);
-      if (found !== -1) setIndex(found);
-    }
     setMounted(true);
   }, []);
 

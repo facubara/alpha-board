@@ -42,9 +42,8 @@ export function ExchangeSettingsSection() {
         setDefaultLeverage(String(data.defaultLeverage || 1));
         setEnabled(data.enabled ?? true);
       }
+      setLoading(false);
     } catch {
-      /* ignore */
-    } finally {
       setLoading(false);
     }
   }, []);
@@ -76,18 +75,19 @@ export function ExchangeSettingsSection() {
             success: false,
             message: err.detail || "Save failed",
           });
+          setSaving(false);
           return;
         }
         setApiKey("");
         setApiSecret("");
         await fetchSettings();
         setTestResult({ success: true, message: "Settings saved" });
+        setSaving(false);
       } catch (e) {
         setTestResult({
           success: false,
           message: e instanceof Error ? e.message : "Save failed",
         });
-      } finally {
         setSaving(false);
       }
     });
@@ -113,12 +113,12 @@ export function ExchangeSettingsSection() {
             message: data.error || "Connection failed",
           });
         }
+        setTesting(false);
       } catch (e) {
         setTestResult({
           success: false,
           message: e instanceof Error ? e.message : "Test failed",
         });
-      } finally {
         setTesting(false);
       }
     });
@@ -177,10 +177,11 @@ export function ExchangeSettingsSection() {
         {/* API Key inputs */}
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-api-key" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
               API Key
             </label>
             <input
+              id="exchange-api-key"
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
@@ -193,10 +194,11 @@ export function ExchangeSettingsSection() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-api-secret" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
               API Secret
             </label>
             <input
+              id="exchange-api-secret"
               type="password"
               value={apiSecret}
               onChange={(e) => setApiSecret(e.target.value)}
@@ -213,10 +215,11 @@ export function ExchangeSettingsSection() {
         {/* Preferences */}
         <div className="grid gap-3 sm:grid-cols-3">
           <div>
-            <label className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-trading-mode" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
               Trading Mode
             </label>
             <select
+              id="exchange-trading-mode"
               value={tradingMode}
               onChange={(e) =>
                 setTradingMode(e.target.value as "spot" | "futures" | "both")
@@ -229,10 +232,11 @@ export function ExchangeSettingsSection() {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-max-position" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
               Max Position (USD)
             </label>
             <input
+              id="exchange-max-position"
               type="number"
               min={1}
               value={maxPositionUsd}
@@ -241,10 +245,11 @@ export function ExchangeSettingsSection() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-default-leverage" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
               Default Leverage
             </label>
             <input
+              id="exchange-default-leverage"
               type="number"
               min={1}
               max={125}

@@ -42,7 +42,8 @@ export function PromptEditor({ agentId, activePrompt }: PromptEditorProps) {
           setSaved(true);
           setTimeout(() => setSaved(false), 3000);
         }
-      } finally {
+        setSaving(false);
+      } catch {
         setSaving(false);
       }
     });

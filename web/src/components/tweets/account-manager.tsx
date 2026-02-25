@@ -44,6 +44,15 @@ function formatFollowers(n: number | null): string {
   return String(n);
 }
 
+function SortIcon({ field, sortField, sortDirection }: { field: SortField; sortField: SortField; sortDirection: SortDirection }) {
+  if (sortField !== field) return null;
+  return sortDirection === "asc" ? (
+    <ChevronUp className="inline h-3 w-3" />
+  ) : (
+    <ChevronDown className="inline h-3 w-3" />
+  );
+}
+
 export function AccountManager({ initialAccounts }: AccountManagerProps) {
   const router = useRouter();
   const { requireAuth } = useAuth();
@@ -100,15 +109,6 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
       setSortDirection(field === "handle" || field === "category" ? "asc" : "desc");
     }
     setPage(0);
-  }
-
-  function SortIcon({ field }: { field: SortField }) {
-    if (sortField !== field) return null;
-    return sortDirection === "asc" ? (
-      <ChevronUp className="inline h-3 w-3" />
-    ) : (
-      <ChevronDown className="inline h-3 w-3" />
-    );
   }
 
   async function doAdd() {
@@ -241,31 +241,31 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary"
                     onClick={() => handleSort("handle")}
                   >
-                    Handle <SortIcon field="handle" />
+                    Handle <SortIcon field="handle" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary"
                     onClick={() => handleSort("category")}
                   >
-                    Category <SortIcon field="category" />
+                    Category <SortIcon field="category" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
                     onClick={() => handleSort("followers")}
                   >
-                    Followers <SortIcon field="followers" />
+                    Followers <SortIcon field="followers" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
                     onClick={() => handleSort("tweets")}
                   >
-                    Tweets <SortIcon field="tweets" />
+                    Tweets <SortIcon field="tweets" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary"
                     onClick={() => handleSort("bio")}
                   >
-                    Bio <SortIcon field="bio" />
+                    Bio <SortIcon field="bio" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead className="text-xs text-muted w-10" />
                 </TableRow>

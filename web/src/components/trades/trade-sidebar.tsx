@@ -13,8 +13,11 @@ export function TradeSidebar() {
       {/* Mobile overlay backdrop */}
       {sidebarOpen && (
         <div
+          role="button"
+          tabIndex={-1}
           className="fixed inset-0 z-40 bg-black/50 sm:hidden"
           onClick={toggleSidebar}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleSidebar(); }}
         />
       )}
 

@@ -54,6 +54,15 @@ type SortField =
   | "tokenCost";
 type SortDirection = "asc" | "desc";
 
+function SortIndicator({ field, sortField, sortDirection }: { field: SortField; sortField: SortField; sortDirection: SortDirection }) {
+  if (sortField !== field) return null;
+  return sortDirection === "asc" ? (
+    <ChevronUp className="ml-1 inline h-3 w-3" />
+  ) : (
+    <ChevronDown className="ml-1 inline h-3 w-3" />
+  );
+}
+
 interface AgentLeaderboardProps {
   agents: AgentLeaderboardRow[];
   className?: string;
@@ -306,15 +315,6 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     }
   };
 
-  const SortIndicator = ({ field }: { field: SortField }) => {
-    if (sortField !== field) return null;
-    return sortDirection === "asc" ? (
-      <ChevronUp className="ml-1 inline h-3 w-3" />
-    ) : (
-      <ChevronDown className="ml-1 inline h-3 w-3" />
-    );
-  };
-
   return (
     <div className={cn("space-y-4", className)}>
       {/* Filters */}
@@ -525,7 +525,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
                   onClick={() => handleSort("name")}
                 >
                   Agent
-                  <SortIndicator field="name" />
+                  <SortIndicator field="name" sortField={sortField} sortDirection={sortDirection} />
                 </TableHead>
                 <TableHead className="hidden w-16 text-xs font-medium text-secondary sm:table-cell">
                   TF
@@ -535,7 +535,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
                   onClick={() => handleSort("pnl")}
                 >
                   Realized
-                  <SortIndicator field="pnl" />
+                  <SortIndicator field="pnl" sortField={sortField} sortDirection={sortDirection} />
                 </TableHead>
                 <TableHead
                   className="hidden w-20 select-none text-right text-xs font-medium text-secondary sm:table-cell"
@@ -547,28 +547,28 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
                   onClick={() => handleSort("winRate")}
                 >
                   Win%
-                  <SortIndicator field="winRate" />
+                  <SortIndicator field="winRate" sortField={sortField} sortDirection={sortDirection} />
                 </TableHead>
                 <TableHead
                   className="hidden w-16 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
                   onClick={() => handleSort("trades")}
                 >
                   Trades
-                  <SortIndicator field="trades" />
+                  <SortIndicator field="trades" sortField={sortField} sortDirection={sortDirection} />
                 </TableHead>
                 <TableHead
                   className="hidden w-16 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
                   onClick={() => handleSort("openPositions")}
                 >
                   Open
-                  <SortIndicator field="openPositions" />
+                  <SortIndicator field="openPositions" sortField={sortField} sortDirection={sortDirection} />
                 </TableHead>
                 <TableHead
                   className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
                   onClick={() => handleSort("tokenCost")}
                 >
                   Cost
-                  <SortIndicator field="tokenCost" />
+                  <SortIndicator field="tokenCost" sortField={sortField} sortDirection={sortDirection} />
                 </TableHead>
                 <TableHead className="w-10" />
               </TableRow>

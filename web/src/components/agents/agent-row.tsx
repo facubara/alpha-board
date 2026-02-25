@@ -114,7 +114,8 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
           const data = await res.json();
           setStatus(data.status);
         }
-      } finally {
+        setToggling(false);
+      } catch {
         setToggling(false);
       }
     });

@@ -102,7 +102,9 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
   );
 
   const sidebarOpenRef = useRef(sidebarOpen);
-  sidebarOpenRef.current = sidebarOpen;
+  useEffect(() => {
+    sidebarOpenRef.current = sidebarOpen;
+  }, [sidebarOpen]);
 
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

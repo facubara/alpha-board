@@ -72,7 +72,8 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
           setSaved(true);
           setTimeout(() => setSaved(false), 3000);
         }
-      } finally {
+        setSaving(false);
+      } catch {
         setSaving(false);
       }
     });
@@ -155,8 +156,8 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {tokenUsage.map((u, i) => (
-                  <TableRow key={i} className="h-10 hover:bg-[var(--bg-elevated)]">
+                {tokenUsage.map((u) => (
+                  <TableRow key={`${u.model}-${u.taskType}`} className="h-10 hover:bg-[var(--bg-elevated)]">
                     <TableCell className="font-mono text-sm text-primary">
                       {modelLabel(u.model)}
                     </TableCell>

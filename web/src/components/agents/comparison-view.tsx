@@ -27,7 +27,7 @@ interface ComparisonViewProps {
 
 export function ComparisonView({ data }: ComparisonViewProps) {
   const router = useRouter();
-  const [activeIds, setActiveIds] = useState<number[]>(
+  const [activeIds, setActiveIds] = useState<number[]>(() =>
     data.agents.map((a) => a.id)
   );
 

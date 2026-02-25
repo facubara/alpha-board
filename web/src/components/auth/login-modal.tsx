@@ -41,10 +41,12 @@ export function LoginModal({ onLogin, onClose }: LoginModalProps) {
 
   return (
     <div
+      role="dialog"
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
+      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
     >
       <div className="w-full max-w-sm rounded-lg border border-[var(--border-default)] bg-[var(--bg-base)] p-6 shadow-lg">
         <h2 className="mb-1 text-sm font-semibold text-primary">

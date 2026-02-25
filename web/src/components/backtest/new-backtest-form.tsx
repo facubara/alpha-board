@@ -61,8 +61,9 @@ export function NewBacktestForm() {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {/* Strategy */}
         <div>
-          <label className="mb-1 block text-xs text-muted">Strategy</label>
+          <label htmlFor="backtest-strategy" className="mb-1 block text-xs text-muted">Strategy</label>
           <select
+            id="backtest-strategy"
             name="strategy"
             required
             className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 text-sm text-primary"
@@ -77,8 +78,9 @@ export function NewBacktestForm() {
 
         {/* Timeframe */}
         <div>
-          <label className="mb-1 block text-xs text-muted">Timeframe</label>
+          <label htmlFor="backtest-timeframe" className="mb-1 block text-xs text-muted">Timeframe</label>
           <select
+            id="backtest-timeframe"
             name="timeframe"
             required
             defaultValue="1h"
@@ -94,8 +96,9 @@ export function NewBacktestForm() {
 
         {/* Symbol */}
         <div>
-          <label className="mb-1 block text-xs text-muted">Symbol</label>
+          <label htmlFor="backtest-symbol" className="mb-1 block text-xs text-muted">Symbol</label>
           <select
+            id="backtest-symbol"
             name="symbol"
             required
             className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 text-sm text-primary"
@@ -110,8 +113,9 @@ export function NewBacktestForm() {
 
         {/* Start Date */}
         <div>
-          <label className="mb-1 block text-xs text-muted">Start Date</label>
+          <label htmlFor="backtest-start-date" className="mb-1 block text-xs text-muted">Start Date</label>
           <input
+            id="backtest-start-date"
             type="date"
             name="startDate"
             required
@@ -122,8 +126,9 @@ export function NewBacktestForm() {
 
         {/* End Date */}
         <div>
-          <label className="mb-1 block text-xs text-muted">End Date</label>
+          <label htmlFor="backtest-end-date" className="mb-1 block text-xs text-muted">End Date</label>
           <input
+            id="backtest-end-date"
             type="date"
             name="endDate"
             required

@@ -36,6 +36,15 @@ import { useTradeNotifications } from "@/components/trades/trade-notification-pr
 type SortField = "rank" | "symbol" | "score" | "confidence" | "priceChange" | "volumeChange" | "priceChangeAbs" | "volumeChangeAbs" | "fundingRate";
 type SortDirection = "asc" | "desc";
 
+function SortIndicator({ field, sortField, sortDirection }: { field: SortField; sortField: SortField; sortDirection: SortDirection }) {
+  if (sortField !== field) return null;
+  return sortDirection === "asc" ? (
+    <ChevronUp className="ml-1 inline h-3 w-3" />
+  ) : (
+    <ChevronDown className="ml-1 inline h-3 w-3" />
+  );
+}
+
 interface RankingsTableProps {
   data: AllTimeframeRankings;
   className?: string;
@@ -149,16 +158,6 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
     }
   };
 
-  // Sort indicator component
-  const SortIndicator = ({ field }: { field: SortField }) => {
-    if (sortField !== field) return null;
-    return sortDirection === "asc" ? (
-      <ChevronUp className="ml-1 inline h-3 w-3" />
-    ) : (
-      <ChevronDown className="ml-1 inline h-3 w-3" />
-    );
-  };
-
   // Column header tooltips
   const COLUMN_TOOLTIPS: Partial<Record<SortField | "highlights", string>> = {
     score:
@@ -243,20 +242,20 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                     className="w-12 cursor-pointer select-none pr-2 text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
                     onClick={() => handleSort("rank")}
                   >
-                    #<SortIndicator field="rank" />
+                    #<SortIndicator field="rank" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="w-28 cursor-pointer select-none text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
                     onClick={() => handleSort("symbol")}
                   >
-                    Symbol<SortIndicator field="symbol" />
+                    Symbol<SortIndicator field="symbol" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="w-44 cursor-pointer select-none text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
                     onClick={() => handleSort("score")}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.score!} side="bottom">
-                      <span className="cursor-pointer">Score<SortIndicator field="score" /></span>
+                      <span className="cursor-pointer">Score<SortIndicator field="score" sortField={sortField} sortDirection={sortDirection} /></span>
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
@@ -264,7 +263,7 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                     onClick={() => handleSort("confidence")}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.confidence!} side="bottom">
-                      <span className="cursor-pointer">Conf<SortIndicator field="confidence" /></span>
+                      <span className="cursor-pointer">Conf<SortIndicator field="confidence" sortField={sortField} sortDirection={sortDirection} /></span>
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
@@ -272,7 +271,7 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                     onClick={() => handleSort("priceChange")}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.priceChange!} side="bottom">
-                      <span className="cursor-pointer">Price %<SortIndicator field="priceChange" /></span>
+                      <span className="cursor-pointer">Price %<SortIndicator field="priceChange" sortField={sortField} sortDirection={sortDirection} /></span>
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
@@ -280,7 +279,7 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                     onClick={() => handleSort("priceChangeAbs")}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.priceChangeAbs!} side="bottom">
-                      <span className="cursor-pointer">Price Δ<SortIndicator field="priceChangeAbs" /></span>
+                      <span className="cursor-pointer">Price Δ<SortIndicator field="priceChangeAbs" sortField={sortField} sortDirection={sortDirection} /></span>
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
@@ -288,7 +287,7 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                     onClick={() => handleSort("volumeChange")}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.volumeChange!} side="bottom">
-                      <span className="cursor-pointer">Vol %<SortIndicator field="volumeChange" /></span>
+                      <span className="cursor-pointer">Vol %<SortIndicator field="volumeChange" sortField={sortField} sortDirection={sortDirection} /></span>
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
@@ -296,7 +295,7 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                     onClick={() => handleSort("volumeChangeAbs")}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.volumeChangeAbs!} side="bottom">
-                      <span className="cursor-pointer">Vol Δ<SortIndicator field="volumeChangeAbs" /></span>
+                      <span className="cursor-pointer">Vol Δ<SortIndicator field="volumeChangeAbs" sortField={sortField} sortDirection={sortDirection} /></span>
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
@@ -304,7 +303,7 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                     onClick={() => handleSort("fundingRate")}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.fundingRate!} side="bottom">
-                      <span className="cursor-pointer">Funding<SortIndicator field="fundingRate" /></span>
+                      <span className="cursor-pointer">Funding<SortIndicator field="fundingRate" sortField={sortField} sortDirection={sortDirection} /></span>
                     </InfoTooltip>
                   </TableHead>
                   <TableHead className="hidden text-xs font-medium text-secondary xl:table-cell">

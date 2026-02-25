@@ -115,7 +115,7 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
           throw new Error(`HTTP ${res.status}`);
         }
 
-        setPausedCount(i + 1);
+        setPausedCount(() => i + 1);
         saveProgress(agentList.map((a) => a.id), i);
       } catch {
         setFailedAgent(agent);
@@ -171,8 +171,11 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
+        role="button"
+        tabIndex={-1}
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={handleCancel}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleCancel(); }}
       />
 
       {/* Modal */}

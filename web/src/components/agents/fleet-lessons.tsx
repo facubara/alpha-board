@@ -47,7 +47,12 @@ export function FleetLessons({ lessons: initialLessons }: FleetLessonsProps) {
           if (res.ok) {
             setItems((prev) => prev.filter((l) => l.id !== id));
           }
-        } finally {
+          setRemoving((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          });
+        } catch {
           setRemoving((prev) => {
             const next = new Set(prev);
             next.delete(id);

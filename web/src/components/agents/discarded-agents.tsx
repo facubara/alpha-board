@@ -42,7 +42,12 @@ export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
           if (res.ok) {
             setItems((prev) => prev.filter((a) => a.id !== id));
           }
-        } finally {
+          setActionLoading((prev) => {
+            const next = { ...prev };
+            delete next[id];
+            return next;
+          });
+        } catch {
           setActionLoading((prev) => {
             const next = { ...prev };
             delete next[id];
@@ -68,7 +73,12 @@ export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
           if (res.ok) {
             setItems((prev) => prev.filter((a) => a.id !== id));
           }
-        } finally {
+          setActionLoading((prev) => {
+            const next = { ...prev };
+            delete next[id];
+            return next;
+          });
+        } catch {
           setActionLoading((prev) => {
             const next = { ...prev };
             delete next[id];
