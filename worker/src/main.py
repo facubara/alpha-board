@@ -37,6 +37,7 @@ from src.models.db import (
     BacktestRun, BacktestTrade, MemecoinToken, MemecoinTweet,
     MemecoinTweetSignal, MemecoinTweetToken, MemecoinTwitterAccount,
     Snapshot, Symbol, Tweet, TweetSignal, TwitterAccount,
+    TokenTracker, TokenTrackerSnapshot,
     WatchWallet, WatchWalletActivity,
 )
 from src.notifications.digest import send_daily_digest_job
@@ -2201,6 +2202,167 @@ async def memecoin_twitter_feed(limit: int = 50, offset: int = 0):
         return feed
 
 
+# =============================================================================
+# Token Tracker Endpoints
+# =============================================================================
+
+
+class TokenTrackerAddRequest(PydanticBaseModel):
+    """Request body for adding a token to the tracker."""
+    mint_address: str
+    refresh_interval_minutes: int = 15
+
+
+class TokenTrackerUpdateRequest(PydanticBaseModel):
+    """Request body for updating a tracked token."""
+    refresh_interval_minutes: int
+
+
+@app.get("/memecoins/tracker")
+async def list_tracked_tokens():
+    """List all active tracked tokens."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(TokenTracker)
+            .where(TokenTracker.is_active == True)  # noqa: E712
+            .order_by(TokenTracker.added_at.desc())
+        )
+        tokens = result.scalars().all()
+
+        return [
+            {
+                "id": t.id,
+                "mintAddress": t.mint_address,
+                "symbol": t.symbol,
+                "name": t.name,
+                "source": t.source,
+                "refreshIntervalMinutes": t.refresh_interval_minutes,
+                "isActive": t.is_active,
+                "latestHolders": t.latest_holders,
+                "latestPriceUsd": float(t.latest_price_usd) if t.latest_price_usd else None,
+                "latestVolume24hUsd": float(t.latest_volume_24h_usd) if t.latest_volume_24h_usd else None,
+                "latestMcapUsd": float(t.latest_mcap_usd) if t.latest_mcap_usd else None,
+                "latestLiquidityUsd": float(t.latest_liquidity_usd) if t.latest_liquidity_usd else None,
+                "lastRefreshedAt": t.last_refreshed_at.isoformat() if t.last_refreshed_at else None,
+                "addedAt": t.added_at.isoformat(),
+            }
+            for t in tokens
+        ]
+
+
+@app.post("/memecoins/tracker")
+async def add_tracked_token(request: TokenTrackerAddRequest):
+    """Add a token to the tracker."""
+    mint = request.mint_address.strip()
+    if not mint or len(mint) > 64:
+        raise HTTPException(400, "Invalid mint address")
+
+    interval = request.refresh_interval_minutes
+    if interval not in (5, 15, 30, 60, 1440):
+        raise HTTPException(400, "Invalid refresh interval. Must be 5, 15, 30, 60, or 1440.")
+
+    from src.memecoins.token_tracker import TokenTrackerService
+
+    async with async_session() as session:
+        service = TokenTrackerService(session)
+        token = await service.add_token(mint, source="manual", interval=interval)
+
+        if not token:
+            raise HTTPException(400, "Token not found on DexScreener")
+
+        return {
+            "id": token.id,
+            "mintAddress": token.mint_address,
+            "symbol": token.symbol,
+            "name": token.name,
+            "source": token.source,
+            "refreshIntervalMinutes": token.refresh_interval_minutes,
+            "isActive": token.is_active,
+            "latestHolders": token.latest_holders,
+            "latestPriceUsd": float(token.latest_price_usd) if token.latest_price_usd else None,
+            "latestVolume24hUsd": float(token.latest_volume_24h_usd) if token.latest_volume_24h_usd else None,
+            "latestMcapUsd": float(token.latest_mcap_usd) if token.latest_mcap_usd else None,
+            "latestLiquidityUsd": float(token.latest_liquidity_usd) if token.latest_liquidity_usd else None,
+            "lastRefreshedAt": token.last_refreshed_at.isoformat() if token.last_refreshed_at else None,
+            "addedAt": token.added_at.isoformat(),
+        }
+
+
+@app.delete("/memecoins/tracker/{mint}")
+async def deactivate_tracked_token(mint: str):
+    """Deactivate a manually-added tracked token."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(TokenTracker).where(TokenTracker.mint_address == mint)
+        )
+        token = result.scalar_one_or_none()
+        if not token:
+            raise HTTPException(404, "Token not found")
+        if token.source != "manual":
+            raise HTTPException(400, "Only manually-added tokens can be deactivated")
+
+        token.is_active = False
+        await session.commit()
+        return {"status": "deactivated", "mintAddress": mint}
+
+
+@app.patch("/memecoins/tracker/{mint}")
+async def update_tracked_token(mint: str, request: TokenTrackerUpdateRequest):
+    """Update refresh interval for a tracked token."""
+    interval = request.refresh_interval_minutes
+    if interval not in (5, 15, 30, 60, 1440):
+        raise HTTPException(400, "Invalid refresh interval. Must be 5, 15, 30, 60, or 1440.")
+
+    async with async_session() as session:
+        result = await session.execute(
+            select(TokenTracker).where(TokenTracker.mint_address == mint)
+        )
+        token = result.scalar_one_or_none()
+        if not token:
+            raise HTTPException(404, "Token not found")
+
+        token.refresh_interval_minutes = interval
+        await session.commit()
+        return {
+            "mintAddress": token.mint_address,
+            "refreshIntervalMinutes": token.refresh_interval_minutes,
+        }
+
+
+@app.get("/memecoins/tracker/{mint}/snapshots")
+async def get_token_snapshots(mint: str, limit: int = 168):
+    """Get historical snapshots for a tracked token."""
+    limit = min(limit, 500)
+    async with async_session() as session:
+        token_result = await session.execute(
+            select(TokenTracker).where(TokenTracker.mint_address == mint)
+        )
+        token = token_result.scalar_one_or_none()
+        if not token:
+            raise HTTPException(404, "Token not found")
+
+        result = await session.execute(
+            select(TokenTrackerSnapshot)
+            .where(TokenTrackerSnapshot.token_id == token.id)
+            .order_by(TokenTrackerSnapshot.snapshot_at.desc())
+            .limit(limit)
+        )
+        snapshots = list(result.scalars().all())
+        snapshots.reverse()  # Chronological order
+
+        return [
+            {
+                "id": s.id,
+                "holders": s.holders,
+                "priceUsd": float(s.price_usd) if s.price_usd else None,
+                "volume24hUsd": float(s.volume_24h_usd) if s.volume_24h_usd else None,
+                "mcapUsd": float(s.mcap_usd) if s.mcap_usd else None,
+                "snapshotAt": s.snapshot_at.isoformat(),
+            }
+            for s in snapshots
+        ]
+
+
 @app.post("/memecoins/twitter/poll")
 async def trigger_memecoin_twitter():
     """Manually trigger a memecoin Twitter poll."""
@@ -2405,6 +2567,27 @@ async def on_startup():
             name=f"Wallet cross-reference (every {settings.memecoin_wallet_poll_minutes}m)",
             replace_existing=True,
             max_instances=1,
+        )
+
+    # Token tracker refresh (every 1 minute — service decides which tokens are due)
+    if settings.memecoin_enabled:
+        from src.memecoins.token_tracker import run_token_tracker_refresh, run_token_tracker_cleanup
+
+        scheduler.add_job(
+            run_token_tracker_refresh,
+            trigger=IntervalTrigger(minutes=1),
+            id="token_tracker_refresh",
+            name="Token tracker refresh (every 1m)",
+            replace_existing=True,
+            max_instances=1,
+        )
+
+        scheduler.add_job(
+            run_token_tracker_cleanup,
+            trigger=CronTrigger(hour=3, minute=30),
+            id="token_tracker_cleanup",
+            name="Token tracker snapshot cleanup (daily at 03:30)",
+            replace_existing=True,
         )
 
     # Memecoin Twitter polling (gated on feature flag)

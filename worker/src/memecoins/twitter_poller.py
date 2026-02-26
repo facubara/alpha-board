@@ -19,6 +19,7 @@ from src.models.db import (
     MemecoinTweet,
     MemecoinTweetSignal,
     MemecoinTwitterAccount,
+    TokenTracker,
 )
 from src.twitter.client import TwitterClient
 from src.memecoins.token_extractor import TokenExtractor
@@ -135,6 +136,9 @@ class MemecoinTwitterPoller:
                 logger.warning(f"Token extraction failed: {e}")
                 errors.append(f"extraction: {e}")
 
+        # 5b. Auto-discover tokens into token_tracker
+        await self._upsert_tracker_tokens(new_tweet_data)
+
         # 6. Run VIP LLM analysis on VIP account tweets
         vip_match_count = 0
         for item in new_tweet_data:
@@ -201,6 +205,51 @@ class MemecoinTwitterPoller:
         }
         logger.info(f"Memecoin Twitter poll: {summary}")
         return summary
+
+    async def _upsert_tracker_tokens(self, tweet_data: list[dict]) -> None:
+        """Auto-discover tokens into token_tracker from tweet token matches.
+
+        Uses ON CONFLICT DO UPDATE to reactivate or update symbol/name
+        without overwriting manual settings like refresh_interval.
+        """
+        from src.models.db import MemecoinTweetToken
+
+        # Gather all unique mints from recent token extraction
+        seen_mints: set[str] = set()
+        for item in tweet_data:
+            db_id = item["db_id"]
+            result = await self.session.execute(
+                select(MemecoinTweetToken).where(
+                    MemecoinTweetToken.tweet_id == db_id,
+                    MemecoinTweetToken.token_mint != None,  # noqa: E711
+                )
+            )
+            for tm in result.scalars().all():
+                if tm.token_mint and tm.token_mint not in seen_mints:
+                    seen_mints.add(tm.token_mint)
+                    try:
+                        stmt = (
+                            pg_insert(TokenTracker)
+                            .values(
+                                mint_address=tm.token_mint,
+                                symbol=tm.token_symbol,
+                                name=tm.token_name,
+                                source="twitter",
+                                refresh_interval_minutes=15,
+                                is_active=True,
+                            )
+                            .on_conflict_do_update(
+                                index_elements=["mint_address"],
+                                set_={
+                                    "is_active": True,
+                                    "symbol": tm.token_symbol or TokenTracker.symbol,
+                                    "name": tm.token_name or TokenTracker.name,
+                                },
+                            )
+                        )
+                        await self.session.execute(stmt)
+                    except Exception as e:
+                        logger.debug(f"Token tracker upsert failed for {tm.token_mint}: {e}")
 
     async def _analyze_sentiment(self, tweet_items: list[dict]) -> int:
         """Run sentiment analysis on new tweets using same pattern as TweetAnalyzer."""
