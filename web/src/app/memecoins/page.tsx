@@ -11,8 +11,7 @@ import {
 import type { EnrichedToken } from "@/lib/types";
 import { StatsBar } from "@/components/memecoins/stats-bar";
 import { TrendingTokens } from "@/components/memecoins/trending-tokens";
-import { WalletLeaderboard } from "@/components/memecoins/wallet-leaderboard";
-import { WalletActivityFeed } from "@/components/memecoins/wallet-activity-feed";
+import { WalletTabs } from "@/components/memecoins/wallet-tabs";
 import { MemecoinAccountManager } from "@/components/memecoins/memecoin-account-manager";
 import { MemecoinTweetFeed } from "@/components/memecoins/memecoin-tweet-feed";
 
@@ -93,7 +92,7 @@ export default async function MemecoinsPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Page header */}
       <div>
         <h1 className="text-xl font-semibold text-primary">Memecoins</h1>
@@ -105,28 +104,42 @@ export default async function MemecoinsPage() {
       {/* Stats */}
       <StatsBar stats={stats} />
 
-      {/* Trending Tokens */}
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-lg font-medium text-primary">Trending Tokens</h2>
-          <p className="mt-0.5 text-xs text-muted">Most mentioned tokens in the last 24 hours</p>
+      {/* Two-column command center */}
+      <div className="flex flex-col gap-6 md:flex-row">
+        {/* Left column — data tables & management (60%) */}
+        <div className="space-y-6 md:w-3/5">
+          {/* Trending Tokens */}
+          <section className="space-y-4">
+            <div>
+              <h2 className="text-lg font-medium text-primary">Trending Tokens</h2>
+              <p className="mt-0.5 text-xs text-muted">Most mentioned tokens in the last 24 hours</p>
+            </div>
+            <TrendingTokens tokens={enrichedTokens} />
+          </section>
+
+          {/* Watch Wallets (tabbed) */}
+          <section className="space-y-4">
+            <h2 className="text-lg font-medium text-primary">Watch Wallets</h2>
+            <WalletTabs wallets={wallets} activity={walletActivity} />
+          </section>
+
+          {/* Tracked Accounts */}
+          <section className="space-y-4">
+            <h2 className="text-lg font-medium text-primary">Tracked Accounts</h2>
+            <MemecoinAccountManager initialAccounts={twitterAccounts} />
+          </section>
         </div>
-        <TrendingTokens tokens={enrichedTokens} />
-      </section>
 
-      {/* Section 1: Watch Wallets */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-medium text-primary">Watch Wallets</h2>
-        <WalletLeaderboard initialWallets={wallets} />
-        <WalletActivityFeed initialActivity={walletActivity} />
-      </section>
-
-      {/* Section 2: Memecoin Twitter Feed */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-medium text-primary">Memecoin Twitter</h2>
-        <MemecoinAccountManager initialAccounts={twitterAccounts} />
-        <MemecoinTweetFeed initialTweets={tweets} />
-      </section>
+        {/* Right column — tweet feed (40%), sticky on desktop */}
+        <div className="md:w-2/5">
+          <div className="md:sticky md:top-[72px] md:max-h-[calc(100vh-72px-24px)] md:overflow-y-auto md:border-l md:border-[var(--border-default)] md:pl-6">
+            <section className="space-y-4">
+              <h2 className="text-lg font-medium text-primary">Memecoin Twitter</h2>
+              <MemecoinTweetFeed initialTweets={tweets} />
+            </section>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
