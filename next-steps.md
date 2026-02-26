@@ -1874,6 +1874,18 @@ Two-phase token extraction: Phase 1 resolves contract addresses from DexScreener
 
 ---
 
+## Token Tracker — Real-Time Market Data — `COMPLETED`
+
+**What:** Enhanced the Trending Tokens table with holder counts, price, volume, historical sparklines, and manual token add-by-mint. Each token gets a per-token configurable refresh interval and source badge (twitter vs manual).
+
+**Data sources:** Helius (holder counts via paginated getTokenAccounts) + DexScreener (price/volume/mcap/liquidity).
+
+- Worker: Alembic migration 026 (token_tracker + token_tracker_snapshots tables), ORM models, Helius count_token_holders(), TokenTrackerService (add/refresh/cleanup), 5 API endpoints, 2 scheduler jobs (1m refresh + daily cleanup)
+- Auto-discovery: Twitter poller upserts extracted tokens into tracker with source="twitter"
+- Web: TrackedToken/TokenSnapshot/EnrichedToken types, Neon queries with batch snapshot fetch, 3 API routes, merge logic in server component, HolderSparkline SVG component, enhanced TrendingTokens with holders column + sparkline, vol 24h, source badges (blue=Twitter, gray=Manual), per-row interval dropdown, and "Add Token" bar
+
+---
+
 ## React Doctor: Remaining Improvements — `PENDING`
 
 **What:** Address the remaining react-doctor findings (score 91/100 → target 97+). These require architectural changes or new dependencies.
