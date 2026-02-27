@@ -162,24 +162,24 @@ export function AnalyticsDashboard({
         <div className="grid gap-6 lg:grid-cols-2">
           <div>
             <h3 className="mb-2 text-sm font-medium text-secondary">
-              PnL by Archetype
+              Avg PnL by Archetype
             </h3>
             <HorizontalBarChart
               items={archetypeStats.map((a) => ({
                 label: STRATEGY_ARCHETYPE_LABELS[a.archetype],
-                value: a.totalPnl,
+                value: a.tradeCount > 0 ? a.totalPnl / a.tradeCount : 0,
                 sublabel: `${a.tradeCount} trades · ${(a.winRate * 100).toFixed(0)}% win · ${pfLabel(a.grossWins, a.grossLosses)}`,
               }))}
             />
           </div>
           <div>
             <h3 className="mb-2 text-sm font-medium text-secondary">
-              PnL by Timeframe
+              Avg PnL by Timeframe
             </h3>
             <HorizontalBarChart
               items={timeframeStats.map((t) => ({
                 label: AGENT_TIMEFRAME_LABELS[t.timeframe],
-                value: t.totalPnl,
+                value: t.tradeCount > 0 ? t.totalPnl / t.tradeCount : 0,
                 sublabel: `${t.tradeCount} trades · ${(t.winRate * 100).toFixed(0)}% win · ${pfLabel(t.grossWins, t.grossLosses)}`,
               }))}
             />
@@ -188,12 +188,12 @@ export function AnalyticsDashboard({
 
         <div>
           <h3 className="mb-2 text-sm font-medium text-secondary">
-            PnL by Source Type
+            Avg PnL by Source Type
           </h3>
           <HorizontalBarChart
             items={sourceStats.map((s) => ({
               label: AGENT_SOURCE_LABELS[s.source],
-              value: s.totalPnl,
+              value: s.tradeCount > 0 ? s.totalPnl / s.tradeCount : 0,
               sublabel: `${s.agentCount} agents · ${s.tradeCount} trades · ${(s.winRate * 100).toFixed(0)}% win · ${pfLabel(s.grossWins, s.grossLosses)}`,
             }))}
           />
@@ -234,7 +234,7 @@ export function AnalyticsDashboard({
             <HorizontalBarChart
               items={directionStats.map((d) => ({
                 label: d.direction === "long" ? "Long" : "Short",
-                value: d.totalPnl,
+                value: d.tradeCount > 0 ? d.totalPnl / d.tradeCount : 0,
                 sublabel: `${d.tradeCount} trades · ${(d.winRate * 100).toFixed(0)}% win · ${pfLabel(d.grossWins, d.grossLosses)}`,
               }))}
             />
