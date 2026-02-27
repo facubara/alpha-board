@@ -6,6 +6,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { formatDuration, formatProfitFactor } from "@/lib/chart-theme";
 import { TablePagination } from "@/components/ui/table-pagination";
 import {
   Table,
@@ -17,10 +18,15 @@ import {
 } from "@/components/ui/table";
 import type { SymbolStats } from "@/lib/types";
 
-type SortKey = "symbol" | "tradeCount" | "winRate" | "totalPnl" | "avgPnl" | "totalFees";
+type SortKey = "symbol" | "tradeCount" | "winRate" | "totalPnl" | "avgPnl" | "totalFees" | "profitFactor" | "avgDurationMinutes";
 
 interface SymbolTableProps {
   data: SymbolStats[];
+}
+
+function getProfitFactor(s: SymbolStats): number {
+  if (s.grossLosses === 0) return s.grossWins > 0 ? Infinity : 0;
+  return s.grossWins / s.grossLosses;
 }
 
 export function SymbolTable({ data }: SymbolTableProps) {
@@ -44,6 +50,7 @@ export function SymbolTable({ data }: SymbolTableProps) {
   const sorted = [...data].sort((a, b) => {
     const dir = sortAsc ? 1 : -1;
     if (sortKey === "symbol") return dir * a.symbol.localeCompare(b.symbol);
+    if (sortKey === "profitFactor") return dir * (getProfitFactor(a) - getProfitFactor(b));
     return dir * (a[sortKey] - b[sortKey]);
   });
 
@@ -100,6 +107,21 @@ export function SymbolTable({ data }: SymbolTableProps) {
             </TableHead>
             <TableHead
               className="cursor-pointer text-right text-xs font-medium text-secondary"
+              onClick={() => handleSort("profitFactor")}
+            >
+              PF{arrow("profitFactor")}
+            </TableHead>
+            <TableHead
+              className="cursor-pointer text-right text-xs font-medium text-secondary"
+              onClick={() => handleSort("avgDurationMinutes")}
+            >
+              Avg Duration{arrow("avgDurationMinutes")}
+            </TableHead>
+            <TableHead className="text-right text-xs font-medium text-secondary">
+              L/S
+            </TableHead>
+            <TableHead
+              className="cursor-pointer text-right text-xs font-medium text-secondary"
               onClick={() => handleSort("totalFees")}
             >
               Fees{arrow("totalFees")}
@@ -137,6 +159,15 @@ export function SymbolTable({ data }: SymbolTableProps) {
                 )}
               >
                 {s.avgPnl >= 0 ? "+" : ""}${s.avgPnl.toFixed(2)}
+              </TableCell>
+              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                {formatProfitFactor(s.grossWins, s.grossLosses)}
+              </TableCell>
+              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                {formatDuration(s.avgDurationMinutes)}
+              </TableCell>
+              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                {s.longCount}L / {s.shortCount}S
               </TableCell>
               <TableCell className="text-right font-mono text-sm tabular-nums text-muted">
                 ${s.totalFees.toFixed(2)}

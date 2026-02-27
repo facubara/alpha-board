@@ -26,9 +26,11 @@ import type {
   ModelCostBreakdown,
   ArchetypeCost,
   AgentDrawdown,
+  DirectionStats,
   StrategyArchetype,
   AgentTimeframe,
 } from "@/lib/types";
+import { formatProfitFactor } from "@/lib/chart-theme";
 import { SummaryCards } from "./summary-cards";
 import { CumulativePnlChart } from "./cumulative-pnl-chart";
 import { HorizontalBarChart } from "./horizontal-bar-chart";
@@ -50,10 +52,15 @@ interface AnalyticsDashboardProps {
   modelCosts: ModelCostBreakdown[];
   archetypeCosts: ArchetypeCost[];
   agentDrawdowns: AgentDrawdown[];
+  directionStats: DirectionStats[];
 }
 
 const tabTriggerClass =
   "rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary";
+
+function pfLabel(grossWins: number, grossLosses: number): string {
+  return `PF ${formatProfitFactor(grossWins, grossLosses)}`;
+}
 
 function FilterButtons<T extends string>({
   label,
@@ -110,6 +117,7 @@ export function AnalyticsDashboard({
   modelCosts,
   archetypeCosts,
   agentDrawdowns,
+  directionStats,
 }: AnalyticsDashboardProps) {
   const [archFilter, setArchFilter] = useState<StrategyArchetype | "all">("all");
   const [tfFilter, setTfFilter] = useState<AgentTimeframe | "all">("all");
@@ -134,9 +142,6 @@ export function AnalyticsDashboard({
         </TabsTrigger>
         <TabsTrigger value="symbols" className={tabTriggerClass}>
           Symbols
-        </TabsTrigger>
-        <TabsTrigger value="sources" className={tabTriggerClass}>
-          Sources
         </TabsTrigger>
         <TabsTrigger value="costs" className={tabTriggerClass}>
           Costs
@@ -163,7 +168,7 @@ export function AnalyticsDashboard({
               items={archetypeStats.map((a) => ({
                 label: STRATEGY_ARCHETYPE_LABELS[a.archetype],
                 value: a.totalPnl,
-                sublabel: `${a.tradeCount} trades · ${(a.winRate * 100).toFixed(0)}% win`,
+                sublabel: `${a.tradeCount} trades · ${(a.winRate * 100).toFixed(0)}% win · ${pfLabel(a.grossWins, a.grossLosses)}`,
               }))}
             />
           </div>
@@ -175,10 +180,23 @@ export function AnalyticsDashboard({
               items={timeframeStats.map((t) => ({
                 label: AGENT_TIMEFRAME_LABELS[t.timeframe],
                 value: t.totalPnl,
-                sublabel: `${t.tradeCount} trades · ${(t.winRate * 100).toFixed(0)}% win`,
+                sublabel: `${t.tradeCount} trades · ${(t.winRate * 100).toFixed(0)}% win · ${pfLabel(t.grossWins, t.grossLosses)}`,
               }))}
             />
           </div>
+        </div>
+
+        <div>
+          <h3 className="mb-2 text-sm font-medium text-secondary">
+            PnL by Source Type
+          </h3>
+          <HorizontalBarChart
+            items={sourceStats.map((s) => ({
+              label: AGENT_SOURCE_LABELS[s.source],
+              value: s.totalPnl,
+              sublabel: `${s.agentCount} agents · ${s.tradeCount} trades · ${(s.winRate * 100).toFixed(0)}% win · ${pfLabel(s.grossWins, s.grossLosses)}`,
+            }))}
+          />
         </div>
       </TabsContent>
 
@@ -208,6 +226,21 @@ export function AnalyticsDashboard({
           <ArchetypeCurvesChart data={dailyArchetypePnl} />
         </div>
 
+        {directionStats.length > 0 && (
+          <div>
+            <h3 className="mb-2 text-sm font-medium text-secondary">
+              Long vs Short
+            </h3>
+            <HorizontalBarChart
+              items={directionStats.map((d) => ({
+                label: d.direction === "long" ? "Long" : "Short",
+                value: d.totalPnl,
+                sublabel: `${d.tradeCount} trades · ${(d.winRate * 100).toFixed(0)}% win · ${pfLabel(d.grossWins, d.grossLosses)}`,
+              }))}
+            />
+          </div>
+        )}
+
         <div>
           <h3 className="mb-2 text-sm font-medium text-secondary">
             Agents in Drawdown ({filteredDrawdowns.length})
@@ -226,73 +259,14 @@ export function AnalyticsDashboard({
         </div>
       </TabsContent>
 
-      {/* Sources Tab */}
-      <TabsContent value="sources" className="space-y-6 pt-4">
-        <div>
-          <h3 className="mb-2 text-sm font-medium text-secondary">
-            PnL by Source Type
-          </h3>
-          <HorizontalBarChart
-            items={sourceStats.map((s) => ({
-              label: AGENT_SOURCE_LABELS[s.source],
-              value: s.totalPnl,
-              sublabel: `${s.agentCount} agents · ${s.tradeCount} trades · ${(s.winRate * 100).toFixed(0)}% win`,
-            }))}
-          />
-        </div>
-
-        <div>
-          <h3 className="mb-2 text-sm font-medium text-secondary">
-            Source Breakdown
-          </h3>
-          <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-                  <th className="px-4 py-2 text-left text-xs font-medium text-secondary">Source</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-secondary">Agents</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-secondary">Trades</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-secondary">Win Rate</th>
-                  <th className="px-4 py-2 text-right text-xs font-medium text-secondary">PnL</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sourceStats.map((s) => (
-                  <tr key={s.source} className="border-b border-[var(--border-subtle)] last:border-0">
-                    <td className="px-4 py-2 font-medium text-primary">
-                      <span
-                        className={`mr-2 inline-flex items-center rounded px-1.5 py-0.5 font-mono text-xs font-bold ${
-                          s.source === "tweet"
-                            ? "bg-[var(--accent-teal)]/10 text-[var(--accent-teal)]"
-                            : s.source === "hybrid"
-                              ? "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)]"
-                              : "bg-[var(--bg-muted)] text-muted"
-                        }`}
-                      >
-                        {s.source === "tweet" ? "TW" : s.source === "hybrid" ? "HYB" : "TECH"}
-                      </span>
-                      {AGENT_SOURCE_LABELS[s.source]}
-                    </td>
-                    <td className="px-4 py-2 text-right font-mono tabular-nums text-secondary">{s.agentCount}</td>
-                    <td className="px-4 py-2 text-right font-mono tabular-nums text-secondary">{s.tradeCount}</td>
-                    <td className="px-4 py-2 text-right font-mono tabular-nums text-secondary">
-                      {s.tradeCount > 0 ? `${(s.winRate * 100).toFixed(1)}%` : "—"}
-                    </td>
-                    <td className={`px-4 py-2 text-right font-mono font-semibold tabular-nums ${
-                      s.totalPnl > 0 ? "text-bullish" : s.totalPnl < 0 ? "text-bearish" : "text-secondary"
-                    }`}>
-                      {s.totalPnl >= 0 ? "+" : ""}{s.totalPnl.toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </TabsContent>
-
       {/* Costs Tab */}
       <TabsContent value="costs" className="space-y-6 pt-4">
+        <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
+          <span className="text-xs text-muted">Total Token Cost</span>
+          <span className="ml-3 font-mono text-lg font-semibold text-primary">
+            ${summary.totalTokenCost.toFixed(2)}
+          </span>
+        </div>
         <DailyCostChart data={dailyTokenCost} />
         <CostBreakdownTable
           modelCosts={modelCosts}

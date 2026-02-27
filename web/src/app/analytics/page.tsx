@@ -18,6 +18,7 @@ import {
   getModelCostBreakdown,
   getArchetypeCost,
   getAgentDrawdowns,
+  getDirectionStats,
 } from "@/lib/queries/analytics";
 import { AnalyticsDashboard } from "@/components/analytics/analytics-dashboard";
 
@@ -36,6 +37,7 @@ export default async function AnalyticsPage() {
     modelCosts,
     archetypeCosts,
     agentDrawdowns,
+    directionStats,
   ] = await Promise.all([
     getAnalyticsSummary(),
     getArchetypeStats(),
@@ -48,6 +50,7 @@ export default async function AnalyticsPage() {
     getModelCostBreakdown(),
     getArchetypeCost(),
     getAgentDrawdowns(),
+    getDirectionStats(),
   ]);
 
   return (
@@ -87,6 +90,7 @@ export default async function AnalyticsPage() {
         modelCosts={modelCosts}
         archetypeCosts={archetypeCosts}
         agentDrawdowns={agentDrawdowns}
+        directionStats={directionStats}
       />
       </div>
     </div>

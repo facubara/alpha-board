@@ -98,24 +98,38 @@ export function CostBreakdownTable({
                   <TableHead className="text-xs font-medium text-secondary">Archetype</TableHead>
                   <TableHead className="text-right text-xs font-medium text-secondary">Total Tokens</TableHead>
                   <TableHead className="text-right text-xs font-medium text-secondary">Total Cost</TableHead>
+                  <TableHead className="text-right text-xs font-medium text-secondary">Cost/Trade</TableHead>
+                  <TableHead className="text-right text-xs font-medium text-secondary">ROI</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {archetypeCosts.map((a) => (
-                  <TableRow key={a.archetype} className="h-10 hover:bg-[var(--bg-elevated)]">
-                    <TableCell>
-                      <span className="rounded bg-[var(--bg-muted)] px-2 py-0.5 text-xs font-medium text-secondary">
-                        {STRATEGY_ARCHETYPE_LABELS[a.archetype]}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
-                      {formatTokens(a.totalTokens)}
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-sm font-semibold tabular-nums text-primary">
-                      ${a.totalCost.toFixed(4)}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {archetypeCosts.map((a) => {
+                  const costPerTrade = a.tradeCount > 0 ? a.totalCost / a.tradeCount : 0;
+                  const roi = a.totalCost > 0 ? a.totalPnl / a.totalCost : 0;
+                  return (
+                    <TableRow key={a.archetype} className="h-10 hover:bg-[var(--bg-elevated)]">
+                      <TableCell>
+                        <span className="rounded bg-[var(--bg-muted)] px-2 py-0.5 text-xs font-medium text-secondary">
+                          {STRATEGY_ARCHETYPE_LABELS[a.archetype]}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                        {formatTokens(a.totalTokens)}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-sm font-semibold tabular-nums text-primary">
+                        ${a.totalCost.toFixed(4)}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                        {a.tradeCount > 0 ? `$${costPerTrade.toFixed(4)}` : "—"}
+                      </TableCell>
+                      <TableCell className={`text-right font-mono text-sm font-semibold tabular-nums ${
+                        roi > 0 ? "text-bullish" : roi < 0 ? "text-bearish" : "text-secondary"
+                      }`}>
+                        {a.totalCost > 0 ? `${roi >= 0 ? "+" : ""}${roi.toFixed(1)}x` : "—"}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>

@@ -413,6 +413,9 @@ export interface AnalyticsSummary {
   totalTokenCost: number;
   totalInitialBalance: number;
   maxDrawdownPct: number;
+  grossWins: number;
+  grossLosses: number;
+  activeAgents: number;
 }
 
 export interface ArchetypeStats {
@@ -422,6 +425,9 @@ export interface ArchetypeStats {
   tradeCount: number;
   wins: number;
   winRate: number;
+  grossWins: number;
+  grossLosses: number;
+  avgDurationMinutes: number;
 }
 
 export interface SourceStats {
@@ -431,6 +437,9 @@ export interface SourceStats {
   tradeCount: number;
   wins: number;
   winRate: number;
+  grossWins: number;
+  grossLosses: number;
+  avgDurationMinutes: number;
 }
 
 export interface TimeframeStats {
@@ -440,6 +449,9 @@ export interface TimeframeStats {
   tradeCount: number;
   wins: number;
   winRate: number;
+  grossWins: number;
+  grossLosses: number;
+  avgDurationMinutes: number;
 }
 
 export interface DailyPnl {
@@ -464,6 +476,11 @@ export interface SymbolStats {
   totalPnl: number;
   avgPnl: number;
   totalFees: number;
+  grossWins: number;
+  grossLosses: number;
+  avgDurationMinutes: number;
+  longCount: number;
+  shortCount: number;
 }
 
 export interface DailyTokenCost {
@@ -485,6 +502,8 @@ export interface ArchetypeCost {
   archetype: StrategyArchetype;
   totalCost: number;
   totalTokens: number;
+  tradeCount: number;
+  totalPnl: number;
 }
 
 export interface AgentDrawdown {
@@ -495,6 +514,17 @@ export interface AgentDrawdown {
   peakEquity: number;
   totalEquity: number;
   drawdownPct: number;
+}
+
+export interface DirectionStats {
+  direction: "long" | "short";
+  tradeCount: number;
+  wins: number;
+  winRate: number;
+  totalPnl: number;
+  grossWins: number;
+  grossLosses: number;
+  avgDurationMinutes: number;
 }
 
 // =============================================================================

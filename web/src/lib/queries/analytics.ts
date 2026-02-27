@@ -19,6 +19,7 @@ import type {
   ModelCostBreakdown,
   ArchetypeCost,
   AgentDrawdown,
+  DirectionStats,
   AgentSource,
   StrategyArchetype,
   AgentTimeframe,
@@ -36,7 +37,10 @@ export function getAnalyticsSummary(): Promise<AnalyticsSummary> {
         COALESCE(SUM(p.total_fees_paid), 0) as total_fees,
         (SELECT COUNT(*) FROM agent_trades) as total_trades,
         (SELECT COUNT(*) FILTER (WHERE pnl > 0) FROM agent_trades) as total_wins,
-        (SELECT COALESCE(SUM(estimated_cost_usd), 0) FROM agent_token_usage) as total_token_cost
+        (SELECT COALESCE(SUM(estimated_cost_usd), 0) FROM agent_token_usage) as total_token_cost,
+        (SELECT COALESCE(SUM(pnl), 0) FROM agent_trades WHERE pnl > 0) as gross_wins,
+        (SELECT COALESCE(ABS(SUM(pnl)), 0) FROM agent_trades WHERE pnl < 0) as gross_losses,
+        (SELECT COUNT(*) FROM agents WHERE status = 'active') as active_agents
       FROM agents a
       JOIN agent_portfolios p ON a.id = p.agent_id
     `;
@@ -62,6 +66,9 @@ export function getAnalyticsSummary(): Promise<AnalyticsSummary> {
       totalTokenCost: Number(rows[0].total_token_cost),
       totalInitialBalance: Number(rows[0].total_initial_balance),
       maxDrawdownPct: Math.min(0, Number(ddRows[0].max_drawdown_pct)),
+      grossWins: Number(rows[0].gross_wins),
+      grossLosses: Number(rows[0].gross_losses),
+      activeAgents: Number(rows[0].active_agents),
     };
   });
 }
@@ -77,14 +84,23 @@ export function getArchetypeStats(): Promise<ArchetypeStats[]> {
         COUNT(DISTINCT a.id) as agent_count,
         COALESCE(SUM(p.total_equity - a.initial_balance), 0) as total_pnl,
         COALESCE(SUM(sub.trade_count), 0) as trade_count,
-        COALESCE(SUM(sub.wins), 0) as wins
+        COALESCE(SUM(sub.wins), 0) as wins,
+        COALESCE(SUM(sub.gross_wins), 0) as gross_wins,
+        COALESCE(SUM(sub.gross_losses), 0) as gross_losses,
+        CASE WHEN COALESCE(SUM(sub.trade_count), 0) > 0
+          THEN SUM(sub.avg_duration * sub.trade_count) / SUM(sub.trade_count)
+          ELSE 0
+        END as avg_duration_minutes
       FROM agents a
       JOIN agent_portfolios p ON a.id = p.agent_id
       LEFT JOIN (
         SELECT
           agent_id,
           COUNT(*) as trade_count,
-          COUNT(*) FILTER (WHERE pnl > 0) as wins
+          COUNT(*) FILTER (WHERE pnl > 0) as wins,
+          COALESCE(SUM(pnl) FILTER (WHERE pnl > 0), 0) as gross_wins,
+          COALESCE(ABS(SUM(pnl) FILTER (WHERE pnl < 0)), 0) as gross_losses,
+          AVG(duration_minutes) as avg_duration
         FROM agent_trades
         GROUP BY agent_id
       ) sub ON sub.agent_id = a.id
@@ -102,6 +118,9 @@ export function getArchetypeStats(): Promise<ArchetypeStats[]> {
         tradeCount,
         wins,
         winRate: tradeCount > 0 ? wins / tradeCount : 0,
+        grossWins: Number(r.gross_wins),
+        grossLosses: Number(r.gross_losses),
+        avgDurationMinutes: Number(r.avg_duration_minutes),
       };
     });
   });
@@ -118,14 +137,23 @@ export function getSourceStats(): Promise<SourceStats[]> {
         COUNT(DISTINCT a.id) as agent_count,
         COALESCE(SUM(p.total_equity - a.initial_balance), 0) as total_pnl,
         COALESCE(SUM(sub.trade_count), 0) as trade_count,
-        COALESCE(SUM(sub.wins), 0) as wins
+        COALESCE(SUM(sub.wins), 0) as wins,
+        COALESCE(SUM(sub.gross_wins), 0) as gross_wins,
+        COALESCE(SUM(sub.gross_losses), 0) as gross_losses,
+        CASE WHEN COALESCE(SUM(sub.trade_count), 0) > 0
+          THEN SUM(sub.avg_duration * sub.trade_count) / SUM(sub.trade_count)
+          ELSE 0
+        END as avg_duration_minutes
       FROM agents a
       JOIN agent_portfolios p ON a.id = p.agent_id
       LEFT JOIN (
         SELECT
           agent_id,
           COUNT(*) as trade_count,
-          COUNT(*) FILTER (WHERE pnl > 0) as wins
+          COUNT(*) FILTER (WHERE pnl > 0) as wins,
+          COALESCE(SUM(pnl) FILTER (WHERE pnl > 0), 0) as gross_wins,
+          COALESCE(ABS(SUM(pnl) FILTER (WHERE pnl < 0)), 0) as gross_losses,
+          AVG(duration_minutes) as avg_duration
         FROM agent_trades
         GROUP BY agent_id
       ) sub ON sub.agent_id = a.id
@@ -143,6 +171,9 @@ export function getSourceStats(): Promise<SourceStats[]> {
         tradeCount,
         wins,
         winRate: tradeCount > 0 ? wins / tradeCount : 0,
+        grossWins: Number(r.gross_wins),
+        grossLosses: Number(r.gross_losses),
+        avgDurationMinutes: Number(r.avg_duration_minutes),
       };
     });
   });
@@ -159,14 +190,23 @@ export function getTimeframeStats(): Promise<TimeframeStats[]> {
         COUNT(DISTINCT a.id) as agent_count,
         COALESCE(SUM(p.total_equity - a.initial_balance), 0) as total_pnl,
         COALESCE(SUM(sub.trade_count), 0) as trade_count,
-        COALESCE(SUM(sub.wins), 0) as wins
+        COALESCE(SUM(sub.wins), 0) as wins,
+        COALESCE(SUM(sub.gross_wins), 0) as gross_wins,
+        COALESCE(SUM(sub.gross_losses), 0) as gross_losses,
+        CASE WHEN COALESCE(SUM(sub.trade_count), 0) > 0
+          THEN SUM(sub.avg_duration * sub.trade_count) / SUM(sub.trade_count)
+          ELSE 0
+        END as avg_duration_minutes
       FROM agents a
       JOIN agent_portfolios p ON a.id = p.agent_id
       LEFT JOIN (
         SELECT
           agent_id,
           COUNT(*) as trade_count,
-          COUNT(*) FILTER (WHERE pnl > 0) as wins
+          COUNT(*) FILTER (WHERE pnl > 0) as wins,
+          COALESCE(SUM(pnl) FILTER (WHERE pnl > 0), 0) as gross_wins,
+          COALESCE(ABS(SUM(pnl) FILTER (WHERE pnl < 0)), 0) as gross_losses,
+          AVG(duration_minutes) as avg_duration
         FROM agent_trades
         GROUP BY agent_id
       ) sub ON sub.agent_id = a.id
@@ -184,6 +224,9 @@ export function getTimeframeStats(): Promise<TimeframeStats[]> {
         tradeCount,
         wins,
         winRate: tradeCount > 0 ? wins / tradeCount : 0,
+        grossWins: Number(r.gross_wins),
+        grossLosses: Number(r.gross_losses),
+        avgDurationMinutes: Number(r.avg_duration_minutes),
       };
     });
   });
@@ -258,7 +301,12 @@ export function getSymbolStats(): Promise<SymbolStats[]> {
         COUNT(*) FILTER (WHERE t.pnl > 0) as wins,
         SUM(t.pnl) as total_pnl,
         AVG(t.pnl) as avg_pnl,
-        SUM(t.fees) as total_fees
+        SUM(t.fees) as total_fees,
+        COALESCE(SUM(t.pnl) FILTER (WHERE t.pnl > 0), 0) as gross_wins,
+        COALESCE(ABS(SUM(t.pnl) FILTER (WHERE t.pnl < 0)), 0) as gross_losses,
+        AVG(t.duration_minutes) as avg_duration_minutes,
+        COUNT(*) FILTER (WHERE t.direction = 'long') as long_count,
+        COUNT(*) FILTER (WHERE t.direction = 'short') as short_count
       FROM agent_trades t
       JOIN symbols sym ON sym.id = t.symbol_id
       GROUP BY sym.symbol
@@ -277,6 +325,11 @@ export function getSymbolStats(): Promise<SymbolStats[]> {
         totalPnl: Number(r.total_pnl),
         avgPnl: Number(r.avg_pnl),
         totalFees: Number(r.total_fees),
+        grossWins: Number(r.gross_wins),
+        grossLosses: Number(r.gross_losses),
+        avgDurationMinutes: Number(r.avg_duration_minutes),
+        longCount: Number(r.long_count),
+        shortCount: Number(r.short_count),
       };
     });
   });
@@ -344,9 +397,16 @@ export function getArchetypeCost(): Promise<ArchetypeCost[]> {
       SELECT
         a.strategy_archetype,
         COALESCE(SUM(tu.estimated_cost_usd), 0) as total_cost,
-        COALESCE(SUM(tu.input_tokens + tu.output_tokens), 0) as total_tokens
+        COALESCE(SUM(tu.input_tokens + tu.output_tokens), 0) as total_tokens,
+        COALESCE(SUM(trades.trade_count), 0) as trade_count,
+        COALESCE(SUM(trades.total_pnl), 0) as total_pnl
       FROM agents a
       LEFT JOIN agent_token_usage tu ON tu.agent_id = a.id
+      LEFT JOIN (
+        SELECT agent_id, COUNT(*) as trade_count, SUM(pnl) as total_pnl
+        FROM agent_trades
+        GROUP BY agent_id
+      ) trades ON trades.agent_id = a.id
       GROUP BY a.strategy_archetype
       ORDER BY total_cost DESC
     `;
@@ -355,7 +415,44 @@ export function getArchetypeCost(): Promise<ArchetypeCost[]> {
       archetype: r.strategy_archetype as StrategyArchetype,
       totalCost: Number(r.total_cost),
       totalTokens: Number(r.total_tokens),
+      tradeCount: Number(r.trade_count),
+      totalPnl: Number(r.total_pnl),
     }));
+  });
+}
+
+/**
+ * Long vs Short fleet-wide breakdown.
+ */
+export function getDirectionStats(): Promise<DirectionStats[]> {
+  return cached("analytics:direction_stats", 120, async () => {
+    const rows = await sql`
+      SELECT
+        direction,
+        COUNT(*) as trade_count,
+        COUNT(*) FILTER (WHERE pnl > 0) as wins,
+        COALESCE(SUM(pnl), 0) as total_pnl,
+        COALESCE(SUM(pnl) FILTER (WHERE pnl > 0), 0) as gross_wins,
+        COALESCE(ABS(SUM(pnl) FILTER (WHERE pnl < 0)), 0) as gross_losses,
+        AVG(duration_minutes) as avg_duration_minutes
+      FROM agent_trades
+      GROUP BY direction
+    `;
+
+    return rows.map((r) => {
+      const tradeCount = Number(r.trade_count);
+      const wins = Number(r.wins);
+      return {
+        direction: r.direction as "long" | "short",
+        tradeCount,
+        wins,
+        winRate: tradeCount > 0 ? wins / tradeCount : 0,
+        totalPnl: Number(r.total_pnl),
+        grossWins: Number(r.gross_wins),
+        grossLosses: Number(r.gross_losses),
+        avgDurationMinutes: Number(r.avg_duration_minutes),
+      };
+    });
   });
 }
 

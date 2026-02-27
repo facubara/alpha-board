@@ -5,6 +5,7 @@
  */
 
 import { cn } from "@/lib/utils";
+import { formatProfitFactor } from "@/lib/chart-theme";
 import type { AnalyticsSummary } from "@/lib/types";
 
 interface SummaryCardsProps {
@@ -12,15 +13,26 @@ interface SummaryCardsProps {
 }
 
 export function SummaryCards({ summary }: SummaryCardsProps) {
-  const returnPct =
-    summary.totalInitialBalance > 0
-      ? (summary.totalPnl / summary.totalInitialBalance) * 100
-      : 0;
-
   const winRate =
     summary.totalTrades > 0 ? summary.totalWins / summary.totalTrades : 0;
 
+  const avgPnlPerTrade =
+    summary.totalTrades > 0 ? summary.totalPnl / summary.totalTrades : 0;
+
+  const profitFactor =
+    summary.grossLosses > 0
+      ? summary.grossWins / summary.grossLosses
+      : summary.grossWins > 0
+        ? Infinity
+        : 0;
+
   const metrics = [
+    {
+      label: "Active Agents",
+      value: String(summary.activeAgents),
+      color: "text-primary",
+      size: "text-lg" as const,
+    },
     {
       label: "Total Trades",
       value: String(summary.totalTrades),
@@ -34,23 +46,25 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
       size: "text-lg" as const,
     },
     {
-      label: "Total PnL",
-      value: `${summary.totalPnl >= 0 ? "+" : ""}$${summary.totalPnl.toFixed(2)}`,
+      label: "Avg PnL / Trade",
+      value: summary.totalTrades > 0
+        ? `${avgPnlPerTrade >= 0 ? "+" : ""}$${avgPnlPerTrade.toFixed(2)}`
+        : "—",
       color:
-        summary.totalPnl > 0
+        avgPnlPerTrade > 0
           ? "text-bullish"
-          : summary.totalPnl < 0
+          : avgPnlPerTrade < 0
             ? "text-bearish"
             : "text-secondary",
       size: "text-base" as const,
     },
     {
-      label: "Return %",
-      value: `${returnPct >= 0 ? "+" : ""}${returnPct.toFixed(2)}%`,
+      label: "Profit Factor",
+      value: formatProfitFactor(summary.grossWins, summary.grossLosses),
       color:
-        returnPct > 0
+        profitFactor > 1
           ? "text-bullish"
-          : returnPct < 0
+          : profitFactor < 1 && profitFactor > 0
             ? "text-bearish"
             : "text-secondary",
       size: "text-base" as const,
@@ -62,12 +76,6 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           ? `${summary.maxDrawdownPct.toFixed(2)}%`
           : "0.00%",
       color: summary.maxDrawdownPct < 0 ? "text-bearish" : "text-secondary",
-      size: "text-base" as const,
-    },
-    {
-      label: "Token Cost",
-      value: `$${summary.totalTokenCost.toFixed(2)}`,
-      color: "text-muted",
       size: "text-base" as const,
     },
   ];
