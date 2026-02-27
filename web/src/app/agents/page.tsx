@@ -24,7 +24,7 @@ export default async function AgentsPage() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-xl font-semibold text-primary">Agent Arena</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-primary">Agent Arena</h1>
         <p className="mt-1 text-sm text-secondary">
           {agents.length} AI trading agents competing in simulated markets
           {discarded.length > 0 && (
@@ -38,14 +38,33 @@ export default async function AgentsPage() {
         SIMULATED TRADING — All balances and trades are virtual. Not financial advice.
       </div>
 
+      {/* Agent type legend */}
+      <details className="text-sm text-secondary">
+        <summary className="cursor-pointer font-medium text-primary hover:text-secondary">Agent types</summary>
+        <p className="mt-2 text-xs text-muted">
+          <span className="font-medium text-secondary">RB</span> = Rule-Based &middot;{" "}
+          <span className="font-medium text-secondary">HYB</span> = Hybrid &middot;{" "}
+          <span className="font-medium text-secondary">TW-LLM</span> = Twitter LLM &middot;{" "}
+          <span className="font-medium text-secondary">LLM</span> = Pure LLM
+        </p>
+      </details>
+
       {/* Leaderboard */}
       <AgentLeaderboard agents={agents} />
 
       {/* Fleet lessons section */}
-      {fleetLessons.length > 0 && <FleetLessons lessons={fleetLessons} />}
+      {fleetLessons.length > 0 && (
+        <div className="border-t border-[var(--border-default)] pt-6">
+          <FleetLessons lessons={fleetLessons} />
+        </div>
+      )}
 
       {/* Discarded agents section */}
-      {discarded.length > 0 && <DiscardedAgents agents={discarded} />}
+      {discarded.length > 0 && (
+        <div className="border-t border-[var(--border-default)] pt-6">
+          <DiscardedAgents agents={discarded} />
+        </div>
+      )}
     </div>
   );
 }

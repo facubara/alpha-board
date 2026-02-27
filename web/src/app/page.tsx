@@ -45,6 +45,11 @@ export default async function RankingsPage() {
         </div>
       </div>
 
+      {/* Social proof */}
+      <p className="text-sm text-secondary">
+        135 AI Agents &middot; 15,000+ Trades &middot; 6 Timeframes &middot; 580 Accounts Tracked
+      </p>
+
       {/* Page header */}
       <div>
         <h2 className="text-xl font-semibold text-primary">Rankings</h2>

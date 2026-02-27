@@ -95,9 +95,9 @@ export default async function MemecoinsPage() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-xl font-semibold text-primary">Memecoins</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-primary">Memecoins</h1>
         <p className="mt-1 text-sm text-secondary">
-          Token analysis, wallet cross-referencing, live activity monitoring, and memecoin Twitter intelligence.
+          Track smart wallets, analyze early buyers, and cross-reference memecoin signals
         </p>
       </div>
 

@@ -240,19 +240,28 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                 <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
                   <TableHead
                     className="w-12 cursor-pointer select-none pr-2 text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                    tabIndex={0}
+                    role="button"
                     onClick={() => handleSort("rank")}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSort("rank"); } }}
                   >
                     #<SortIndicator field="rank" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="w-28 cursor-pointer select-none text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                    tabIndex={0}
+                    role="button"
                     onClick={() => handleSort("symbol")}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSort("symbol"); } }}
                   >
                     Symbol<SortIndicator field="symbol" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
                     className="w-44 cursor-pointer select-none text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                    tabIndex={0}
+                    role="button"
                     onClick={() => handleSort("score")}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSort("score"); } }}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.score!} side="bottom">
                       <span className="cursor-pointer">Score<SortIndicator field="score" sortField={sortField} sortDirection={sortDirection} /></span>
@@ -260,7 +269,10 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                   </TableHead>
                   <TableHead
                     className="w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                    tabIndex={0}
+                    role="button"
                     onClick={() => handleSort("confidence")}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSort("confidence"); } }}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.confidence!} side="bottom">
                       <span className="cursor-pointer">Conf<SortIndicator field="confidence" sortField={sortField} sortDirection={sortDirection} /></span>
@@ -268,7 +280,10 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                   </TableHead>
                   <TableHead
                     className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
+                    tabIndex={0}
+                    role="button"
                     onClick={() => handleSort("priceChange")}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSort("priceChange"); } }}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.priceChange!} side="bottom">
                       <span className="cursor-pointer">Price %<SortIndicator field="priceChange" sortField={sortField} sortDirection={sortDirection} /></span>
@@ -276,7 +291,10 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                   </TableHead>
                   <TableHead
                     className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                    tabIndex={0}
+                    role="button"
                     onClick={() => handleSort("priceChangeAbs")}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSort("priceChangeAbs"); } }}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.priceChangeAbs!} side="bottom">
                       <span className="cursor-pointer">Price Δ<SortIndicator field="priceChangeAbs" sortField={sortField} sortDirection={sortDirection} /></span>
@@ -284,7 +302,10 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                   </TableHead>
                   <TableHead
                     className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
+                    tabIndex={0}
+                    role="button"
                     onClick={() => handleSort("volumeChange")}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSort("volumeChange"); } }}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.volumeChange!} side="bottom">
                       <span className="cursor-pointer">Vol %<SortIndicator field="volumeChange" sortField={sortField} sortDirection={sortDirection} /></span>
@@ -292,7 +313,10 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                   </TableHead>
                   <TableHead
                     className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                    tabIndex={0}
+                    role="button"
                     onClick={() => handleSort("volumeChangeAbs")}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSort("volumeChangeAbs"); } }}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.volumeChangeAbs!} side="bottom">
                       <span className="cursor-pointer">Vol Δ<SortIndicator field="volumeChangeAbs" sortField={sortField} sortDirection={sortDirection} /></span>
@@ -300,7 +324,10 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                   </TableHead>
                   <TableHead
                     className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                    tabIndex={0}
+                    role="button"
                     onClick={() => handleSort("fundingRate")}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleSort("fundingRate"); } }}
                   >
                     <InfoTooltip content={COLUMN_TOOLTIPS.fundingRate!} side="bottom">
                       <span className="cursor-pointer">Funding<SortIndicator field="fundingRate" sortField={sortField} sortDirection={sortDirection} /></span>

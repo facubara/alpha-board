@@ -219,5 +219,5 @@ export function CandlestickChart({
     };
   }, [data, height, showVolume, showEMA, showBollingerBands, tradeMarkers]);
 
-  return <div ref={containerRef} className="w-full" />;
+  return <div ref={containerRef} className="w-full" role="img" aria-label="Price chart" />;
 }

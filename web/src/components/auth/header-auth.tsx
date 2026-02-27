@@ -13,7 +13,7 @@ export function HeaderAuth() {
         className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
       >
         <LogOut className="h-3.5 w-3.5" />
-        Logout
+        Sign Out
       </button>
     );
   }
@@ -24,7 +24,7 @@ export function HeaderAuth() {
       className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
     >
       <Lock className="h-3.5 w-3.5" />
-      Login
+      Sign In
     </button>
   );
 }

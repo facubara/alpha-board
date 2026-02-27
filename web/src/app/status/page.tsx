@@ -29,9 +29,9 @@ export default async function StatusRoute() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-semibold text-primary">System Status</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-primary">System Status</h1>
         <p className="mt-1 text-sm text-muted">
-          Operational health of all Alpha Board services
+          Real-time health monitoring for pipeline, agents, and services
         </p>
       </div>
 

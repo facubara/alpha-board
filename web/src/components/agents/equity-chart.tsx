@@ -98,6 +98,8 @@ export function EquityChart({
           viewBox={`0 0 ${width} ${height}`}
           className="w-full"
           preserveAspectRatio="none"
+          role="img"
+          aria-label="Equity curve"
         >
           {/* Grid lines */}
           <line

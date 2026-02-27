@@ -21,10 +21,9 @@ export default async function SettingsRoute() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-semibold text-primary">Settings</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-primary">Settings</h1>
         <p className="mt-1 text-sm text-muted">
-          Control which LLM sections are active. Disabled sections skip API
-          calls to save costs. Changes take effect on the next pipeline cycle.
+          Configure exchange connections, notifications, and LLM models
         </p>
       </div>
 

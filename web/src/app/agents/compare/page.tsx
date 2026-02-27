@@ -40,7 +40,7 @@ export default async function AgentComparePage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-primary">Agent Comparison</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-primary">Agent Comparison</h1>
         <p className="mt-1 text-sm text-secondary">
           Comparing {data.agents.length} agents side-by-side
         </p>

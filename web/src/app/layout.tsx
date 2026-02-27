@@ -7,6 +7,7 @@ import { LogoSwitcher } from "@/components/logo-switcher";
 import { NavLinks } from "@/components/nav-links";
 import { TradeNotificationWrapper, SidebarToggleButton, TradeSidebar, TradeToast } from "@/components/trades";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Footer } from "@/components/footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,6 +42,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-[var(--bg-base)] font-sans text-[var(--text-primary)] antialiased`}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded focus:bg-[var(--bg-elevated)] focus:px-4 focus:py-2 focus:text-sm focus:text-primary"
+        >
+          Skip to content
+        </a>
         <AuthProvider>
         <TradeNotificationWrapper>
         <TooltipProvider>
@@ -63,9 +70,12 @@ export default function RootLayout({
           <ConsensusBannerWrapper />
 
           {/* Main content */}
-          <main className="mx-auto max-w-[1200px] px-4 py-6 sm:px-8">
+          <main id="main-content" className="mx-auto max-w-[1200px] px-4 py-6 sm:px-8">
             {children}
           </main>
+
+          {/* Footer */}
+          <Footer />
 
           {/* Trade sidebar + toast */}
           <TradeSidebar />

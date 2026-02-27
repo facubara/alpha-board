@@ -23,6 +23,7 @@ export function TradeSidebar() {
 
       {/* Sidebar panel */}
       <aside
+        aria-label="Trade feed"
         className={`fixed bottom-0 right-0 top-14 z-40 w-full border-l border-[var(--border-default)] bg-[var(--bg-base)] transition-transform duration-200 ease-in-out sm:w-96 ${
           sidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}

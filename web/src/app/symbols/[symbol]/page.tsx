@@ -44,7 +44,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <h1 className="font-mono text-xl font-semibold text-primary">
+        <h1 className="font-mono text-2xl font-bold tracking-tight text-primary">
           {upperSymbol}
         </h1>
         <a
