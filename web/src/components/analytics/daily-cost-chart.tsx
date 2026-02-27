@@ -1,46 +1,51 @@
 "use client";
 
 /**
- * DailyCostChart — Area line chart showing daily token costs.
- * Amber/neutral color scheme. SVG geometry + HTML text overlays.
+ * DailyCostChart — Area chart showing daily token costs.
+ * Amber colour scheme, with total cost header.
  */
 
+import { useMemo } from "react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import type { DailyTokenCost } from "@/lib/types";
+import {
+  AXIS_TICK_STYLE,
+  GRID_PROPS,
+  TOOLTIP_STYLE,
+  CHART_COLORS,
+  formatDateTick,
+} from "@/lib/chart-theme";
 
 interface DailyCostChartProps {
   data: DailyTokenCost[];
   className?: string;
 }
 
-/** Deduplicate date labels for sparse data. */
-function buildDateLabels(
-  days: string[],
-  scaleX: (i: number) => number,
-  targetCount: number
-): { x: number; label: string }[] {
-  const uniqueDays = [...new Set(days)];
-  const count = Math.min(targetCount, uniqueDays.length);
-  if (count <= 0) return [];
-
-  const labels: { x: number; label: string }[] = [];
-  for (let i = 0; i < count; i++) {
-    const dayIdx = Math.round((i / (count - 1)) * (uniqueDays.length - 1));
-    const day = uniqueDays[dayIdx];
-    const dataIdx = days.indexOf(day);
-    if (dataIdx >= 0) {
-      labels.push({
-        x: scaleX(dataIdx),
-        label: new Date(day + "T00:00:00").toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        }),
-      });
-    }
-  }
-  return labels;
+function formatCost(v: number): string {
+  if (v >= 1) return `$${v.toFixed(2)}`;
+  if (v > 0) return `$${v.toFixed(4)}`;
+  return "$0";
 }
 
 export function DailyCostChart({ data, className }: DailyCostChartProps) {
+  const chartData = useMemo(
+    () => data.map((d) => ({ day: d.day, cost: d.dailyCost })),
+    [data]
+  );
+
+  const totalCost = useMemo(
+    () => data.reduce((sum, d) => sum + d.dailyCost, 0),
+    [data]
+  );
+
   if (data.length < 2) {
     return (
       <div
@@ -51,42 +56,8 @@ export function DailyCostChart({ data, className }: DailyCostChartProps) {
     );
   }
 
-  const width = 700;
-  const height = 200;
-  const padX = 55;
-  const padY = 20;
-
-  const values = data.map((d) => d.dailyCost);
-  const minY = 0;
-  const maxY = Math.max(...values, 0.01);
-  const rangeY = maxY - minY || 1;
-  const maxX = data.length - 1;
-  const chartFloor = height - padY;
-
-  const scaleX = (x: number) => padX + (x / maxX) * (width - padX * 2);
-  const scaleY = (y: number) =>
-    height - padY - ((y - minY) / rangeY) * (height - padY * 2);
-
-  const pathD = data
-    .map((d, i) => `${i === 0 ? "M" : "L"} ${scaleX(i)} ${scaleY(d.dailyCost)}`)
-    .join(" ");
-
-  // Area fill to chart floor
-  const areaD = `${pathD} L ${scaleX(maxX)} ${chartFloor} L ${scaleX(0)} ${chartFloor} Z`;
-
-  const strokeColor = "#F59E0B";
-
-  const dateLabels = buildDateLabels(
-    data.map((d) => d.day),
-    scaleX,
-    4
-  );
-
-  const totalCost = values.reduce((sum, v) => sum + v, 0);
-  const ariaLabel = `Daily token cost chart: $${totalCost.toFixed(2)} total over ${data.length} days`;
-
-  const maxLabelY = scaleY(maxY);
-  const zeroLabelY = scaleY(0);
+  const color = CHART_COLORS.amber;
+  const gradientId = "costGrad";
 
   return (
     <div
@@ -98,82 +69,49 @@ export function DailyCostChart({ data, className }: DailyCostChartProps) {
           Total: ${totalCost.toFixed(2)}
         </p>
       </div>
-      <div className="relative">
-        <svg
-          viewBox={`0 0 ${width} ${height}`}
-          className="w-full"
-          preserveAspectRatio="none"
-          role="img"
-          aria-label={ariaLabel}
-        >
-          <title>{ariaLabel}</title>
-
-          {/* Area fill */}
-          <path d={areaD} fill={strokeColor} opacity="0.08" />
-
-          {/* Cost line */}
-          <path
-            d={pathD}
-            fill="none"
-            stroke={strokeColor}
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+      <ResponsiveContainer width="100%" height={200}>
+        <AreaChart data={chartData} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={color} stopOpacity={0.15} />
+              <stop offset="100%" stopColor={color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid {...GRID_PROPS} />
+          <XAxis
+            dataKey="day"
+            tickFormatter={formatDateTick}
+            tick={AXIS_TICK_STYLE}
+            axisLine={false}
+            tickLine={false}
+            minTickGap={40}
           />
-
-          {/* End point */}
-          <circle
-            cx={scaleX(maxX)}
-            cy={scaleY(data[data.length - 1].dailyCost)}
-            r="3"
-            fill={strokeColor}
+          <YAxis
+            tickFormatter={formatCost}
+            tick={AXIS_TICK_STYLE}
+            axisLine={false}
+            tickLine={false}
+            width={52}
           />
-        </svg>
-
-        {/* Y-axis labels as HTML overlays */}
-        <span
-          className="pointer-events-none absolute font-mono text-[9px] text-muted"
-          style={{
-            left: 0,
-            width: `${(padX / width) * 100}%`,
-            top: `${(maxLabelY / height) * 100}%`,
-            transform: "translateY(-50%)",
-            textAlign: "right",
-            paddingRight: 4,
-          }}
-        >
-          ${maxY.toFixed(2)}
-        </span>
-        <span
-          className="pointer-events-none absolute font-mono text-[9px] text-muted"
-          style={{
-            left: 0,
-            width: `${(padX / width) * 100}%`,
-            top: `${(zeroLabelY / height) * 100}%`,
-            transform: "translateY(-50%)",
-            textAlign: "right",
-            paddingRight: 4,
-          }}
-        >
-          $0
-        </span>
-
-        {/* Date labels as HTML overlays */}
-        {dateLabels.map((d, i) => (
-          <span
-            key={i}
-            className="pointer-events-none absolute font-mono text-[9px] text-muted"
-            style={{
-              left: `${(d.x / width) * 100}%`,
-              bottom: 0,
-              transform: "translateX(-50%)",
-              paddingBottom: 2,
-            }}
-          >
-            {d.label}
-          </span>
-        ))}
-      </div>
+          <Tooltip
+            contentStyle={TOOLTIP_STYLE.contentStyle}
+            cursor={TOOLTIP_STYLE.cursor}
+            itemStyle={TOOLTIP_STYLE.itemStyle}
+            labelStyle={TOOLTIP_STYLE.labelStyle}
+            labelFormatter={(label) => formatDateTick(String(label))}
+            formatter={(value) => [formatCost(Number(value)), "Cost"]}
+          />
+          <Area
+            type="monotone"
+            dataKey="cost"
+            stroke={color}
+            strokeWidth={1.5}
+            fill={`url(#${gradientId})`}
+            dot={false}
+            activeDot={{ r: 3, fill: color }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 }
