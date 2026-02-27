@@ -2034,3 +2034,19 @@ Extract logical sections (filters, table, modals) into separate components.
 - `discarded-agents.tsx`, `account-manager.tsx`, `agent-leaderboard.tsx`, `memecoin-account-manager.tsx`, `trade-notification-provider.tsx`, `rankings-table.tsx`
 
 These are intentional (local mutation of server-fetched initial data). Consider adding `// eslint-disable-next-line` comments or refactoring to derive state during render where possible.
+
+---
+
+## 32. Manual LLM Processing via Claude Code — `COMPLETED`
+
+**What:** Replace paid API calls for tweet analysis, agent reviews, trade memory, and post-mortem with a manual processing pipeline powered by Claude Code (Pro Max subscription). Includes CLI scripts, a `/processing` monitoring dashboard, and agent analysis history.
+
+**Why:** The worker's LLM pipeline costs API credits for every tweet analysis, agent evolution, trade memory, and post-mortem run. With a $100/mo Claude Pro Max subscription, Claude Code itself can act as the LLM — reading fetched data, producing analysis, and saving results back via CLI scripts at zero incremental API cost.
+
+**Implementation:**
+- DB: Migration 027 adds `processing_runs` (progress tracking) and `agent_analysis_history` (per-agent performance reviews) tables
+- CLI: 13 Node.js scripts in `cli/` — fetch/save pairs for 5 task types (tweet sentiment, memecoin sentiment, agent review, trade memory, post-mortem) plus a progress manager
+- Web: `/processing` page with 5 task cards (pending counts, last run status, "Run" button with Claude Code instructions), run history table, and loading skeleton
+- Agent detail: New "Analysis" tab showing chronological analysis history with expandable full analysis, prioritized recommendations, and metrics snapshots
+- Nav: "Processing" link added between Analytics and Status
+- Also fixed pre-existing dual-head Alembic conflict (two migrations both claiming revision 026)
