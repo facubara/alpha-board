@@ -1,15 +1,15 @@
 """Add token analysis, analyzed wallets, wallet token entries, and cross-reference checks tables.
 
-Revision ID: 026
-Revises: 025
+Revision ID: 026b
+Revises: 026
 """
 
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import JSONB
 
-revision = "026"
-down_revision = "025"
+revision = "026b"
+down_revision = "026"
 branch_labels = None
 depends_on = None
 
