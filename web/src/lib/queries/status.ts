@@ -5,19 +5,8 @@
  */
 
 import { cached } from "@/lib/cache";
+import { workerGet } from "@/lib/worker-client";
 import type { StatusData, ServiceCurrent, ServiceHistory, ServiceIncident } from "@/lib/types";
-
-const WORKER_URL = "https://alpha-worker.fly.dev";
-
-async function fetchJson<T>(path: string): Promise<T> {
-  const res = await fetch(`${WORKER_URL}${path}`, {
-    next: { revalidate: 0 },
-  });
-  if (!res.ok) {
-    throw new Error(`Worker API error: ${res.status} ${res.statusText}`);
-  }
-  return res.json() as Promise<T>;
-}
 
 /**
  * Fetch all status data in parallel: current services, history, incidents.
@@ -25,13 +14,13 @@ async function fetchJson<T>(path: string): Promise<T> {
 export async function getStatusData(): Promise<StatusData> {
   return cached("status:data", 60, async () => {
     const [currentData, historyData, incidentsData] = await Promise.all([
-      fetchJson<{
+      workerGet<{
         overall: StatusData["overall"];
         services: ServiceCurrent[];
         active_incidents: ServiceIncident[];
       }>("/status/services"),
-      fetchJson<{ services: ServiceHistory[] }>("/status/history?days=90"),
-      fetchJson<ServiceIncident[]>("/status/incidents?days=14"),
+      workerGet<{ services: ServiceHistory[] }>("/status/history?days=90"),
+      workerGet<ServiceIncident[]>("/status/incidents?days=14"),
     ]);
 
     return {

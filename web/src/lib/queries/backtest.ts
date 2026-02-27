@@ -1,65 +1,17 @@
 /**
  * Backtest Queries
  *
- * Fetches backtest data from Neon database.
+ * Fetches backtest data from the worker API.
  */
 
-import { sql } from "@/lib/db";
+import { workerGet } from "@/lib/worker-client";
 import type { BacktestRun, BacktestTrade } from "@/lib/types";
 
 /**
  * Fetch all backtest runs, most recent first.
  */
 export async function getBacktestRuns(): Promise<BacktestRun[]> {
-  const rows = await sql`
-    SELECT
-      id,
-      agent_name,
-      strategy_archetype,
-      timeframe,
-      symbol,
-      start_date,
-      end_date,
-      initial_balance,
-      final_equity,
-      total_pnl,
-      total_trades,
-      winning_trades,
-      max_drawdown_pct,
-      sharpe_ratio,
-      status,
-      error_message,
-      started_at,
-      completed_at
-    FROM backtest_runs
-    ORDER BY started_at DESC
-    LIMIT 50
-  `;
-
-  return rows.map((row) => ({
-    id: Number(row.id),
-    agentName: row.agent_name as string,
-    strategyArchetype: row.strategy_archetype as string,
-    timeframe: row.timeframe as string,
-    symbol: row.symbol as string,
-    startDate: (row.start_date as Date).toISOString(),
-    endDate: (row.end_date as Date).toISOString(),
-    initialBalance: Number(row.initial_balance),
-    finalEquity: row.final_equity != null ? Number(row.final_equity) : null,
-    totalPnl: row.total_pnl != null ? Number(row.total_pnl) : null,
-    totalTrades: Number(row.total_trades ?? 0),
-    winningTrades: Number(row.winning_trades ?? 0),
-    maxDrawdownPct:
-      row.max_drawdown_pct != null ? Number(row.max_drawdown_pct) : null,
-    sharpeRatio: row.sharpe_ratio != null ? Number(row.sharpe_ratio) : null,
-    equityCurve: null, // Not fetched in list view
-    status: row.status as BacktestRun["status"],
-    errorMessage: (row.error_message as string) || null,
-    startedAt: (row.started_at as Date).toISOString(),
-    completedAt: row.completed_at
-      ? (row.completed_at as Date).toISOString()
-      : null,
-  }));
+  return workerGet<BacktestRun[]>("/backtest");
 }
 
 /**
@@ -68,93 +20,85 @@ export async function getBacktestRuns(): Promise<BacktestRun[]> {
 export async function getBacktestRun(
   runId: number
 ): Promise<{ run: BacktestRun; trades: BacktestTrade[] } | null> {
-  const runRows = await sql`
-    SELECT
-      id,
-      agent_name,
-      strategy_archetype,
-      timeframe,
-      symbol,
-      start_date,
-      end_date,
-      initial_balance,
-      final_equity,
-      total_pnl,
-      total_trades,
-      winning_trades,
-      max_drawdown_pct,
-      sharpe_ratio,
-      equity_curve,
-      status,
-      error_message,
-      started_at,
-      completed_at
-    FROM backtest_runs
-    WHERE id = ${runId}
-  `;
+  try {
+    const data = await workerGet<{
+      id: number;
+      agent_name: string;
+      strategy_archetype: string;
+      timeframe: string;
+      symbol: string;
+      start_date: string;
+      end_date: string;
+      initial_balance: number;
+      final_equity: number | null;
+      total_pnl: number | null;
+      total_trades: number;
+      winning_trades: number;
+      max_drawdown_pct: number | null;
+      sharpe_ratio: number | null;
+      equity_curve: BacktestRun["equityCurve"];
+      status: string;
+      error_message: string | null;
+      started_at: string;
+      completed_at: string | null;
+      trades: Array<{
+        id: number;
+        symbol: string;
+        direction: string;
+        entry_price: number;
+        exit_price: number;
+        position_size: number;
+        pnl: number;
+        fees: number;
+        exit_reason: string;
+        entry_at: string;
+        exit_at: string;
+        duration_minutes: number;
+      }>;
+    }>(`/backtest/${runId}`);
 
-  if (runRows.length === 0) return null;
+    const run: BacktestRun = {
+      id: data.id,
+      agentName: data.agent_name,
+      strategyArchetype: data.strategy_archetype,
+      timeframe: data.timeframe,
+      symbol: data.symbol,
+      startDate: data.start_date,
+      endDate: data.end_date,
+      initialBalance: data.initial_balance,
+      finalEquity: data.final_equity,
+      totalPnl: data.total_pnl,
+      totalTrades: data.total_trades ?? 0,
+      winningTrades: data.winning_trades ?? 0,
+      maxDrawdownPct: data.max_drawdown_pct,
+      sharpeRatio: data.sharpe_ratio,
+      equityCurve: data.equity_curve || null,
+      status: data.status as BacktestRun["status"],
+      errorMessage: data.error_message || null,
+      startedAt: data.started_at,
+      completedAt: data.completed_at || null,
+    };
 
-  const row = runRows[0];
-  const run: BacktestRun = {
-    id: Number(row.id),
-    agentName: row.agent_name as string,
-    strategyArchetype: row.strategy_archetype as string,
-    timeframe: row.timeframe as string,
-    symbol: row.symbol as string,
-    startDate: (row.start_date as Date).toISOString(),
-    endDate: (row.end_date as Date).toISOString(),
-    initialBalance: Number(row.initial_balance),
-    finalEquity: row.final_equity != null ? Number(row.final_equity) : null,
-    totalPnl: row.total_pnl != null ? Number(row.total_pnl) : null,
-    totalTrades: Number(row.total_trades ?? 0),
-    winningTrades: Number(row.winning_trades ?? 0),
-    maxDrawdownPct:
-      row.max_drawdown_pct != null ? Number(row.max_drawdown_pct) : null,
-    sharpeRatio: row.sharpe_ratio != null ? Number(row.sharpe_ratio) : null,
-    equityCurve:
-      (row.equity_curve as BacktestRun["equityCurve"]) || null,
-    status: row.status as BacktestRun["status"],
-    errorMessage: (row.error_message as string) || null,
-    startedAt: (row.started_at as Date).toISOString(),
-    completedAt: row.completed_at
-      ? (row.completed_at as Date).toISOString()
-      : null,
-  };
+    const trades: BacktestTrade[] = (data.trades || []).map((t) => ({
+      id: t.id,
+      symbol: t.symbol,
+      direction: t.direction as "long" | "short",
+      entryPrice: t.entry_price,
+      exitPrice: t.exit_price,
+      positionSize: t.position_size,
+      pnl: t.pnl,
+      fees: t.fees,
+      exitReason: t.exit_reason,
+      entryAt: t.entry_at,
+      exitAt: t.exit_at,
+      durationMinutes: t.duration_minutes,
+    }));
 
-  const tradeRows = await sql`
-    SELECT
-      id,
-      symbol,
-      direction,
-      entry_price,
-      exit_price,
-      position_size,
-      pnl,
-      fees,
-      exit_reason,
-      entry_at,
-      exit_at,
-      duration_minutes
-    FROM backtest_trades
-    WHERE run_id = ${runId}
-    ORDER BY entry_at ASC
-  `;
-
-  const trades: BacktestTrade[] = tradeRows.map((t) => ({
-    id: Number(t.id),
-    symbol: t.symbol as string,
-    direction: t.direction as "long" | "short",
-    entryPrice: Number(t.entry_price),
-    exitPrice: Number(t.exit_price),
-    positionSize: Number(t.position_size),
-    pnl: Number(t.pnl),
-    fees: Number(t.fees),
-    exitReason: t.exit_reason as string,
-    entryAt: (t.entry_at as Date).toISOString(),
-    exitAt: (t.exit_at as Date).toISOString(),
-    durationMinutes: Number(t.duration_minutes),
-  }));
-
-  return { run, trades };
+    return { run, trades };
+  } catch (e: unknown) {
+    if (e && typeof e === "object" && "status" in e && e.status === 404) {
+      return null;
+    }
+    throw e;
+  }
 }
