@@ -58,7 +58,7 @@
       "Bash(dir:*)",
       "WebFetch(domain:api.binance.com)",
       "Bash(fly secrets set:*)",
-      "Bash(powershell -Command \"Invoke-RestMethod -Uri ''https://alpha-worker.fly.dev/twitter/poll'' -Method POST | ConvertTo-Json -Depth 5\")"
+      "Bash(powershell -Command \"Invoke-RestMethod -Uri ''https://alpha-worker.fly.dev/twitter/poll'' -Method POST | ConvertTo-Json -Depth 5\")",
       "Bash(dir:*)",
       "WebFetch(domain:docs.x.com)",
       "mcp__playwright__browser_fill_form",
@@ -78,7 +78,23 @@
       "WebFetch(domain:api.vercel.com)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/facubara/alpha-board/deployments --jq '.[0:3] | .[] | {environment: .environment, created_at: .created_at, sha: .sha[0:8]}')",
       "Bash(npx next lint:*)",
-      "Bash(DATABASE_URL=\"postgresql://user:pass@ep-test-123.us-east-1.aws.neon.tech/dbname?sslmode=require\" npx next build:*)"
+      "Bash(DATABASE_URL=\"postgresql://user:pass@ep-test-123.us-east-1.aws.neon.tech/dbname?sslmode=require\" npx next build:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:www.helius.dev)",
+      "WebFetch(domain:bds.birdeye.so)",
+      "WebFetch(domain:shyft.to)",
+      "WebFetch(domain:www.quicknode.com)",
+      "WebFetch(domain:docs.gmgn.ai)",
+      "WebFetch(domain:docs.jup.ag)",
+      "WebFetch(domain:docs.dexscreener.com)",
+      "WebFetch(domain:www.nansen.ai)",
+      "WebFetch(domain:docs.nansen.ai)",
+      "WebFetch(domain:nftevening.com)",
+      "Bash(MSYS_NO_PATHCONV=1 fly ssh:*)",
+      "Bash(MSYS_NO_PATHCONV=1 fly machine:*)",
+      "Bash(fly machine:*)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api:*)",
+      "Bash(cd /c/Users/facun/Escritorio/alpha-board/web && npx -y react-doctor@latest . --verbose --diff 2>&1)"
     ]
   }
 }

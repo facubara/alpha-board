@@ -10,6 +10,7 @@ from src.notifications.models import (
     DailyDigestData,
     EquityAlertEvent,
     EvolutionEvent,
+    MemecoinBuyEvent,
     TradeClosedEvent,
     TradeOpenedEvent,
 )
@@ -157,6 +158,27 @@ def agent_discarded_message(event: AgentDiscardedEvent) -> str:
         f"Health: {event.health_score:.0f}/100",
         f"Reason: {event.reason}",
     ]
+    return "\n".join(lines)
+
+
+def memecoin_buy_message(event: MemecoinBuyEvent) -> str:
+    addr_short = event.wallet_address[:6] + "..." + event.wallet_address[-4:]
+    label = f" ({event.wallet_label})" if event.wallet_label else ""
+    solscan = f"https://solscan.io/tx/{event.tx_signature}" if event.tx_signature else ""
+
+    lines = [
+        f"\U0001f4b0 <b>Memecoin Buy</b>",
+        f"Wallet: <code>{addr_short}</code>{label}",
+        f"Token: <b>{event.token_symbol or 'Unknown'}</b>",
+    ]
+    if event.amount_sol:
+        lines.append(f"Spent: {float(event.amount_sol):.4f} SOL")
+    if event.wallet_score:
+        lines.append(f"Wallet Score: {event.wallet_score:.0f}/100")
+    if event.past_hits:
+        lines.append(f"Past Early Hits: {event.past_hits}")
+    if solscan:
+        lines.append(f'<a href="{solscan}">View TX</a>')
     return "\n".join(lines)
 
 

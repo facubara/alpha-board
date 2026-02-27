@@ -6,9 +6,9 @@
  * Collapsible sorted table view with follower counts and bios.
  */
 
-import { useState, useMemo, useTransition } from "react";
+import { useReducer, useMemo, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2, Plus, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { Trash2, Plus, Search, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
 import type { TwitterAccount, TwitterAccountCategory } from "@/lib/types";
 import { TWITTER_CATEGORIES, TWITTER_CATEGORY_LABELS } from "@/lib/types";
@@ -53,27 +53,117 @@ function SortIcon({ field, sortField, sortDirection }: { field: SortField; sortF
   );
 }
 
+// ─── Reducer ───
+interface AccountState {
+  // react-doctor: intentional — local mutation of server-fetched initial data
+  accounts: TwitterAccount[];
+  showForm: boolean;
+  expanded: boolean;
+  handle: string;
+  displayName: string;
+  category: TwitterAccountCategory;
+  error: string | null;
+  search: string;
+  sortField: SortField;
+  sortDirection: SortDirection;
+  page: number;
+  pageSize: number;
+}
+
+type AccountAction =
+  | { type: "SET_SHOW_FORM"; value: boolean }
+  | { type: "SET_EXPANDED"; value: boolean }
+  | { type: "SET_HANDLE"; value: string }
+  | { type: "SET_DISPLAY_NAME"; value: string }
+  | { type: "SET_CATEGORY"; value: TwitterAccountCategory }
+  | { type: "SET_ERROR"; value: string | null }
+  | { type: "SET_SEARCH"; value: string }
+  | { type: "TOGGLE_SORT"; field: SortField }
+  | { type: "SET_PAGE"; value: number }
+  | { type: "SET_PAGE_SIZE"; value: number }
+  | { type: "ADD_ACCOUNT"; account: TwitterAccount }
+  | { type: "REMOVE_ACCOUNT"; id: number };
+
+function accountReducer(state: AccountState, action: AccountAction): AccountState {
+  switch (action.type) {
+    case "SET_SHOW_FORM":
+      return { ...state, showForm: action.value };
+    case "SET_EXPANDED":
+      return { ...state, expanded: action.value };
+    case "SET_HANDLE":
+      return { ...state, handle: action.value };
+    case "SET_DISPLAY_NAME":
+      return { ...state, displayName: action.value };
+    case "SET_CATEGORY":
+      return { ...state, category: action.value };
+    case "SET_ERROR":
+      return { ...state, error: action.value };
+    case "SET_SEARCH":
+      return { ...state, search: action.value, page: 0 };
+    case "TOGGLE_SORT": {
+      if (state.sortField === action.field) {
+        return { ...state, sortDirection: state.sortDirection === "asc" ? "desc" : "asc", page: 0 };
+      }
+      return {
+        ...state,
+        sortField: action.field,
+        sortDirection: action.field === "handle" || action.field === "category" ? "asc" : "desc",
+        page: 0,
+      };
+    }
+    case "SET_PAGE":
+      return { ...state, page: action.value };
+    case "SET_PAGE_SIZE":
+      return { ...state, pageSize: action.value, page: 0 };
+    case "ADD_ACCOUNT":
+      return {
+        ...state,
+        accounts: [{ ...action.account, tweetCount: 0 }, ...state.accounts],
+        handle: "",
+        displayName: "",
+        showForm: false,
+      };
+    case "REMOVE_ACCOUNT":
+      return { ...state, accounts: state.accounts.filter((a) => a.id !== action.id) };
+  }
+}
+
 export function AccountManager({ initialAccounts }: AccountManagerProps) {
   const router = useRouter();
   const { requireAuth } = useAuth();
-  const [accounts, setAccounts] = useState<TwitterAccount[]>(initialAccounts);
-  const [showForm, setShowForm] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  const [handle, setHandle] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [category, setCategory] = useState<TwitterAccountCategory>("analyst");
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const [sortField, setSortField] = useState<SortField>("followers");
-  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(25);
+
+  const [state, dispatch] = useReducer(accountReducer, {
+    accounts: initialAccounts,
+    showForm: false,
+    expanded: false,
+    handle: "",
+    displayName: "",
+    category: "analyst",
+    error: null,
+    search: "",
+    sortField: "followers",
+    sortDirection: "desc",
+    page: 0,
+    pageSize: 25,
+  });
 
   const sorted = useMemo(() => {
-    const list = [...accounts];
+    let list = [...state.accounts];
+
+    if (state.search.trim()) {
+      const term = state.search.toLowerCase();
+      list = list.filter(
+        (a) =>
+          a.handle.toLowerCase().includes(term) ||
+          a.category.toLowerCase().includes(term) ||
+          (a.bio ?? "").toLowerCase().includes(term)
+      );
+    }
+
     list.sort((a, b) => {
       let cmp = 0;
-      switch (sortField) {
+      switch (state.sortField) {
         case "handle":
           cmp = a.handle.localeCompare(b.handle);
           break;
@@ -90,55 +180,48 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
           cmp = (a.bio ?? "").localeCompare(b.bio ?? "");
           break;
       }
-      return sortDirection === "asc" ? cmp : -cmp;
+      return state.sortDirection === "asc" ? cmp : -cmp;
     });
     return list;
-  }, [accounts, sortField, sortDirection]);
+  }, [state.accounts, state.search, state.sortField, state.sortDirection]);
 
-  const totalPages = Math.ceil(sorted.length / pageSize);
+  const totalPages = Math.ceil(sorted.length / state.pageSize);
   const paginated = useMemo(
-    () => sorted.slice(page * pageSize, (page + 1) * pageSize),
-    [sorted, page, pageSize]
+    () => sorted.slice(state.page * state.pageSize, (state.page + 1) * state.pageSize),
+    [sorted, state.page, state.pageSize]
   );
 
-  function handleSort(field: SortField) {
-    if (sortField === field) {
-      setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortField(field);
-      setSortDirection(field === "handle" || field === "category" ? "asc" : "desc");
-    }
-    setPage(0);
-  }
-
   async function doAdd() {
-    if (!handle.trim()) return;
-    setError(null);
+    if (!state.handle.trim()) return;
+    dispatch({ type: "SET_ERROR", value: null });
 
-    const resolvedDisplayName = displayName.trim() || handle.replace(/^@/, "").trim();
+    const resolvedDisplayName = state.displayName.trim() || state.handle.replace(/^@/, "").trim();
 
+    let res: Response | null = null;
     try {
-      const res = await fetch("/api/twitter/accounts", {
+      res = await fetch("/api/twitter/accounts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ handle, displayName: resolvedDisplayName, category }),
+        body: JSON.stringify({ handle: state.handle, displayName: resolvedDisplayName, category: state.category }),
       });
-
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Failed to add account");
-        return;
-      }
-
-      const newAccount = await res.json();
-      setAccounts((prev) => [{ ...newAccount, tweetCount: 0 }, ...prev]);
-      setHandle("");
-      setDisplayName("");
-      setShowForm(false);
-      startTransition(() => router.refresh());
     } catch {
-      setError("Failed to add account");
+      dispatch({ type: "SET_ERROR", value: "Failed to add account" });
+      return;
     }
+
+    if (!res.ok) {
+      let errMsg = "Failed to add account";
+      try {
+        const data = await res.json();
+        errMsg = data.error || errMsg;
+      } catch { /* ignore */ }
+      dispatch({ type: "SET_ERROR", value: errMsg });
+      return;
+    }
+
+    const newAccount = await res.json();
+    dispatch({ type: "ADD_ACCOUNT", account: newAccount });
+    startTransition(() => router.refresh());
   }
 
   function handleAdd() {
@@ -146,19 +229,20 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
   }
 
   async function doDelete(id: number) {
+    let res: Response | null = null;
     try {
-      const res = await fetch("/api/twitter/accounts", {
+      res = await fetch("/api/twitter/accounts", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
-
-      if (res.ok) {
-        setAccounts((prev) => prev.filter((a) => a.id !== id));
-        startTransition(() => router.refresh());
-      }
     } catch {
-      // Silently fail — account will remain visible
+      return;
+    }
+
+    if (res.ok) {
+      dispatch({ type: "REMOVE_ACCOUNT", id });
+      startTransition(() => router.refresh());
     }
   }
 
@@ -170,14 +254,14 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <button
-          onClick={() => setExpanded((v) => !v)}
+          onClick={() => dispatch({ type: "SET_EXPANDED", value: !state.expanded })}
           className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-secondary transition-colors"
         >
-          {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-          Tracked Accounts ({accounts.length})
+          {state.expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          Tracked Accounts ({state.accounts.length})
         </button>
         <button
-          onClick={() => { setShowForm((v) => !v); if (!expanded) setExpanded(true); }}
+          onClick={() => { dispatch({ type: "SET_SHOW_FORM", value: !state.showForm }); if (!state.expanded) dispatch({ type: "SET_EXPANDED", value: true }); }}
           className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
         >
           <Plus className="h-3 w-3" />
@@ -185,27 +269,41 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
         </button>
       </div>
 
+      {/* Search */}
+      {state.expanded && state.accounts.length > 0 && (
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+          <input
+            type="text"
+            placeholder="Search accounts..."
+            value={state.search}
+            onChange={(e) => dispatch({ type: "SET_SEARCH", value: e.target.value })}
+            className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] py-1.5 pl-8 pr-3 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none sm:w-64"
+          />
+        </div>
+      )}
+
       {/* Add form */}
-      {showForm && (
+      {state.showForm && (
         <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 space-y-2">
           <div className="flex gap-2">
             <input
               type="text"
               placeholder="@handle"
-              value={handle}
-              onChange={(e) => setHandle(e.target.value)}
+              value={state.handle}
+              onChange={(e) => dispatch({ type: "SET_HANDLE", value: e.target.value })}
               className="flex-1 rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none"
             />
             <input
               type="text"
               placeholder="Display Name (optional)"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
+              value={state.displayName}
+              onChange={(e) => dispatch({ type: "SET_DISPLAY_NAME", value: e.target.value })}
               className="flex-1 rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none"
             />
             <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value as TwitterAccountCategory)}
+              value={state.category}
+              onChange={(e) => dispatch({ type: "SET_CATEGORY", value: e.target.value as TwitterAccountCategory })}
               className="rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary focus:border-[var(--primary)] focus:outline-none"
             >
               {TWITTER_CATEGORIES.map((cat) => (
@@ -216,19 +314,19 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
             </select>
             <button
               onClick={handleAdd}
-              disabled={!handle.trim()}
+              disabled={!state.handle.trim()}
               className="rounded bg-[var(--primary)] px-3 py-1 text-sm font-medium text-white disabled:opacity-50"
             >
               Add
             </button>
           </div>
-          {error && <p className="text-xs text-red-400">{error}</p>}
+          {state.error && <p className="text-xs text-red-400">{state.error}</p>}
         </div>
       )}
 
       {/* Account table (collapsible) */}
-      {expanded && (
-        accounts.length === 0 ? (
+      {state.expanded && (
+        state.accounts.length === 0 ? (
           <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-6 text-center text-sm text-muted">
             No accounts tracked yet. Add accounts to start ingesting tweets.
           </div>
@@ -239,33 +337,33 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
                 <TableRow className="border-[var(--border-default)]">
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary"
-                    onClick={() => handleSort("handle")}
+                    onClick={() => dispatch({ type: "TOGGLE_SORT", field: "handle" })}
                   >
-                    Handle <SortIcon field="handle" sortField={sortField} sortDirection={sortDirection} />
+                    Handle <SortIcon field="handle" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary"
-                    onClick={() => handleSort("category")}
+                    onClick={() => dispatch({ type: "TOGGLE_SORT", field: "category" })}
                   >
-                    Category <SortIcon field="category" sortField={sortField} sortDirection={sortDirection} />
+                    Category <SortIcon field="category" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
-                    onClick={() => handleSort("followers")}
+                    onClick={() => dispatch({ type: "TOGGLE_SORT", field: "followers" })}
                   >
-                    Followers <SortIcon field="followers" sortField={sortField} sortDirection={sortDirection} />
+                    Followers <SortIcon field="followers" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
-                    onClick={() => handleSort("tweets")}
+                    onClick={() => dispatch({ type: "TOGGLE_SORT", field: "tweets" })}
                   >
-                    Tweets <SortIcon field="tweets" sortField={sortField} sortDirection={sortDirection} />
+                    Tweets <SortIcon field="tweets" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
                     className="cursor-pointer select-none text-xs text-muted hover:text-primary"
-                    onClick={() => handleSort("bio")}
+                    onClick={() => dispatch({ type: "TOGGLE_SORT", field: "bio" })}
                   >
-                    Bio <SortIcon field="bio" sortField={sortField} sortDirection={sortDirection} />
+                    Bio <SortIcon field="bio" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead className="text-xs text-muted w-10" />
                 </TableRow>
@@ -314,25 +412,28 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
                 {[10, 25, 50].map((size) => (
                   <button
                     key={size}
-                    onClick={() => { setPageSize(size); setPage(0); }}
-                    className={`rounded px-1.5 py-0.5 ${pageSize === size ? "bg-[var(--bg-elevated)] text-primary font-medium" : "hover:text-primary"}`}
+                    onClick={() => dispatch({ type: "SET_PAGE_SIZE", value: size })}
+                    className={`rounded px-1.5 py-0.5 ${state.pageSize === size ? "bg-[var(--bg-elevated)] text-primary font-medium" : "hover:text-primary"}`}
                   >
                     {size}
                   </button>
                 ))}
               </div>
               <div className="flex items-center gap-2 text-xs text-muted">
-                <span>{page * pageSize + 1}–{Math.min((page + 1) * pageSize, sorted.length)} of {sorted.length}</span>
+                <span>
+                  {state.page * state.pageSize + 1}–{Math.min((state.page + 1) * state.pageSize, sorted.length)} of {sorted.length}
+                  {state.search.trim() && ` (${state.accounts.length} total)`}
+                </span>
                 <button
-                  onClick={() => setPage((p) => Math.max(0, p - 1))}
-                  disabled={page === 0}
+                  onClick={() => dispatch({ type: "SET_PAGE", value: Math.max(0, state.page - 1) })}
+                  disabled={state.page === 0}
                   className="rounded p-0.5 hover:text-primary disabled:opacity-30"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
                 <button
-                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-                  disabled={page >= totalPages - 1}
+                  onClick={() => dispatch({ type: "SET_PAGE", value: Math.min(totalPages - 1, state.page + 1) })}
+                  disabled={state.page >= totalPages - 1}
                   className="rounded p-0.5 hover:text-primary disabled:opacity-30"
                 >
                   <ChevronRight className="h-4 w-4" />

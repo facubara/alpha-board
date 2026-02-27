@@ -1,0 +1,3801 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - link "Home" [ref=e4361] [cursor=pointer]:
+          - /url: /
+          - img "Alpha Board" [ref=e4362]
+        - button "Switch logo variant" [ref=e5]:
+          - img [ref=e6]
+      - generic [ref=e11]:
+        - navigation [ref=e12]:
+          - link "Rankings" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Agents" [ref=e14] [cursor=pointer]:
+            - /url: /agents
+          - link "Tweets" [ref=e15] [cursor=pointer]:
+            - /url: /tweets
+          - link "Backtest" [ref=e16] [cursor=pointer]:
+            - /url: /backtest
+          - link "Analytics" [ref=e17] [cursor=pointer]:
+            - /url: /analytics
+          - link "Status" [ref=e18] [cursor=pointer]:
+            - /url: /status
+          - link "Settings" [ref=e19] [cursor=pointer]:
+            - /url: /settings
+        - button "Close trade feed" [ref=e20]:
+          - img [ref=e21]
+        - button "Login" [ref=e24]:
+          - img [ref=e25]
+          - text: Login
+  - main [ref=e28]:
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - heading "Settings" [level=1] [ref=e31]
+        - paragraph [ref=e32]: Control which LLM sections are active. Disabled sections skip API calls to save costs. Changes take effect on the next pipeline cycle.
+      - generic [ref=e34]:
+        - heading "LLM Sections" [level=2] [ref=e35]
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - generic [ref=e38]:
+              - switch "Toggle LLM Trade Decisions" [checked] [disabled] [ref=e39]
+              - generic [ref=e40]: LLM Trade Decisions
+              - generic [ref=e41]: Enabled
+            - paragraph [ref=e42]: LLM agents analyze rankings and decide to open/close/hold positions (Sonnet 4)
+            - generic [ref=e44]: "All-time: $28.7398 · 30d: $28.7398"
+          - generic [ref=e45]:
+            - generic [ref=e46]:
+              - switch "Toggle Post-Mortem Analysis" [checked] [disabled] [ref=e47]
+              - generic [ref=e48]: Post-Mortem Analysis
+              - generic [ref=e49]: Enabled
+            - paragraph [ref=e50]: Extract fleet lessons from discarded agents (Haiku 3.5)
+            - generic [ref=e51]: "All-time: $0.0000 · 30d: $0.0000"
+          - generic [ref=e52]:
+            - generic [ref=e53]:
+              - switch "Toggle Prompt Evolution" [checked] [disabled] [ref=e54]
+              - generic [ref=e55]: Prompt Evolution
+              - generic [ref=e56]: Enabled
+            - paragraph [ref=e57]: Rewrite agent system prompts based on performance (Opus 4.5)
+            - generic [ref=e58]: "All-time: $0.0000 · 30d: $0.0000"
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - switch "Toggle Rule Trade Decisions" [checked] [disabled] [ref=e61]
+              - generic [ref=e62]: Rule Trade Decisions
+              - generic [ref=e63]: Enabled
+            - paragraph [ref=e64]: Rule-based agents execute deterministic strategies (no API cost)
+            - generic [ref=e65]: No API cost
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - switch "Toggle Trade Memory" [checked] [disabled] [ref=e68]
+              - generic [ref=e69]: Trade Memory
+              - generic [ref=e70]: Enabled
+            - paragraph [ref=e71]: Generate 1-3 sentence reflections after each trade (Haiku 3.5)
+            - generic [ref=e73]: "All-time: $0.0483 · 30d: $0.0483"
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - switch "Toggle Tweet Relevance Filter (LLM)" [checked] [disabled] [ref=e76]
+              - generic [ref=e77]: Tweet Relevance Filter (LLM)
+              - generic [ref=e78]: Enabled
+            - paragraph [ref=e79]: LLM fallback for ambiguous tweets that don't match keyword heuristics (~$0.0001/tweet)
+            - generic [ref=e80]: "All-time: $0.0000 · 30d: $0.0000"
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - switch "Toggle Tweet Sentiment Analysis" [checked] [disabled] [ref=e83]
+              - generic [ref=e84]: Tweet Sentiment Analysis
+              - generic [ref=e85]: Enabled
+            - paragraph [ref=e86]: Batch-analyze tweets for sentiment and trading signals (Haiku 4.5)
+            - generic [ref=e88]: "All-time: $0.0335 · 30d: $0.0335"
+      - generic [ref=e89]:
+        - generic [ref=e4363]:
+          - heading "Binance Copy Trade" [level=2] [ref=e4364]
+          - paragraph [ref=e4365]: Connect your Binance API keys to execute trades directly from agent signals. Keys are encrypted at rest and never sent to the browser.
+        - generic [ref=e4366]:
+          - generic [ref=e4367]:
+            - generic [ref=e4368]:
+              - generic [ref=e4369]: API Key
+              - textbox "Binance API Key" [ref=e4370]
+            - generic [ref=e4371]:
+              - generic [ref=e4372]: API Secret
+              - textbox "Binance API Secret" [ref=e4373]
+          - generic [ref=e4374]:
+            - generic [ref=e4375]:
+              - generic [ref=e4376]: Trading Mode
+              - combobox [ref=e4377]:
+                - option "Spot"
+                - option "Futures" [selected]
+                - option "Both"
+            - generic [ref=e4378]:
+              - generic [ref=e4379]: Max Position (USD)
+              - spinbutton [ref=e4380]: "100"
+            - generic [ref=e4381]:
+              - generic [ref=e4382]: Default Leverage
+              - spinbutton [ref=e4383]: "1"
+          - generic [ref=e4384]:
+            - checkbox "Enable copy-trade execution" [checked] [ref=e4385]
+            - text: Enable copy-trade execution
+          - button "Save" [disabled] [ref=e4387]
+          - generic [ref=e4388]:
+            - paragraph [ref=e4389]: "Safety setup:"
+            - list [ref=e4390]:
+              - listitem [ref=e4391]:
+                - text: Create a dedicated API key with
+                - strong [ref=e4392]: trading only
+                - text: permissions (no withdrawals)
+              - listitem [ref=e4393]: IP-restrict the key to the Fly.io worker IP for maximum security
+              - listitem [ref=e4394]: The max position cap prevents accidental large orders
+              - listitem [ref=e4395]: All executions are logged in the audit trail
+  - complementary [ref=e90]:
+    - generic [ref=e91]:
+      - generic [ref=e92]:
+        - heading "Trade Feed" [level=2] [ref=e93]
+        - generic [ref=e94]: 297 trades
+      - generic [ref=e95]:
+        - button "Mark read" [ref=e96]
+        - button "Close trade feed" [ref=e97]:
+          - img [ref=e98]
+    - generic [ref=e101]:
+      - 'button "Open long ENSO 5m ago RB Momentum Trader (30M) #137" [ref=e103]':
+        - generic [ref=e104]: Open long
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e107]: ENSO
+            - generic [ref=e108]: 5m ago
+          - generic [ref=e109]:
+            - generic [ref=e110]: RB Momentum Trader (30M)
+            - generic [ref=e111]: "#137"
+            - link [ref=e112] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e113]
+      - 'button "Close long INJ 5m ago RB Momentum Trader (30M) #137 $-27.19 (-4.10%)" [ref=e117]':
+        - generic [ref=e118]: Close long
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - generic [ref=e121]: INJ
+            - generic [ref=e122]: 5m ago
+          - generic [ref=e123]:
+            - generic [ref=e124]: RB Momentum Trader (30M)
+            - generic [ref=e125]: "#137"
+            - link [ref=e126] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e127]
+            - generic [ref=e130]: $-27.19
+            - generic [ref=e131]: (-4.10%)
+      - 'button "Close long INJ 6m ago HYB Momentum Trader (30M) #83 $-32.66 (-4.10%)" [ref=e133]':
+        - generic [ref=e134]: Close long
+        - generic [ref=e135]:
+          - generic [ref=e136]:
+            - generic [ref=e137]: INJ
+            - generic [ref=e138]: 6m ago
+          - generic [ref=e139]:
+            - generic [ref=e140]: HYB Momentum Trader (30M)
+            - generic [ref=e141]: "#83"
+            - link [ref=e142] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e143]
+            - generic [ref=e146]: $-32.66
+            - generic [ref=e147]: (-4.10%)
+      - 'button "Open long SOMI 33m ago HYB Breakout Trader (1H) #89" [ref=e149]':
+        - generic [ref=e150]: Open long
+        - generic [ref=e151]:
+          - generic [ref=e152]:
+            - generic [ref=e153]: SOMI
+            - generic [ref=e154]: 33m ago
+          - generic [ref=e155]:
+            - generic [ref=e156]: HYB Breakout Trader (1H)
+            - generic [ref=e157]: "#89"
+            - link [ref=e158] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e159]
+      - 'button "Open long SOMI 33m ago RB Breakout Hunter (1H) #114" [ref=e163]':
+        - generic [ref=e164]: Open long
+        - generic [ref=e165]:
+          - generic [ref=e166]:
+            - generic [ref=e167]: SOMI
+            - generic [ref=e168]: 33m ago
+          - generic [ref=e169]:
+            - generic [ref=e170]: RB Breakout Hunter (1H)
+            - generic [ref=e171]: "#114"
+            - link [ref=e172] [cursor=pointer]:
+              - /url: /agents/39
+              - img [ref=e173]
+      - 'button "Close long XPL 45m ago RB Breakout Hunter (15M) #128 $-2.26 (-0.32%)" [ref=e177]':
+        - generic [ref=e178]: Close long
+        - generic [ref=e179]:
+          - generic [ref=e180]:
+            - generic [ref=e181]: XPL
+            - generic [ref=e182]: 45m ago
+          - generic [ref=e183]:
+            - generic [ref=e184]: RB Breakout Hunter (15M)
+            - generic [ref=e185]: "#128"
+            - link [ref=e186] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e187]
+            - generic [ref=e190]: $-2.26
+            - generic [ref=e191]: (-0.32%)
+      - 'button "Open long SNX 45m ago HYB Momentum Trader (30M) #83" [ref=e193]':
+        - generic [ref=e194]: Open long
+        - generic [ref=e195]:
+          - generic [ref=e196]:
+            - generic [ref=e197]: SNX
+            - generic [ref=e198]: 45m ago
+          - generic [ref=e199]:
+            - generic [ref=e200]: HYB Momentum Trader (30M)
+            - generic [ref=e201]: "#83"
+            - link [ref=e202] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e203]
+      - 'button "Close long XPL 45m ago HYB Breakout Trader (15M) #123 $-2.28 (-0.32%)" [ref=e207]':
+        - generic [ref=e208]: Close long
+        - generic [ref=e209]:
+          - generic [ref=e210]:
+            - generic [ref=e211]: XPL
+            - generic [ref=e212]: 45m ago
+          - generic [ref=e213]:
+            - generic [ref=e214]: HYB Breakout Trader (15M)
+            - generic [ref=e215]: "#123"
+            - link [ref=e216] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e217]
+            - generic [ref=e220]: $-2.28
+            - generic [ref=e221]: (-0.32%)
+      - 'button "Close long SOMI 50m ago HYB Breakout Trader (1H) #89 $-12.46 (-1.58%)" [ref=e223]':
+        - generic [ref=e224]: Close long
+        - generic [ref=e225]:
+          - generic [ref=e226]:
+            - generic [ref=e227]: SOMI
+            - generic [ref=e228]: 50m ago
+          - generic [ref=e229]:
+            - generic [ref=e230]: HYB Breakout Trader (1H)
+            - generic [ref=e231]: "#89"
+            - link [ref=e232] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e233]
+            - generic [ref=e236]: $-12.46
+            - generic [ref=e237]: (-1.58%)
+      - 'button "Close long SOMI 51m ago RB Breakout Hunter (1H) #114 $-11.61 (-1.58%)" [ref=e239]':
+        - generic [ref=e240]: Close long
+        - generic [ref=e241]:
+          - generic [ref=e242]:
+            - generic [ref=e243]: SOMI
+            - generic [ref=e244]: 51m ago
+          - generic [ref=e245]:
+            - generic [ref=e246]: RB Breakout Hunter (1H)
+            - generic [ref=e247]: "#114"
+            - link [ref=e248] [cursor=pointer]:
+              - /url: /agents/39
+              - img [ref=e249]
+            - generic [ref=e252]: $-11.61
+            - generic [ref=e253]: (-1.58%)
+      - 'button "Open long ENSO 55m ago HYB Momentum Trader (30M) #83" [ref=e255]':
+        - generic [ref=e256]: Open long
+        - generic [ref=e257]:
+          - generic [ref=e258]:
+            - generic [ref=e259]: ENSO
+            - generic [ref=e260]: 55m ago
+          - generic [ref=e261]:
+            - generic [ref=e262]: HYB Momentum Trader (30M)
+            - generic [ref=e263]: "#83"
+            - link [ref=e264] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e265]
+      - 'button "Open long SOMI 1h ago HYB Momentum Trader (15M) #95" [ref=e269]':
+        - generic [ref=e270]: Open long
+        - generic [ref=e271]:
+          - generic [ref=e272]:
+            - generic [ref=e273]: SOMI
+            - generic [ref=e274]: 1h ago
+          - generic [ref=e275]:
+            - generic [ref=e276]: HYB Momentum Trader (15M)
+            - generic [ref=e277]: "#95"
+            - link [ref=e278] [cursor=pointer]:
+              - /url: /agents/151
+              - img [ref=e279]
+      - 'button "Close long TRX 1h ago RB Breakout Hunter (30M) #127 +$6.08 (+0.79%)" [ref=e283]':
+        - generic [ref=e284]: Close long
+        - generic [ref=e285]:
+          - generic [ref=e286]:
+            - generic [ref=e287]: TRX
+            - generic [ref=e288]: 1h ago
+          - generic [ref=e289]:
+            - generic [ref=e290]: RB Breakout Hunter (30M)
+            - generic [ref=e291]: "#127"
+            - link [ref=e292] [cursor=pointer]:
+              - /url: /agents/35
+              - img [ref=e293]
+            - generic [ref=e296]: +$6.08
+            - generic [ref=e297]: (+0.79%)
+      - 'button "Close long CRV 1h ago RB Breakout Hunter (15M) #128 +$1.66 (+0.23%)" [ref=e299]':
+        - generic [ref=e300]: Close long
+        - generic [ref=e301]:
+          - generic [ref=e302]:
+            - generic [ref=e303]: CRV
+            - generic [ref=e304]: 1h ago
+          - generic [ref=e305]:
+            - generic [ref=e306]: RB Breakout Hunter (15M)
+            - generic [ref=e307]: "#128"
+            - link [ref=e308] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e309]
+            - generic [ref=e312]: +$1.66
+            - generic [ref=e313]: (+0.23%)
+      - 'button "Close long CRV 1h ago HYB Breakout Trader (15M) #123 +$1.68 (+0.23%)" [ref=e315]':
+        - generic [ref=e316]: Close long
+        - generic [ref=e317]:
+          - generic [ref=e318]:
+            - generic [ref=e319]: CRV
+            - generic [ref=e320]: 1h ago
+          - generic [ref=e321]:
+            - generic [ref=e322]: HYB Breakout Trader (15M)
+            - generic [ref=e323]: "#123"
+            - link [ref=e324] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e325]
+            - generic [ref=e328]: +$1.68
+            - generic [ref=e329]: (+0.23%)
+      - 'button "Open long SOMI 1h ago RB Momentum Trader (15M) #131" [ref=e331]':
+        - generic [ref=e332]: Open long
+        - generic [ref=e333]:
+          - generic [ref=e334]:
+            - generic [ref=e335]: SOMI
+            - generic [ref=e336]: 1h ago
+          - generic [ref=e337]:
+            - generic [ref=e338]: RB Momentum Trader (15M)
+            - generic [ref=e339]: "#131"
+            - link [ref=e340] [cursor=pointer]:
+              - /url: /agents/29
+              - img [ref=e341]
+      - 'button "Close long TRX 1h ago HYB Breakout Trader (30M) #119 +$6.20 (+0.79%)" [ref=e345]':
+        - generic [ref=e346]: Close long
+        - generic [ref=e347]:
+          - generic [ref=e348]:
+            - generic [ref=e349]: TRX
+            - generic [ref=e350]: 1h ago
+          - generic [ref=e351]:
+            - generic [ref=e352]: HYB Breakout Trader (30M)
+            - generic [ref=e353]: "#119"
+            - link [ref=e354] [cursor=pointer]:
+              - /url: /agents/163
+              - img [ref=e355]
+            - generic [ref=e358]: +$6.20
+            - generic [ref=e359]: (+0.79%)
+      - 'button "Close long SNX 1h ago RB Momentum Trader (30M) #137 $-27.28 (-4.10%)" [ref=e361]':
+        - generic [ref=e362]: Close long
+        - generic [ref=e363]:
+          - generic [ref=e364]:
+            - generic [ref=e365]: SNX
+            - generic [ref=e366]: 1h ago
+          - generic [ref=e367]:
+            - generic [ref=e368]: RB Momentum Trader (30M)
+            - generic [ref=e369]: "#137"
+            - link [ref=e370] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e371]
+            - generic [ref=e374]: $-27.28
+            - generic [ref=e375]: (-4.10%)
+      - 'button "Close long SNX 1h ago HYB Momentum Trader (30M) #83 $-32.77 (-4.10%)" [ref=e377]':
+        - generic [ref=e378]: Close long
+        - generic [ref=e379]:
+          - generic [ref=e380]:
+            - generic [ref=e381]: SNX
+            - generic [ref=e382]: 1h ago
+          - generic [ref=e383]:
+            - generic [ref=e384]: HYB Momentum Trader (30M)
+            - generic [ref=e385]: "#83"
+            - link [ref=e386] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e387]
+            - generic [ref=e390]: $-32.77
+            - generic [ref=e391]: (-4.10%)
+      - 'button "Open long INJ 1h ago RB Momentum Trader (1H) #103" [ref=e393]':
+        - generic [ref=e394]: Open long
+        - generic [ref=e395]:
+          - generic [ref=e396]:
+            - generic [ref=e397]: INJ
+            - generic [ref=e398]: 1h ago
+          - generic [ref=e399]:
+            - generic [ref=e400]: RB Momentum Trader (1H)
+            - generic [ref=e401]: "#103"
+            - link [ref=e402] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e403]
+      - 'button "Close long INJ 1h ago RB Momentum Trader (1H) #103 +$44.71 (+5.90%)" [ref=e407]':
+        - generic [ref=e408]: Close long
+        - generic [ref=e409]:
+          - generic [ref=e410]:
+            - generic [ref=e411]: INJ
+            - generic [ref=e412]: 1h ago
+          - generic [ref=e413]:
+            - generic [ref=e414]: RB Momentum Trader (1H)
+            - generic [ref=e415]: "#103"
+            - link [ref=e416] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e417]
+            - generic [ref=e420]: +$44.71
+            - generic [ref=e421]: (+5.90%)
+      - 'button "Open long INJ 1h ago HYB Momentum Trader (1H) #93" [ref=e423]':
+        - generic [ref=e424]: Open long
+        - generic [ref=e425]:
+          - generic [ref=e426]:
+            - generic [ref=e427]: INJ
+            - generic [ref=e428]: 1h ago
+          - generic [ref=e429]:
+            - generic [ref=e430]: HYB Momentum Trader (1H)
+            - generic [ref=e431]: "#93"
+            - link [ref=e432] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e433]
+      - 'button "Close long INJ 1h ago HYB Momentum Trader (1H) #93 +$46.32 (+5.90%)" [ref=e437]':
+        - generic [ref=e438]: Close long
+        - generic [ref=e439]:
+          - generic [ref=e440]:
+            - generic [ref=e441]: INJ
+            - generic [ref=e442]: 1h ago
+          - generic [ref=e443]:
+            - generic [ref=e444]: HYB Momentum Trader (1H)
+            - generic [ref=e445]: "#93"
+            - link [ref=e446] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e447]
+            - generic [ref=e450]: +$46.32
+            - generic [ref=e451]: (+5.90%)
+      - 'button "Close long SNX 1h ago HYB Momentum Trader (15M) #95 $-12.40 (-1.58%)" [ref=e453]':
+        - generic [ref=e454]: Close long
+        - generic [ref=e455]:
+          - generic [ref=e456]:
+            - generic [ref=e457]: SNX
+            - generic [ref=e458]: 1h ago
+          - generic [ref=e459]:
+            - generic [ref=e460]: HYB Momentum Trader (15M)
+            - generic [ref=e461]: "#95"
+            - link [ref=e462] [cursor=pointer]:
+              - /url: /agents/151
+              - img [ref=e463]
+            - generic [ref=e466]: $-12.40
+            - generic [ref=e467]: (-1.58%)
+      - 'button "Close long SNX 1h ago RB Momentum Trader (15M) #131 $-11.00 (-1.58%)" [ref=e469]':
+        - generic [ref=e470]: Close long
+        - generic [ref=e471]:
+          - generic [ref=e472]:
+            - generic [ref=e473]: SNX
+            - generic [ref=e474]: 1h ago
+          - generic [ref=e475]:
+            - generic [ref=e476]: RB Momentum Trader (15M)
+            - generic [ref=e477]: "#131"
+            - link [ref=e478] [cursor=pointer]:
+              - /url: /agents/29
+              - img [ref=e479]
+            - generic [ref=e482]: $-11.00
+            - generic [ref=e483]: (-1.58%)
+      - 'button "Open long ENSO 1h ago HYB Momentum Trader (15M) #95" [ref=e485]':
+        - generic [ref=e486]: Open long
+        - generic [ref=e487]:
+          - generic [ref=e488]:
+            - generic [ref=e489]: ENSO
+            - generic [ref=e490]: 1h ago
+          - generic [ref=e491]:
+            - generic [ref=e492]: HYB Momentum Trader (15M)
+            - generic [ref=e493]: "#95"
+            - link [ref=e494] [cursor=pointer]:
+              - /url: /agents/151
+              - img [ref=e495]
+      - 'button "Close long SOMI 1h ago RB Breakout Hunter (15M) #128 +$1.05 (+0.15%)" [ref=e499]':
+        - generic [ref=e500]: Close long
+        - generic [ref=e501]:
+          - generic [ref=e502]:
+            - generic [ref=e503]: SOMI
+            - generic [ref=e504]: 1h ago
+          - generic [ref=e505]:
+            - generic [ref=e506]: RB Breakout Hunter (15M)
+            - generic [ref=e507]: "#128"
+            - link [ref=e508] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e509]
+            - generic [ref=e512]: +$1.05
+            - generic [ref=e513]: (+0.15%)
+      - 'button "Close long SOMI 1h ago HYB Breakout Trader (15M) #123 +$1.06 (+0.15%)" [ref=e515]':
+        - generic [ref=e516]: Close long
+        - generic [ref=e517]:
+          - generic [ref=e518]:
+            - generic [ref=e519]: SOMI
+            - generic [ref=e520]: 1h ago
+          - generic [ref=e521]:
+            - generic [ref=e522]: HYB Breakout Trader (15M)
+            - generic [ref=e523]: "#123"
+            - link [ref=e524] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e525]
+            - generic [ref=e528]: +$1.06
+            - generic [ref=e529]: (+0.15%)
+      - 'button "Open long ENSO 1h ago RB Momentum Trader (15M) #131" [ref=e531]':
+        - generic [ref=e532]: Open long
+        - generic [ref=e533]:
+          - generic [ref=e534]:
+            - generic [ref=e535]: ENSO
+            - generic [ref=e536]: 1h ago
+          - generic [ref=e537]:
+            - generic [ref=e538]: RB Momentum Trader (15M)
+            - generic [ref=e539]: "#131"
+            - link [ref=e540] [cursor=pointer]:
+              - /url: /agents/29
+              - img [ref=e541]
+      - 'button "Close long POL 1h ago HYB Mean Reversion Trader (1H) #85 +$18.07 (+1.82%)" [ref=e545]':
+        - generic [ref=e546]: Close long
+        - generic [ref=e547]:
+          - generic [ref=e548]:
+            - generic [ref=e549]: POL
+            - generic [ref=e550]: 1h ago
+          - generic [ref=e551]:
+            - generic [ref=e552]: HYB Mean Reversion Trader (1H)
+            - generic [ref=e553]: "#85"
+            - link [ref=e554] [cursor=pointer]:
+              - /url: /agents/169
+              - img [ref=e555]
+            - generic [ref=e558]: +$18.07
+            - generic [ref=e559]: (+1.82%)
+      - 'button "Close short PENDLE 1h ago HYB Breakout Trader (1H) #89 $-16.54 (-2.09%)" [ref=e561]':
+        - generic [ref=e562]: Close short
+        - generic [ref=e563]:
+          - generic [ref=e564]:
+            - generic [ref=e565]: PENDLE
+            - generic [ref=e566]: 1h ago
+          - generic [ref=e567]:
+            - generic [ref=e568]: HYB Breakout Trader (1H)
+            - generic [ref=e569]: "#89"
+            - link [ref=e570] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e571]
+            - generic [ref=e574]: $-16.54
+            - generic [ref=e575]: (-2.09%)
+      - 'button "Close short PENDLE 1h ago RB Breakout Hunter (1H) #114 $-15.42 (-2.09%)" [ref=e577]':
+        - generic [ref=e578]: Close short
+        - generic [ref=e579]:
+          - generic [ref=e580]:
+            - generic [ref=e581]: PENDLE
+            - generic [ref=e582]: 1h ago
+          - generic [ref=e583]:
+            - generic [ref=e584]: RB Breakout Hunter (1H)
+            - generic [ref=e585]: "#114"
+            - link [ref=e586] [cursor=pointer]:
+              - /url: /agents/39
+              - img [ref=e587]
+            - generic [ref=e590]: $-15.42
+            - generic [ref=e591]: (-2.09%)
+      - 'button "Close long POL 1h ago RB Mean Reversion (1H) #80 +$18.14 (+1.82%)" [ref=e593]':
+        - generic [ref=e594]: Close long
+        - generic [ref=e595]:
+          - generic [ref=e596]:
+            - generic [ref=e597]: POL
+            - generic [ref=e598]: 1h ago
+          - generic [ref=e599]:
+            - generic [ref=e600]: RB Mean Reversion (1H)
+            - generic [ref=e601]: "#80"
+            - link [ref=e602] [cursor=pointer]:
+              - /url: /agents/38
+              - img [ref=e603]
+            - generic [ref=e606]: +$18.14
+            - generic [ref=e607]: (+1.82%)
+      - 'button "Close long SOMI 2h ago RB Breakout Hunter (15M) #128 +$2.89 (+0.41%)" [ref=e609]':
+        - generic [ref=e610]: Close long
+        - generic [ref=e611]:
+          - generic [ref=e612]:
+            - generic [ref=e613]: SOMI
+            - generic [ref=e614]: 2h ago
+          - generic [ref=e615]:
+            - generic [ref=e616]: RB Breakout Hunter (15M)
+            - generic [ref=e617]: "#128"
+            - link [ref=e618] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e619]
+            - generic [ref=e622]: +$2.89
+            - generic [ref=e623]: (+0.41%)
+      - 'button "Open long TRX 2h ago HYB Breakout Trader (1H) #89" [ref=e625]':
+        - generic [ref=e626]: Open long
+        - generic [ref=e627]:
+          - generic [ref=e628]:
+            - generic [ref=e629]: TRX
+            - generic [ref=e630]: 2h ago
+          - generic [ref=e631]:
+            - generic [ref=e632]: HYB Breakout Trader (1H)
+            - generic [ref=e633]: "#89"
+            - link [ref=e634] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e635]
+      - 'button "Close long SOMI 2h ago HYB Breakout Trader (15M) #123 +$2.92 (+0.41%)" [ref=e639]':
+        - generic [ref=e640]: Close long
+        - generic [ref=e641]:
+          - generic [ref=e642]:
+            - generic [ref=e643]: SOMI
+            - generic [ref=e644]: 2h ago
+          - generic [ref=e645]:
+            - generic [ref=e646]: HYB Breakout Trader (15M)
+            - generic [ref=e647]: "#123"
+            - link [ref=e648] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e649]
+            - generic [ref=e652]: +$2.92
+            - generic [ref=e653]: (+0.41%)
+      - 'button "Close long ASTER 2h ago HYB Swing Trader (4H) #141 $-37.84 (-4.10%)" [ref=e655]':
+        - generic [ref=e656]: Close long
+        - generic [ref=e657]:
+          - generic [ref=e658]:
+            - generic [ref=e659]: ASTER
+            - generic [ref=e660]: 2h ago
+          - generic [ref=e661]:
+            - generic [ref=e662]: HYB Swing Trader (4H)
+            - generic [ref=e663]: "#141"
+            - link [ref=e664] [cursor=pointer]:
+              - /url: /agents/181
+              - img [ref=e665]
+            - generic [ref=e668]: $-37.84
+            - generic [ref=e669]: (-4.10%)
+      - 'button "Open long OM 2h ago HYB Momentum Trader (4H) #96" [ref=e671]':
+        - generic [ref=e672]: Open long
+        - generic [ref=e673]:
+          - generic [ref=e674]:
+            - generic [ref=e675]: OM
+            - generic [ref=e676]: 2h ago
+          - generic [ref=e677]:
+            - generic [ref=e678]: HYB Momentum Trader (4H)
+            - generic [ref=e679]: "#96"
+            - link [ref=e680] [cursor=pointer]:
+              - /url: /agents/175
+              - img [ref=e681]
+      - 'button "Close long OM 2h ago HYB Momentum Trader (4H) #96 $-32.07 (-4.10%)" [ref=e685]':
+        - generic [ref=e686]: Close long
+        - generic [ref=e687]:
+          - generic [ref=e688]:
+            - generic [ref=e689]: OM
+            - generic [ref=e690]: 2h ago
+          - generic [ref=e691]:
+            - generic [ref=e692]: HYB Momentum Trader (4H)
+            - generic [ref=e693]: "#96"
+            - link [ref=e694] [cursor=pointer]:
+              - /url: /agents/175
+              - img [ref=e695]
+            - generic [ref=e698]: $-32.07
+            - generic [ref=e699]: (-4.10%)
+      - 'button "Close short WBETH 2h ago HYB Breakout Trader (1H) #89 $-3.49 (-0.44%)" [ref=e701]':
+        - generic [ref=e702]: Close short
+        - generic [ref=e703]:
+          - generic [ref=e704]:
+            - generic [ref=e705]: WBETH
+            - generic [ref=e706]: 2h ago
+          - generic [ref=e707]:
+            - generic [ref=e708]: HYB Breakout Trader (1H)
+            - generic [ref=e709]: "#89"
+            - link [ref=e710] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e711]
+            - generic [ref=e714]: $-3.49
+            - generic [ref=e715]: (-0.44%)
+      - 'button "Open long MITO 2h ago RB Breakout Hunter (30M) #127" [ref=e717]':
+        - generic [ref=e718]: Open long
+        - generic [ref=e719]:
+          - generic [ref=e720]:
+            - generic [ref=e721]: MITO
+            - generic [ref=e722]: 2h ago
+          - generic [ref=e723]:
+            - generic [ref=e724]: RB Breakout Hunter (30M)
+            - generic [ref=e725]: "#127"
+            - link [ref=e726] [cursor=pointer]:
+              - /url: /agents/35
+              - img [ref=e727]
+      - 'button "Close long ASTER 2h ago RB Swing Trader (4H) #110 $-44.45 (-4.10%)" [ref=e731]':
+        - generic [ref=e732]: Close long
+        - generic [ref=e733]:
+          - generic [ref=e734]:
+            - generic [ref=e735]: ASTER
+            - generic [ref=e736]: 2h ago
+          - generic [ref=e737]:
+            - generic [ref=e738]: RB Swing Trader (4H)
+            - generic [ref=e739]: "#110"
+            - link [ref=e740] [cursor=pointer]:
+              - /url: /agents/44
+              - img [ref=e741]
+            - generic [ref=e744]: $-44.45
+            - generic [ref=e745]: (-4.10%)
+      - 'button "Open long MITO 2h ago HYB Breakout Trader (30M) #119" [ref=e747]':
+        - generic [ref=e748]: Open long
+        - generic [ref=e749]:
+          - generic [ref=e750]:
+            - generic [ref=e751]: MITO
+            - generic [ref=e752]: 2h ago
+          - generic [ref=e753]:
+            - generic [ref=e754]: HYB Breakout Trader (30M)
+            - generic [ref=e755]: "#119"
+            - link [ref=e756] [cursor=pointer]:
+              - /url: /agents/163
+              - img [ref=e757]
+      - 'button "Open short MITO 2h ago HYB Mean Reversion Trader (30M) #121" [ref=e761]':
+        - generic [ref=e762]: Open short
+        - generic [ref=e763]:
+          - generic [ref=e764]:
+            - generic [ref=e765]: MITO
+            - generic [ref=e766]: 2h ago
+          - generic [ref=e767]:
+            - generic [ref=e768]: HYB Mean Reversion Trader (30M)
+            - generic [ref=e769]: "#121"
+            - link [ref=e770] [cursor=pointer]:
+              - /url: /agents/161
+              - img [ref=e771]
+      - 'button "Open short MITO 2h ago RB Mean Reversion (30M) #122" [ref=e775]':
+        - generic [ref=e776]: Open short
+        - generic [ref=e777]:
+          - generic [ref=e778]:
+            - generic [ref=e779]: MITO
+            - generic [ref=e780]: 2h ago
+          - generic [ref=e781]:
+            - generic [ref=e782]: RB Mean Reversion (30M)
+            - generic [ref=e783]: "#122"
+            - link [ref=e784] [cursor=pointer]:
+              - /url: /agents/34
+              - img [ref=e785]
+      - 'button "Open long SNX 2h ago RB Momentum Trader (1H) #103" [ref=e789]':
+        - generic [ref=e790]: Open long
+        - generic [ref=e791]:
+          - generic [ref=e792]:
+            - generic [ref=e793]: SNX
+            - generic [ref=e794]: 2h ago
+          - generic [ref=e795]:
+            - generic [ref=e796]: RB Momentum Trader (1H)
+            - generic [ref=e797]: "#103"
+            - link [ref=e798] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e799]
+      - 'button "Open long ORCA 2h ago HYB Mean Reversion Trader (1H) #85" [ref=e803]':
+        - generic [ref=e804]: Open long
+        - generic [ref=e805]:
+          - generic [ref=e806]:
+            - generic [ref=e807]: ORCA
+            - generic [ref=e808]: 2h ago
+          - generic [ref=e809]:
+            - generic [ref=e810]: HYB Mean Reversion Trader (1H)
+            - generic [ref=e811]: "#85"
+            - link [ref=e812] [cursor=pointer]:
+              - /url: /agents/169
+              - img [ref=e813]
+      - 'button "Open long SNX 2h ago HYB Momentum Trader (1H) #93" [ref=e817]':
+        - generic [ref=e818]: Open long
+        - generic [ref=e819]:
+          - generic [ref=e820]:
+            - generic [ref=e821]: SNX
+            - generic [ref=e822]: 2h ago
+          - generic [ref=e823]:
+            - generic [ref=e824]: HYB Momentum Trader (1H)
+            - generic [ref=e825]: "#93"
+            - link [ref=e826] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e827]
+      - 'button "Open long ORCA 2h ago RB Mean Reversion (1H) #80" [ref=e831]':
+        - generic [ref=e832]: Open long
+        - generic [ref=e833]:
+          - generic [ref=e834]:
+            - generic [ref=e835]: ORCA
+            - generic [ref=e836]: 2h ago
+          - generic [ref=e837]:
+            - generic [ref=e838]: RB Mean Reversion (1H)
+            - generic [ref=e839]: "#80"
+            - link [ref=e840] [cursor=pointer]:
+              - /url: /agents/38
+              - img [ref=e841]
+      - 'button "Open short MITO 2h ago HYB Mean Reversion Trader (15M) #125" [ref=e845]':
+        - generic [ref=e846]: Open short
+        - generic [ref=e847]:
+          - generic [ref=e848]:
+            - generic [ref=e849]: MITO
+            - generic [ref=e850]: 2h ago
+          - generic [ref=e851]:
+            - generic [ref=e852]: HYB Mean Reversion Trader (15M)
+            - generic [ref=e853]: "#125"
+            - link [ref=e854] [cursor=pointer]:
+              - /url: /agents/153
+              - img [ref=e855]
+      - 'button "Open short MITO 2h ago RB Mean Reversion (15M) #120" [ref=e859]':
+        - generic [ref=e860]: Open short
+        - generic [ref=e861]:
+          - generic [ref=e862]:
+            - generic [ref=e863]: MITO
+            - generic [ref=e864]: 2h ago
+          - generic [ref=e865]:
+            - generic [ref=e866]: RB Mean Reversion (15M)
+            - generic [ref=e867]: "#120"
+            - link [ref=e868] [cursor=pointer]:
+              - /url: /agents/30
+              - img [ref=e869]
+      - 'button "Close short POL 2h ago RB Breakout Hunter (15M) #128 $-8.16 (-1.15%)" [ref=e873]':
+        - generic [ref=e874]: Close short
+        - generic [ref=e875]:
+          - generic [ref=e876]:
+            - generic [ref=e877]: POL
+            - generic [ref=e878]: 2h ago
+          - generic [ref=e879]:
+            - generic [ref=e880]: RB Breakout Hunter (15M)
+            - generic [ref=e881]: "#128"
+            - link [ref=e882] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e883]
+            - generic [ref=e886]: $-8.16
+            - generic [ref=e887]: (-1.15%)
+      - 'button "Close short POL 2h ago HYB Breakout Trader (15M) #123 $-8.25 (-1.15%)" [ref=e889]':
+        - generic [ref=e890]: Close short
+        - generic [ref=e891]:
+          - generic [ref=e892]:
+            - generic [ref=e893]: POL
+            - generic [ref=e894]: 2h ago
+          - generic [ref=e895]:
+            - generic [ref=e896]: HYB Breakout Trader (15M)
+            - generic [ref=e897]: "#123"
+            - link [ref=e898] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e899]
+            - generic [ref=e902]: $-8.25
+            - generic [ref=e903]: (-1.15%)
+      - 'button "Open short BCH 2h ago HYB Mean Reversion Trader (15M) #125" [ref=e905]':
+        - generic [ref=e906]: Open short
+        - generic [ref=e907]:
+          - generic [ref=e908]:
+            - generic [ref=e909]: BCH
+            - generic [ref=e910]: 2h ago
+          - generic [ref=e911]:
+            - generic [ref=e912]: HYB Mean Reversion Trader (15M)
+            - generic [ref=e913]: "#125"
+            - link [ref=e914] [cursor=pointer]:
+              - /url: /agents/153
+              - img [ref=e915]
+      - 'button "Open short BCH 2h ago RB Mean Reversion (15M) #120" [ref=e919]':
+        - generic [ref=e920]: Open short
+        - generic [ref=e921]:
+          - generic [ref=e922]:
+            - generic [ref=e923]: BCH
+            - generic [ref=e924]: 2h ago
+          - generic [ref=e925]:
+            - generic [ref=e926]: RB Mean Reversion (15M)
+            - generic [ref=e927]: "#120"
+            - link [ref=e928] [cursor=pointer]:
+              - /url: /agents/30
+              - img [ref=e929]
+      - 'button "Close long ORCA 2h ago HYB Mean Reversion Trader (30M) #121 +$39.03 (+3.90%)" [ref=e933]':
+        - generic [ref=e934]: Close long
+        - generic [ref=e935]:
+          - generic [ref=e936]:
+            - generic [ref=e937]: ORCA
+            - generic [ref=e938]: 2h ago
+          - generic [ref=e939]:
+            - generic [ref=e940]: HYB Mean Reversion Trader (30M)
+            - generic [ref=e941]: "#121"
+            - link [ref=e942] [cursor=pointer]:
+              - /url: /agents/161
+              - img [ref=e943]
+            - generic [ref=e946]: +$39.03
+            - generic [ref=e947]: (+3.90%)
+      - 'button "Close long ORCA 2h ago RB Mean Reversion (30M) #122 +$38.90 (+3.90%)" [ref=e949]':
+        - generic [ref=e950]: Close long
+        - generic [ref=e951]:
+          - generic [ref=e952]:
+            - generic [ref=e953]: ORCA
+            - generic [ref=e954]: 2h ago
+          - generic [ref=e955]:
+            - generic [ref=e956]: RB Mean Reversion (30M)
+            - generic [ref=e957]: "#122"
+            - link [ref=e958] [cursor=pointer]:
+              - /url: /agents/34
+              - img [ref=e959]
+            - generic [ref=e962]: +$38.90
+            - generic [ref=e963]: (+3.90%)
+      - 'button "Open long WLFI 3h ago HYB Swing Trader (1H) #148" [ref=e965]':
+        - generic [ref=e966]: Open long
+        - generic [ref=e967]:
+          - generic [ref=e968]:
+            - generic [ref=e969]: WLFI
+            - generic [ref=e970]: 3h ago
+          - generic [ref=e971]:
+            - generic [ref=e972]: HYB Swing Trader (1H)
+            - generic [ref=e973]: "#148"
+            - link [ref=e974] [cursor=pointer]:
+              - /url: /agents/173
+              - img [ref=e975]
+      - 'button "Close short USD1 3h ago HYB Mean Reversion Trader (15M) #125 $-0.90 (-0.09%)" [ref=e979]':
+        - generic [ref=e980]: Close short
+        - generic [ref=e981]:
+          - generic [ref=e982]:
+            - generic [ref=e983]: USD1
+            - generic [ref=e984]: 3h ago
+          - generic [ref=e985]:
+            - generic [ref=e986]: HYB Mean Reversion Trader (15M)
+            - generic [ref=e987]: "#125"
+            - link [ref=e988] [cursor=pointer]:
+              - /url: /agents/153
+              - img [ref=e989]
+            - generic [ref=e992]: $-0.90
+            - generic [ref=e993]: (-0.09%)
+      - 'button "Close short USD1 3h ago RB Mean Reversion (15M) #120 $-0.91 (-0.09%)" [ref=e995]':
+        - generic [ref=e996]: Close short
+        - generic [ref=e997]:
+          - generic [ref=e998]:
+            - generic [ref=e999]: USD1
+            - generic [ref=e1000]: 3h ago
+          - generic [ref=e1001]:
+            - generic [ref=e1002]: RB Mean Reversion (15M)
+            - generic [ref=e1003]: "#120"
+            - link [ref=e1004] [cursor=pointer]:
+              - /url: /agents/30
+              - img [ref=e1005]
+            - generic [ref=e1008]: $-0.91
+            - generic [ref=e1009]: (-0.09%)
+      - 'button "Open long OM 4h ago HYB Momentum Trader (1H) #93" [ref=e1011]':
+        - generic [ref=e1012]: Open long
+        - generic [ref=e1013]:
+          - generic [ref=e1014]:
+            - generic [ref=e1015]: OM
+            - generic [ref=e1016]: 4h ago
+          - generic [ref=e1017]:
+            - generic [ref=e1018]: HYB Momentum Trader (1H)
+            - generic [ref=e1019]: "#93"
+            - link [ref=e1020] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e1021]
+      - 'button "Open long OM 4h ago RB Momentum Trader (1H) #103" [ref=e1025]':
+        - generic [ref=e1026]: Open long
+        - generic [ref=e1027]:
+          - generic [ref=e1028]:
+            - generic [ref=e1029]: OM
+            - generic [ref=e1030]: 4h ago
+          - generic [ref=e1031]:
+            - generic [ref=e1032]: RB Momentum Trader (1H)
+            - generic [ref=e1033]: "#103"
+            - link [ref=e1034] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e1035]
+      - 'button "Close long OM 4h ago RB Momentum Trader (1H) #103 $-31.12 (-4.10%)" [ref=e1039]':
+        - generic [ref=e1040]: Close long
+        - generic [ref=e1041]:
+          - generic [ref=e1042]:
+            - generic [ref=e1043]: OM
+            - generic [ref=e1044]: 4h ago
+          - generic [ref=e1045]:
+            - generic [ref=e1046]: RB Momentum Trader (1H)
+            - generic [ref=e1047]: "#103"
+            - link [ref=e1048] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e1049]
+            - generic [ref=e1052]: $-31.12
+            - generic [ref=e1053]: (-4.10%)
+      - 'button "Close short BCH 4h ago HYB Swing Trader (1D) #79 $-49.62 (-4.10%)" [ref=e1055]':
+        - generic [ref=e1056]: Close short
+        - generic [ref=e1057]:
+          - generic [ref=e1058]:
+            - generic [ref=e1059]: BCH
+            - generic [ref=e1060]: 4h ago
+          - generic [ref=e1061]:
+            - generic [ref=e1062]: HYB Swing Trader (1D)
+            - generic [ref=e1063]: "#79"
+            - link [ref=e1064] [cursor=pointer]:
+              - /url: /agents/189
+              - img [ref=e1065]
+            - generic [ref=e1068]: $-49.62
+            - generic [ref=e1069]: (-4.10%)
+      - 'button "Close long OM 4h ago HYB Momentum Trader (1H) #93 $-32.24 (-4.10%)" [ref=e1071]':
+        - generic [ref=e1072]: Close long
+        - generic [ref=e1073]:
+          - generic [ref=e1074]:
+            - generic [ref=e1075]: OM
+            - generic [ref=e1076]: 4h ago
+          - generic [ref=e1077]:
+            - generic [ref=e1078]: HYB Momentum Trader (1H)
+            - generic [ref=e1079]: "#93"
+            - link [ref=e1080] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e1081]
+            - generic [ref=e1084]: $-32.24
+            - generic [ref=e1085]: (-4.10%)
+      - 'button "Close long TAO 4h ago HYB Mean Reversion Trader (1H) #85 $-30.85 (-3.10%)" [ref=e1087]':
+        - generic [ref=e1088]: Close long
+        - generic [ref=e1089]:
+          - generic [ref=e1090]:
+            - generic [ref=e1091]: TAO
+            - generic [ref=e1092]: 4h ago
+          - generic [ref=e1093]:
+            - generic [ref=e1094]: HYB Mean Reversion Trader (1H)
+            - generic [ref=e1095]: "#85"
+            - link [ref=e1096] [cursor=pointer]:
+              - /url: /agents/169
+              - img [ref=e1097]
+            - generic [ref=e1100]: $-30.85
+            - generic [ref=e1101]: (-3.10%)
+      - 'button "Close long TAO 4h ago RB Mean Reversion (1H) #80 $-30.96 (-3.10%)" [ref=e1103]':
+        - generic [ref=e1104]: Close long
+        - generic [ref=e1105]:
+          - generic [ref=e1106]:
+            - generic [ref=e1107]: TAO
+            - generic [ref=e1108]: 4h ago
+          - generic [ref=e1109]:
+            - generic [ref=e1110]: RB Mean Reversion (1H)
+            - generic [ref=e1111]: "#80"
+            - link [ref=e1112] [cursor=pointer]:
+              - /url: /agents/38
+              - img [ref=e1113]
+            - generic [ref=e1116]: $-30.96
+            - generic [ref=e1117]: (-3.10%)
+      - 'button "Close short ATOM 4h ago RB Breakout Hunter (30M) #127 $-4.83 (-0.63%)" [ref=e1119]':
+        - generic [ref=e1120]: Close short
+        - generic [ref=e1121]:
+          - generic [ref=e1122]:
+            - generic [ref=e1123]: ATOM
+            - generic [ref=e1124]: 4h ago
+          - generic [ref=e1125]:
+            - generic [ref=e1126]: RB Breakout Hunter (30M)
+            - generic [ref=e1127]: "#127"
+            - link [ref=e1128] [cursor=pointer]:
+              - /url: /agents/35
+              - img [ref=e1129]
+            - generic [ref=e1132]: $-4.83
+            - generic [ref=e1133]: (-0.63%)
+      - 'button "Open long ATM 4h ago HYB Swing Trader (15M) #152" [ref=e1135]':
+        - generic [ref=e1136]: Open long
+        - generic [ref=e1137]:
+          - generic [ref=e1138]:
+            - generic [ref=e1139]: ATM
+            - generic [ref=e1140]: 4h ago
+          - generic [ref=e1141]:
+            - generic [ref=e1142]: HYB Swing Trader (15M)
+            - generic [ref=e1143]: "#152"
+            - link [ref=e1144] [cursor=pointer]:
+              - /url: /agents/157
+              - img [ref=e1145]
+      - 'button "Open long ATM 4h ago RB Swing Trader (15M) #150" [ref=e1149]':
+        - generic [ref=e1150]: Open long
+        - generic [ref=e1151]:
+          - generic [ref=e1152]:
+            - generic [ref=e1153]: ATM
+            - generic [ref=e1154]: 4h ago
+          - generic [ref=e1155]:
+            - generic [ref=e1156]: RB Swing Trader (15M)
+            - generic [ref=e1157]: "#150"
+            - link [ref=e1158] [cursor=pointer]:
+              - /url: /agents/32
+              - img [ref=e1159]
+      - 'button "Close short ATOM 4h ago HYB Breakout Trader (30M) #119 $-4.93 (-0.63%)" [ref=e1163]':
+        - generic [ref=e1164]: Close short
+        - generic [ref=e1165]:
+          - generic [ref=e1166]:
+            - generic [ref=e1167]: ATOM
+            - generic [ref=e1168]: 4h ago
+          - generic [ref=e1169]:
+            - generic [ref=e1170]: HYB Breakout Trader (30M)
+            - generic [ref=e1171]: "#119"
+            - link [ref=e1172] [cursor=pointer]:
+              - /url: /agents/163
+              - img [ref=e1173]
+            - generic [ref=e1176]: $-4.93
+            - generic [ref=e1177]: (-0.63%)
+      - 'button "Close long OM 5h ago RB Momentum Trader (30M) #137 $-27.37 (-4.10%)" [ref=e1179]':
+        - generic [ref=e1180]: Close long
+        - generic [ref=e1181]:
+          - generic [ref=e1182]:
+            - generic [ref=e1183]: OM
+            - generic [ref=e1184]: 5h ago
+          - generic [ref=e1185]:
+            - generic [ref=e1186]: RB Momentum Trader (30M)
+            - generic [ref=e1187]: "#137"
+            - link [ref=e1188] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e1189]
+            - generic [ref=e1192]: $-27.37
+            - generic [ref=e1193]: (-4.10%)
+      - 'button "Close long OM 5h ago HYB Momentum Trader (30M) #83 $-32.79 (-4.10%)" [ref=e1195]':
+        - generic [ref=e1196]: Close long
+        - generic [ref=e1197]:
+          - generic [ref=e1198]:
+            - generic [ref=e1199]: OM
+            - generic [ref=e1200]: 5h ago
+          - generic [ref=e1201]:
+            - generic [ref=e1202]: HYB Momentum Trader (30M)
+            - generic [ref=e1203]: "#83"
+            - link [ref=e1204] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e1205]
+            - generic [ref=e1208]: $-32.79
+            - generic [ref=e1209]: (-4.10%)
+      - 'button "Close long OM 5h ago HYB Momentum Trader (1H) #93 $-32.42 (-4.10%)" [ref=e1211]':
+        - generic [ref=e1212]: Close long
+        - generic [ref=e1213]:
+          - generic [ref=e1214]:
+            - generic [ref=e1215]: OM
+            - generic [ref=e1216]: 5h ago
+          - generic [ref=e1217]:
+            - generic [ref=e1218]: HYB Momentum Trader (1H)
+            - generic [ref=e1219]: "#93"
+            - link [ref=e1220] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e1221]
+            - generic [ref=e1224]: $-32.42
+            - generic [ref=e1225]: (-4.10%)
+      - 'button "Close long OM 5h ago RB Momentum Trader (1H) #103 $-31.29 (-4.10%)" [ref=e1227]':
+        - generic [ref=e1228]: Close long
+        - generic [ref=e1229]:
+          - generic [ref=e1230]:
+            - generic [ref=e1231]: OM
+            - generic [ref=e1232]: 5h ago
+          - generic [ref=e1233]:
+            - generic [ref=e1234]: RB Momentum Trader (1H)
+            - generic [ref=e1235]: "#103"
+            - link [ref=e1236] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e1237]
+            - generic [ref=e1240]: $-31.29
+            - generic [ref=e1241]: (-4.10%)
+      - 'button "Close short ATOM 5h ago RB Breakout Hunter (30M) #127 $-2.46 (-0.32%)" [ref=e1243]':
+        - generic [ref=e1244]: Close short
+        - generic [ref=e1245]:
+          - generic [ref=e1246]:
+            - generic [ref=e1247]: ATOM
+            - generic [ref=e1248]: 5h ago
+          - generic [ref=e1249]:
+            - generic [ref=e1250]: RB Breakout Hunter (30M)
+            - generic [ref=e1251]: "#127"
+            - link [ref=e1252] [cursor=pointer]:
+              - /url: /agents/35
+              - img [ref=e1253]
+            - generic [ref=e1256]: $-2.46
+            - generic [ref=e1257]: (-0.32%)
+      - 'button "Close long ALLO 5h ago HYB Swing Trader (15M) #152 +$56.34 (+7.90%)" [ref=e1259]':
+        - generic [ref=e1260]: Close long
+        - generic [ref=e1261]:
+          - generic [ref=e1262]:
+            - generic [ref=e1263]: ALLO
+            - generic [ref=e1264]: 5h ago
+          - generic [ref=e1265]:
+            - generic [ref=e1266]: HYB Swing Trader (15M)
+            - generic [ref=e1267]: "#152"
+            - link [ref=e1268] [cursor=pointer]:
+              - /url: /agents/157
+              - img [ref=e1269]
+            - generic [ref=e1272]: +$56.34
+            - generic [ref=e1273]: (+7.90%)
+      - 'button "Close long ALLO 5h ago RB Swing Trader (15M) #150 +$64.75 (+7.90%)" [ref=e1275]':
+        - generic [ref=e1276]: Close long
+        - generic [ref=e1277]:
+          - generic [ref=e1278]:
+            - generic [ref=e1279]: ALLO
+            - generic [ref=e1280]: 5h ago
+          - generic [ref=e1281]:
+            - generic [ref=e1282]: RB Swing Trader (15M)
+            - generic [ref=e1283]: "#150"
+            - link [ref=e1284] [cursor=pointer]:
+              - /url: /agents/32
+              - img [ref=e1285]
+            - generic [ref=e1288]: +$64.75
+            - generic [ref=e1289]: (+7.90%)
+      - 'button "Close long ALLO 5h ago HYB Momentum Trader (30M) #83 +$46.85 (+5.90%)" [ref=e1291]':
+        - generic [ref=e1292]: Close long
+        - generic [ref=e1293]:
+          - generic [ref=e1294]:
+            - generic [ref=e1295]: ALLO
+            - generic [ref=e1296]: 5h ago
+          - generic [ref=e1297]:
+            - generic [ref=e1298]: HYB Momentum Trader (30M)
+            - generic [ref=e1299]: "#83"
+            - link [ref=e1300] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e1301]
+            - generic [ref=e1304]: +$46.85
+            - generic [ref=e1305]: (+5.90%)
+      - 'button "Close short ATOM 5h ago HYB Breakout Trader (30M) #119 $-2.51 (-0.32%)" [ref=e1307]':
+        - generic [ref=e1308]: Close short
+        - generic [ref=e1309]:
+          - generic [ref=e1310]:
+            - generic [ref=e1311]: ATOM
+            - generic [ref=e1312]: 5h ago
+          - generic [ref=e1313]:
+            - generic [ref=e1314]: HYB Breakout Trader (30M)
+            - generic [ref=e1315]: "#119"
+            - link [ref=e1316] [cursor=pointer]:
+              - /url: /agents/163
+              - img [ref=e1317]
+            - generic [ref=e1320]: $-2.51
+            - generic [ref=e1321]: (-0.32%)
+      - 'button "Open short EUR 6h ago HYB Breakout Trader (4H) #116" [ref=e1323]':
+        - generic [ref=e1324]: Open short
+        - generic [ref=e1325]:
+          - generic [ref=e1326]:
+            - generic [ref=e1327]: EUR
+            - generic [ref=e1328]: 6h ago
+          - generic [ref=e1329]:
+            - generic [ref=e1330]: HYB Breakout Trader (4H)
+            - generic [ref=e1331]: "#116"
+            - link [ref=e1332] [cursor=pointer]:
+              - /url: /agents/179
+              - img [ref=e1333]
+      - 'button "Open short EUR 6h ago RB Breakout Hunter (4H) #115" [ref=e1337]':
+        - generic [ref=e1338]: Open short
+        - generic [ref=e1339]:
+          - generic [ref=e1340]:
+            - generic [ref=e1341]: EUR
+            - generic [ref=e1342]: 6h ago
+          - generic [ref=e1343]:
+            - generic [ref=e1344]: RB Breakout Hunter (4H)
+            - generic [ref=e1345]: "#115"
+            - link [ref=e1346] [cursor=pointer]:
+              - /url: /agents/43
+              - img [ref=e1347]
+      - 'button "Open long ATM 11h ago HYB Swing Trader (30M) #144" [ref=e1351]':
+        - generic [ref=e1352]: Open long
+        - generic [ref=e1353]:
+          - generic [ref=e1354]:
+            - generic [ref=e1355]: ATM
+            - generic [ref=e1356]: 11h ago
+          - generic [ref=e1357]:
+            - generic [ref=e1358]: HYB Swing Trader (30M)
+            - generic [ref=e1359]: "#144"
+            - link [ref=e1360] [cursor=pointer]:
+              - /url: /agents/165
+              - img [ref=e1361]
+      - 'button "Open long GUN 15h ago HYB Momentum Trader (4H) #96" [ref=e1365]':
+        - generic [ref=e1366]: Open long
+        - generic [ref=e1367]:
+          - generic [ref=e1368]:
+            - generic [ref=e1369]: GUN
+            - generic [ref=e1370]: 15h ago
+          - generic [ref=e1371]:
+            - generic [ref=e1372]: HYB Momentum Trader (4H)
+            - generic [ref=e1373]: "#96"
+            - link [ref=e1374] [cursor=pointer]:
+              - /url: /agents/175
+              - img [ref=e1375]
+      - 'button "Open long GUN 15h ago RB Momentum Trader (4H) #109" [ref=e1379]':
+        - generic [ref=e1380]: Open long
+        - generic [ref=e1381]:
+          - generic [ref=e1382]:
+            - generic [ref=e1383]: GUN
+            - generic [ref=e1384]: 15h ago
+          - generic [ref=e1385]:
+            - generic [ref=e1386]: RB Momentum Trader (4H)
+            - generic [ref=e1387]: "#109"
+            - link [ref=e1388] [cursor=pointer]:
+              - /url: /agents/41
+              - img [ref=e1389]
+      - 'button "Open long GPS 17h ago RB Momentum Trader (1D) #117" [ref=e1393]':
+        - generic [ref=e1394]: Open long
+        - generic [ref=e1395]:
+          - generic [ref=e1396]:
+            - generic [ref=e1397]: GPS
+            - generic [ref=e1398]: 17h ago
+          - generic [ref=e1399]:
+            - generic [ref=e1400]: RB Momentum Trader (1D)
+            - generic [ref=e1401]: "#117"
+            - link [ref=e1402] [cursor=pointer]:
+              - /url: /agents/45
+              - img [ref=e1403]
+      - 'button "Open long GPS 17h ago HYB Momentum Trader (1D) #111" [ref=e1407]':
+        - generic [ref=e1408]: Open long
+        - generic [ref=e1409]:
+          - generic [ref=e1410]:
+            - generic [ref=e1411]: GPS
+            - generic [ref=e1412]: 17h ago
+          - generic [ref=e1413]:
+            - generic [ref=e1414]: HYB Momentum Trader (1D)
+            - generic [ref=e1415]: "#111"
+            - link [ref=e1416] [cursor=pointer]:
+              - /url: /agents/183
+              - img [ref=e1417]
+      - 'button "Open short ATOM 21h ago RB Mean Reversion (1D) #82" [ref=e1421]':
+        - generic [ref=e1422]: Open short
+        - generic [ref=e1423]:
+          - generic [ref=e1424]:
+            - generic [ref=e1425]: ATOM
+            - generic [ref=e1426]: 21h ago
+          - generic [ref=e1427]:
+            - generic [ref=e1428]: RB Mean Reversion (1D)
+            - generic [ref=e1429]: "#82"
+            - link [ref=e1430] [cursor=pointer]:
+              - /url: /agents/46
+              - img [ref=e1431]
+      - 'button "Open short PEPE 21h ago RB Swing Trader (1D) #139" [ref=e1435]':
+        - generic [ref=e1436]: Open short
+        - generic [ref=e1437]:
+          - generic [ref=e1438]:
+            - generic [ref=e1439]: PEPE
+            - generic [ref=e1440]: 21h ago
+          - generic [ref=e1441]:
+            - generic [ref=e1442]: RB Swing Trader (1D)
+            - generic [ref=e1443]: "#139"
+            - link [ref=e1444] [cursor=pointer]:
+              - /url: /agents/48
+              - img [ref=e1445]
+      - 'button "Open short ATOM 21h ago HYB Mean Reversion Trader (1D) #81" [ref=e1449]':
+        - generic [ref=e1450]: Open short
+        - generic [ref=e1451]:
+          - generic [ref=e1452]:
+            - generic [ref=e1453]: ATOM
+            - generic [ref=e1454]: 21h ago
+          - generic [ref=e1455]:
+            - generic [ref=e1456]: HYB Mean Reversion Trader (1D)
+            - generic [ref=e1457]: "#81"
+            - link [ref=e1458] [cursor=pointer]:
+              - /url: /agents/185
+              - img [ref=e1459]
+      - 'button "Open long ATOM 21h ago HYB Momentum Trader (4H) #96" [ref=e1463]':
+        - generic [ref=e1464]: Open long
+        - generic [ref=e1465]:
+          - generic [ref=e1466]:
+            - generic [ref=e1467]: ATOM
+            - generic [ref=e1468]: 21h ago
+          - generic [ref=e1469]:
+            - generic [ref=e1470]: HYB Momentum Trader (4H)
+            - generic [ref=e1471]: "#96"
+            - link [ref=e1472] [cursor=pointer]:
+              - /url: /agents/175
+              - img [ref=e1473]
+      - 'button "Open short PEPE 21h ago HYB Swing Trader (1D) #79" [ref=e1477]':
+        - generic [ref=e1478]: Open short
+        - generic [ref=e1479]:
+          - generic [ref=e1480]:
+            - generic [ref=e1481]: PEPE
+            - generic [ref=e1482]: 21h ago
+          - generic [ref=e1483]:
+            - generic [ref=e1484]: HYB Swing Trader (1D)
+            - generic [ref=e1485]: "#79"
+            - link [ref=e1486] [cursor=pointer]:
+              - /url: /agents/189
+              - img [ref=e1487]
+      - 'button "Open long ATOM 21h ago RB Momentum Trader (4H) #109" [ref=e1491]':
+        - generic [ref=e1492]: Open long
+        - generic [ref=e1493]:
+          - generic [ref=e1494]:
+            - generic [ref=e1495]: ATOM
+            - generic [ref=e1496]: 21h ago
+          - generic [ref=e1497]:
+            - generic [ref=e1498]: RB Momentum Trader (4H)
+            - generic [ref=e1499]: "#109"
+            - link [ref=e1500] [cursor=pointer]:
+              - /url: /agents/41
+              - img [ref=e1501]
+      - 'button "Open long GUN 22h ago RB Swing Trader (30M) #142" [ref=e1505]':
+        - generic [ref=e1506]: Open long
+        - generic [ref=e1507]:
+          - generic [ref=e1508]:
+            - generic [ref=e1509]: GUN
+            - generic [ref=e1510]: 22h ago
+          - generic [ref=e1511]:
+            - generic [ref=e1512]: RB Swing Trader (30M)
+            - generic [ref=e1513]: "#142"
+            - link [ref=e1514] [cursor=pointer]:
+              - /url: /agents/36
+              - img [ref=e1515]
+      - 'button "Open long GUN 22h ago HYB Swing Trader (30M) #144" [ref=e1519]':
+        - generic [ref=e1520]: Open long
+        - generic [ref=e1521]:
+          - generic [ref=e1522]:
+            - generic [ref=e1523]: GUN
+            - generic [ref=e1524]: 22h ago
+          - generic [ref=e1525]:
+            - generic [ref=e1526]: HYB Swing Trader (30M)
+            - generic [ref=e1527]: "#144"
+            - link [ref=e1528] [cursor=pointer]:
+              - /url: /agents/165
+              - img [ref=e1529]
+      - 'button "Open short AAVE 1d ago RB Swing Trader (1D) #139" [ref=e1533]':
+        - generic [ref=e1534]: Open short
+        - generic [ref=e1535]:
+          - generic [ref=e1536]:
+            - generic [ref=e1537]: AAVE
+            - generic [ref=e1538]: 1d ago
+          - generic [ref=e1539]:
+            - generic [ref=e1540]: RB Swing Trader (1D)
+            - generic [ref=e1541]: "#139"
+            - link [ref=e1542] [cursor=pointer]:
+              - /url: /agents/48
+              - img [ref=e1543]
+      - 'button "Open short AAVE 1d ago HYB Swing Trader (1D) #79" [ref=e1547]':
+        - generic [ref=e1548]: Open short
+        - generic [ref=e1549]:
+          - generic [ref=e1550]:
+            - generic [ref=e1551]: AAVE
+            - generic [ref=e1552]: 1d ago
+          - generic [ref=e1553]:
+            - generic [ref=e1554]: HYB Swing Trader (1D)
+            - generic [ref=e1555]: "#79"
+            - link [ref=e1556] [cursor=pointer]:
+              - /url: /agents/189
+              - img [ref=e1557]
+      - 'button "Open short UNI 1d ago RB Swing Trader (4H) #110" [ref=e1561]':
+        - generic [ref=e1562]: Open short
+        - generic [ref=e1563]:
+          - generic [ref=e1564]:
+            - generic [ref=e1565]: UNI
+            - generic [ref=e1566]: 1d ago
+          - generic [ref=e1567]:
+            - generic [ref=e1568]: RB Swing Trader (4H)
+            - generic [ref=e1569]: "#110"
+            - link [ref=e1570] [cursor=pointer]:
+              - /url: /agents/44
+              - img [ref=e1571]
+      - 'button "Open long ESP 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e1575]':
+        - generic [ref=e1576]: Open long
+        - generic [ref=e1577]:
+          - generic [ref=e1578]:
+            - generic [ref=e1579]: ESP
+            - generic [ref=e1580]: 2d ago
+          - generic [ref=e1581]:
+            - generic [ref=e1582]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e1583]: "#105"
+            - link [ref=e1584] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e1585]
+      - 'button "Open long MMT 2d ago HYB-LLM Mean Reversion Trader (1H) #6" [ref=e1589]':
+        - generic [ref=e1590]: Open long
+        - generic [ref=e1591]:
+          - generic [ref=e1592]:
+            - generic [ref=e1593]: MMT
+            - generic [ref=e1594]: 2d ago
+          - generic [ref=e1595]:
+            - generic [ref=e1596]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e1597]: "#6"
+            - link [ref=e1598] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e1599]
+      - 'button "Open long ORCA 2d ago HYB-LLM Momentum Trader (4H) #130" [ref=e1603]':
+        - generic [ref=e1604]: Open long
+        - generic [ref=e1605]:
+          - generic [ref=e1606]:
+            - generic [ref=e1607]: ORCA
+            - generic [ref=e1608]: 2d ago
+          - generic [ref=e1609]:
+            - generic [ref=e1610]: HYB-LLM Momentum Trader (4H)
+            - generic [ref=e1611]: "#130"
+            - link [ref=e1612] [cursor=pointer]:
+              - /url: /agents/176
+              - img [ref=e1613]
+      - 'button "Open long INIT 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e1617]':
+        - generic [ref=e1618]: Open long
+        - generic [ref=e1619]:
+          - generic [ref=e1620]:
+            - generic [ref=e1621]: INIT
+            - generic [ref=e1622]: 2d ago
+          - generic [ref=e1623]:
+            - generic [ref=e1624]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e1625]: "#99"
+            - link [ref=e1626] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e1627]
+      - 'button "Open long ATM 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e1631]':
+        - generic [ref=e1632]: Open long
+        - generic [ref=e1633]:
+          - generic [ref=e1634]:
+            - generic [ref=e1635]: ATM
+            - generic [ref=e1636]: 2d ago
+          - generic [ref=e1637]:
+            - generic [ref=e1638]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e1639]: "#107"
+            - link [ref=e1640] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e1641]
+      - 'button "Open long ESP 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e1645]':
+        - generic [ref=e1646]: Open long
+        - generic [ref=e1647]:
+          - generic [ref=e1648]:
+            - generic [ref=e1649]: ESP
+            - generic [ref=e1650]: 2d ago
+          - generic [ref=e1651]:
+            - generic [ref=e1652]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e1653]: "#132"
+            - link [ref=e1654] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e1655]
+      - 'button "Open long 0G 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e1659]':
+        - generic [ref=e1660]: Open long
+        - generic [ref=e1661]:
+          - generic [ref=e1662]:
+            - generic [ref=e1663]: 0G
+            - generic [ref=e1664]: 2d ago
+          - generic [ref=e1665]:
+            - generic [ref=e1666]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e1667]: "#132"
+            - link [ref=e1668] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e1669]
+      - 'button "Open long HUMA 2d ago HYB-LLM Mean Reversion Trader (1H) #6" [ref=e1673]':
+        - generic [ref=e1674]: Open long
+        - generic [ref=e1675]:
+          - generic [ref=e1676]:
+            - generic [ref=e1677]: HUMA
+            - generic [ref=e1678]: 2d ago
+          - generic [ref=e1679]:
+            - generic [ref=e1680]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e1681]: "#6"
+            - link [ref=e1682] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e1683]
+      - 'button "Open long ATM 2d ago HYB-LLM Breakout Trader (15M) #143" [ref=e1687]':
+        - generic [ref=e1688]: Open long
+        - generic [ref=e1689]:
+          - generic [ref=e1690]:
+            - generic [ref=e1691]: ATM
+            - generic [ref=e1692]: 2d ago
+          - generic [ref=e1693]:
+            - generic [ref=e1694]: HYB-LLM Breakout Trader (15M)
+            - generic [ref=e1695]: "#143"
+            - link [ref=e1696] [cursor=pointer]:
+              - /url: /agents/156
+              - img [ref=e1697]
+      - 'button "Open long INIT 2d ago TW-LLM Momentum Rider (1D) #87" [ref=e1701]':
+        - generic [ref=e1702]: Open long
+        - generic [ref=e1703]:
+          - generic [ref=e1704]:
+            - generic [ref=e1705]: INIT
+            - generic [ref=e1706]: 2d ago
+          - generic [ref=e1707]:
+            - generic [ref=e1708]: TW-LLM Momentum Rider (1D)
+            - generic [ref=e1709]: "#87"
+            - link [ref=e1710] [cursor=pointer]:
+              - /url: /agents/90
+              - img [ref=e1711]
+      - 'button "Open long ALLO 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e1715]':
+        - generic [ref=e1716]: Open long
+        - generic [ref=e1717]:
+          - generic [ref=e1718]:
+            - generic [ref=e1719]: ALLO
+            - generic [ref=e1720]: 2d ago
+          - generic [ref=e1721]:
+            - generic [ref=e1722]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e1723]: "#105"
+            - link [ref=e1724] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e1725]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Mean Reversion Trader (1W) #3" [ref=e1729]':
+        - generic [ref=e1730]: Open long
+        - generic [ref=e1731]:
+          - generic [ref=e1732]:
+            - generic [ref=e1733]: FDUSD
+            - generic [ref=e1734]: 2d ago
+          - generic [ref=e1735]:
+            - generic [ref=e1736]: HYB-LLM Mean Reversion Trader (1W)
+            - generic [ref=e1737]: "#3"
+            - link [ref=e1738] [cursor=pointer]:
+              - /url: /agents/194
+              - img [ref=e1739]
+      - 'button "Open long BTC 2d ago RB Mean Reversion (1W) #4" [ref=e1743]':
+        - generic [ref=e1744]: Open long
+        - generic [ref=e1745]:
+          - generic [ref=e1746]:
+            - generic [ref=e1747]: BTC
+            - generic [ref=e1748]: 2d ago
+          - generic [ref=e1749]:
+            - generic [ref=e1750]: RB Mean Reversion (1W)
+            - generic [ref=e1751]: "#4"
+            - link [ref=e1752] [cursor=pointer]:
+              - /url: /agents/50
+              - img [ref=e1753]
+      - 'button "Open long INIT 2d ago HYB-LLM Momentum Trader (1D) #134" [ref=e1757]':
+        - generic [ref=e1758]: Open long
+        - generic [ref=e1759]:
+          - generic [ref=e1760]:
+            - generic [ref=e1761]: INIT
+            - generic [ref=e1762]: 2d ago
+          - generic [ref=e1763]:
+            - generic [ref=e1764]: HYB-LLM Momentum Trader (1D)
+            - generic [ref=e1765]: "#134"
+            - link [ref=e1766] [cursor=pointer]:
+              - /url: /agents/184
+              - img [ref=e1767]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Breakout Trader (1W) #113" [ref=e1771]':
+        - generic [ref=e1772]: Open long
+        - generic [ref=e1773]:
+          - generic [ref=e1774]:
+            - generic [ref=e1775]: FDUSD
+            - generic [ref=e1776]: 2d ago
+          - generic [ref=e1777]:
+            - generic [ref=e1778]: HYB-LLM Breakout Trader (1W)
+            - generic [ref=e1779]: "#113"
+            - link [ref=e1780] [cursor=pointer]:
+              - /url: /agents/196
+              - img [ref=e1781]
+      - 'button "Open long BTC 2d ago HYB Mean Reversion Trader (1W) #7" [ref=e1785]':
+        - generic [ref=e1786]: Open long
+        - generic [ref=e1787]:
+          - generic [ref=e1788]:
+            - generic [ref=e1789]: BTC
+            - generic [ref=e1790]: 2d ago
+          - generic [ref=e1791]:
+            - generic [ref=e1792]: HYB Mean Reversion Trader (1W)
+            - generic [ref=e1793]: "#7"
+            - link [ref=e1794] [cursor=pointer]:
+              - /url: /agents/193
+              - img [ref=e1795]
+      - 'button "Open long KITE 2d ago HYB-LLM Mean Reversion Trader (1D) #9" [ref=e1799]':
+        - generic [ref=e1800]: Open long
+        - generic [ref=e1801]:
+          - generic [ref=e1802]:
+            - generic [ref=e1803]: KITE
+            - generic [ref=e1804]: 2d ago
+          - generic [ref=e1805]:
+            - generic [ref=e1806]: HYB-LLM Mean Reversion Trader (1D)
+            - generic [ref=e1807]: "#9"
+            - link [ref=e1808] [cursor=pointer]:
+              - /url: /agents/186
+              - img [ref=e1809]
+      - 'button "Open long ESP 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e1813]':
+        - generic [ref=e1814]: Open long
+        - generic [ref=e1815]:
+          - generic [ref=e1816]:
+            - generic [ref=e1817]: ESP
+            - generic [ref=e1818]: 2d ago
+          - generic [ref=e1819]:
+            - generic [ref=e1820]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e1821]: "#140"
+            - link [ref=e1822] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e1823]
+      - 'button "Open long MMT 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e1827]':
+        - generic [ref=e1828]: Open long
+        - generic [ref=e1829]:
+          - generic [ref=e1830]:
+            - generic [ref=e1831]: MMT
+            - generic [ref=e1832]: 2d ago
+          - generic [ref=e1833]:
+            - generic [ref=e1834]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e1835]: "#107"
+            - link [ref=e1836] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e1837]
+      - 'button "Open long JTO 2d ago HYB-LLM Mean Reversion Trader (1H) #6" [ref=e1841]':
+        - generic [ref=e1842]: Open long
+        - generic [ref=e1843]:
+          - generic [ref=e1844]:
+            - generic [ref=e1845]: JTO
+            - generic [ref=e1846]: 2d ago
+          - generic [ref=e1847]:
+            - generic [ref=e1848]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e1849]: "#6"
+            - link [ref=e1850] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e1851]
+      - 'button "Open long MUBARAK 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e1855]':
+        - generic [ref=e1856]: Open long
+        - generic [ref=e1857]:
+          - generic [ref=e1858]:
+            - generic [ref=e1859]: MUBARAK
+            - generic [ref=e1860]: 2d ago
+          - generic [ref=e1861]:
+            - generic [ref=e1862]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e1863]: "#132"
+            - link [ref=e1864] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e1865]
+      - 'button "Open long MUBARAK 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e1869]':
+        - generic [ref=e1870]: Open long
+        - generic [ref=e1871]:
+          - generic [ref=e1872]:
+            - generic [ref=e1873]: MUBARAK
+            - generic [ref=e1874]: 2d ago
+          - generic [ref=e1875]:
+            - generic [ref=e1876]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e1877]: "#108"
+            - link [ref=e1878] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e1879]
+      - 'button "Open long PAXG 2d ago HYB-LLM Momentum Trader (1W) #133" [ref=e1883]':
+        - generic [ref=e1884]: Open long
+        - generic [ref=e1885]:
+          - generic [ref=e1886]:
+            - generic [ref=e1887]: PAXG
+            - generic [ref=e1888]: 2d ago
+          - generic [ref=e1889]:
+            - generic [ref=e1890]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e1891]: "#133"
+            - link [ref=e1892] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e1893]
+      - 'button "Open long TAO 2d ago HYB-LLM Swing Trader (1H) #112" [ref=e1897]':
+        - generic [ref=e1898]: Open long
+        - generic [ref=e1899]:
+          - generic [ref=e1900]:
+            - generic [ref=e1901]: TAO
+            - generic [ref=e1902]: 2d ago
+          - generic [ref=e1903]:
+            - generic [ref=e1904]: HYB-LLM Swing Trader (1H)
+            - generic [ref=e1905]: "#112"
+            - link [ref=e1906] [cursor=pointer]:
+              - /url: /agents/174
+              - img [ref=e1907]
+      - 'button "Open short TWT 2d ago HYB Mean Reversion Trader (4H) #124" [ref=e1911]':
+        - generic [ref=e1912]: Open short
+        - generic [ref=e1913]:
+          - generic [ref=e1914]:
+            - generic [ref=e1915]: TWT
+            - generic [ref=e1916]: 2d ago
+          - generic [ref=e1917]:
+            - generic [ref=e1918]: HYB Mean Reversion Trader (4H)
+            - generic [ref=e1919]: "#124"
+            - link [ref=e1920] [cursor=pointer]:
+              - /url: /agents/177
+              - img [ref=e1921]
+      - 'button "Open long RPL 2d ago HYB-LLM Swing Trader (4H) #94" [ref=e1925]':
+        - generic [ref=e1926]: Open long
+        - generic [ref=e1927]:
+          - generic [ref=e1928]:
+            - generic [ref=e1929]: RPL
+            - generic [ref=e1930]: 2d ago
+          - generic [ref=e1931]:
+            - generic [ref=e1932]: HYB-LLM Swing Trader (4H)
+            - generic [ref=e1933]: "#94"
+            - link [ref=e1934] [cursor=pointer]:
+              - /url: /agents/182
+              - img [ref=e1935]
+      - 'button "Open short TWT 2d ago RB Mean Reversion (4H) #126" [ref=e1939]':
+        - generic [ref=e1940]: Open short
+        - generic [ref=e1941]:
+          - generic [ref=e1942]:
+            - generic [ref=e1943]: TWT
+            - generic [ref=e1944]: 2d ago
+          - generic [ref=e1945]:
+            - generic [ref=e1946]: RB Mean Reversion (4H)
+            - generic [ref=e1947]: "#126"
+            - link [ref=e1948] [cursor=pointer]:
+              - /url: /agents/42
+              - img [ref=e1949]
+      - 'button "Open long TAO 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e1953]':
+        - generic [ref=e1954]: Open long
+        - generic [ref=e1955]:
+          - generic [ref=e1956]:
+            - generic [ref=e1957]: TAO
+            - generic [ref=e1958]: 2d ago
+          - generic [ref=e1959]:
+            - generic [ref=e1960]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e1961]: "#107"
+            - link [ref=e1962] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e1963]
+      - 'button "Open long TAO 2d ago TW-LLM Narrative Follower (15M) #102" [ref=e1967]':
+        - generic [ref=e1968]: Open long
+        - generic [ref=e1969]:
+          - generic [ref=e1970]:
+            - generic [ref=e1971]: TAO
+            - generic [ref=e1972]: 2d ago
+          - generic [ref=e1973]:
+            - generic [ref=e1974]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e1975]: "#102"
+            - link [ref=e1976] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e1977]
+      - 'button "Open long ESP 2d ago HYB-LLM Momentum Trader (15M) #100" [ref=e1981]':
+        - generic [ref=e1982]: Open long
+        - generic [ref=e1983]:
+          - generic [ref=e1984]:
+            - generic [ref=e1985]: ESP
+            - generic [ref=e1986]: 2d ago
+          - generic [ref=e1987]:
+            - generic [ref=e1988]: HYB-LLM Momentum Trader (15M)
+            - generic [ref=e1989]: "#100"
+            - link [ref=e1990] [cursor=pointer]:
+              - /url: /agents/152
+              - img [ref=e1991]
+      - 'button "Open long TAO 2d ago HYB-LLM Mean Reversion Trader (15M) #135" [ref=e1995]':
+        - generic [ref=e1996]: Open long
+        - generic [ref=e1997]:
+          - generic [ref=e1998]:
+            - generic [ref=e1999]: TAO
+            - generic [ref=e2000]: 2d ago
+          - generic [ref=e2001]:
+            - generic [ref=e2002]: HYB-LLM Mean Reversion Trader (15M)
+            - generic [ref=e2003]: "#135"
+            - link [ref=e2004] [cursor=pointer]:
+              - /url: /agents/154
+              - img [ref=e2005]
+      - 'button "Open long 0G 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e2009]':
+        - generic [ref=e2010]: Open long
+        - generic [ref=e2011]:
+          - generic [ref=e2012]:
+            - generic [ref=e2013]: 0G
+            - generic [ref=e2014]: 2d ago
+          - generic [ref=e2015]:
+            - generic [ref=e2016]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e2017]: "#108"
+            - link [ref=e2018] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e2019]
+      - 'button "Open long TAO 2d ago HYB-LLM Mean Reversion Trader (1H) #6" [ref=e2023]':
+        - generic [ref=e2024]: Open long
+        - generic [ref=e2025]:
+          - generic [ref=e2026]:
+            - generic [ref=e2027]: TAO
+            - generic [ref=e2028]: 2d ago
+          - generic [ref=e2029]:
+            - generic [ref=e2030]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e2031]: "#6"
+            - link [ref=e2032] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e2033]
+      - 'button "Open long TAO 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e2037]':
+        - generic [ref=e2038]: Open long
+        - generic [ref=e2039]:
+          - generic [ref=e2040]:
+            - generic [ref=e2041]: TAO
+            - generic [ref=e2042]: 2d ago
+          - generic [ref=e2043]:
+            - generic [ref=e2044]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e2045]: "#132"
+            - link [ref=e2046] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e2047]
+      - 'button "Open long ALLO 2d ago HYB-LLM Breakout Trader (30M) #129" [ref=e2051]':
+        - generic [ref=e2052]: Open long
+        - generic [ref=e2053]:
+          - generic [ref=e2054]:
+            - generic [ref=e2055]: ALLO
+            - generic [ref=e2056]: 2d ago
+          - generic [ref=e2057]:
+            - generic [ref=e2058]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e2059]: "#129"
+            - link [ref=e2060] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e2061]
+      - 'button "Open long MMT 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e2065]':
+        - generic [ref=e2066]: Open long
+        - generic [ref=e2067]:
+          - generic [ref=e2068]:
+            - generic [ref=e2069]: MMT
+            - generic [ref=e2070]: 2d ago
+          - generic [ref=e2071]:
+            - generic [ref=e2072]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e2073]: "#105"
+            - link [ref=e2074] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e2075]
+      - 'button "Open long TAO 2d ago HYB-LLM Breakout Trader (15M) #143" [ref=e2079]':
+        - generic [ref=e2080]: Open long
+        - generic [ref=e2081]:
+          - generic [ref=e2082]:
+            - generic [ref=e2083]: TAO
+            - generic [ref=e2084]: 2d ago
+          - generic [ref=e2085]:
+            - generic [ref=e2086]: HYB-LLM Breakout Trader (15M)
+            - generic [ref=e2087]: "#143"
+            - link [ref=e2088] [cursor=pointer]:
+              - /url: /agents/156
+              - img [ref=e2089]
+      - 'button "Open long JTO 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e2093]':
+        - generic [ref=e2094]: Open long
+        - generic [ref=e2095]:
+          - generic [ref=e2096]:
+            - generic [ref=e2097]: JTO
+            - generic [ref=e2098]: 2d ago
+          - generic [ref=e2099]:
+            - generic [ref=e2100]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e2101]: "#107"
+            - link [ref=e2102] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e2103]
+      - 'button "Open long MMT 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e2107]':
+        - generic [ref=e2108]: Open long
+        - generic [ref=e2109]:
+          - generic [ref=e2110]:
+            - generic [ref=e2111]: MMT
+            - generic [ref=e2112]: 2d ago
+          - generic [ref=e2113]:
+            - generic [ref=e2114]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e2115]: "#108"
+            - link [ref=e2116] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e2117]
+      - 'button "Open long FDUSD 2d ago TW-LLM Momentum Rider (1D) #87" [ref=e2121]':
+        - generic [ref=e2122]: Open long
+        - generic [ref=e2123]:
+          - generic [ref=e2124]:
+            - generic [ref=e2125]: FDUSD
+            - generic [ref=e2126]: 2d ago
+          - generic [ref=e2127]:
+            - generic [ref=e2128]: TW-LLM Momentum Rider (1D)
+            - generic [ref=e2129]: "#87"
+            - link [ref=e2130] [cursor=pointer]:
+              - /url: /agents/90
+              - img [ref=e2131]
+      - 'button "Open long MMT 2d ago HYB-LLM Momentum Trader (15M) #100" [ref=e2135]':
+        - generic [ref=e2136]: Open long
+        - generic [ref=e2137]:
+          - generic [ref=e2138]:
+            - generic [ref=e2139]: MMT
+            - generic [ref=e2140]: 2d ago
+          - generic [ref=e2141]:
+            - generic [ref=e2142]: HYB-LLM Momentum Trader (15M)
+            - generic [ref=e2143]: "#100"
+            - link [ref=e2144] [cursor=pointer]:
+              - /url: /agents/152
+              - img [ref=e2145]
+      - 'button "Open long RPL 2d ago TW-LLM Narrative Follower (15M) #102" [ref=e2149]':
+        - generic [ref=e2150]: Open long
+        - generic [ref=e2151]:
+          - generic [ref=e2152]:
+            - generic [ref=e2153]: RPL
+            - generic [ref=e2154]: 2d ago
+          - generic [ref=e2155]:
+            - generic [ref=e2156]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e2157]: "#102"
+            - link [ref=e2158] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e2159]
+      - 'button "Open long TRX 2d ago HYB-LLM Mean Reversion Trader (1W) #3" [ref=e2163]':
+        - generic [ref=e2164]: Open long
+        - generic [ref=e2165]:
+          - generic [ref=e2166]:
+            - generic [ref=e2167]: TRX
+            - generic [ref=e2168]: 2d ago
+          - generic [ref=e2169]:
+            - generic [ref=e2170]: HYB-LLM Mean Reversion Trader (1W)
+            - generic [ref=e2171]: "#3"
+            - link [ref=e2172] [cursor=pointer]:
+              - /url: /agents/194
+              - img [ref=e2173]
+      - 'button "Open long BERA 2d ago HYB-LLM Mean Reversion Trader (1H) #6" [ref=e2177]':
+        - generic [ref=e2178]: Open long
+        - generic [ref=e2179]:
+          - generic [ref=e2180]:
+            - generic [ref=e2181]: BERA
+            - generic [ref=e2182]: 2d ago
+          - generic [ref=e2183]:
+            - generic [ref=e2184]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e2185]: "#6"
+            - link [ref=e2186] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e2187]
+      - 'button "Open long ASTER 2d ago HYB-LLM Breakout Trader (1D) #118" [ref=e2191]':
+        - generic [ref=e2192]: Open long
+        - generic [ref=e2193]:
+          - generic [ref=e2194]:
+            - generic [ref=e2195]: ASTER
+            - generic [ref=e2196]: 2d ago
+          - generic [ref=e2197]:
+            - generic [ref=e2198]: HYB-LLM Breakout Trader (1D)
+            - generic [ref=e2199]: "#118"
+            - link [ref=e2200] [cursor=pointer]:
+              - /url: /agents/188
+              - img [ref=e2201]
+      - 'button "Open long EUR 2d ago HYB-LLM Momentum Trader (1W) #133" [ref=e2205]':
+        - generic [ref=e2206]: Open long
+        - generic [ref=e2207]:
+          - generic [ref=e2208]:
+            - generic [ref=e2209]: EUR
+            - generic [ref=e2210]: 2d ago
+          - generic [ref=e2211]:
+            - generic [ref=e2212]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e2213]: "#133"
+            - link [ref=e2214] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e2215]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Swing Trader (1W) #84" [ref=e2219]':
+        - generic [ref=e2220]: Open long
+        - generic [ref=e2221]:
+          - generic [ref=e2222]:
+            - generic [ref=e2223]: FDUSD
+            - generic [ref=e2224]: 2d ago
+          - generic [ref=e2225]:
+            - generic [ref=e2226]: HYB-LLM Swing Trader (1W)
+            - generic [ref=e2227]: "#84"
+            - link [ref=e2228] [cursor=pointer]:
+              - /url: /agents/198
+              - img [ref=e2229]
+      - 'button "Open long BCH 2d ago HYB-LLM Breakout Trader (1W) #113" [ref=e2233]':
+        - generic [ref=e2234]: Open long
+        - generic [ref=e2235]:
+          - generic [ref=e2236]:
+            - generic [ref=e2237]: BCH
+            - generic [ref=e2238]: 2d ago
+          - generic [ref=e2239]:
+            - generic [ref=e2240]: HYB-LLM Breakout Trader (1W)
+            - generic [ref=e2241]: "#113"
+            - link [ref=e2242] [cursor=pointer]:
+              - /url: /agents/196
+              - img [ref=e2243]
+      - 'button "Open long ASTER 2d ago HYB-LLM Mean Reversion Trader (1D) #9" [ref=e2247]':
+        - generic [ref=e2248]: Open long
+        - generic [ref=e2249]:
+          - generic [ref=e2250]:
+            - generic [ref=e2251]: ASTER
+            - generic [ref=e2252]: 2d ago
+          - generic [ref=e2253]:
+            - generic [ref=e2254]: HYB-LLM Mean Reversion Trader (1D)
+            - generic [ref=e2255]: "#9"
+            - link [ref=e2256] [cursor=pointer]:
+              - /url: /agents/186
+              - img [ref=e2257]
+      - 'button "Open long ATOM 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e2261]':
+        - generic [ref=e2262]: Open long
+        - generic [ref=e2263]:
+          - generic [ref=e2264]:
+            - generic [ref=e2265]: ATOM
+            - generic [ref=e2266]: 2d ago
+          - generic [ref=e2267]:
+            - generic [ref=e2268]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e2269]: "#140"
+            - link [ref=e2270] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e2271]
+      - 'button "Open long ATOM 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e2275]':
+        - generic [ref=e2276]: Open long
+        - generic [ref=e2277]:
+          - generic [ref=e2278]:
+            - generic [ref=e2279]: ATOM
+            - generic [ref=e2280]: 2d ago
+          - generic [ref=e2281]:
+            - generic [ref=e2282]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e2283]: "#108"
+            - link [ref=e2284] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e2285]
+      - 'button "Open long NEXO 2d ago HYB-LLM Breakout Trader (1H) #138" [ref=e2289]':
+        - generic [ref=e2290]: Open long
+        - generic [ref=e2291]:
+          - generic [ref=e2292]:
+            - generic [ref=e2293]: NEXO
+            - generic [ref=e2294]: 2d ago
+          - generic [ref=e2295]:
+            - generic [ref=e2296]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e2297]: "#138"
+            - link [ref=e2298] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e2299]
+      - 'button "Open long NEXO 2d ago HYB-LLM Momentum Trader (1H) #147" [ref=e2303]':
+        - generic [ref=e2304]: Open long
+        - generic [ref=e2305]:
+          - generic [ref=e2306]:
+            - generic [ref=e2307]: NEXO
+            - generic [ref=e2308]: 2d ago
+          - generic [ref=e2309]:
+            - generic [ref=e2310]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e2311]: "#147"
+            - link [ref=e2312] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e2313]
+      - 'button "Open long RPL 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e2317]':
+        - generic [ref=e2318]: Open long
+        - generic [ref=e2319]:
+          - generic [ref=e2320]:
+            - generic [ref=e2321]: RPL
+            - generic [ref=e2322]: 2d ago
+          - generic [ref=e2323]:
+            - generic [ref=e2324]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e2325]: "#99"
+            - link [ref=e2326] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e2327]
+      - 'button "Open long JTO 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e2331]':
+        - generic [ref=e2332]: Open long
+        - generic [ref=e2333]:
+          - generic [ref=e2334]:
+            - generic [ref=e2335]: JTO
+            - generic [ref=e2336]: 2d ago
+          - generic [ref=e2337]:
+            - generic [ref=e2338]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e2339]: "#105"
+            - link [ref=e2340] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e2341]
+      - 'button "Open long MAGIC 2d ago TW-LLM Narrative Follower (15M) #102" [ref=e2345]':
+        - generic [ref=e2346]: Open long
+        - generic [ref=e2347]:
+          - generic [ref=e2348]:
+            - generic [ref=e2349]: MAGIC
+            - generic [ref=e2350]: 2d ago
+          - generic [ref=e2351]:
+            - generic [ref=e2352]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e2353]: "#102"
+            - link [ref=e2354] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e2355]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Momentum Trader (1W) #133" [ref=e2359]':
+        - generic [ref=e2360]: Open long
+        - generic [ref=e2361]:
+          - generic [ref=e2362]:
+            - generic [ref=e2363]: FDUSD
+            - generic [ref=e2364]: 2d ago
+          - generic [ref=e2365]:
+            - generic [ref=e2366]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e2367]: "#133"
+            - link [ref=e2368] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e2369]
+      - 'button "Open long ASTER 2d ago HYB-LLM Swing Trader (1D) #136" [ref=e2373]':
+        - generic [ref=e2374]: Open long
+        - generic [ref=e2375]:
+          - generic [ref=e2376]:
+            - generic [ref=e2377]: ASTER
+            - generic [ref=e2378]: 2d ago
+          - generic [ref=e2379]:
+            - generic [ref=e2380]: HYB-LLM Swing Trader (1D)
+            - generic [ref=e2381]: "#136"
+            - link [ref=e2382] [cursor=pointer]:
+              - /url: /agents/190
+              - img [ref=e2383]
+      - 'button "Open long LISTA 2d ago HYB Breakout Trader (15M) #123" [ref=e2387]':
+        - generic [ref=e2388]: Open long
+        - generic [ref=e2389]:
+          - generic [ref=e2390]:
+            - generic [ref=e2391]: LISTA
+            - generic [ref=e2392]: 2d ago
+          - generic [ref=e2393]:
+            - generic [ref=e2394]: HYB Breakout Trader (15M)
+            - generic [ref=e2395]: "#123"
+            - link [ref=e2396] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e2397]
+      - 'button "Open long LISTA 2d ago RB Breakout Hunter (15M) #128" [ref=e2401]':
+        - generic [ref=e2402]: Open long
+        - generic [ref=e2403]:
+          - generic [ref=e2404]:
+            - generic [ref=e2405]: LISTA
+            - generic [ref=e2406]: 2d ago
+          - generic [ref=e2407]:
+            - generic [ref=e2408]: RB Breakout Hunter (15M)
+            - generic [ref=e2409]: "#128"
+            - link [ref=e2410] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e2411]
+      - 'button "Open long REZ 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e2415]':
+        - generic [ref=e2416]: Open long
+        - generic [ref=e2417]:
+          - generic [ref=e2418]:
+            - generic [ref=e2419]: REZ
+            - generic [ref=e2420]: 2d ago
+          - generic [ref=e2421]:
+            - generic [ref=e2422]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e2423]: "#132"
+            - link [ref=e2424] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e2425]
+      - 'button "Open long REZ 2d ago HYB-LLM Swing Trader (15M) #151" [ref=e2429]':
+        - generic [ref=e2430]: Open long
+        - generic [ref=e2431]:
+          - generic [ref=e2432]:
+            - generic [ref=e2433]: REZ
+            - generic [ref=e2434]: 2d ago
+          - generic [ref=e2435]:
+            - generic [ref=e2436]: HYB-LLM Swing Trader (15M)
+            - generic [ref=e2437]: "#151"
+            - link [ref=e2438] [cursor=pointer]:
+              - /url: /agents/158
+              - img [ref=e2439]
+      - 'button "Open long REZ 2d ago HYB-LLM Mean Reversion Trader (15M) #135" [ref=e2443]':
+        - generic [ref=e2444]: Open long
+        - generic [ref=e2445]:
+          - generic [ref=e2446]:
+            - generic [ref=e2447]: REZ
+            - generic [ref=e2448]: 2d ago
+          - generic [ref=e2449]:
+            - generic [ref=e2450]: HYB-LLM Mean Reversion Trader (15M)
+            - generic [ref=e2451]: "#135"
+            - link [ref=e2452] [cursor=pointer]:
+              - /url: /agents/154
+              - img [ref=e2453]
+      - 'button "Open long REZ 2d ago HYB-LLM Momentum Trader (1H) #147" [ref=e2457]':
+        - generic [ref=e2458]: Open long
+        - generic [ref=e2459]:
+          - generic [ref=e2460]:
+            - generic [ref=e2461]: REZ
+            - generic [ref=e2462]: 2d ago
+          - generic [ref=e2463]:
+            - generic [ref=e2464]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e2465]: "#147"
+            - link [ref=e2466] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e2467]
+      - 'button "Open long REZ 2d ago HYB-LLM Breakout Trader (1H) #138" [ref=e2471]':
+        - generic [ref=e2472]: Open long
+        - generic [ref=e2473]:
+          - generic [ref=e2474]:
+            - generic [ref=e2475]: REZ
+            - generic [ref=e2476]: 2d ago
+          - generic [ref=e2477]:
+            - generic [ref=e2478]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e2479]: "#138"
+            - link [ref=e2480] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e2481]
+      - 'button "Open long REZ 2d ago HYB-LLM Breakout Trader (15M) #143" [ref=e2485]':
+        - generic [ref=e2486]: Open long
+        - generic [ref=e2487]:
+          - generic [ref=e2488]:
+            - generic [ref=e2489]: REZ
+            - generic [ref=e2490]: 2d ago
+          - generic [ref=e2491]:
+            - generic [ref=e2492]: HYB-LLM Breakout Trader (15M)
+            - generic [ref=e2493]: "#143"
+            - link [ref=e2494] [cursor=pointer]:
+              - /url: /agents/156
+              - img [ref=e2495]
+      - 'button "Open long ATM 2d ago HYB-LLM Momentum Trader (1D) #134" [ref=e2499]':
+        - generic [ref=e2500]: Open long
+        - generic [ref=e2501]:
+          - generic [ref=e2502]:
+            - generic [ref=e2503]: ATM
+            - generic [ref=e2504]: 2d ago
+          - generic [ref=e2505]:
+            - generic [ref=e2506]: HYB-LLM Momentum Trader (1D)
+            - generic [ref=e2507]: "#134"
+            - link [ref=e2508] [cursor=pointer]:
+              - /url: /agents/184
+              - img [ref=e2509]
+      - 'button "Open long AI 2d ago HYB Swing Trader (15M) #152" [ref=e2513]':
+        - generic [ref=e2514]: Open long
+        - generic [ref=e2515]:
+          - generic [ref=e2516]:
+            - generic [ref=e2517]: AI
+            - generic [ref=e2518]: 2d ago
+          - generic [ref=e2519]:
+            - generic [ref=e2520]: HYB Swing Trader (15M)
+            - generic [ref=e2521]: "#152"
+            - link [ref=e2522] [cursor=pointer]:
+              - /url: /agents/157
+              - img [ref=e2523]
+      - 'button "Open long GPS 2d ago HYB-LLM Mean Reversion Trader (15M) #135" [ref=e2527]':
+        - generic [ref=e2528]: Open long
+        - generic [ref=e2529]:
+          - generic [ref=e2530]:
+            - generic [ref=e2531]: GPS
+            - generic [ref=e2532]: 2d ago
+          - generic [ref=e2533]:
+            - generic [ref=e2534]: HYB-LLM Mean Reversion Trader (15M)
+            - generic [ref=e2535]: "#135"
+            - link [ref=e2536] [cursor=pointer]:
+              - /url: /agents/154
+              - img [ref=e2537]
+      - 'button "Open long AI 2d ago RB Swing Trader (15M) #150" [ref=e2541]':
+        - generic [ref=e2542]: Open long
+        - generic [ref=e2543]:
+          - generic [ref=e2544]:
+            - generic [ref=e2545]: AI
+            - generic [ref=e2546]: 2d ago
+          - generic [ref=e2547]:
+            - generic [ref=e2548]: RB Swing Trader (15M)
+            - generic [ref=e2549]: "#150"
+            - link [ref=e2550] [cursor=pointer]:
+              - /url: /agents/32
+              - img [ref=e2551]
+      - 'button "Open long OM 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e2555]':
+        - generic [ref=e2556]: Open long
+        - generic [ref=e2557]:
+          - generic [ref=e2558]:
+            - generic [ref=e2559]: OM
+            - generic [ref=e2560]: 2d ago
+          - generic [ref=e2561]:
+            - generic [ref=e2562]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e2563]: "#99"
+            - link [ref=e2564] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e2565]
+      - 'button "Open long JST 2d ago TW-LLM Insider Tracker (1W) #88" [ref=e2569]':
+        - generic [ref=e2570]: Open long
+        - generic [ref=e2571]:
+          - generic [ref=e2572]:
+            - generic [ref=e2573]: JST
+            - generic [ref=e2574]: 2d ago
+          - generic [ref=e2575]:
+            - generic [ref=e2576]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e2577]: "#88"
+            - link [ref=e2578] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e2579]
+      - 'button "Open long GPS 2d ago HYB-LLM Breakout Trader (1H) #138" [ref=e2583]':
+        - generic [ref=e2584]: Open long
+        - generic [ref=e2585]:
+          - generic [ref=e2586]:
+            - generic [ref=e2587]: GPS
+            - generic [ref=e2588]: 2d ago
+          - generic [ref=e2589]:
+            - generic [ref=e2590]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e2591]: "#138"
+            - link [ref=e2592] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e2593]
+      - 'button "Open long NEXO 2d ago HYB-LLM Momentum Trader (4H) #130" [ref=e2597]':
+        - generic [ref=e2598]: Open long
+        - generic [ref=e2599]:
+          - generic [ref=e2600]:
+            - generic [ref=e2601]: NEXO
+            - generic [ref=e2602]: 2d ago
+          - generic [ref=e2603]:
+            - generic [ref=e2604]: HYB-LLM Momentum Trader (4H)
+            - generic [ref=e2605]: "#130"
+            - link [ref=e2606] [cursor=pointer]:
+              - /url: /agents/176
+              - img [ref=e2607]
+      - 'button "Open long NEXO 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e2611]':
+        - generic [ref=e2612]: Open long
+        - generic [ref=e2613]:
+          - generic [ref=e2614]:
+            - generic [ref=e2615]: NEXO
+            - generic [ref=e2616]: 2d ago
+          - generic [ref=e2617]:
+            - generic [ref=e2618]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e2619]: "#99"
+            - link [ref=e2620] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e2621]
+      - 'button "Open long GPS 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e2625]':
+        - generic [ref=e2626]: Open long
+        - generic [ref=e2627]:
+          - generic [ref=e2628]:
+            - generic [ref=e2629]: GPS
+            - generic [ref=e2630]: 2d ago
+          - generic [ref=e2631]:
+            - generic [ref=e2632]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e2633]: "#140"
+            - link [ref=e2634] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e2635]
+      - 'button "Open long OM 2d ago HYB-LLM Momentum Trader (4H) #130" [ref=e2639]':
+        - generic [ref=e2640]: Open long
+        - generic [ref=e2641]:
+          - generic [ref=e2642]:
+            - generic [ref=e2643]: OM
+            - generic [ref=e2644]: 2d ago
+          - generic [ref=e2645]:
+            - generic [ref=e2646]: HYB-LLM Momentum Trader (4H)
+            - generic [ref=e2647]: "#130"
+            - link [ref=e2648] [cursor=pointer]:
+              - /url: /agents/176
+              - img [ref=e2649]
+      - 'button "Open long NEXO 2d ago HYB-LLM Breakout Trader (15M) #143" [ref=e2653]':
+        - generic [ref=e2654]: Open long
+        - generic [ref=e2655]:
+          - generic [ref=e2656]:
+            - generic [ref=e2657]: NEXO
+            - generic [ref=e2658]: 2d ago
+          - generic [ref=e2659]:
+            - generic [ref=e2660]: HYB-LLM Breakout Trader (15M)
+            - generic [ref=e2661]: "#143"
+            - link [ref=e2662] [cursor=pointer]:
+              - /url: /agents/156
+              - img [ref=e2663]
+      - 'button "Open long EUR 2d ago HYB-LLM Mean Reversion Trader (15M) #135" [ref=e2667]':
+        - generic [ref=e2668]: Open long
+        - generic [ref=e2669]:
+          - generic [ref=e2670]:
+            - generic [ref=e2671]: EUR
+            - generic [ref=e2672]: 2d ago
+          - generic [ref=e2673]:
+            - generic [ref=e2674]: HYB-LLM Mean Reversion Trader (15M)
+            - generic [ref=e2675]: "#135"
+            - link [ref=e2676] [cursor=pointer]:
+              - /url: /agents/154
+              - img [ref=e2677]
+      - 'button "Open long SHELL 2d ago HYB-LLM Breakout Trader (30M) #129" [ref=e2681]':
+        - generic [ref=e2682]: Open long
+        - generic [ref=e2683]:
+          - generic [ref=e2684]:
+            - generic [ref=e2685]: SHELL
+            - generic [ref=e2686]: 2d ago
+          - generic [ref=e2687]:
+            - generic [ref=e2688]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e2689]: "#129"
+            - link [ref=e2690] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e2691]
+      - 'button "Open long GPS 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e2695]':
+        - generic [ref=e2696]: Open long
+        - generic [ref=e2697]:
+          - generic [ref=e2698]:
+            - generic [ref=e2699]: GPS
+            - generic [ref=e2700]: 2d ago
+          - generic [ref=e2701]:
+            - generic [ref=e2702]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e2703]: "#105"
+            - link [ref=e2704] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e2705]
+      - 'button "Open long IO 2d ago HYB-LLM Momentum Trader (1H) #147" [ref=e2709]':
+        - generic [ref=e2710]: Open long
+        - generic [ref=e2711]:
+          - generic [ref=e2712]:
+            - generic [ref=e2713]: IO
+            - generic [ref=e2714]: 2d ago
+          - generic [ref=e2715]:
+            - generic [ref=e2716]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e2717]: "#147"
+            - link [ref=e2718] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e2719]
+      - 'button "Open long ASTER 2d ago HYB-LLM Momentum Trader (1D) #134" [ref=e2723]':
+        - generic [ref=e2724]: Open long
+        - generic [ref=e2725]:
+          - generic [ref=e2726]:
+            - generic [ref=e2727]: ASTER
+            - generic [ref=e2728]: 2d ago
+          - generic [ref=e2729]:
+            - generic [ref=e2730]: HYB-LLM Momentum Trader (1D)
+            - generic [ref=e2731]: "#134"
+            - link [ref=e2732] [cursor=pointer]:
+              - /url: /agents/184
+              - img [ref=e2733]
+      - 'button "Open long IO 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e2737]':
+        - generic [ref=e2738]: Open long
+        - generic [ref=e2739]:
+          - generic [ref=e2740]:
+            - generic [ref=e2741]: IO
+            - generic [ref=e2742]: 2d ago
+          - generic [ref=e2743]:
+            - generic [ref=e2744]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e2745]: "#140"
+            - link [ref=e2746] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e2747]
+      - 'button "Open long GPS 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e2751]':
+        - generic [ref=e2752]: Open long
+        - generic [ref=e2753]:
+          - generic [ref=e2754]:
+            - generic [ref=e2755]: GPS
+            - generic [ref=e2756]: 2d ago
+          - generic [ref=e2757]:
+            - generic [ref=e2758]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e2759]: "#108"
+            - link [ref=e2760] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e2761]
+      - 'button "Open long DYM 2d ago HYB Swing Trader (15M) #152" [ref=e2765]':
+        - generic [ref=e2766]: Open long
+        - generic [ref=e2767]:
+          - generic [ref=e2768]:
+            - generic [ref=e2769]: DYM
+            - generic [ref=e2770]: 2d ago
+          - generic [ref=e2771]:
+            - generic [ref=e2772]: HYB Swing Trader (15M)
+            - generic [ref=e2773]: "#152"
+            - link [ref=e2774] [cursor=pointer]:
+              - /url: /agents/157
+              - img [ref=e2775]
+      - 'button "Open long IO 2d ago HYB-LLM Momentum Trader (30M) #145" [ref=e2779]':
+        - generic [ref=e2780]: Open long
+        - generic [ref=e2781]:
+          - generic [ref=e2782]:
+            - generic [ref=e2783]: IO
+            - generic [ref=e2784]: 2d ago
+          - generic [ref=e2785]:
+            - generic [ref=e2786]: HYB-LLM Momentum Trader (30M)
+            - generic [ref=e2787]: "#145"
+            - link [ref=e2788] [cursor=pointer]:
+              - /url: /agents/160
+              - img [ref=e2789]
+      - 'button "Open long COW 2d ago HYB-LLM Momentum Trader (1H) #147" [ref=e2793]':
+        - generic [ref=e2794]: Open long
+        - generic [ref=e2795]:
+          - generic [ref=e2796]:
+            - generic [ref=e2797]: COW
+            - generic [ref=e2798]: 2d ago
+          - generic [ref=e2799]:
+            - generic [ref=e2800]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e2801]: "#147"
+            - link [ref=e2802] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e2803]
+      - 'button "Open long OM 2d ago HYB-LLM Swing Trader (4H) #94" [ref=e2807]':
+        - generic [ref=e2808]: Open long
+        - generic [ref=e2809]:
+          - generic [ref=e2810]:
+            - generic [ref=e2811]: OM
+            - generic [ref=e2812]: 2d ago
+          - generic [ref=e2813]:
+            - generic [ref=e2814]: HYB-LLM Swing Trader (4H)
+            - generic [ref=e2815]: "#94"
+            - link [ref=e2816] [cursor=pointer]:
+              - /url: /agents/182
+              - img [ref=e2817]
+      - 'button "Open long ORCA 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e2821]':
+        - generic [ref=e2822]: Open long
+        - generic [ref=e2823]:
+          - generic [ref=e2824]:
+            - generic [ref=e2825]: ORCA
+            - generic [ref=e2826]: 2d ago
+          - generic [ref=e2827]:
+            - generic [ref=e2828]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e2829]: "#99"
+            - link [ref=e2830] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e2831]
+      - 'button "Open long ZKP 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e2835]':
+        - generic [ref=e2836]: Open long
+        - generic [ref=e2837]:
+          - generic [ref=e2838]:
+            - generic [ref=e2839]: ZKP
+            - generic [ref=e2840]: 2d ago
+          - generic [ref=e2841]:
+            - generic [ref=e2842]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e2843]: "#140"
+            - link [ref=e2844] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e2845]
+      - 'button "Open long ARPA 2d ago HYB Swing Trader (30M) #144" [ref=e2849]':
+        - generic [ref=e2850]: Open long
+        - generic [ref=e2851]:
+          - generic [ref=e2852]:
+            - generic [ref=e2853]: ARPA
+            - generic [ref=e2854]: 2d ago
+          - generic [ref=e2855]:
+            - generic [ref=e2856]: HYB Swing Trader (30M)
+            - generic [ref=e2857]: "#144"
+            - link [ref=e2858] [cursor=pointer]:
+              - /url: /agents/165
+              - img [ref=e2859]
+      - 'button "Open long RAY 2d ago HYB-LLM Breakout Trader (30M) #129" [ref=e2863]':
+        - generic [ref=e2864]: Open long
+        - generic [ref=e2865]:
+          - generic [ref=e2866]:
+            - generic [ref=e2867]: RAY
+            - generic [ref=e2868]: 2d ago
+          - generic [ref=e2869]:
+            - generic [ref=e2870]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e2871]: "#129"
+            - link [ref=e2872] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e2873]
+      - 'button "Open long DUSK 2d ago TW-LLM Momentum Rider (1W) #86" [ref=e2877]':
+        - generic [ref=e2878]: Open long
+        - generic [ref=e2879]:
+          - generic [ref=e2880]:
+            - generic [ref=e2881]: DUSK
+            - generic [ref=e2882]: 2d ago
+          - generic [ref=e2883]:
+            - generic [ref=e2884]: TW-LLM Momentum Rider (1W)
+            - generic [ref=e2885]: "#86"
+            - link [ref=e2886] [cursor=pointer]:
+              - /url: /agents/98
+              - img [ref=e2887]
+      - 'button "Open long PAXG 2d ago TW-LLM Momentum Rider (1W) #86" [ref=e2891]':
+        - generic [ref=e2892]: Open long
+        - generic [ref=e2893]:
+          - generic [ref=e2894]:
+            - generic [ref=e2895]: PAXG
+            - generic [ref=e2896]: 2d ago
+          - generic [ref=e2897]:
+            - generic [ref=e2898]: TW-LLM Momentum Rider (1W)
+            - generic [ref=e2899]: "#86"
+            - link [ref=e2900] [cursor=pointer]:
+              - /url: /agents/98
+              - img [ref=e2901]
+      - 'button "Open long RPL 2d ago TW-LLM Narrative Follower (4H) #106" [ref=e2905]':
+        - generic [ref=e2906]: Open long
+        - generic [ref=e2907]:
+          - generic [ref=e2908]:
+            - generic [ref=e2909]: RPL
+            - generic [ref=e2910]: 2d ago
+          - generic [ref=e2911]:
+            - generic [ref=e2912]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e2913]: "#106"
+            - link [ref=e2914] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e2915]
+      - 'button "Open long INIT 2d ago TW-LLM Narrative Follower (4H) #106" [ref=e2919]':
+        - generic [ref=e2920]: Open long
+        - generic [ref=e2921]:
+          - generic [ref=e2922]:
+            - generic [ref=e2923]: INIT
+            - generic [ref=e2924]: 2d ago
+          - generic [ref=e2925]:
+            - generic [ref=e2926]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e2927]: "#106"
+            - link [ref=e2928] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e2929]
+      - 'button "Open long TWT 2d ago HYB-LLM Swing Trader (15M) #151" [ref=e2933]':
+        - generic [ref=e2934]: Open long
+        - generic [ref=e2935]:
+          - generic [ref=e2936]:
+            - generic [ref=e2937]: TWT
+            - generic [ref=e2938]: 2d ago
+          - generic [ref=e2939]:
+            - generic [ref=e2940]: HYB-LLM Swing Trader (15M)
+            - generic [ref=e2941]: "#151"
+            - link [ref=e2942] [cursor=pointer]:
+              - /url: /agents/158
+              - img [ref=e2943]
+      - 'button "Open long DUSK 2d ago TW-LLM Insider Tracker (1W) #88" [ref=e2947]':
+        - generic [ref=e2948]: Open long
+        - generic [ref=e2949]:
+          - generic [ref=e2950]:
+            - generic [ref=e2951]: DUSK
+            - generic [ref=e2952]: 2d ago
+          - generic [ref=e2953]:
+            - generic [ref=e2954]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e2955]: "#88"
+            - link [ref=e2956] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e2957]
+      - 'button "Open long DASH 2d ago HYB-LLM Swing Trader (1H) #112" [ref=e2961]':
+        - generic [ref=e2962]: Open long
+        - generic [ref=e2963]:
+          - generic [ref=e2964]:
+            - generic [ref=e2965]: DASH
+            - generic [ref=e2966]: 2d ago
+          - generic [ref=e2967]:
+            - generic [ref=e2968]: HYB-LLM Swing Trader (1H)
+            - generic [ref=e2969]: "#112"
+            - link [ref=e2970] [cursor=pointer]:
+              - /url: /agents/174
+              - img [ref=e2971]
+      - 'button "Open long COW 2d ago HYB-LLM Swing Trader (15M) #151" [ref=e2975]':
+        - generic [ref=e2976]: Open long
+        - generic [ref=e2977]:
+          - generic [ref=e2978]:
+            - generic [ref=e2979]: COW
+            - generic [ref=e2980]: 2d ago
+          - generic [ref=e2981]:
+            - generic [ref=e2982]: HYB-LLM Swing Trader (15M)
+            - generic [ref=e2983]: "#151"
+            - link [ref=e2984] [cursor=pointer]:
+              - /url: /agents/158
+              - img [ref=e2985]
+      - 'button "Open long JST 2d ago TW-LLM Momentum Rider (1W) #86" [ref=e2989]':
+        - generic [ref=e2990]: Open long
+        - generic [ref=e2991]:
+          - generic [ref=e2992]:
+            - generic [ref=e2993]: JST
+            - generic [ref=e2994]: 2d ago
+          - generic [ref=e2995]:
+            - generic [ref=e2996]: TW-LLM Momentum Rider (1W)
+            - generic [ref=e2997]: "#86"
+            - link [ref=e2998] [cursor=pointer]:
+              - /url: /agents/98
+              - img [ref=e2999]
+      - 'button "Open long JST 2d ago HYB-LLM Momentum Trader (1W) #133" [ref=e3003]':
+        - generic [ref=e3004]: Open long
+        - generic [ref=e3005]:
+          - generic [ref=e3006]:
+            - generic [ref=e3007]: JST
+            - generic [ref=e3008]: 2d ago
+          - generic [ref=e3009]:
+            - generic [ref=e3010]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e3011]: "#133"
+            - link [ref=e3012] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e3013]
+      - 'button "Open long ATM 2d ago TW-LLM Narrative Follower (1D) #1" [ref=e3017]':
+        - generic [ref=e3018]: Open long
+        - generic [ref=e3019]:
+          - generic [ref=e3020]:
+            - generic [ref=e3021]: ATM
+            - generic [ref=e3022]: 2d ago
+          - generic [ref=e3023]:
+            - generic [ref=e3024]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e3025]: "#1"
+            - link [ref=e3026] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e3027]
+      - 'button "Open long ORCA 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e3031]':
+        - generic [ref=e3032]: Open long
+        - generic [ref=e3033]:
+          - generic [ref=e3034]:
+            - generic [ref=e3035]: ORCA
+            - generic [ref=e3036]: 2d ago
+          - generic [ref=e3037]:
+            - generic [ref=e3038]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e3039]: "#2"
+            - link [ref=e3040] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e3041]
+      - 'button "Open long RAY 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e3045]':
+        - generic [ref=e3046]: Open long
+        - generic [ref=e3047]:
+          - generic [ref=e3048]:
+            - generic [ref=e3049]: RAY
+            - generic [ref=e3050]: 2d ago
+          - generic [ref=e3051]:
+            - generic [ref=e3052]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e3053]: "#2"
+            - link [ref=e3054] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e3055]
+      - 'button "Open long ETH 2d ago TW-LLM Momentum Rider (1D) #87" [ref=e3059]':
+        - generic [ref=e3060]: Open long
+        - generic [ref=e3061]:
+          - generic [ref=e3062]:
+            - generic [ref=e3063]: ETH
+            - generic [ref=e3064]: 2d ago
+          - generic [ref=e3065]:
+            - generic [ref=e3066]: TW-LLM Momentum Rider (1D)
+            - generic [ref=e3067]: "#87"
+            - link [ref=e3068] [cursor=pointer]:
+              - /url: /agents/90
+              - img [ref=e3069]
+      - 'button "Open long HUMA 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e3073]':
+        - generic [ref=e3074]: Open long
+        - generic [ref=e3075]:
+          - generic [ref=e3076]:
+            - generic [ref=e3077]: HUMA
+            - generic [ref=e3078]: 2d ago
+          - generic [ref=e3079]:
+            - generic [ref=e3080]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e3081]: "#2"
+            - link [ref=e3082] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e3083]
+      - 'button "Open long ATM 2d ago HYB-LLM Swing Trader (1D) #136" [ref=e3087]':
+        - generic [ref=e3088]: Open long
+        - generic [ref=e3089]:
+          - generic [ref=e3090]:
+            - generic [ref=e3091]: ATM
+            - generic [ref=e3092]: 2d ago
+          - generic [ref=e3093]:
+            - generic [ref=e3094]: HYB-LLM Swing Trader (1D)
+            - generic [ref=e3095]: "#136"
+            - link [ref=e3096] [cursor=pointer]:
+              - /url: /agents/190
+              - img [ref=e3097]
+      - 'button "Open long ATM 2d ago HYB-LLM Breakout Trader (1D) #118" [ref=e3101]':
+        - generic [ref=e3102]: Open long
+        - generic [ref=e3103]:
+          - generic [ref=e3104]:
+            - generic [ref=e3105]: ATM
+            - generic [ref=e3106]: 2d ago
+          - generic [ref=e3107]:
+            - generic [ref=e3108]: HYB-LLM Breakout Trader (1D)
+            - generic [ref=e3109]: "#118"
+            - link [ref=e3110] [cursor=pointer]:
+              - /url: /agents/188
+              - img [ref=e3111]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Mean Reversion Trader (1D) #9" [ref=e3115]':
+        - generic [ref=e3116]: Open long
+        - generic [ref=e3117]:
+          - generic [ref=e3118]:
+            - generic [ref=e3119]: FDUSD
+            - generic [ref=e3120]: 2d ago
+          - generic [ref=e3121]:
+            - generic [ref=e3122]: HYB-LLM Mean Reversion Trader (1D)
+            - generic [ref=e3123]: "#9"
+            - link [ref=e3124] [cursor=pointer]:
+              - /url: /agents/186
+              - img [ref=e3125]
+      - 'button "Open long KITE 2d ago HYB-LLM Momentum Trader (1D) #134" [ref=e3129]':
+        - generic [ref=e3130]: Open long
+        - generic [ref=e3131]:
+          - generic [ref=e3132]:
+            - generic [ref=e3133]: KITE
+            - generic [ref=e3134]: 2d ago
+          - generic [ref=e3135]:
+            - generic [ref=e3136]: HYB-LLM Momentum Trader (1D)
+            - generic [ref=e3137]: "#134"
+            - link [ref=e3138] [cursor=pointer]:
+              - /url: /agents/184
+              - img [ref=e3139]
+      - 'button "Open long MUBARAK 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e3143]':
+        - generic [ref=e3144]: Open long
+        - generic [ref=e3145]:
+          - generic [ref=e3146]:
+            - generic [ref=e3147]: MUBARAK
+            - generic [ref=e3148]: 2d ago
+          - generic [ref=e3149]:
+            - generic [ref=e3150]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e3151]: "#2"
+            - link [ref=e3152] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e3153]
+      - 'button "Open long RAY 2d ago TW-LLM Narrative Follower (1D) #1" [ref=e3157]':
+        - generic [ref=e3158]: Open long
+        - generic [ref=e3159]:
+          - generic [ref=e3160]:
+            - generic [ref=e3161]: RAY
+            - generic [ref=e3162]: 2d ago
+          - generic [ref=e3163]:
+            - generic [ref=e3164]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e3165]: "#1"
+            - link [ref=e3166] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e3167]
+      - 'button "Open long LISTA 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e3171]':
+        - generic [ref=e3172]: Open long
+        - generic [ref=e3173]:
+          - generic [ref=e3174]:
+            - generic [ref=e3175]: LISTA
+            - generic [ref=e3176]: 2d ago
+          - generic [ref=e3177]:
+            - generic [ref=e3178]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e3179]: "#2"
+            - link [ref=e3180] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e3181]
+      - 'button "Open long INIT 2d ago TW-LLM Insider Tracker (1D) #8" [ref=e3185]':
+        - generic [ref=e3186]: Open long
+        - generic [ref=e3187]:
+          - generic [ref=e3188]:
+            - generic [ref=e3189]: INIT
+            - generic [ref=e3190]: 2d ago
+          - generic [ref=e3191]:
+            - generic [ref=e3192]: TW-LLM Insider Tracker (1D)
+            - generic [ref=e3193]: "#8"
+            - link [ref=e3194] [cursor=pointer]:
+              - /url: /agents/96
+              - img [ref=e3195]
+      - 'button "Open long COW 2d ago HYB Swing Trader (4H) #141" [ref=e3199]':
+        - generic [ref=e3200]: Open long
+        - generic [ref=e3201]:
+          - generic [ref=e3202]:
+            - generic [ref=e3203]: COW
+            - generic [ref=e3204]: 2d ago
+          - generic [ref=e3205]:
+            - generic [ref=e3206]: HYB Swing Trader (4H)
+            - generic [ref=e3207]: "#141"
+            - link [ref=e3208] [cursor=pointer]:
+              - /url: /agents/181
+              - img [ref=e3209]
+      - 'button "Open long OGN 2d ago TW-LLM Insider Tracker (4H) #104" [ref=e3213]':
+        - generic [ref=e3214]: Open long
+        - generic [ref=e3215]:
+          - generic [ref=e3216]:
+            - generic [ref=e3217]: OGN
+            - generic [ref=e3218]: 2d ago
+          - generic [ref=e3219]:
+            - generic [ref=e3220]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e3221]: "#104"
+            - link [ref=e3222] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e3223]
+      - 'button "Open long ENSO 2d ago HYB-LLM Momentum Trader (15M) #100" [ref=e3227]':
+        - generic [ref=e3228]: Open long
+        - generic [ref=e3229]:
+          - generic [ref=e3230]:
+            - generic [ref=e3231]: ENSO
+            - generic [ref=e3232]: 2d ago
+          - generic [ref=e3233]:
+            - generic [ref=e3234]: HYB-LLM Momentum Trader (15M)
+            - generic [ref=e3235]: "#100"
+            - link [ref=e3236] [cursor=pointer]:
+              - /url: /agents/152
+              - img [ref=e3237]
+      - 'button "Open long RAY 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e3241]':
+        - generic [ref=e3242]: Open long
+        - generic [ref=e3243]:
+          - generic [ref=e3244]:
+            - generic [ref=e3245]: RAY
+            - generic [ref=e3246]: 2d ago
+          - generic [ref=e3247]:
+            - generic [ref=e3248]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e3249]: "#107"
+            - link [ref=e3250] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e3251]
+      - 'button "Open long DUSK 2d ago TW-LLM Narrative Follower (1W) #90" [ref=e3255]':
+        - generic [ref=e3256]: Open long
+        - generic [ref=e3257]:
+          - generic [ref=e3258]:
+            - generic [ref=e3259]: DUSK
+            - generic [ref=e3260]: 2d ago
+          - generic [ref=e3261]:
+            - generic [ref=e3262]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e3263]: "#90"
+            - link [ref=e3264] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e3265]
+      - 'button "Open long ETH 2d ago TW-LLM Momentum Rider (1W) #86" [ref=e3269]':
+        - generic [ref=e3270]: Open long
+        - generic [ref=e3271]:
+          - generic [ref=e3272]:
+            - generic [ref=e3273]: ETH
+            - generic [ref=e3274]: 2d ago
+          - generic [ref=e3275]:
+            - generic [ref=e3276]: TW-LLM Momentum Rider (1W)
+            - generic [ref=e3277]: "#86"
+            - link [ref=e3278] [cursor=pointer]:
+              - /url: /agents/98
+              - img [ref=e3279]
+      - 'button "Open long RPL 2d ago TW-LLM Insider Tracker (4H) #104" [ref=e3283]':
+        - generic [ref=e3284]: Open long
+        - generic [ref=e3285]:
+          - generic [ref=e3286]:
+            - generic [ref=e3287]: RPL
+            - generic [ref=e3288]: 2d ago
+          - generic [ref=e3289]:
+            - generic [ref=e3290]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e3291]: "#104"
+            - link [ref=e3292] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e3293]
+      - 'button "Open long ATOM 2d ago TW-LLM Narrative Follower (15M) #102" [ref=e3297]':
+        - generic [ref=e3298]: Open long
+        - generic [ref=e3299]:
+          - generic [ref=e3300]:
+            - generic [ref=e3301]: ATOM
+            - generic [ref=e3302]: 2d ago
+          - generic [ref=e3303]:
+            - generic [ref=e3304]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e3305]: "#102"
+            - link [ref=e3306] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e3307]
+      - 'button "Open long ARPA 2d ago TW-LLM Insider Tracker (1H) #97" [ref=e3311]':
+        - generic [ref=e3312]: Open long
+        - generic [ref=e3313]:
+          - generic [ref=e3314]:
+            - generic [ref=e3315]: ARPA
+            - generic [ref=e3316]: 2d ago
+          - generic [ref=e3317]:
+            - generic [ref=e3318]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e3319]: "#97"
+            - link [ref=e3320] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e3321]
+      - 'button "Open long OM 2d ago TW-LLM Narrative Follower (4H) #106" [ref=e3325]':
+        - generic [ref=e3326]: Open long
+        - generic [ref=e3327]:
+          - generic [ref=e3328]:
+            - generic [ref=e3329]: OM
+            - generic [ref=e3330]: 2d ago
+          - generic [ref=e3331]:
+            - generic [ref=e3332]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e3333]: "#106"
+            - link [ref=e3334] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e3335]
+      - 'button "Open long OM 2d ago TW-LLM Insider Tracker (1H) #97" [ref=e3339]':
+        - generic [ref=e3340]: Open long
+        - generic [ref=e3341]:
+          - generic [ref=e3342]:
+            - generic [ref=e3343]: OM
+            - generic [ref=e3344]: 2d ago
+          - generic [ref=e3345]:
+            - generic [ref=e3346]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e3347]: "#97"
+            - link [ref=e3348] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e3349]
+      - 'button "Open long BTC 2d ago TW-LLM Narrative Follower (1D) #1" [ref=e3353]':
+        - generic [ref=e3354]: Open long
+        - generic [ref=e3355]:
+          - generic [ref=e3356]:
+            - generic [ref=e3357]: BTC
+            - generic [ref=e3358]: 2d ago
+          - generic [ref=e3359]:
+            - generic [ref=e3360]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e3361]: "#1"
+            - link [ref=e3362] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e3363]
+      - 'button "Open long ATM 2d ago TW-LLM Insider Tracker (1D) #8" [ref=e3367]':
+        - generic [ref=e3368]: Open long
+        - generic [ref=e3369]:
+          - generic [ref=e3370]:
+            - generic [ref=e3371]: ATM
+            - generic [ref=e3372]: 2d ago
+          - generic [ref=e3373]:
+            - generic [ref=e3374]: TW-LLM Insider Tracker (1D)
+            - generic [ref=e3375]: "#8"
+            - link [ref=e3376] [cursor=pointer]:
+              - /url: /agents/96
+              - img [ref=e3377]
+      - 'button "Open long UMA 2d ago TW-LLM Insider Tracker (1H) #97" [ref=e3381]':
+        - generic [ref=e3382]: Open long
+        - generic [ref=e3383]:
+          - generic [ref=e3384]:
+            - generic [ref=e3385]: UMA
+            - generic [ref=e3386]: 2d ago
+          - generic [ref=e3387]:
+            - generic [ref=e3388]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e3389]: "#97"
+            - link [ref=e3390] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e3391]
+      - 'button "Open long PAXG 2d ago HYB-LLM Mean Reversion Trader (1W) #3" [ref=e3395]':
+        - generic [ref=e3396]: Open long
+        - generic [ref=e3397]:
+          - generic [ref=e3398]:
+            - generic [ref=e3399]: PAXG
+            - generic [ref=e3400]: 2d ago
+          - generic [ref=e3401]:
+            - generic [ref=e3402]: HYB-LLM Mean Reversion Trader (1W)
+            - generic [ref=e3403]: "#3"
+            - link [ref=e3404] [cursor=pointer]:
+              - /url: /agents/194
+              - img [ref=e3405]
+      - 'button "Open long OM 2d ago TW-LLM Narrative Follower (15M) #102" [ref=e3409]':
+        - generic [ref=e3410]: Open long
+        - generic [ref=e3411]:
+          - generic [ref=e3412]:
+            - generic [ref=e3413]: OM
+            - generic [ref=e3414]: 2d ago
+          - generic [ref=e3415]:
+            - generic [ref=e3416]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e3417]: "#102"
+            - link [ref=e3418] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e3419]
+      - 'button "Open long DUSK 2d ago HYB-LLM Breakout Trader (1W) #113" [ref=e3423]':
+        - generic [ref=e3424]: Open long
+        - generic [ref=e3425]:
+          - generic [ref=e3426]:
+            - generic [ref=e3427]: DUSK
+            - generic [ref=e3428]: 2d ago
+          - generic [ref=e3429]:
+            - generic [ref=e3430]: HYB-LLM Breakout Trader (1W)
+            - generic [ref=e3431]: "#113"
+            - link [ref=e3432] [cursor=pointer]:
+              - /url: /agents/196
+              - img [ref=e3433]
+      - 'button "Open long OM 2d ago TW-LLM Insider Tracker (15M) #101" [ref=e3437]':
+        - generic [ref=e3438]: Open long
+        - generic [ref=e3439]:
+          - generic [ref=e3440]:
+            - generic [ref=e3441]: OM
+            - generic [ref=e3442]: 2d ago
+          - generic [ref=e3443]:
+            - generic [ref=e3444]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e3445]: "#101"
+            - link [ref=e3446] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e3447]
+      - 'button "Open long PAXG 2d ago TW-LLM Narrative Follower (1W) #90" [ref=e3451]':
+        - generic [ref=e3452]: Open long
+        - generic [ref=e3453]:
+          - generic [ref=e3454]:
+            - generic [ref=e3455]: PAXG
+            - generic [ref=e3456]: 2d ago
+          - generic [ref=e3457]:
+            - generic [ref=e3458]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e3459]: "#90"
+            - link [ref=e3460] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e3461]
+      - 'button "Open long NIL 2d ago TW-LLM Insider Tracker (4H) #104" [ref=e3465]':
+        - generic [ref=e3466]: Open long
+        - generic [ref=e3467]:
+          - generic [ref=e3468]:
+            - generic [ref=e3469]: NIL
+            - generic [ref=e3470]: 2d ago
+          - generic [ref=e3471]:
+            - generic [ref=e3472]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e3473]: "#104"
+            - link [ref=e3474] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e3475]
+      - 'button "Open long STO 2d ago HYB-LLM Momentum Trader (30M) #145" [ref=e3479]':
+        - generic [ref=e3480]: Open long
+        - generic [ref=e3481]:
+          - generic [ref=e3482]:
+            - generic [ref=e3483]: STO
+            - generic [ref=e3484]: 2d ago
+          - generic [ref=e3485]:
+            - generic [ref=e3486]: HYB-LLM Momentum Trader (30M)
+            - generic [ref=e3487]: "#145"
+            - link [ref=e3488] [cursor=pointer]:
+              - /url: /agents/160
+              - img [ref=e3489]
+      - 'button "Open long UMA 2d ago HYB-LLM Breakout Trader (1H) #138" [ref=e3493]':
+        - generic [ref=e3494]: Open long
+        - generic [ref=e3495]:
+          - generic [ref=e3496]:
+            - generic [ref=e3497]: UMA
+            - generic [ref=e3498]: 2d ago
+          - generic [ref=e3499]:
+            - generic [ref=e3500]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e3501]: "#138"
+            - link [ref=e3502] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e3503]
+      - 'button "Open long HAEDAL 2d ago TW-LLM Insider Tracker (30M) #98" [ref=e3507]':
+        - generic [ref=e3508]: Open long
+        - generic [ref=e3509]:
+          - generic [ref=e3510]:
+            - generic [ref=e3511]: HAEDAL
+            - generic [ref=e3512]: 2d ago
+          - generic [ref=e3513]:
+            - generic [ref=e3514]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e3515]: "#98"
+            - link [ref=e3516] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e3517]
+      - 'button "Open long POL 2d ago TW-LLM Insider Tracker (1H) #97" [ref=e3521]':
+        - generic [ref=e3522]: Open long
+        - generic [ref=e3523]:
+          - generic [ref=e3524]:
+            - generic [ref=e3525]: POL
+            - generic [ref=e3526]: 2d ago
+          - generic [ref=e3527]:
+            - generic [ref=e3528]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e3529]: "#97"
+            - link [ref=e3530] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e3531]
+      - 'button "Open long POL 2d ago HYB-LLM Momentum Trader (1H) #147" [ref=e3535]':
+        - generic [ref=e3536]: Open long
+        - generic [ref=e3537]:
+          - generic [ref=e3538]:
+            - generic [ref=e3539]: POL
+            - generic [ref=e3540]: 2d ago
+          - generic [ref=e3541]:
+            - generic [ref=e3542]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e3543]: "#147"
+            - link [ref=e3544] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e3545]
+      - 'button "Open long SOL 2d ago TW-LLM Momentum Rider (1D) #87" [ref=e3549]':
+        - generic [ref=e3550]: Open long
+        - generic [ref=e3551]:
+          - generic [ref=e3552]:
+            - generic [ref=e3553]: SOL
+            - generic [ref=e3554]: 2d ago
+          - generic [ref=e3555]:
+            - generic [ref=e3556]: TW-LLM Momentum Rider (1D)
+            - generic [ref=e3557]: "#87"
+            - link [ref=e3558] [cursor=pointer]:
+              - /url: /agents/90
+              - img [ref=e3559]
+      - 'button "Open long ETH 2d ago TW-LLM Insider Tracker (1D) #8" [ref=e3563]':
+        - generic [ref=e3564]: Open long
+        - generic [ref=e3565]:
+          - generic [ref=e3566]:
+            - generic [ref=e3567]: ETH
+            - generic [ref=e3568]: 2d ago
+          - generic [ref=e3569]:
+            - generic [ref=e3570]: TW-LLM Insider Tracker (1D)
+            - generic [ref=e3571]: "#8"
+            - link [ref=e3572] [cursor=pointer]:
+              - /url: /agents/96
+              - img [ref=e3573]
+      - 'button "Open long OM 2d ago TW-LLM Insider Tracker (4H) #104" [ref=e3577]':
+        - generic [ref=e3578]: Open long
+        - generic [ref=e3579]:
+          - generic [ref=e3580]:
+            - generic [ref=e3581]: OM
+            - generic [ref=e3582]: 2d ago
+          - generic [ref=e3583]:
+            - generic [ref=e3584]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e3585]: "#104"
+            - link [ref=e3586] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e3587]
+      - 'button "Open long OGN 2d ago TW-LLM Insider Tracker (1H) #97" [ref=e3591]':
+        - generic [ref=e3592]: Open long
+        - generic [ref=e3593]:
+          - generic [ref=e3594]:
+            - generic [ref=e3595]: OGN
+            - generic [ref=e3596]: 2d ago
+          - generic [ref=e3597]:
+            - generic [ref=e3598]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e3599]: "#97"
+            - link [ref=e3600] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e3601]
+      - 'button "Open long NIL 2d ago TW-LLM Insider Tracker (30M) #98" [ref=e3605]':
+        - generic [ref=e3606]: Open long
+        - generic [ref=e3607]:
+          - generic [ref=e3608]:
+            - generic [ref=e3609]: NIL
+            - generic [ref=e3610]: 2d ago
+          - generic [ref=e3611]:
+            - generic [ref=e3612]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e3613]: "#98"
+            - link [ref=e3614] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e3615]
+      - 'button "Open long RPL 2d ago TW-LLM Insider Tracker (15M) #101" [ref=e3619]':
+        - generic [ref=e3620]: Open long
+        - generic [ref=e3621]:
+          - generic [ref=e3622]:
+            - generic [ref=e3623]: RPL
+            - generic [ref=e3624]: 2d ago
+          - generic [ref=e3625]:
+            - generic [ref=e3626]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e3627]: "#101"
+            - link [ref=e3628] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e3629]
+      - 'button "Open long PAXG 2d ago TW-LLM Insider Tracker (1W) #88" [ref=e3633]':
+        - generic [ref=e3634]: Open long
+        - generic [ref=e3635]:
+          - generic [ref=e3636]:
+            - generic [ref=e3637]: PAXG
+            - generic [ref=e3638]: 2d ago
+          - generic [ref=e3639]:
+            - generic [ref=e3640]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e3641]: "#88"
+            - link [ref=e3642] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e3643]
+      - 'button "Open long NEXO 2d ago HYB-LLM Swing Trader (15M) #151" [ref=e3647]':
+        - generic [ref=e3648]: Open long
+        - generic [ref=e3649]:
+          - generic [ref=e3650]:
+            - generic [ref=e3651]: NEXO
+            - generic [ref=e3652]: 2d ago
+          - generic [ref=e3653]:
+            - generic [ref=e3654]: HYB-LLM Swing Trader (15M)
+            - generic [ref=e3655]: "#151"
+            - link [ref=e3656] [cursor=pointer]:
+              - /url: /agents/158
+              - img [ref=e3657]
+      - 'button "Open long NEXO 2d ago TW-LLM Insider Tracker (15M) #101" [ref=e3661]':
+        - generic [ref=e3662]: Open long
+        - generic [ref=e3663]:
+          - generic [ref=e3664]:
+            - generic [ref=e3665]: NEXO
+            - generic [ref=e3666]: 2d ago
+          - generic [ref=e3667]:
+            - generic [ref=e3668]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e3669]: "#101"
+            - link [ref=e3670] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e3671]
+      - 'button "Open long BTC 2d ago TW-LLM Insider Tracker (1W) #88" [ref=e3675]':
+        - generic [ref=e3676]: Open long
+        - generic [ref=e3677]:
+          - generic [ref=e3678]:
+            - generic [ref=e3679]: BTC
+            - generic [ref=e3680]: 2d ago
+          - generic [ref=e3681]:
+            - generic [ref=e3682]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e3683]: "#88"
+            - link [ref=e3684] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e3685]
+      - 'button "Open long SOL 2d ago TW-LLM Narrative Follower (1D) #1" [ref=e3689]':
+        - generic [ref=e3690]: Open long
+        - generic [ref=e3691]:
+          - generic [ref=e3692]:
+            - generic [ref=e3693]: SOL
+            - generic [ref=e3694]: 2d ago
+          - generic [ref=e3695]:
+            - generic [ref=e3696]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e3697]: "#1"
+            - link [ref=e3698] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e3699]
+      - 'button "Open long RPL 2d ago TW-LLM Insider Tracker (30M) #98" [ref=e3703]':
+        - generic [ref=e3704]: Open long
+        - generic [ref=e3705]:
+          - generic [ref=e3706]:
+            - generic [ref=e3707]: RPL
+            - generic [ref=e3708]: 2d ago
+          - generic [ref=e3709]:
+            - generic [ref=e3710]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e3711]: "#98"
+            - link [ref=e3712] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e3713]
+      - 'button "Open long ETH 3d ago TW-LLM Narrative Follower (1W) #90" [ref=e3717]':
+        - generic [ref=e3718]: Open long
+        - generic [ref=e3719]:
+          - generic [ref=e3720]:
+            - generic [ref=e3721]: ETH
+            - generic [ref=e3722]: 3d ago
+          - generic [ref=e3723]:
+            - generic [ref=e3724]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e3725]: "#90"
+            - link [ref=e3726] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e3727]
+      - 'button "Open long OM 3d ago HYB-LLM Swing Trader (1H) #112" [ref=e3731]':
+        - generic [ref=e3732]: Open long
+        - generic [ref=e3733]:
+          - generic [ref=e3734]:
+            - generic [ref=e3735]: OM
+            - generic [ref=e3736]: 3d ago
+          - generic [ref=e3737]:
+            - generic [ref=e3738]: HYB-LLM Swing Trader (1H)
+            - generic [ref=e3739]: "#112"
+            - link [ref=e3740] [cursor=pointer]:
+              - /url: /agents/174
+              - img [ref=e3741]
+      - 'button "Open long TAO 3d ago HYB-LLM Momentum Trader (30M) #145" [ref=e3745]':
+        - generic [ref=e3746]: Open long
+        - generic [ref=e3747]:
+          - generic [ref=e3748]:
+            - generic [ref=e3749]: TAO
+            - generic [ref=e3750]: 3d ago
+          - generic [ref=e3751]:
+            - generic [ref=e3752]: HYB-LLM Momentum Trader (30M)
+            - generic [ref=e3753]: "#145"
+            - link [ref=e3754] [cursor=pointer]:
+              - /url: /agents/160
+              - img [ref=e3755]
+      - 'button "Open long OM 3d ago TW-LLM Insider Tracker (30M) #98" [ref=e3759]':
+        - generic [ref=e3760]: Open long
+        - generic [ref=e3761]:
+          - generic [ref=e3762]:
+            - generic [ref=e3763]: OM
+            - generic [ref=e3764]: 3d ago
+          - generic [ref=e3765]:
+            - generic [ref=e3766]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e3767]: "#98"
+            - link [ref=e3768] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e3769]
+      - 'button "Open long TAO 3d ago HYB-LLM Momentum Trader (15M) #100" [ref=e3773]':
+        - generic [ref=e3774]: Open long
+        - generic [ref=e3775]:
+          - generic [ref=e3776]:
+            - generic [ref=e3777]: TAO
+            - generic [ref=e3778]: 3d ago
+          - generic [ref=e3779]:
+            - generic [ref=e3780]: HYB-LLM Momentum Trader (15M)
+            - generic [ref=e3781]: "#100"
+            - link [ref=e3782] [cursor=pointer]:
+              - /url: /agents/152
+              - img [ref=e3783]
+      - 'button "Open long INIT 3d ago TW-LLM Insider Tracker (15M) #101" [ref=e3787]':
+        - generic [ref=e3788]: Open long
+        - generic [ref=e3789]:
+          - generic [ref=e3790]:
+            - generic [ref=e3791]: INIT
+            - generic [ref=e3792]: 3d ago
+          - generic [ref=e3793]:
+            - generic [ref=e3794]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e3795]: "#101"
+            - link [ref=e3796] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e3797]
+      - 'button "Open long BTC 3d ago TW-LLM Narrative Follower (1W) #90" [ref=e3801]':
+        - generic [ref=e3802]: Open long
+        - generic [ref=e3803]:
+          - generic [ref=e3804]:
+            - generic [ref=e3805]: BTC
+            - generic [ref=e3806]: 3d ago
+          - generic [ref=e3807]:
+            - generic [ref=e3808]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e3809]: "#90"
+            - link [ref=e3810] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e3811]
+      - 'button "Open long BEAMX 3d ago HYB Swing Trader (1H) #148" [ref=e3815]':
+        - generic [ref=e3816]: Open long
+        - generic [ref=e3817]:
+          - generic [ref=e3818]:
+            - generic [ref=e3819]: BEAMX
+            - generic [ref=e3820]: 3d ago
+          - generic [ref=e3821]:
+            - generic [ref=e3822]: HYB Swing Trader (1H)
+            - generic [ref=e3823]: "#148"
+            - link [ref=e3824] [cursor=pointer]:
+              - /url: /agents/173
+              - img [ref=e3825]
+      - 'button "Open long ETH 3d ago TW-LLM Narrative Follower (4H) #106" [ref=e3829]':
+        - generic [ref=e3830]: Open long
+        - generic [ref=e3831]:
+          - generic [ref=e3832]:
+            - generic [ref=e3833]: ETH
+            - generic [ref=e3834]: 3d ago
+          - generic [ref=e3835]:
+            - generic [ref=e3836]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e3837]: "#106"
+            - link [ref=e3838] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e3839]
+      - 'button "Open long SUPER 3d ago RB Swing Trader (1H) #146" [ref=e3843]':
+        - generic [ref=e3844]: Open long
+        - generic [ref=e3845]:
+          - generic [ref=e3846]:
+            - generic [ref=e3847]: SUPER
+            - generic [ref=e3848]: 3d ago
+          - generic [ref=e3849]:
+            - generic [ref=e3850]: RB Swing Trader (1H)
+            - generic [ref=e3851]: "#146"
+            - link [ref=e3852] [cursor=pointer]:
+              - /url: /agents/40
+              - img [ref=e3853]
+      - 'button "Open long TAO 3d ago HYB-LLM Breakout Trader (30M) #129" [ref=e3857]':
+        - generic [ref=e3858]: Open long
+        - generic [ref=e3859]:
+          - generic [ref=e3860]:
+            - generic [ref=e3861]: TAO
+            - generic [ref=e3862]: 3d ago
+          - generic [ref=e3863]:
+            - generic [ref=e3864]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e3865]: "#129"
+            - link [ref=e3866] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e3867]
+      - 'button "Open long MAGIC 3d ago TW-LLM Insider Tracker (30M) #98" [ref=e3871]':
+        - generic [ref=e3872]: Open long
+        - generic [ref=e3873]:
+          - generic [ref=e3874]:
+            - generic [ref=e3875]: MAGIC
+            - generic [ref=e3876]: 3d ago
+          - generic [ref=e3877]:
+            - generic [ref=e3878]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e3879]: "#98"
+            - link [ref=e3880] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e3881]
+      - 'button "Open long PAXG 3d ago HYB-LLM Swing Trader (1W) #84" [ref=e3885]':
+        - generic [ref=e3886]: Open long
+        - generic [ref=e3887]:
+          - generic [ref=e3888]:
+            - generic [ref=e3889]: PAXG
+            - generic [ref=e3890]: 3d ago
+          - generic [ref=e3891]:
+            - generic [ref=e3892]: HYB-LLM Swing Trader (1W)
+            - generic [ref=e3893]: "#84"
+            - link [ref=e3894] [cursor=pointer]:
+              - /url: /agents/198
+              - img [ref=e3895]
+      - 'button "Open long BANANAS31 3d ago HYB Swing Trader (4H) #141" [ref=e3899]':
+        - generic [ref=e3900]: Open long
+        - generic [ref=e3901]:
+          - generic [ref=e3902]:
+            - generic [ref=e3903]: BANANAS31
+            - generic [ref=e3904]: 3d ago
+          - generic [ref=e3905]:
+            - generic [ref=e3906]: HYB Swing Trader (4H)
+            - generic [ref=e3907]: "#141"
+            - link [ref=e3908] [cursor=pointer]:
+              - /url: /agents/181
+              - img [ref=e3909]
+      - 'button "Open long BCH 3d ago HYB-LLM Momentum Trader (1W) #133" [ref=e3913]':
+        - generic [ref=e3914]: Open long
+        - generic [ref=e3915]:
+          - generic [ref=e3916]:
+            - generic [ref=e3917]: BCH
+            - generic [ref=e3918]: 3d ago
+          - generic [ref=e3919]:
+            - generic [ref=e3920]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e3921]: "#133"
+            - link [ref=e3922] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e3923]
+      - 'button "Open long SUPER 3d ago HYB Swing Trader (1H) #148" [ref=e3927]':
+        - generic [ref=e3928]: Open long
+        - generic [ref=e3929]:
+          - generic [ref=e3930]:
+            - generic [ref=e3931]: SUPER
+            - generic [ref=e3932]: 3d ago
+          - generic [ref=e3933]:
+            - generic [ref=e3934]: HYB Swing Trader (1H)
+            - generic [ref=e3935]: "#148"
+            - link [ref=e3936] [cursor=pointer]:
+              - /url: /agents/173
+              - img [ref=e3937]
+      - 'button "Open long OM 3d ago HYB-LLM Breakout Trader (1H) #138" [ref=e3941]':
+        - generic [ref=e3942]: Open long
+        - generic [ref=e3943]:
+          - generic [ref=e3944]:
+            - generic [ref=e3945]: OM
+            - generic [ref=e3946]: 3d ago
+          - generic [ref=e3947]:
+            - generic [ref=e3948]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e3949]: "#138"
+            - link [ref=e3950] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e3951]
+      - 'button "Open long OM 3d ago HYB-LLM Breakout Trader (30M) #129" [ref=e3955]':
+        - generic [ref=e3956]: Open long
+        - generic [ref=e3957]:
+          - generic [ref=e3958]:
+            - generic [ref=e3959]: OM
+            - generic [ref=e3960]: 3d ago
+          - generic [ref=e3961]:
+            - generic [ref=e3962]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e3963]: "#129"
+            - link [ref=e3964] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e3965]
+      - 'button "Open long SUPER 3d ago HYB-LLM Momentum Trader (30M) #145" [ref=e3969]':
+        - generic [ref=e3970]: Open long
+        - generic [ref=e3971]:
+          - generic [ref=e3972]:
+            - generic [ref=e3973]: SUPER
+            - generic [ref=e3974]: 3d ago
+          - generic [ref=e3975]:
+            - generic [ref=e3976]: HYB-LLM Momentum Trader (30M)
+            - generic [ref=e3977]: "#145"
+            - link [ref=e3978] [cursor=pointer]:
+              - /url: /agents/160
+              - img [ref=e3979]
+      - 'button "Open long SOL 3d ago TW-LLM Insider Tracker (1W) #88" [ref=e3983]':
+        - generic [ref=e3984]: Open long
+        - generic [ref=e3985]:
+          - generic [ref=e3986]:
+            - generic [ref=e3987]: SOL
+            - generic [ref=e3988]: 3d ago
+          - generic [ref=e3989]:
+            - generic [ref=e3990]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e3991]: "#88"
+            - link [ref=e3992] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e3993]
+      - 'button "Open long SOL 3d ago TW-LLM Narrative Follower (1W) #90" [ref=e3997]':
+        - generic [ref=e3998]: Open long
+        - generic [ref=e3999]:
+          - generic [ref=e4000]:
+            - generic [ref=e4001]: SOL
+            - generic [ref=e4002]: 3d ago
+          - generic [ref=e4003]:
+            - generic [ref=e4004]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e4005]: "#90"
+            - link [ref=e4006] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e4007]
+      - 'button "Open long BTC 3d ago TW-LLM Insider Tracker (1D) #8" [ref=e4011]':
+        - generic [ref=e4012]: Open long
+        - generic [ref=e4013]:
+          - generic [ref=e4014]:
+            - generic [ref=e4015]: BTC
+            - generic [ref=e4016]: 3d ago
+          - generic [ref=e4017]:
+            - generic [ref=e4018]: TW-LLM Insider Tracker (1D)
+            - generic [ref=e4019]: "#8"
+            - link [ref=e4020] [cursor=pointer]:
+              - /url: /agents/96
+              - img [ref=e4021]
+      - 'button "Open long ETH 3d ago TW-LLM Narrative Follower (1D) #1" [ref=e4025]':
+        - generic [ref=e4026]: Open long
+        - generic [ref=e4027]:
+          - generic [ref=e4028]:
+            - generic [ref=e4029]: ETH
+            - generic [ref=e4030]: 3d ago
+          - generic [ref=e4031]:
+            - generic [ref=e4032]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e4033]: "#1"
+            - link [ref=e4034] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e4035]
+      - 'button "Open long INIT 3d ago TW-LLM Insider Tracker (4H) #104" [ref=e4039]':
+        - generic [ref=e4040]: Open long
+        - generic [ref=e4041]:
+          - generic [ref=e4042]:
+            - generic [ref=e4043]: INIT
+            - generic [ref=e4044]: 3d ago
+          - generic [ref=e4045]:
+            - generic [ref=e4046]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e4047]: "#104"
+            - link [ref=e4048] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e4049]
+      - 'button "Open long BTC 3d ago TW-LLM Narrative Follower (4H) #106" [ref=e4053]':
+        - generic [ref=e4054]: Open long
+        - generic [ref=e4055]:
+          - generic [ref=e4056]:
+            - generic [ref=e4057]: BTC
+            - generic [ref=e4058]: 3d ago
+          - generic [ref=e4059]:
+            - generic [ref=e4060]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e4061]: "#106"
+            - link [ref=e4062] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e4063]
+      - 'button "Open long XPL 3d ago TW-LLM Insider Tracker (15M) #101" [ref=e4067]':
+        - generic [ref=e4068]: Open long
+        - generic [ref=e4069]:
+          - generic [ref=e4070]:
+            - generic [ref=e4071]: XPL
+            - generic [ref=e4072]: 3d ago
+          - generic [ref=e4073]:
+            - generic [ref=e4074]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e4075]: "#101"
+            - link [ref=e4076] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e4077]
+      - 'button "Open long GLMR 3d ago RB Breakout Hunter (1H) #114" [ref=e4081]':
+        - generic [ref=e4082]: Open long
+        - generic [ref=e4083]:
+          - generic [ref=e4084]:
+            - generic [ref=e4085]: GLMR
+            - generic [ref=e4086]: 3d ago
+          - generic [ref=e4087]:
+            - generic [ref=e4088]: RB Breakout Hunter (1H)
+            - generic [ref=e4089]: "#114"
+            - link [ref=e4090] [cursor=pointer]:
+              - /url: /agents/39
+              - img [ref=e4091]
+      - 'button "Open long MANTA 3d ago RB Swing Trader (15M) #150" [ref=e4095]':
+        - generic [ref=e4096]: Open long
+        - generic [ref=e4097]:
+          - generic [ref=e4098]:
+            - generic [ref=e4099]: MANTA
+            - generic [ref=e4100]: 3d ago
+          - generic [ref=e4101]:
+            - generic [ref=e4102]: RB Swing Trader (15M)
+            - generic [ref=e4103]: "#150"
+            - link [ref=e4104] [cursor=pointer]:
+              - /url: /agents/32
+              - img [ref=e4105]
+      - 'button "Open long BANANAS31 3d ago RB Swing Trader (4H) #110" [ref=e4109]':
+        - generic [ref=e4110]: Open long
+        - generic [ref=e4111]:
+          - generic [ref=e4112]:
+            - generic [ref=e4113]: BANANAS31
+            - generic [ref=e4114]: 3d ago
+          - generic [ref=e4115]:
+            - generic [ref=e4116]: RB Swing Trader (4H)
+            - generic [ref=e4117]: "#110"
+            - link [ref=e4118] [cursor=pointer]:
+              - /url: /agents/44
+              - img [ref=e4119]
+      - 'button "Open long MIRA 3d ago RB Swing Trader (30M) #142" [ref=e4123]':
+        - generic [ref=e4124]: Open long
+        - generic [ref=e4125]:
+          - generic [ref=e4126]:
+            - generic [ref=e4127]: MIRA
+            - generic [ref=e4128]: 3d ago
+          - generic [ref=e4129]:
+            - generic [ref=e4130]: RB Swing Trader (30M)
+            - generic [ref=e4131]: "#142"
+            - link [ref=e4132] [cursor=pointer]:
+              - /url: /agents/36
+              - img [ref=e4133]
+      - 'button "Open long CITY 3d ago RB Momentum Trader (4H) #109" [ref=e4137]':
+        - generic [ref=e4138]: Open long
+        - generic [ref=e4139]:
+          - generic [ref=e4140]:
+            - generic [ref=e4141]: CITY
+            - generic [ref=e4142]: 3d ago
+          - generic [ref=e4143]:
+            - generic [ref=e4144]: RB Momentum Trader (4H)
+            - generic [ref=e4145]: "#109"
+            - link [ref=e4146] [cursor=pointer]:
+              - /url: /agents/41
+              - img [ref=e4147]
+      - 'button "Open long STRAX 5d ago RB Swing Trader (1H) #146" [ref=e4151]':
+        - generic [ref=e4152]: Open long
+        - generic [ref=e4153]:
+          - generic [ref=e4154]:
+            - generic [ref=e4155]: STRAX
+            - generic [ref=e4156]: 5d ago
+          - generic [ref=e4157]:
+            - generic [ref=e4158]: RB Swing Trader (1H)
+            - generic [ref=e4159]: "#146"
+            - link [ref=e4160] [cursor=pointer]:
+              - /url: /agents/40
+              - img [ref=e4161]
+      - 'button "Open long DCR 5d ago RB Multi-TF Confluence #149" [ref=e4165]':
+        - generic [ref=e4166]: Open long
+        - generic [ref=e4167]:
+          - generic [ref=e4168]:
+            - generic [ref=e4169]: DCR
+            - generic [ref=e4170]: 5d ago
+          - generic [ref=e4171]:
+            - generic [ref=e4172]: RB Multi-TF Confluence
+            - generic [ref=e4173]: "#149"
+            - link [ref=e4174] [cursor=pointer]:
+              - /url: /agents/53
+              - img [ref=e4175]
+      - 'button "Open long STRAX 6d ago RB Swing Trader (30M) #142" [ref=e4179]':
+        - generic [ref=e4180]: Open long
+        - generic [ref=e4181]:
+          - generic [ref=e4182]:
+            - generic [ref=e4183]: STRAX
+            - generic [ref=e4184]: 6d ago
+          - generic [ref=e4185]:
+            - generic [ref=e4186]: RB Swing Trader (30M)
+            - generic [ref=e4187]: "#142"
+            - link [ref=e4188] [cursor=pointer]:
+              - /url: /agents/36
+              - img [ref=e4189]
+      - 'button "Open long ERA 6d ago RB Momentum Trader (15M) #131" [ref=e4193]':
+        - generic [ref=e4194]: Open long
+        - generic [ref=e4195]:
+          - generic [ref=e4196]:
+            - generic [ref=e4197]: ERA
+            - generic [ref=e4198]: 6d ago
+          - generic [ref=e4199]:
+            - generic [ref=e4200]: RB Momentum Trader (15M)
+            - generic [ref=e4201]: "#131"
+            - link [ref=e4202] [cursor=pointer]:
+              - /url: /agents/29
+              - img [ref=e4203]
+      - 'button "Open long LAYER 6d ago RB Momentum Trader (30M) #137" [ref=e4207]':
+        - generic [ref=e4208]: Open long
+        - generic [ref=e4209]:
+          - generic [ref=e4210]:
+            - generic [ref=e4211]: LAYER
+            - generic [ref=e4212]: 6d ago
+          - generic [ref=e4213]:
+            - generic [ref=e4214]: RB Momentum Trader (30M)
+            - generic [ref=e4215]: "#137"
+            - link [ref=e4216] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e4217]
+      - 'button "Open long AUCTION 6d ago RB Momentum Trader (30M) #137" [ref=e4221]':
+        - generic [ref=e4222]: Open long
+        - generic [ref=e4223]:
+          - generic [ref=e4224]:
+            - generic [ref=e4225]: AUCTION
+            - generic [ref=e4226]: 6d ago
+          - generic [ref=e4227]:
+            - generic [ref=e4228]: RB Momentum Trader (30M)
+            - generic [ref=e4229]: "#137"
+            - link [ref=e4230] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e4231]
+      - 'button "Open long FDUSD 7d ago RB Swing Trader (1D) #139" [ref=e4235]':
+        - generic [ref=e4236]: Open long
+        - generic [ref=e4237]:
+          - generic [ref=e4238]:
+            - generic [ref=e4239]: FDUSD
+            - generic [ref=e4240]: 7d ago
+          - generic [ref=e4241]:
+            - generic [ref=e4242]: RB Swing Trader (1D)
+            - generic [ref=e4243]: "#139"
+            - link [ref=e4244] [cursor=pointer]:
+              - /url: /agents/48
+              - img [ref=e4245]
+      - 'button "Open long ACH 7d ago RB Swing Trader (1H) #146" [ref=e4249]':
+        - generic [ref=e4250]: Open long
+        - generic [ref=e4251]:
+          - generic [ref=e4252]:
+            - generic [ref=e4253]: ACH
+            - generic [ref=e4254]: 7d ago
+          - generic [ref=e4255]:
+            - generic [ref=e4256]: RB Swing Trader (1H)
+            - generic [ref=e4257]: "#146"
+            - link [ref=e4258] [cursor=pointer]:
+              - /url: /agents/40
+              - img [ref=e4259]
+      - 'button "Open long ZEC 7d ago Momentum Trader (1H) #5" [ref=e4263]':
+        - generic [ref=e4264]: Open long
+        - generic [ref=e4265]:
+          - generic [ref=e4266]:
+            - generic [ref=e4267]: ZEC
+            - generic [ref=e4268]: 7d ago
+          - generic [ref=e4269]:
+            - generic [ref=e4270]: Momentum Trader (1H)
+            - generic [ref=e4271]: "#5"
+            - link [ref=e4272] [cursor=pointer]:
+              - /url: /agents/9
+              - img [ref=e4273]
+      - 'button "Open long MUBARAK 7d ago Momentum Trader (15M) #10" [ref=e4277]':
+        - generic [ref=e4278]: Open long
+        - generic [ref=e4279]:
+          - generic [ref=e4280]:
+            - generic [ref=e4281]: MUBARAK
+            - generic [ref=e4282]: 7d ago
+          - generic [ref=e4283]:
+            - generic [ref=e4284]: Momentum Trader (15M)
+            - generic [ref=e4285]: "#10"
+            - link [ref=e4286] [cursor=pointer]:
+              - /url: /agents/1
+              - img [ref=e4287]
+      - 'button "Open long ZEC 7d ago Momentum Trader (15M) #10" [ref=e4291]':
+        - generic [ref=e4292]: Open long
+        - generic [ref=e4293]:
+          - generic [ref=e4294]:
+            - generic [ref=e4295]: ZEC
+            - generic [ref=e4296]: 7d ago
+          - generic [ref=e4297]:
+            - generic [ref=e4298]: Momentum Trader (15M)
+            - generic [ref=e4299]: "#10"
+            - link [ref=e4300] [cursor=pointer]:
+              - /url: /agents/1
+              - img [ref=e4301]
+      - 'button "Open long ACE 7d ago Momentum Trader (15M) #10" [ref=e4305]':
+        - generic [ref=e4306]: Open long
+        - generic [ref=e4307]:
+          - generic [ref=e4308]:
+            - generic [ref=e4309]: ACE
+            - generic [ref=e4310]: 7d ago
+          - generic [ref=e4311]:
+            - generic [ref=e4312]: Momentum Trader (15M)
+            - generic [ref=e4313]: "#10"
+            - link [ref=e4314] [cursor=pointer]:
+              - /url: /agents/1
+              - img [ref=e4315]
+      - 'button "Open long ACE 8d ago Momentum Trader (1H) #5" [ref=e4319]':
+        - generic [ref=e4320]: Open long
+        - generic [ref=e4321]:
+          - generic [ref=e4322]:
+            - generic [ref=e4323]: ACE
+            - generic [ref=e4324]: 8d ago
+          - generic [ref=e4325]:
+            - generic [ref=e4326]: Momentum Trader (1H)
+            - generic [ref=e4327]: "#5"
+            - link [ref=e4328] [cursor=pointer]:
+              - /url: /agents/9
+              - img [ref=e4329]
+      - 'button "Open long STG 8d ago Momentum Trader (1W) #27" [ref=e4333]':
+        - generic [ref=e4334]: Open long
+        - generic [ref=e4335]:
+          - generic [ref=e4336]:
+            - generic [ref=e4337]: STG
+            - generic [ref=e4338]: 8d ago
+          - generic [ref=e4339]:
+            - generic [ref=e4340]: Momentum Trader (1W)
+            - generic [ref=e4341]: "#27"
+            - link [ref=e4342] [cursor=pointer]:
+              - /url: /agents/21
+              - img [ref=e4343]
+      - 'button "Open long DUSK 8d ago Momentum Trader (1H) #5" [ref=e4347]':
+        - generic [ref=e4348]: Open long
+        - generic [ref=e4349]:
+          - generic [ref=e4350]:
+            - generic [ref=e4351]: DUSK
+            - generic [ref=e4352]: 8d ago
+          - generic [ref=e4353]:
+            - generic [ref=e4354]: Momentum Trader (1H)
+            - generic [ref=e4355]: "#5"
+            - link [ref=e4356] [cursor=pointer]:
+              - /url: /agents/9
+              - img [ref=e4357]
+  - alert [ref=e4360]

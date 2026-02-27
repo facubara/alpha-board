@@ -5,8 +5,8 @@
  * Clickable rows open a modal showing which accounts mentioned the token.
  */
 
-import { useState, useEffect, useCallback } from "react";
-import { ExternalLink, Star } from "lucide-react";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { ExternalLink, Search, Star } from "lucide-react";
 import type { TrendingToken, TokenMention, MemecoinCategory } from "@/lib/types";
 import { MEMECOIN_CATEGORY_LABELS } from "@/lib/types";
 
@@ -22,9 +22,20 @@ interface TrendingTokensProps {
 }
 
 export function TrendingTokens({ tokens }: TrendingTokensProps) {
+  const [search, setSearch] = useState("");
   const [selectedToken, setSelectedToken] = useState<TrendingToken | null>(null);
   const [mentions, setMentions] = useState<TokenMention[]>([]);
   const [loadingMentions, setLoadingMentions] = useState(false);
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return tokens;
+    const term = search.toLowerCase();
+    return tokens.filter(
+      (t) =>
+        t.tokenSymbol.toLowerCase().includes(term) ||
+        (t.tokenName ?? "").toLowerCase().includes(term)
+    );
+  }, [tokens, search]);
 
   const closeModal = useCallback(() => setSelectedToken(null), []);
 
@@ -60,6 +71,18 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
 
   return (
     <>
+      {/* Search */}
+      <div className="relative mb-3">
+        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+        <input
+          type="text"
+          placeholder="Search tokens..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] py-1.5 pl-8 pr-3 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none sm:w-64"
+        />
+      </div>
+
       <div className="overflow-x-auto rounded-md border border-[var(--border-default)]">
         <table className="w-full text-sm">
           <thead>
@@ -74,7 +97,13 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
             </tr>
           </thead>
           <tbody>
-            {tokens.map((token) => (
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-3 py-6 text-center text-sm text-muted">
+                  No tokens match &ldquo;{search}&rdquo;
+                </td>
+              </tr>
+            ) : filtered.map((token) => (
               <tr
                 key={token.tokenMint}
                 onClick={() => handleTokenClick(token)}

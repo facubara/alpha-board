@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { RefreshCw } from "lucide-react";
+import { useMounted } from "@/hooks/use-mounted";
 
 const LOGOS = [
   { key: "ascii", src: "/logos/ascii-logo.png" },
@@ -27,11 +29,7 @@ function getStoredIndex(): number {
 
 export function LogoSwitcher() {
   const [index, setIndex] = useState(getStoredIndex);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   function cycle() {
     const next = (index + 1) % LOGOS.length;
@@ -42,12 +40,15 @@ export function LogoSwitcher() {
   return (
     <div className="flex items-center gap-1.5">
       <Link href="/" aria-label="Home">
-        <img
+        <Image
           key={LOGOS[index].key}
           src={LOGOS[index].src}
           alt="Alpha Board"
+          width={76}
+          height={38}
           className="h-[38px] w-auto rounded-sm"
           style={{ visibility: mounted ? "visible" : "hidden" }}
+          priority
         />
       </Link>
       <button

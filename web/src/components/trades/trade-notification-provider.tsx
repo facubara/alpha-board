@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { useSSE } from "@/hooks/use-sse";
+import { useFetch } from "@/hooks/use-fetch";
 import type { TradeNotification } from "@/lib/types";
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
@@ -38,6 +39,11 @@ interface TradeSSEEvent {
   timestamp?: string;
 }
 
+interface ExchangeSettingsResponse {
+  configured?: boolean;
+  enabled?: boolean;
+}
+
 interface TradeNotificationContextValue {
   trades: TradeNotification[];
   unreadCount: number;
@@ -62,16 +68,22 @@ export function useTradeNotifications() {
   return ctx;
 }
 
+function readStoredSidebarOpen(): boolean {
+  if (typeof window === "undefined") return true;
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored !== null ? stored === "true" : true;
+}
+
 interface Props {
   initialTrades: TradeNotification[];
   children: React.ReactNode;
 }
 
 export function TradeNotificationProvider({ initialTrades, children }: Props) {
+  // react-doctor: intentional — local mutation of server-fetched initial data
   const [trades, setTrades] = useState<TradeNotification[]>(initialTrades);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [exchangeEnabled, setExchangeEnabled] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(readStoredSidebarOpen);
   const [highlightedSymbols, setHighlightedSymbols] = useState<Set<string>>(
     new Set()
   );
@@ -79,24 +91,11 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
     new Map()
   );
 
-  // Fetch exchange settings once on mount
-  useEffect(() => {
-    if (!WORKER_URL) return;
-    fetch(`${WORKER_URL}/exchange/settings`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.configured && data.enabled) setExchangeEnabled(true);
-      })
-      .catch(() => {});
-  }, []);
+  // Fetch exchange settings once on mount — derive exchangeEnabled from data
+  const exchangeUrl = WORKER_URL ? `${WORKER_URL}/exchange/settings` : null;
+  const { data: exchangeData } = useFetch<ExchangeSettingsResponse>(exchangeUrl);
+  const exchangeEnabled = !!(exchangeData?.configured && exchangeData?.enabled);
 
-  // Sync with localStorage after hydration to avoid mismatch
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored !== null) {
-      setSidebarOpen(stored === "true");
-    }
-  }, []);
   const [latestToast, setLatestToast] = useState<TradeNotification | null>(
     null
   );

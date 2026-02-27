@@ -17,6 +17,8 @@ import type {
   TokenMention,
   AccountCallHistoryItem,
   TweetSetupType,
+  TokenAnalysis,
+  CrossReferenceCheckSummary,
 } from "@/lib/types";
 
 /**
@@ -400,5 +402,54 @@ export async function getAccountCallHistory(
     matchTimeMcap: row.match_time_mcap != null ? Number(row.match_time_mcap) : null,
     matchTimePrice: row.match_time_price != null ? Number(row.match_time_price) : null,
     athMcap: row.ath_mcap != null ? Number(row.ath_mcap) : null,
+  }));
+}
+
+/**
+ * Fetch recent token analyses.
+ */
+export async function getTokenAnalyses(): Promise<TokenAnalysis[]> {
+  const rows = await sql`
+    SELECT *
+    FROM token_analyses
+    ORDER BY requested_at DESC
+    LIMIT 20
+  `;
+
+  return rows.map((row) => ({
+    id: Number(row.id),
+    mintAddress: row.mint_address as string,
+    tokenSymbol: (row.token_symbol as string) || null,
+    tokenName: (row.token_name as string) || null,
+    marketCapUsd: row.market_cap_usd != null ? Number(row.market_cap_usd) : null,
+    requestedBuyers: Number(row.requested_buyers),
+    foundBuyers: Number(row.found_buyers),
+    status: row.status as TokenAnalysis["status"],
+    errorMessage: (row.error_message as string) || null,
+    requestedAt: (row.requested_at as Date).toISOString(),
+    completedAt: row.completed_at ? (row.completed_at as Date).toISOString() : null,
+  }));
+}
+
+/**
+ * Fetch recent cross-reference checks.
+ */
+export async function getCrossReferenceChecks(): Promise<CrossReferenceCheckSummary[]> {
+  const rows = await sql`
+    SELECT *
+    FROM cross_reference_checks
+    ORDER BY checked_at DESC
+    LIMIT 20
+  `;
+
+  return rows.map((row) => ({
+    id: Number(row.id),
+    mintAddress: row.mint_address as string,
+    tokenSymbol: (row.token_symbol as string) || null,
+    tokenName: (row.token_name as string) || null,
+    buyersScanned: Number(row.buyers_scanned),
+    matchesFound: Number(row.matches_found),
+    topMatchScore: row.top_match_score != null ? Number(row.top_match_score) : null,
+    checkedAt: (row.checked_at as Date).toISOString(),
   }));
 }

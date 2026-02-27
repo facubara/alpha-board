@@ -15,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.events import event_bus
 from src.memecoins.dexscreener_client import DexScreenerClient
 from src.memecoins.helius_client import HeliusClient
-from src.models.db import WatchWallet, WatchWalletActivity
+from src.models.db import AnalyzedWallet, WalletTokenEntry, WatchWallet, WatchWalletActivity
 
 logger = logging.getLogger(__name__)
 
@@ -175,6 +175,42 @@ class WalletMonitor:
                 "blockTime": block_time.isoformat(),
             },
         })
+
+        # Fire notification if wallet is in analyzed_wallets DB and direction is buy
+        if direction == "buy":
+            try:
+                analyzed_result = await self.session.execute(
+                    select(AnalyzedWallet).where(AnalyzedWallet.address == fee_payer)
+                )
+                analyzed_wallet = analyzed_result.scalar_one_or_none()
+                if analyzed_wallet:
+                    # Count past early entries
+                    from sqlalchemy import func as sa_func
+                    hits_result = await self.session.execute(
+                        select(sa_func.count()).select_from(WalletTokenEntry).where(
+                            WalletTokenEntry.wallet_id == analyzed_wallet.id
+                        )
+                    )
+                    past_hits = hits_result.scalar() or 0
+
+                    from src.notifications.models import MemecoinBuyEvent
+                    from src.notifications.service import NotificationService
+
+                    svc = NotificationService(self.session)
+                    await svc.notify_memecoin_buy(MemecoinBuyEvent(
+                        wallet_address=fee_payer,
+                        wallet_label=wallet.label,
+                        wallet_score=float(wallet.score),
+                        token_symbol=token_symbol,
+                        token_name=token_name,
+                        token_mint=token_mint,
+                        amount_sol=amount_sol,
+                        price_usd=price_usd,
+                        past_hits=past_hits,
+                        tx_signature=signature,
+                    ))
+            except Exception as e:
+                logger.debug(f"Memecoin buy notification failed: {e}")
 
         return True
 

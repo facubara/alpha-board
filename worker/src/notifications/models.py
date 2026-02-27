@@ -92,6 +92,21 @@ class AgentDiscardedEvent(BaseModel):
     reason: str = ""
 
 
+class MemecoinBuyEvent(BaseModel):
+    """Fired when an analyzed wallet buys a new token."""
+
+    wallet_address: str
+    wallet_label: str | None = None
+    wallet_score: float = 0.0
+    token_symbol: str = ""
+    token_name: str | None = None
+    token_mint: str = ""
+    amount_sol: Decimal = Decimal("0")
+    price_usd: Decimal | None = None
+    past_hits: int = 0  # Number of tokens they were early on
+    tx_signature: str = ""
+
+
 class DailyDigestData(BaseModel):
     """Aggregated data for the daily digest message."""
 

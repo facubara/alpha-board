@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { ChevronDown, ChevronRight, RotateCcw, Trash2 } from "lucide-react";
+import { useState, useMemo, useCallback } from "react";
+import { ChevronDown, ChevronRight, Search, RotateCcw, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
 import {
@@ -27,8 +27,21 @@ interface DiscardedAgentsProps {
 
 export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
   const [expanded, setExpanded] = useState(false);
+  const [search, setSearch] = useState("");
+  // react-doctor: intentional — local mutation of server-fetched initial data
   const [items, setItems] = useState(agents);
   const [actionLoading, setActionLoading] = useState<Record<number, string>>({});
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return items;
+    const term = search.toLowerCase();
+    return items.filter(
+      (a) =>
+        a.displayName.toLowerCase().includes(term) ||
+        a.timeframe.toLowerCase().includes(term) ||
+        (a.discardReason ?? "").toLowerCase().includes(term)
+    );
+  }, [items, search]);
   const { requireAuth } = useAuth();
 
   const handleReactivate = useCallback(
@@ -106,6 +119,19 @@ export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
         Discarded Agents ({items.length})
       </button>
 
+      {expanded && items.length > 0 && (
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+          <input
+            type="text"
+            placeholder="Search agents..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] py-1.5 pl-8 pr-3 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none sm:w-64"
+          />
+        </div>
+      )}
+
       {expanded && (
         <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
           <Table>
@@ -132,7 +158,13 @@ export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {items.map((agent) => (
+              {filtered.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="py-6 text-center text-sm text-muted">
+                    No agents match &ldquo;{search}&rdquo;
+                  </TableCell>
+                </TableRow>
+              ) : filtered.map((agent) => (
                 <TableRow
                   key={agent.id}
                   className="h-10 border-b border-[var(--border-subtle)] hover:bg-[var(--bg-elevated)]"

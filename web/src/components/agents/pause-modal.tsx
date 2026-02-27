@@ -1,25 +1,77 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useReducer, useEffect, useRef, useCallback } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  loadProgress,
+  saveProgress,
+  clearProgress,
+  arraysMatch,
+  type PauseProgress,
+} from "@/lib/pause-progress";
 
 interface PauseAgent {
   id: number;
   name: string;
 }
 
-interface PauseProgress {
-  agentIds: number[];
-  lastPausedIndex: number;
-  timestamp: number;
-}
-
 type ModalStatus = "loading" | "resume_prompt" | "pausing" | "done" | "error" | "empty";
 
-const STORAGE_KEY = "alpha-board:pause-progress";
-const EXPIRY_MS = 60 * 60 * 1000; // 1 hour
 const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+
+// ─── Reducer ───
+interface PauseState {
+  agents: PauseAgent[];
+  currentIndex: number;
+  status: ModalStatus;
+  failedAgent: PauseAgent | null;
+  pausedCount: number;
+  spinnerFrame: number;
+  savedProgress: PauseProgress | null;
+}
+
+type PauseAction =
+  | { type: "RESET" }
+  | { type: "SET_AGENTS_EMPTY" }
+  | { type: "SET_AGENTS"; agents: PauseAgent[]; saved: PauseProgress | null }
+  | { type: "START_PAUSING"; startFrom: number }
+  | { type: "SET_INDEX"; index: number }
+  | { type: "AGENT_PAUSED"; index: number }
+  | { type: "PAUSE_FAILED"; agent: PauseAgent; count: number }
+  | { type: "PAUSE_DONE"; count: number }
+  | { type: "LOAD_ERROR" }
+  | { type: "TICK_SPINNER" };
+
+function pauseReducer(state: PauseState, action: PauseAction): PauseState {
+  switch (action.type) {
+    case "RESET":
+      return { ...state, status: "loading", failedAgent: null, pausedCount: 0, currentIndex: 0 };
+    case "SET_AGENTS_EMPTY":
+      return { ...state, agents: [], status: "empty" };
+    case "SET_AGENTS":
+      return {
+        ...state,
+        agents: action.agents,
+        savedProgress: action.saved,
+        status: action.saved ? "resume_prompt" : "pausing",
+      };
+    case "START_PAUSING":
+      return { ...state, status: "pausing", pausedCount: action.startFrom, currentIndex: action.startFrom };
+    case "SET_INDEX":
+      return { ...state, currentIndex: action.index };
+    case "AGENT_PAUSED":
+      return { ...state, pausedCount: action.index + 1 };
+    case "PAUSE_FAILED":
+      return { ...state, failedAgent: action.agent, status: "error", pausedCount: action.count };
+    case "PAUSE_DONE":
+      return { ...state, status: "done", pausedCount: action.count };
+    case "LOAD_ERROR":
+      return { ...state, status: "error", failedAgent: null };
+    case "TICK_SPINNER":
+      return { ...state, spinnerFrame: (state.spinnerFrame + 1) % SPINNER_FRAMES.length };
+  }
+}
 
 interface PauseModalProps {
   open: boolean;
@@ -28,21 +80,24 @@ interface PauseModalProps {
 }
 
 export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
-  const [agents, setAgents] = useState<PauseAgent[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [status, setStatus] = useState<ModalStatus>("loading");
-  const [failedAgent, setFailedAgent] = useState<PauseAgent | null>(null);
-  const [pausedCount, setPausedCount] = useState(0);
-  const [spinnerFrame, setSpinnerFrame] = useState(0);
-  const [savedProgress, setSavedProgress] = useState<PauseProgress | null>(null);
+  const [state, dispatch] = useReducer(pauseReducer, {
+    agents: [],
+    currentIndex: 0,
+    status: "loading",
+    failedAgent: null,
+    pausedCount: 0,
+    spinnerFrame: 0,
+    savedProgress: null,
+  });
+
   const cancelRef = useRef(false);
   const spinnerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Spinner animation
   useEffect(() => {
-    if (status === "pausing") {
+    if (state.status === "pausing") {
       spinnerRef.current = setInterval(() => {
-        setSpinnerFrame((f) => (f + 1) % SPINNER_FRAMES.length);
+        dispatch({ type: "TICK_SPINNER" });
       }, 80);
     } else {
       if (spinnerRef.current) clearInterval(spinnerRef.current);
@@ -50,108 +105,100 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
     return () => {
       if (spinnerRef.current) clearInterval(spinnerRef.current);
     };
-  }, [status]);
-
-  // Load agents on open
-  useEffect(() => {
-    if (!open) return;
-    cancelRef.current = false;
-    setStatus("loading");
-    setFailedAgent(null);
-    setPausedCount(0);
-    setCurrentIndex(0);
-
-    fetch("/api/agents/active-llm")
-      .then((res) => {
-        if (!res.ok) throw new Error("fetch failed");
-        return res.json();
-      })
-      .then((data: { agents: PauseAgent[] }) => {
-        if (data.agents.length === 0) {
-          setAgents([]);
-          setStatus("empty");
-          return;
-        }
-
-        setAgents(data.agents);
-
-        // Check localStorage for saved progress
-        const saved = loadProgress();
-        if (saved && arraysMatch(saved.agentIds, data.agents.map((a) => a.id))) {
-          setSavedProgress(saved);
-          setStatus("resume_prompt");
-        } else {
-          clearProgress();
-          setSavedProgress(null);
-          startPausing(data.agents, 0);
-        }
-      })
-      .catch(() => {
-        setStatus("error");
-        setFailedAgent(null);
-      });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [state.status]);
 
   const startPausing = useCallback(async (agentList: PauseAgent[], startFrom: number) => {
-    setStatus("pausing");
+    dispatch({ type: "START_PAUSING", startFrom });
     cancelRef.current = false;
-    setPausedCount(startFrom);
-    setCurrentIndex(startFrom);
 
-    // Save initial progress
     saveProgress(agentList.map((a) => a.id), startFrom);
 
     for (let i = startFrom; i < agentList.length; i++) {
       if (cancelRef.current) return;
 
-      setCurrentIndex(i);
+      dispatch({ type: "SET_INDEX", index: i });
       const agent = agentList[i];
 
+      let res: Response | null = null;
       try {
-        const res = await fetch(`/api/agents/${agent.id}/pause`, { method: "POST" });
-        if (!res.ok && res.status !== 404) {
-          // 404 means already paused — that's fine, continue
-          throw new Error(`HTTP ${res.status}`);
-        }
-
-        setPausedCount(() => i + 1);
-        saveProgress(agentList.map((a) => a.id), i);
+        res = await fetch(`/api/agents/${agent.id}/pause`, { method: "POST" });
       } catch {
-        setFailedAgent(agent);
-        setStatus("error");
-        setPausedCount(i);
+        dispatch({ type: "PAUSE_FAILED", agent, count: i });
         return;
       }
+
+      if (!res.ok && res.status !== 404) {
+        dispatch({ type: "PAUSE_FAILED", agent, count: i });
+        return;
+      }
+
+      dispatch({ type: "AGENT_PAUSED", index: i });
+      saveProgress(agentList.map((a) => a.id), i);
     }
 
     // All done
     clearProgress();
-    setStatus("done");
-    setPausedCount(agentList.length);
+    dispatch({ type: "PAUSE_DONE", count: agentList.length });
   }, []);
 
+  // Load agents on open
+  useEffect(() => {
+    if (!open) return;
+    cancelRef.current = false;
+    dispatch({ type: "RESET" });
+
+    let cancelled = false;
+
+    (async () => {
+      let data: { agents: PauseAgent[] } | null = null;
+      try {
+        const res = await fetch("/api/agents/active-llm");
+        if (!res.ok) throw new Error("fetch failed");
+        data = await res.json();
+      } catch {
+        if (!cancelled) dispatch({ type: "LOAD_ERROR" });
+        return;
+      }
+
+      if (cancelled || !data) return;
+
+      if (data.agents.length === 0) {
+        dispatch({ type: "SET_AGENTS_EMPTY" });
+        return;
+      }
+
+      const saved = loadProgress();
+      if (saved && arraysMatch(saved.agentIds, data.agents.map((a) => a.id))) {
+        dispatch({ type: "SET_AGENTS", agents: data.agents, saved });
+      } else {
+        clearProgress();
+        dispatch({ type: "SET_AGENTS", agents: data.agents, saved: null });
+        startPausing(data.agents, 0);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [open, startPausing]);
+
   const handleResume = useCallback(() => {
-    if (savedProgress) {
-      startPausing(agents, savedProgress.lastPausedIndex + 1);
+    if (state.savedProgress) {
+      startPausing(state.agents, state.savedProgress.lastPausedIndex + 1);
     }
-  }, [savedProgress, agents, startPausing]);
+  }, [state.savedProgress, state.agents, startPausing]);
 
   const handleStartFresh = useCallback(() => {
     clearProgress();
-    setSavedProgress(null);
-    startPausing(agents, 0);
-  }, [agents, startPausing]);
+    startPausing(state.agents, 0);
+  }, [state.agents, startPausing]);
 
   const handleResumeFromError = useCallback(() => {
-    if (failedAgent) {
-      const idx = agents.findIndex((a) => a.id === failedAgent.id);
+    if (state.failedAgent) {
+      const idx = state.agents.findIndex((a) => a.id === state.failedAgent!.id);
       if (idx >= 0) {
-        setFailedAgent(null);
-        startPausing(agents, idx);
+        startPausing(state.agents, idx);
       }
     }
-  }, [failedAgent, agents, startPausing]);
+  }, [state.failedAgent, state.agents, startPausing]);
 
   const handleCancel = useCallback(() => {
     cancelRef.current = true;
@@ -165,7 +212,7 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
 
   if (!open) return null;
 
-  const progress = agents.length > 0 ? (pausedCount / agents.length) * 100 : 0;
+  const progress = state.agents.length > 0 ? (state.pausedCount / state.agents.length) * 100 : 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -194,7 +241,7 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         </div>
 
         {/* Loading state */}
-        {status === "loading" && (
+        {state.status === "loading" && (
           <div className="flex items-center gap-2 py-8">
             <span className="font-mono text-sm text-secondary animate-pulse">
               Loading agents...
@@ -203,7 +250,7 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         )}
 
         {/* Empty state */}
-        {status === "empty" && (
+        {state.status === "empty" && (
           <div className="py-8 text-center">
             <p className="font-mono text-sm text-secondary">
               No active LLM agents to pause
@@ -218,12 +265,12 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         )}
 
         {/* Resume prompt */}
-        {status === "resume_prompt" && savedProgress && (
+        {state.status === "resume_prompt" && state.savedProgress && (
           <div className="space-y-4 py-4">
             <p className="font-mono text-sm text-secondary">
               Previous pause stopped at{" "}
               <span className="text-primary">
-                {savedProgress.lastPausedIndex + 1}/{agents.length}
+                {state.savedProgress.lastPausedIndex + 1}/{state.agents.length}
               </span>
             </p>
             <div className="flex items-center gap-3">
@@ -231,7 +278,7 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
                 onClick={handleResume}
                 className="rounded-md border border-[var(--border-strong)] bg-[var(--bg-elevated)] px-4 py-1.5 font-mono text-xs font-medium text-primary transition-colors hover:bg-[var(--bg-surface)]"
               >
-                Resume from {savedProgress.lastPausedIndex + 2}
+                Resume from {state.savedProgress.lastPausedIndex + 2}
               </button>
               <button
                 onClick={handleStartFresh}
@@ -244,23 +291,23 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         )}
 
         {/* Pausing state */}
-        {status === "pausing" && (
+        {state.status === "pausing" && (
           <div className="space-y-4 py-4">
             <div className="space-y-1">
               <p className="font-mono text-sm text-secondary">
                 <span className="text-primary">
-                  {SPINNER_FRAMES[spinnerFrame]}
+                  {SPINNER_FRAMES[state.spinnerFrame]}
                 </span>{" "}
                 stopping{" "}
                 <span className="text-primary">
-                  {currentIndex + 1}
+                  {state.currentIndex + 1}
                 </span>{" "}
                 of{" "}
-                <span className="text-primary">{agents.length}</span>
+                <span className="text-primary">{state.agents.length}</span>
               </p>
-              {agents[currentIndex] && (
+              {state.agents[state.currentIndex] && (
                 <p className="font-mono text-xs text-muted">
-                  current: {agents[currentIndex].name}
+                  current: {state.agents[state.currentIndex].name}
                 </p>
               )}
             </div>
@@ -286,10 +333,10 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         )}
 
         {/* Done state */}
-        {status === "done" && (
+        {state.status === "done" && (
           <div className="space-y-4 py-4">
             <p className="font-mono text-sm text-primary">
-              All {pausedCount} agents paused
+              All {state.pausedCount} agents paused
             </p>
             <button
               onClick={handleDone}
@@ -301,18 +348,18 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         )}
 
         {/* Error state */}
-        {status === "error" && (
+        {state.status === "error" && (
           <div className="space-y-4 py-4">
-            {failedAgent ? (
+            {state.failedAgent ? (
               <>
                 <p className="font-mono text-sm text-bearish">
-                  Failed at agent {currentIndex + 1} of {agents.length}
+                  Failed at agent {state.currentIndex + 1} of {state.agents.length}
                 </p>
                 <p className="font-mono text-xs text-muted">
-                  {failedAgent.name}
+                  {state.failedAgent.name}
                 </p>
                 <p className="font-mono text-xs text-secondary">
-                  {pausedCount} agent{pausedCount !== 1 ? "s" : ""} paused
+                  {state.pausedCount} agent{state.pausedCount !== 1 ? "s" : ""} paused
                   successfully
                 </p>
                 <div className="flex items-center gap-3">
@@ -351,44 +398,4 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
       </div>
     </div>
   );
-}
-
-function loadProgress(): PauseProgress | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const data = JSON.parse(raw) as PauseProgress;
-    if (Date.now() - data.timestamp > EXPIRY_MS) {
-      localStorage.removeItem(STORAGE_KEY);
-      return null;
-    }
-    return data;
-  } catch {
-    return null;
-  }
-}
-
-function saveProgress(agentIds: number[], lastPausedIndex: number) {
-  try {
-    const data: PauseProgress = { agentIds, lastPausedIndex, timestamp: Date.now() };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch {
-    // localStorage unavailable
-  }
-}
-
-function clearProgress() {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // localStorage unavailable
-  }
-}
-
-function arraysMatch(a: number[], b: number[]): boolean {
-  if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
 }

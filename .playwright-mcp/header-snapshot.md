@@ -1,0 +1,6825 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - link "Home" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img "Alpha Board" [ref=e6]
+        - button "Switch logo variant" [ref=e7]:
+          - img [ref=e8]
+      - generic [ref=e13]:
+        - navigation [ref=e14]:
+          - link "Rankings" [ref=e15] [cursor=pointer]:
+            - /url: /
+          - link "Agents" [ref=e16] [cursor=pointer]:
+            - /url: /agents
+          - link "Tweets" [ref=e17] [cursor=pointer]:
+            - /url: /tweets
+          - link "Backtest" [ref=e18] [cursor=pointer]:
+            - /url: /backtest
+          - link "Analytics" [ref=e19] [cursor=pointer]:
+            - /url: /analytics
+          - link "Status" [ref=e20] [cursor=pointer]:
+            - /url: /status
+          - link "Settings" [ref=e21] [cursor=pointer]:
+            - /url: /settings
+        - button "Close trade feed" [ref=e22]:
+          - img [ref=e23]
+        - button "Login" [ref=e26]:
+          - img [ref=e27]
+          - text: Login
+  - main [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - heading "Rankings" [level=1] [ref=e33]
+        - paragraph [ref=e34]: Real-time crypto market rankings based on technical indicators
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - tablist "Select timeframe" [ref=e38]:
+              - tab "15m" [ref=e39]
+              - tab "30m" [ref=e40]
+              - tab "1h" [selected] [ref=e41]
+              - tab "4h" [ref=e42]
+              - tab "1d" [ref=e43]
+              - tab "1w" [ref=e44]
+            - generic [ref=e45]:
+              - img [ref=e46]
+              - textbox "Search symbols..." [ref=e49]
+          - generic [ref=e50]:
+            - generic [ref=e51]: Next close 40m 09s
+            - generic [ref=e52]: Updated 4m ago
+        - tabpanel [ref=e53]:
+          - table [ref=e56]:
+            - rowgroup [ref=e57]:
+              - row "# Symbol Score Conf Price % Price Δ Vol % Vol Δ Funding Highlights" [ref=e58]:
+                - columnheader "#" [ref=e59] [cursor=pointer]:
+                  - text: "#"
+                  - img [ref=e7652]
+                - columnheader "Symbol" [ref=e62] [cursor=pointer]
+                - columnheader "Score" [ref=e63] [cursor=pointer]
+                - columnheader "Conf" [ref=e64] [cursor=pointer]
+                - columnheader "Price %" [ref=e65] [cursor=pointer]
+                - columnheader "Price Δ" [ref=e66] [cursor=pointer]
+                - columnheader "Vol %" [ref=e67] [cursor=pointer]
+                - columnheader "Vol Δ" [ref=e68] [cursor=pointer]
+                - columnheader "Funding" [ref=e69] [cursor=pointer]
+                - columnheader "Highlights" [ref=e70]
+                - columnheader [ref=e71]
+            - rowgroup [ref=e72]:
+              - row "1 ENSOUSDT 73 0.731 68% +0.73% +$0.0120 -79% -$303.9K -0.1076% Strong Uptrend EMA Bullish Strong Buying" [ref=e73] [cursor=pointer]:
+                - cell "1" [ref=e74]
+                - cell "ENSOUSDT" [ref=e75]:
+                  - generic [ref=e76]:
+                    - text: ENSOUSDT
+                    - link "Chart for ENSOUSDT" [ref=e77]:
+                      - /url: /symbols/ENSOUSDT
+                      - img [ref=e78]
+                    - link "Trade ENSO/USDT on Binance" [ref=e81]:
+                      - /url: https://www.binance.com/en/trade/ENSO_USDT
+                      - img [ref=e82]
+                - cell "73 0.731" [ref=e84]:
+                  - generic [ref=e85]:
+                    - 'progressbar "Bullish score: 0.731" [ref=e86]'
+                    - generic [ref=e88]: "0.731"
+                - cell "68%" [ref=e89]
+                - cell "+0.73%" [ref=e90]:
+                  - generic [ref=e91]: +0.73%
+                - cell "+$0.0120" [ref=e92]:
+                  - generic [ref=e93]: +$0.0120
+                - cell "-79%" [ref=e94]:
+                  - generic [ref=e95]: "-79%"
+                - cell "-$303.9K" [ref=e96]
+                - cell "-0.1076%" [ref=e97]:
+                  - generic [ref=e98]: "-0.1076%"
+                - cell "Strong Uptrend EMA Bullish Strong Buying" [ref=e99]:
+                  - generic [ref=e100]:
+                    - generic [ref=e101]: Strong Uptrend
+                    - generic [ref=e102]: EMA Bullish
+                    - generic [ref=e103]: Strong Buying
+                - cell [ref=e104]:
+                  - img [ref=e105]
+              - row "2 SNXUSDT 72 0.723 67% +0.00% +$0.000000 -87% -$306.7K -0.6325% Strong Uptrend EMA Bullish Strong Buying" [ref=e107] [cursor=pointer]:
+                - cell "2" [ref=e108]
+                - cell "SNXUSDT" [ref=e109]:
+                  - generic [ref=e110]:
+                    - text: SNXUSDT
+                    - link "Chart for SNXUSDT" [ref=e111]:
+                      - /url: /symbols/SNXUSDT
+                      - img [ref=e112]
+                    - link "Trade SNX/USDT on Binance" [ref=e115]:
+                      - /url: https://www.binance.com/en/trade/SNX_USDT
+                      - img [ref=e116]
+                - cell "72 0.723" [ref=e118]:
+                  - generic [ref=e119]:
+                    - 'progressbar "Bullish score: 0.723" [ref=e120]'
+                    - generic [ref=e122]: "0.723"
+                - cell "67%" [ref=e123]
+                - cell "+0.00%" [ref=e124]:
+                  - generic [ref=e125]: +0.00%
+                - cell "+$0.000000" [ref=e126]:
+                  - generic [ref=e127]: +$0.000000
+                - cell "-87%" [ref=e128]:
+                  - generic [ref=e129]: "-87%"
+                - cell "-$306.7K" [ref=e130]
+                - cell "-0.6325%" [ref=e131]:
+                  - generic [ref=e132]: "-0.6325%"
+                - cell "Strong Uptrend EMA Bullish Strong Buying" [ref=e133]:
+                  - generic [ref=e134]:
+                    - generic [ref=e135]: Strong Uptrend
+                    - generic [ref=e136]: EMA Bullish
+                    - generic [ref=e137]: Strong Buying
+                - cell [ref=e138]:
+                  - img [ref=e139]
+              - row "3 SOMIUSDT 72 0.722 57% -2.54% $-0.005400 -73% -$1.5M -0.1045% EMA Bullish Strong Buying Stoch Overbought" [ref=e141] [cursor=pointer]:
+                - cell "3" [ref=e142]
+                - cell "SOMIUSDT" [ref=e143]:
+                  - generic [ref=e144]:
+                    - text: SOMIUSDT
+                    - link "Chart for SOMIUSDT" [ref=e145]:
+                      - /url: /symbols/SOMIUSDT
+                      - img [ref=e146]
+                    - link "Trade SOMI/USDT on Binance" [ref=e149]:
+                      - /url: https://www.binance.com/en/trade/SOMI_USDT
+                      - img [ref=e150]
+                - cell "72 0.722" [ref=e152]:
+                  - generic [ref=e153]:
+                    - 'progressbar "Bullish score: 0.722" [ref=e154]'
+                    - generic [ref=e156]: "0.722"
+                - cell "57%" [ref=e157]
+                - cell "-2.54%" [ref=e158]:
+                  - generic [ref=e159]: "-2.54%"
+                - cell "$-0.005400" [ref=e160]
+                - cell "-73%" [ref=e161]:
+                  - generic [ref=e162]: "-73%"
+                - cell "-$1.5M" [ref=e163]
+                - cell "-0.1045%" [ref=e164]:
+                  - generic [ref=e165]: "-0.1045%"
+                - cell "EMA Bullish Strong Buying Stoch Overbought" [ref=e166]:
+                  - generic [ref=e167]:
+                    - generic [ref=e168]: EMA Bullish
+                    - generic [ref=e169]: Strong Buying
+                    - generic [ref=e170]: Stoch Overbought
+                - cell [ref=e171]:
+                  - img [ref=e172]
+              - row "4 DUSDT 70 0.701 58% -0.12% $-0.000010 -85% -$19.7M -0.6899% EMA Bullish Strong Buying" [ref=e174] [cursor=pointer]:
+                - cell "4" [ref=e175]
+                - cell "DUSDT" [ref=e176]:
+                  - generic [ref=e177]:
+                    - text: DUSDT
+                    - link "Chart for DUSDT" [ref=e178]:
+                      - /url: /symbols/DUSDT
+                      - img [ref=e179]
+                    - link "Trade D/USDT on Binance" [ref=e182]:
+                      - /url: https://www.binance.com/en/trade/D_USDT
+                      - img [ref=e183]
+                - cell "70 0.701" [ref=e185]:
+                  - generic [ref=e186]:
+                    - 'progressbar "Bullish score: 0.701" [ref=e187]'
+                    - generic [ref=e189]: "0.701"
+                - cell "58%" [ref=e190]
+                - cell "-0.12%" [ref=e191]:
+                  - generic [ref=e192]: "-0.12%"
+                - cell "$-0.000010" [ref=e193]
+                - cell "-85%" [ref=e194]:
+                  - generic [ref=e195]: "-85%"
+                - cell "-$19.7M" [ref=e196]
+                - cell "-0.6899%" [ref=e197]:
+                  - generic [ref=e198]: "-0.6899%"
+                - cell "EMA Bullish Strong Buying" [ref=e199]:
+                  - generic [ref=e200]:
+                    - generic [ref=e201]: EMA Bullish
+                    - generic [ref=e202]: Strong Buying
+                - cell [ref=e203]:
+                  - img [ref=e204]
+              - row "5 LUNCUSDT 69 0.694 50% -1.33% $-0.000000 -92% -$18.6B — EMA Bullish Strong Buying" [ref=e206] [cursor=pointer]:
+                - cell "5" [ref=e207]
+                - cell "LUNCUSDT" [ref=e208]:
+                  - generic [ref=e209]:
+                    - text: LUNCUSDT
+                    - link "Chart for LUNCUSDT" [ref=e210]:
+                      - /url: /symbols/LUNCUSDT
+                      - img [ref=e211]
+                    - link "Trade LUNC/USDT on Binance" [ref=e214]:
+                      - /url: https://www.binance.com/en/trade/LUNC_USDT
+                      - img [ref=e215]
+                - cell "69 0.694" [ref=e217]:
+                  - generic [ref=e218]:
+                    - 'progressbar "Bullish score: 0.694" [ref=e219]'
+                    - generic [ref=e221]: "0.694"
+                - cell "50%" [ref=e222]
+                - cell "-1.33%" [ref=e223]:
+                  - generic [ref=e224]: "-1.33%"
+                - cell "$-0.000000" [ref=e225]
+                - cell "-92%" [ref=e226]:
+                  - generic [ref=e227]: "-92%"
+                - cell "-$18.6B" [ref=e228]
+                - cell "—" [ref=e229]
+                - cell "EMA Bullish Strong Buying" [ref=e230]:
+                  - generic [ref=e231]:
+                    - generic [ref=e232]: EMA Bullish
+                    - generic [ref=e233]: Strong Buying
+                - cell [ref=e234]:
+                  - img [ref=e235]
+              - row "6 OMUSDT 68 0.684 67% +4.00% +$0.002800 -16% -$2.0M -0.4285% Strong Uptrend EMA Bullish Above BB Upper" [ref=e237] [cursor=pointer]:
+                - cell "6" [ref=e238]
+                - cell "OMUSDT" [ref=e239]:
+                  - generic [ref=e240]:
+                    - text: OMUSDT
+                    - link "Chart for OMUSDT" [ref=e241]:
+                      - /url: /symbols/OMUSDT
+                      - img [ref=e242]
+                    - link "Trade OM/USDT on Binance" [ref=e245]:
+                      - /url: https://www.binance.com/en/trade/OM_USDT
+                      - img [ref=e246]
+                - cell "68 0.684" [ref=e248]:
+                  - generic [ref=e249]:
+                    - 'progressbar "Bullish score: 0.684" [ref=e250]'
+                    - generic [ref=e252]: "0.684"
+                - cell "67%" [ref=e253]
+                - cell "+4.00%" [ref=e254]:
+                  - generic [ref=e255]: +4.00%
+                - cell "+$0.002800" [ref=e256]:
+                  - generic [ref=e257]: +$0.002800
+                - cell "-16%" [ref=e258]:
+                  - generic [ref=e259]: "-16%"
+                - cell "-$2.0M" [ref=e260]
+                - cell "-0.4285%" [ref=e261]:
+                  - generic [ref=e262]: "-0.4285%"
+                - cell "Strong Uptrend EMA Bullish Above BB Upper" [ref=e263]:
+                  - generic [ref=e264]:
+                    - generic [ref=e265]: Strong Uptrend
+                    - generic [ref=e266]: EMA Bullish
+                    - generic [ref=e267]: Above BB Upper
+                - cell [ref=e268]:
+                  - img [ref=e269]
+              - row "7 INJUSDT 68 0.681 75% -1.03% $-0.0340 -73% -$50.0K -1.3073% Strong Uptrend EMA Bullish Strong Buying" [ref=e271] [cursor=pointer]:
+                - cell "7" [ref=e272]
+                - cell "INJUSDT" [ref=e273]:
+                  - generic [ref=e274]:
+                    - text: INJUSDT
+                    - link "Chart for INJUSDT" [ref=e275]:
+                      - /url: /symbols/INJUSDT
+                      - img [ref=e276]
+                    - link "Trade INJ/USDT on Binance" [ref=e279]:
+                      - /url: https://www.binance.com/en/trade/INJ_USDT
+                      - img [ref=e280]
+                - cell "68 0.681" [ref=e282]:
+                  - generic [ref=e283]:
+                    - 'progressbar "Bullish score: 0.681" [ref=e284]'
+                    - generic [ref=e286]: "0.681"
+                - cell "75%" [ref=e287]
+                - cell "-1.03%" [ref=e288]:
+                  - generic [ref=e289]: "-1.03%"
+                - cell "$-0.0340" [ref=e290]
+                - cell "-73%" [ref=e291]:
+                  - generic [ref=e292]: "-73%"
+                - cell "-$50.0K" [ref=e293]
+                - cell "-1.3073%" [ref=e294]:
+                  - generic [ref=e295]: "-1.3073%"
+                - cell "Strong Uptrend EMA Bullish Strong Buying" [ref=e296]:
+                  - generic [ref=e297]:
+                    - generic [ref=e298]: Strong Uptrend
+                    - generic [ref=e299]: EMA Bullish
+                    - generic [ref=e300]: Strong Buying
+                - cell [ref=e301]:
+                  - img [ref=e302]
+              - row "8 ORCAUSDT 68 0.677 72% +1.65% +$0.0210 -68% -$162.3K -0.4712% EMA Bullish" [ref=e304] [cursor=pointer]:
+                - cell "8" [ref=e305]
+                - cell "ORCAUSDT" [ref=e306]:
+                  - generic [ref=e307]:
+                    - text: ORCAUSDT
+                    - link "Chart for ORCAUSDT" [ref=e308]:
+                      - /url: /symbols/ORCAUSDT
+                      - img [ref=e309]
+                    - link "Trade ORCA/USDT on Binance" [ref=e312]:
+                      - /url: https://www.binance.com/en/trade/ORCA_USDT
+                      - img [ref=e313]
+                - cell "68 0.677" [ref=e315]:
+                  - generic [ref=e316]:
+                    - 'progressbar "Bullish score: 0.677" [ref=e317]'
+                    - generic [ref=e319]: "0.677"
+                - cell "72%" [ref=e320]
+                - cell "+1.65%" [ref=e321]:
+                  - generic [ref=e322]: +1.65%
+                - cell "+$0.0210" [ref=e323]:
+                  - generic [ref=e324]: +$0.0210
+                - cell "-68%" [ref=e325]:
+                  - generic [ref=e326]: "-68%"
+                - cell "-$162.3K" [ref=e327]
+                - cell "-0.4712%" [ref=e328]:
+                  - generic [ref=e329]: "-0.4712%"
+                - cell "EMA Bullish" [ref=e330]:
+                  - generic [ref=e332]: EMA Bullish
+                - cell [ref=e333]:
+                  - img [ref=e334]
+              - row "9 KITEUSDT 65 0.645 66% -0.62% $-0.001500 -70% -$1.6M 0.0050% EMA Bullish" [ref=e336] [cursor=pointer]:
+                - cell "9" [ref=e337]
+                - cell "KITEUSDT" [ref=e338]:
+                  - generic [ref=e339]:
+                    - text: KITEUSDT
+                    - link "Chart for KITEUSDT" [ref=e340]:
+                      - /url: /symbols/KITEUSDT
+                      - img [ref=e341]
+                    - link "Trade KITE/USDT on Binance" [ref=e344]:
+                      - /url: https://www.binance.com/en/trade/KITE_USDT
+                      - img [ref=e345]
+                - cell "65 0.645" [ref=e347]:
+                  - generic [ref=e348]:
+                    - 'progressbar "Bullish score: 0.645" [ref=e349]'
+                    - generic [ref=e351]: "0.645"
+                - cell "66%" [ref=e352]
+                - cell "-0.62%" [ref=e353]:
+                  - generic [ref=e354]: "-0.62%"
+                - cell "$-0.001500" [ref=e355]
+                - cell "-70%" [ref=e356]:
+                  - generic [ref=e357]: "-70%"
+                - cell "-$1.6M" [ref=e358]
+                - cell "0.0050%" [ref=e359]:
+                  - generic [ref=e360]: 0.0050%
+                - cell "EMA Bullish" [ref=e361]:
+                  - generic [ref=e363]: EMA Bullish
+                - cell [ref=e364]:
+                  - img [ref=e365]
+              - row "10 LUNAUSDT 64 0.641 72% -0.30% $-0.000200 -96% -$5.8M — EMA Bullish MACD Bullish" [ref=e367] [cursor=pointer]:
+                - cell "10" [ref=e368]
+                - cell "LUNAUSDT" [ref=e369]:
+                  - generic [ref=e370]:
+                    - text: LUNAUSDT
+                    - link "Chart for LUNAUSDT" [ref=e371]:
+                      - /url: /symbols/LUNAUSDT
+                      - img [ref=e372]
+                    - link "Trade LUNA/USDT on Binance" [ref=e375]:
+                      - /url: https://www.binance.com/en/trade/LUNA_USDT
+                      - img [ref=e376]
+                - cell "64 0.641" [ref=e378]:
+                  - generic [ref=e379]:
+                    - 'progressbar "Bullish score: 0.641" [ref=e380]'
+                    - generic [ref=e382]: "0.641"
+                - cell "72%" [ref=e383]
+                - cell "-0.30%" [ref=e384]:
+                  - generic [ref=e385]: "-0.30%"
+                - cell "$-0.000200" [ref=e386]
+                - cell "-96%" [ref=e387]:
+                  - generic [ref=e388]: "-96%"
+                - cell "-$5.8M" [ref=e389]
+                - cell "—" [ref=e390]
+                - cell "EMA Bullish MACD Bullish" [ref=e391]:
+                  - generic [ref=e392]:
+                    - generic [ref=e393]: EMA Bullish
+                    - generic [ref=e394]: MACD Bullish
+                - cell [ref=e395]:
+                  - img [ref=e396]
+              - row "11 ALLOUSDT 64 0.641 67% -0.93% $-0.001000 -88% -$2.7M 0.0050% Strong Uptrend EMA Bullish" [ref=e398] [cursor=pointer]:
+                - cell "11" [ref=e399]
+                - cell "ALLOUSDT" [ref=e400]:
+                  - generic [ref=e401]:
+                    - text: ALLOUSDT
+                    - link "Chart for ALLOUSDT" [ref=e402]:
+                      - /url: /symbols/ALLOUSDT
+                      - img [ref=e403]
+                    - link "Trade ALLO/USDT on Binance" [ref=e406]:
+                      - /url: https://www.binance.com/en/trade/ALLO_USDT
+                      - img [ref=e407]
+                - cell "64 0.641" [ref=e409]:
+                  - generic [ref=e410]:
+                    - 'progressbar "Bullish score: 0.641" [ref=e411]'
+                    - generic [ref=e413]: "0.641"
+                - cell "67%" [ref=e414]
+                - cell "-0.93%" [ref=e415]:
+                  - generic [ref=e416]: "-0.93%"
+                - cell "$-0.001000" [ref=e417]
+                - cell "-88%" [ref=e418]:
+                  - generic [ref=e419]: "-88%"
+                - cell "-$2.7M" [ref=e420]
+                - cell "0.0050%" [ref=e421]:
+                  - generic [ref=e422]: 0.0050%
+                - cell "Strong Uptrend EMA Bullish" [ref=e423]:
+                  - generic [ref=e424]:
+                    - generic [ref=e425]: Strong Uptrend
+                    - generic [ref=e426]: EMA Bullish
+                - cell [ref=e427]:
+                  - img [ref=e428]
+              - row "12 BCHUSDT 63 0.634 78% -0.25% $-1.40 -86% -$910 0.0100% EMA Bullish MACD Bullish Stoch Overbought" [ref=e430] [cursor=pointer]:
+                - cell "12" [ref=e431]
+                - cell "BCHUSDT" [ref=e432]:
+                  - generic [ref=e433]:
+                    - text: BCHUSDT
+                    - link "Chart for BCHUSDT" [ref=e434]:
+                      - /url: /symbols/BCHUSDT
+                      - img [ref=e435]
+                    - link "Trade BCH/USDT on Binance" [ref=e438]:
+                      - /url: https://www.binance.com/en/trade/BCH_USDT
+                      - img [ref=e439]
+                - cell "63 0.634" [ref=e441]:
+                  - generic [ref=e442]:
+                    - 'progressbar "Bullish score: 0.634" [ref=e443]'
+                    - generic [ref=e445]: "0.634"
+                - cell "78%" [ref=e446]
+                - cell "-0.25%" [ref=e447]:
+                  - generic [ref=e448]: "-0.25%"
+                - cell "$-1.40" [ref=e449]
+                - cell "-86%" [ref=e450]:
+                  - generic [ref=e451]: "-86%"
+                - cell "-$910" [ref=e452]
+                - cell "0.0100%" [ref=e453]:
+                  - generic [ref=e454]: 0.0100%
+                - cell "EMA Bullish MACD Bullish Stoch Overbought" [ref=e455]:
+                  - generic [ref=e456]:
+                    - generic [ref=e457]: EMA Bullish
+                    - generic [ref=e458]: MACD Bullish
+                    - generic [ref=e459]: Stoch Overbought
+                - cell [ref=e460]:
+                  - img [ref=e461]
+              - row "13 ASTERUSDT 63 0.629 61% +0.14% +$0.001000 -92% -$1.4M 0.0023% EMA Bullish MACD Bullish Strong Buying" [ref=e463] [cursor=pointer]:
+                - cell "13" [ref=e464]
+                - cell "ASTERUSDT" [ref=e465]:
+                  - generic [ref=e466]:
+                    - text: ASTERUSDT
+                    - link "Chart for ASTERUSDT" [ref=e467]:
+                      - /url: /symbols/ASTERUSDT
+                      - img [ref=e468]
+                    - link "Trade ASTER/USDT on Binance" [ref=e471]:
+                      - /url: https://www.binance.com/en/trade/ASTER_USDT
+                      - img [ref=e472]
+                - cell "63 0.629" [ref=e474]:
+                  - generic [ref=e475]:
+                    - 'progressbar "Bullish score: 0.629" [ref=e476]'
+                    - generic [ref=e478]: "0.629"
+                - cell "61%" [ref=e479]
+                - cell "+0.14%" [ref=e480]:
+                  - generic [ref=e481]: +0.14%
+                - cell "+$0.001000" [ref=e482]:
+                  - generic [ref=e483]: +$0.001000
+                - cell "-92%" [ref=e484]:
+                  - generic [ref=e485]: "-92%"
+                - cell "-$1.4M" [ref=e486]
+                - cell "0.0023%" [ref=e487]:
+                  - generic [ref=e488]: 0.0023%
+                - cell "EMA Bullish MACD Bullish Strong Buying" [ref=e489]:
+                  - generic [ref=e490]:
+                    - generic [ref=e491]: EMA Bullish
+                    - generic [ref=e492]: MACD Bullish
+                    - generic [ref=e493]: Strong Buying
+                - cell [ref=e494]:
+                  - img [ref=e495]
+              - row "14 TRXUSDT 61 0.610 67% +0.11% +$0.000300 -58% -$3.8M 0.0100% RSI Overbought EMA Bullish Strong Buying" [ref=e497] [cursor=pointer]:
+                - cell "14" [ref=e498]
+                - cell "TRXUSDT" [ref=e499]:
+                  - generic [ref=e500]:
+                    - text: TRXUSDT
+                    - link "Chart for TRXUSDT" [ref=e501]:
+                      - /url: /symbols/TRXUSDT
+                      - img [ref=e502]
+                    - link "Trade TRX/USDT on Binance" [ref=e505]:
+                      - /url: https://www.binance.com/en/trade/TRX_USDT
+                      - img [ref=e506]
+                - cell "61 0.610" [ref=e508]:
+                  - generic [ref=e509]:
+                    - 'progressbar "Bullish score: 0.610" [ref=e510]'
+                    - generic [ref=e512]: "0.610"
+                - cell "67%" [ref=e513]
+                - cell "+0.11%" [ref=e514]:
+                  - generic [ref=e515]: +0.11%
+                - cell "+$0.000300" [ref=e516]:
+                  - generic [ref=e517]: +$0.000300
+                - cell "-58%" [ref=e518]:
+                  - generic [ref=e519]: "-58%"
+                - cell "-$3.8M" [ref=e520]
+                - cell "0.0100%" [ref=e521]:
+                  - generic [ref=e522]: 0.0100%
+                - cell "RSI Overbought EMA Bullish Strong Buying" [ref=e523]:
+                  - generic [ref=e524]:
+                    - generic [ref=e525]: RSI Overbought
+                    - generic [ref=e526]: EMA Bullish
+                    - generic [ref=e527]: Strong Buying
+                - cell [ref=e528]:
+                  - img [ref=e529]
+              - row "15 XUSDUSDT 59 0.590 76% +0.00% +$0.000000 +80% +$266 — Strong Uptrend EMA Bearish Stoch Oversold" [ref=e531] [cursor=pointer]:
+                - cell "15" [ref=e532]
+                - cell "XUSDUSDT" [ref=e533]:
+                  - generic [ref=e534]:
+                    - text: XUSDUSDT
+                    - link "Chart for XUSDUSDT" [ref=e535]:
+                      - /url: /symbols/XUSDUSDT
+                      - img [ref=e536]
+                    - link "Trade XUSD/USDT on Binance" [ref=e539]:
+                      - /url: https://www.binance.com/en/trade/XUSD_USDT
+                      - img [ref=e540]
+                - cell "59 0.590" [ref=e542]:
+                  - generic [ref=e543]:
+                    - 'progressbar "Bullish score: 0.590" [ref=e544]'
+                    - generic [ref=e546]: "0.590"
+                - cell "76%" [ref=e547]
+                - cell "+0.00%" [ref=e548]:
+                  - generic [ref=e549]: +0.00%
+                - cell "+$0.000000" [ref=e550]:
+                  - generic [ref=e551]: +$0.000000
+                - cell "+80%" [ref=e552]:
+                  - generic [ref=e553]: +80%
+                - cell "+$266" [ref=e554]:
+                  - generic [ref=e555]: +$266
+                - cell "—" [ref=e556]
+                - cell "Strong Uptrend EMA Bearish Stoch Oversold" [ref=e557]:
+                  - generic [ref=e558]:
+                    - generic [ref=e559]: Strong Uptrend
+                    - generic [ref=e560]: EMA Bearish
+                    - generic [ref=e561]: Stoch Oversold
+                - cell [ref=e562]:
+                  - img [ref=e563]
+              - row "16 VIRTUALUSDT 59 0.588 73% -0.19% $-0.001200 -91% -$392.2K -0.0076% MACD Bullish EMA Transition No Trend" [ref=e565] [cursor=pointer]:
+                - cell "16" [ref=e566]
+                - cell "VIRTUALUSDT" [ref=e567]:
+                  - generic [ref=e568]:
+                    - text: VIRTUALUSDT
+                    - link "Chart for VIRTUALUSDT" [ref=e569]:
+                      - /url: /symbols/VIRTUALUSDT
+                      - img [ref=e570]
+                    - link "Trade VIRTUAL/USDT on Binance" [ref=e573]:
+                      - /url: https://www.binance.com/en/trade/VIRTUAL_USDT
+                      - img [ref=e574]
+                - cell "59 0.588" [ref=e576]:
+                  - generic [ref=e577]:
+                    - 'progressbar "Bullish score: 0.588" [ref=e578]'
+                    - generic [ref=e580]: "0.588"
+                - cell "73%" [ref=e581]
+                - cell "-0.19%" [ref=e582]:
+                  - generic [ref=e583]: "-0.19%"
+                - cell "$-0.001200" [ref=e584]
+                - cell "-91%" [ref=e585]:
+                  - generic [ref=e586]: "-91%"
+                - cell "-$392.2K" [ref=e587]
+                - cell "-0.0076%" [ref=e588]:
+                  - generic [ref=e589]: "-0.0076%"
+                - cell "MACD Bullish EMA Transition No Trend" [ref=e590]:
+                  - generic [ref=e591]:
+                    - generic [ref=e592]: MACD Bullish
+                    - generic [ref=e593]: EMA Transition
+                    - generic [ref=e594]: No Trend
+                - cell [ref=e595]:
+                  - img [ref=e596]
+              - row "17 BTCUSDT 59 0.587 73% -0.06% $-43.45 -87% -$742 0.0059% MACD Bullish Strong Buying BB Squeeze" [ref=e598] [cursor=pointer]:
+                - cell "17" [ref=e599]
+                - cell "BTCUSDT" [ref=e600]:
+                  - generic [ref=e601]:
+                    - text: BTCUSDT
+                    - link "Chart for BTCUSDT" [ref=e602]:
+                      - /url: /symbols/BTCUSDT
+                      - img [ref=e603]
+                    - link "Trade BTC/USDT on Binance" [ref=e606]:
+                      - /url: https://www.binance.com/en/trade/BTC_USDT
+                      - img [ref=e607]
+                - cell "59 0.587" [ref=e609]:
+                  - generic [ref=e610]:
+                    - 'progressbar "Bullish score: 0.587" [ref=e611]'
+                    - generic [ref=e613]: "0.587"
+                - cell "73%" [ref=e614]
+                - cell "-0.06%" [ref=e615]:
+                  - generic [ref=e616]: "-0.06%"
+                - cell "$-43.45" [ref=e617]
+                - cell "-87%" [ref=e618]:
+                  - generic [ref=e619]: "-87%"
+                - cell "-$742" [ref=e620]
+                - cell "0.0059%" [ref=e621]:
+                  - generic [ref=e622]: 0.0059%
+                - cell "MACD Bullish Strong Buying BB Squeeze" [ref=e623]:
+                  - generic [ref=e624]:
+                    - generic [ref=e625]: MACD Bullish
+                    - generic [ref=e626]: Strong Buying
+                    - generic [ref=e627]: BB Squeeze
+                - cell [ref=e628]:
+                  - img [ref=e629]
+              - row "18 AVAXUSDT 58 0.582 70% -0.11% $-0.010000 -81% -$65.9K 0.0100% MACD Bullish Strong Buying Stoch Overbought" [ref=e631] [cursor=pointer]:
+                - cell "18" [ref=e632]
+                - cell "AVAXUSDT" [ref=e633]:
+                  - generic [ref=e634]:
+                    - text: AVAXUSDT
+                    - link "Chart for AVAXUSDT" [ref=e635]:
+                      - /url: /symbols/AVAXUSDT
+                      - img [ref=e636]
+                    - link "Trade AVAX/USDT on Binance" [ref=e639]:
+                      - /url: https://www.binance.com/en/trade/AVAX_USDT
+                      - img [ref=e640]
+                - cell "58 0.582" [ref=e642]:
+                  - generic [ref=e643]:
+                    - 'progressbar "Bullish score: 0.582" [ref=e644]'
+                    - generic [ref=e646]: "0.582"
+                - cell "70%" [ref=e647]
+                - cell "-0.11%" [ref=e648]:
+                  - generic [ref=e649]: "-0.11%"
+                - cell "$-0.010000" [ref=e650]
+                - cell "-81%" [ref=e651]:
+                  - generic [ref=e652]: "-81%"
+                - cell "-$65.9K" [ref=e653]
+                - cell "0.0100%" [ref=e654]:
+                  - generic [ref=e655]: 0.0100%
+                - cell "MACD Bullish Strong Buying Stoch Overbought" [ref=e656]:
+                  - generic [ref=e657]:
+                    - generic [ref=e658]: MACD Bullish
+                    - generic [ref=e659]: Strong Buying
+                    - generic [ref=e660]: Stoch Overbought
+                - cell [ref=e661]:
+                  - img [ref=e662]
+              - row "19 SOLUSDT 57 0.573 76% -0.06% $-0.0500 -82% -$86.0K 0.0029% MACD Bullish Stoch Overbought EMA Transition" [ref=e664] [cursor=pointer]:
+                - cell "19" [ref=e665]
+                - cell "SOLUSDT" [ref=e666]:
+                  - generic [ref=e667]:
+                    - text: SOLUSDT
+                    - link "Chart for SOLUSDT" [ref=e668]:
+                      - /url: /symbols/SOLUSDT
+                      - img [ref=e669]
+                    - link "Trade SOL/USDT on Binance" [ref=e672]:
+                      - /url: https://www.binance.com/en/trade/SOL_USDT
+                      - img [ref=e673]
+                - cell "57 0.573" [ref=e675]:
+                  - generic [ref=e676]:
+                    - 'progressbar "Bullish score: 0.573" [ref=e677]'
+                    - generic [ref=e679]: "0.573"
+                - cell "76%" [ref=e680]
+                - cell "-0.06%" [ref=e681]:
+                  - generic [ref=e682]: "-0.06%"
+                - cell "$-0.0500" [ref=e683]
+                - cell "-82%" [ref=e684]:
+                  - generic [ref=e685]: "-82%"
+                - cell "-$86.0K" [ref=e686]
+                - cell "0.0029%" [ref=e687]:
+                  - generic [ref=e688]: 0.0029%
+                - cell "MACD Bullish Stoch Overbought EMA Transition" [ref=e689]:
+                  - generic [ref=e690]:
+                    - generic [ref=e691]: MACD Bullish
+                    - generic [ref=e692]: Stoch Overbought
+                    - generic [ref=e693]: EMA Transition
+                - cell [ref=e694]:
+                  - img [ref=e695]
+              - row "20 XPLUSDT 57 0.566 67% -0.43% $-0.000400 -92% -$4.1M 0.0050% MACD Bullish EMA Transition" [ref=e697] [cursor=pointer]:
+                - cell "20" [ref=e698]
+                - cell "XPLUSDT" [ref=e699]:
+                  - generic [ref=e700]:
+                    - text: XPLUSDT
+                    - link "Chart for XPLUSDT" [ref=e701]:
+                      - /url: /symbols/XPLUSDT
+                      - img [ref=e702]
+                    - link "Trade XPL/USDT on Binance" [ref=e705]:
+                      - /url: https://www.binance.com/en/trade/XPL_USDT
+                      - img [ref=e706]
+                - cell "57 0.566" [ref=e708]:
+                  - generic [ref=e709]:
+                    - 'progressbar "Bullish score: 0.566" [ref=e710]'
+                    - generic [ref=e712]: "0.566"
+                - cell "67%" [ref=e713]
+                - cell "-0.43%" [ref=e714]:
+                  - generic [ref=e715]: "-0.43%"
+                - cell "$-0.000400" [ref=e716]
+                - cell "-92%" [ref=e717]:
+                  - generic [ref=e718]: "-92%"
+                - cell "-$4.1M" [ref=e719]
+                - cell "0.0050%" [ref=e720]:
+                  - generic [ref=e721]: 0.0050%
+                - cell "MACD Bullish EMA Transition" [ref=e722]:
+                  - generic [ref=e723]:
+                    - generic [ref=e724]: MACD Bullish
+                    - generic [ref=e725]: EMA Transition
+                - cell [ref=e726]:
+                  - img [ref=e727]
+              - row "21 AAVEUSDT 56 0.562 76% +0.10% +$0.1200 -66% -$510 0.0087% MACD Bullish BB Squeeze" [ref=e729] [cursor=pointer]:
+                - cell "21" [ref=e730]
+                - cell "AAVEUSDT" [ref=e731]:
+                  - generic [ref=e732]:
+                    - text: AAVEUSDT
+                    - link "Chart for AAVEUSDT" [ref=e733]:
+                      - /url: /symbols/AAVEUSDT
+                      - img [ref=e734]
+                    - link "Trade AAVE/USDT on Binance" [ref=e737]:
+                      - /url: https://www.binance.com/en/trade/AAVE_USDT
+                      - img [ref=e738]
+                - cell "56 0.562" [ref=e740]:
+                  - generic [ref=e741]:
+                    - 'progressbar "Bullish score: 0.562" [ref=e742]'
+                    - generic [ref=e744]: "0.562"
+                - cell "76%" [ref=e745]
+                - cell "+0.10%" [ref=e746]:
+                  - generic [ref=e747]: +0.10%
+                - cell "+$0.1200" [ref=e748]:
+                  - generic [ref=e749]: +$0.1200
+                - cell "-66%" [ref=e750]:
+                  - generic [ref=e751]: "-66%"
+                - cell "-$510" [ref=e752]
+                - cell "0.0087%" [ref=e753]:
+                  - generic [ref=e754]: 0.0087%
+                - cell "MACD Bullish BB Squeeze" [ref=e755]:
+                  - generic [ref=e756]:
+                    - generic [ref=e757]: MACD Bullish
+                    - generic [ref=e758]: BB Squeeze
+                - cell [ref=e759]:
+                  - img [ref=e760]
+              - row "22 ATOMUSDT 56 0.559 70% +0.31% +$0.007000 +26% +$4.8K 0.0100% No Trend" [ref=e762] [cursor=pointer]:
+                - cell "22" [ref=e763]
+                - cell "ATOMUSDT" [ref=e764]:
+                  - generic [ref=e765]:
+                    - text: ATOMUSDT
+                    - link "Chart for ATOMUSDT" [ref=e766]:
+                      - /url: /symbols/ATOMUSDT
+                      - img [ref=e767]
+                    - link "Trade ATOM/USDT on Binance" [ref=e770]:
+                      - /url: https://www.binance.com/en/trade/ATOM_USDT
+                      - img [ref=e771]
+                - cell "56 0.559" [ref=e773]:
+                  - generic [ref=e774]:
+                    - 'progressbar "Bullish score: 0.559" [ref=e775]'
+                    - generic [ref=e777]: "0.559"
+                - cell "70%" [ref=e778]
+                - cell "+0.31%" [ref=e779]:
+                  - generic [ref=e780]: +0.31%
+                - cell "+$0.007000" [ref=e781]:
+                  - generic [ref=e782]: +$0.007000
+                - cell "+26%" [ref=e783]:
+                  - generic [ref=e784]: +26%
+                - cell "+$4.8K" [ref=e785]:
+                  - generic [ref=e786]: +$4.8K
+                - cell "0.0100%" [ref=e787]:
+                  - generic [ref=e788]: 0.0100%
+                - cell "No Trend" [ref=e789]:
+                  - generic [ref=e791]: No Trend
+                - cell [ref=e792]:
+                  - img [ref=e793]
+              - row "23 PENDLEUSDT 55 0.554 66% +0.34% +$0.004000 -63% -$30.3K 0.0022% MACD Bullish Stoch Overbought EMA Transition" [ref=e795] [cursor=pointer]:
+                - cell "23" [ref=e796]
+                - cell "PENDLEUSDT" [ref=e797]:
+                  - generic [ref=e798]:
+                    - text: PENDLEUSDT
+                    - link "Chart for PENDLEUSDT" [ref=e799]:
+                      - /url: /symbols/PENDLEUSDT
+                      - img [ref=e800]
+                    - link "Trade PENDLE/USDT on Binance" [ref=e803]:
+                      - /url: https://www.binance.com/en/trade/PENDLE_USDT
+                      - img [ref=e804]
+                - cell "55 0.554" [ref=e806]:
+                  - generic [ref=e807]:
+                    - 'progressbar "Bullish score: 0.554" [ref=e808]'
+                    - generic [ref=e810]: "0.554"
+                - cell "66%" [ref=e811]
+                - cell "+0.34%" [ref=e812]:
+                  - generic [ref=e813]: +0.34%
+                - cell "+$0.004000" [ref=e814]:
+                  - generic [ref=e815]: +$0.004000
+                - cell "-63%" [ref=e816]:
+                  - generic [ref=e817]: "-63%"
+                - cell "-$30.3K" [ref=e818]
+                - cell "0.0022%" [ref=e819]:
+                  - generic [ref=e820]: 0.0022%
+                - cell "MACD Bullish Stoch Overbought EMA Transition" [ref=e821]:
+                  - generic [ref=e822]:
+                    - generic [ref=e823]: MACD Bullish
+                    - generic [ref=e824]: Stoch Overbought
+                    - generic [ref=e825]: EMA Transition
+                - cell [ref=e826]:
+                  - img [ref=e827]
+              - row "24 PUMPUSDT 55 0.552 69% -0.14% $-0.000003 -69% -$21.6M 0.0003% MACD Bullish Stoch Overbought EMA Transition" [ref=e829] [cursor=pointer]:
+                - cell "24" [ref=e830]
+                - cell "PUMPUSDT" [ref=e831]:
+                  - generic [ref=e832]:
+                    - text: PUMPUSDT
+                    - link "Chart for PUMPUSDT" [ref=e833]:
+                      - /url: /symbols/PUMPUSDT
+                      - img [ref=e834]
+                    - link "Trade PUMP/USDT on Binance" [ref=e837]:
+                      - /url: https://www.binance.com/en/trade/PUMP_USDT
+                      - img [ref=e838]
+                - cell "55 0.552" [ref=e840]:
+                  - generic [ref=e841]:
+                    - 'progressbar "Bullish score: 0.552" [ref=e842]'
+                    - generic [ref=e844]: "0.552"
+                - cell "69%" [ref=e845]
+                - cell "-0.14%" [ref=e846]:
+                  - generic [ref=e847]: "-0.14%"
+                - cell "$-0.000003" [ref=e848]
+                - cell "-69%" [ref=e849]:
+                  - generic [ref=e850]: "-69%"
+                - cell "-$21.6M" [ref=e851]
+                - cell "0.0003%" [ref=e852]:
+                  - generic [ref=e853]: 0.0003%
+                - cell "MACD Bullish Stoch Overbought EMA Transition" [ref=e854]:
+                  - generic [ref=e855]:
+                    - generic [ref=e856]: MACD Bullish
+                    - generic [ref=e857]: Stoch Overbought
+                    - generic [ref=e858]: EMA Transition
+                - cell [ref=e859]:
+                  - img [ref=e860]
+              - row "25 UUSDT 55 0.548 76% +0.00% +$0.000000 -99% -$501.4K — MACD Bullish Above BB Upper EMA Transition" [ref=e862] [cursor=pointer]:
+                - cell "25" [ref=e863]
+                - cell "UUSDT" [ref=e864]:
+                  - generic [ref=e865]:
+                    - text: UUSDT
+                    - link "Chart for UUSDT" [ref=e866]:
+                      - /url: /symbols/UUSDT
+                      - img [ref=e867]
+                    - link "Trade U/USDT on Binance" [ref=e870]:
+                      - /url: https://www.binance.com/en/trade/U_USDT
+                      - img [ref=e871]
+                - cell "55 0.548" [ref=e873]:
+                  - generic [ref=e874]:
+                    - 'progressbar "Bullish score: 0.548" [ref=e875]'
+                    - generic [ref=e877]: "0.548"
+                - cell "76%" [ref=e878]
+                - cell "+0.00%" [ref=e879]:
+                  - generic [ref=e880]: +0.00%
+                - cell "+$0.000000" [ref=e881]:
+                  - generic [ref=e882]: +$0.000000
+                - cell "-99%" [ref=e883]:
+                  - generic [ref=e884]: "-99%"
+                - cell "-$501.4K" [ref=e885]
+                - cell "—" [ref=e886]
+                - cell "MACD Bullish Above BB Upper EMA Transition" [ref=e887]:
+                  - generic [ref=e888]:
+                    - generic [ref=e889]: MACD Bullish
+                    - generic [ref=e890]: Above BB Upper
+                    - generic [ref=e891]: EMA Transition
+                - cell [ref=e892]:
+                  - img [ref=e893]
+              - row "26 WBTCUSDT 54 0.543 69% +0.00% +$2.26 -67% -$1 — MACD Bullish BB Squeeze EMA Transition" [ref=e895] [cursor=pointer]:
+                - cell "26" [ref=e896]
+                - cell "WBTCUSDT" [ref=e897]:
+                  - generic [ref=e898]:
+                    - text: WBTCUSDT
+                    - link "Chart for WBTCUSDT" [ref=e899]:
+                      - /url: /symbols/WBTCUSDT
+                      - img [ref=e900]
+                    - link "Trade WBTC/USDT on Binance" [ref=e903]:
+                      - /url: https://www.binance.com/en/trade/WBTC_USDT
+                      - img [ref=e904]
+                - cell "54 0.543" [ref=e906]:
+                  - generic [ref=e907]:
+                    - 'progressbar "Bullish score: 0.543" [ref=e908]'
+                    - generic [ref=e910]: "0.543"
+                - cell "69%" [ref=e911]
+                - cell "+0.00%" [ref=e912]:
+                  - generic [ref=e913]: +0.00%
+                - cell "+$2.26" [ref=e914]:
+                  - generic [ref=e915]: +$2.26
+                - cell "-67%" [ref=e916]:
+                  - generic [ref=e917]: "-67%"
+                - cell "-$1" [ref=e918]
+                - cell "—" [ref=e919]
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e920]:
+                  - generic [ref=e921]:
+                    - generic [ref=e922]: MACD Bullish
+                    - generic [ref=e923]: BB Squeeze
+                    - generic [ref=e924]: EMA Transition
+                - cell [ref=e925]:
+                  - img [ref=e926]
+              - row "27 AXSUSDT 54 0.542 50% -0.40% $-0.005000 -59% -$32.3K -0.7753% MACD Bullish Strong Buying Stoch Overbought" [ref=e928] [cursor=pointer]:
+                - cell "27" [ref=e929]
+                - cell "AXSUSDT" [ref=e930]:
+                  - generic [ref=e931]:
+                    - text: AXSUSDT
+                    - link "Chart for AXSUSDT" [ref=e932]:
+                      - /url: /symbols/AXSUSDT
+                      - img [ref=e933]
+                    - link "Trade AXS/USDT on Binance" [ref=e936]:
+                      - /url: https://www.binance.com/en/trade/AXS_USDT
+                      - img [ref=e937]
+                - cell "54 0.542" [ref=e939]:
+                  - generic [ref=e940]:
+                    - 'progressbar "Bullish score: 0.542" [ref=e941]'
+                    - generic [ref=e943]: "0.542"
+                - cell "50%" [ref=e944]
+                - cell "-0.40%" [ref=e945]:
+                  - generic [ref=e946]: "-0.40%"
+                - cell "$-0.005000" [ref=e947]
+                - cell "-59%" [ref=e948]:
+                  - generic [ref=e949]: "-59%"
+                - cell "-$32.3K" [ref=e950]
+                - cell "-0.7753%" [ref=e951]:
+                  - generic [ref=e952]: "-0.7753%"
+                - cell "MACD Bullish Strong Buying Stoch Overbought" [ref=e953]:
+                  - generic [ref=e954]:
+                    - generic [ref=e955]: MACD Bullish
+                    - generic [ref=e956]: Strong Buying
+                    - generic [ref=e957]: Stoch Overbought
+                - cell [ref=e958]:
+                  - img [ref=e959]
+              - row "28 USDEUSDT 54 0.538 72% +0.00% +$0.000000 -58% -$35.5K — EMA Bullish Strong Buying BB Squeeze" [ref=e961] [cursor=pointer]:
+                - cell "28" [ref=e962]
+                - cell "USDEUSDT" [ref=e963]:
+                  - generic [ref=e964]:
+                    - text: USDEUSDT
+                    - link "Chart for USDEUSDT" [ref=e965]:
+                      - /url: /symbols/USDEUSDT
+                      - img [ref=e966]
+                    - link "Trade USDE/USDT on Binance" [ref=e969]:
+                      - /url: https://www.binance.com/en/trade/USDE_USDT
+                      - img [ref=e970]
+                - cell "54 0.538" [ref=e972]:
+                  - generic [ref=e973]:
+                    - 'progressbar "Bullish score: 0.538" [ref=e974]'
+                    - generic [ref=e976]: "0.538"
+                - cell "72%" [ref=e977]
+                - cell "+0.00%" [ref=e978]:
+                  - generic [ref=e979]: +0.00%
+                - cell "+$0.000000" [ref=e980]:
+                  - generic [ref=e981]: +$0.000000
+                - cell "-58%" [ref=e982]:
+                  - generic [ref=e983]: "-58%"
+                - cell "-$35.5K" [ref=e984]
+                - cell "—" [ref=e985]
+                - cell "EMA Bullish Strong Buying BB Squeeze" [ref=e986]:
+                  - generic [ref=e987]:
+                    - generic [ref=e988]: EMA Bullish
+                    - generic [ref=e989]: Strong Buying
+                    - generic [ref=e990]: BB Squeeze
+                - cell [ref=e991]:
+                  - img [ref=e992]
+              - row "29 LTCUSDT 54 0.538 73% +0.11% +$0.0600 -80% -$7.7K -0.0033% Strong Buying EMA Transition" [ref=e994] [cursor=pointer]:
+                - cell "29" [ref=e995]
+                - cell "LTCUSDT" [ref=e996]:
+                  - generic [ref=e997]:
+                    - text: LTCUSDT
+                    - link "Chart for LTCUSDT" [ref=e998]:
+                      - /url: /symbols/LTCUSDT
+                      - img [ref=e999]
+                    - link "Trade LTC/USDT on Binance" [ref=e1002]:
+                      - /url: https://www.binance.com/en/trade/LTC_USDT
+                      - img [ref=e1003]
+                - cell "54 0.538" [ref=e1005]:
+                  - generic [ref=e1006]:
+                    - 'progressbar "Bullish score: 0.538" [ref=e1007]'
+                    - generic [ref=e1009]: "0.538"
+                - cell "73%" [ref=e1010]
+                - cell "+0.11%" [ref=e1011]:
+                  - generic [ref=e1012]: +0.11%
+                - cell "+$0.0600" [ref=e1013]:
+                  - generic [ref=e1014]: +$0.0600
+                - cell "-80%" [ref=e1015]:
+                  - generic [ref=e1016]: "-80%"
+                - cell "-$7.7K" [ref=e1017]
+                - cell "-0.0033%" [ref=e1018]:
+                  - generic [ref=e1019]: "-0.0033%"
+                - cell "Strong Buying EMA Transition" [ref=e1020]:
+                  - generic [ref=e1021]:
+                    - generic [ref=e1022]: Strong Buying
+                    - generic [ref=e1023]: EMA Transition
+                - cell [ref=e1024]:
+                  - img [ref=e1025]
+              - row "30 TRUMPUSDT 53 0.533 87% +0.12% +$0.004000 -75% -$17.3K -0.0245% BB Squeeze No Trend" [ref=e1027] [cursor=pointer]:
+                - cell "30" [ref=e1028]
+                - cell "TRUMPUSDT" [ref=e1029]:
+                  - generic [ref=e1030]:
+                    - text: TRUMPUSDT
+                    - link "Chart for TRUMPUSDT" [ref=e1031]:
+                      - /url: /symbols/TRUMPUSDT
+                      - img [ref=e1032]
+                    - link "Trade TRUMP/USDT on Binance" [ref=e1035]:
+                      - /url: https://www.binance.com/en/trade/TRUMP_USDT
+                      - img [ref=e1036]
+                - cell "53 0.533" [ref=e1038]:
+                  - generic [ref=e1039]:
+                    - 'progressbar "Bullish score: 0.533" [ref=e1040]'
+                    - generic [ref=e1042]: "0.533"
+                - cell "87%" [ref=e1043]
+                - cell "+0.12%" [ref=e1044]:
+                  - generic [ref=e1045]: +0.12%
+                - cell "+$0.004000" [ref=e1046]:
+                  - generic [ref=e1047]: +$0.004000
+                - cell "-75%" [ref=e1048]:
+                  - generic [ref=e1049]: "-75%"
+                - cell "-$17.3K" [ref=e1050]
+                - cell "-0.0245%" [ref=e1051]:
+                  - generic [ref=e1052]: "-0.0245%"
+                - cell "BB Squeeze No Trend" [ref=e1053]:
+                  - generic [ref=e1054]:
+                    - generic [ref=e1055]: BB Squeeze
+                    - generic [ref=e1056]: No Trend
+                - cell [ref=e1057]:
+                  - img [ref=e1058]
+              - row "31 SUIUSDT 53 0.533 71% +0.16% +$0.001500 -53% -$666.9K 0.0001% Strong Downtrend Strong Buying EMA Transition" [ref=e1060] [cursor=pointer]:
+                - cell "31" [ref=e1061]
+                - cell "SUIUSDT" [ref=e1062]:
+                  - generic [ref=e1063]:
+                    - text: SUIUSDT
+                    - link "Chart for SUIUSDT" [ref=e1064]:
+                      - /url: /symbols/SUIUSDT
+                      - img [ref=e1065]
+                    - link "Trade SUI/USDT on Binance" [ref=e1068]:
+                      - /url: https://www.binance.com/en/trade/SUI_USDT
+                      - img [ref=e1069]
+                - cell "53 0.533" [ref=e1071]:
+                  - generic [ref=e1072]:
+                    - 'progressbar "Bullish score: 0.533" [ref=e1073]'
+                    - generic [ref=e1075]: "0.533"
+                - cell "71%" [ref=e1076]
+                - cell "+0.16%" [ref=e1077]:
+                  - generic [ref=e1078]: +0.16%
+                - cell "+$0.001500" [ref=e1079]:
+                  - generic [ref=e1080]: +$0.001500
+                - cell "-53%" [ref=e1081]:
+                  - generic [ref=e1082]: "-53%"
+                - cell "-$666.9K" [ref=e1083]
+                - cell "0.0001%" [ref=e1084]:
+                  - generic [ref=e1085]: 0.0001%
+                - cell "Strong Downtrend Strong Buying EMA Transition" [ref=e1086]:
+                  - generic [ref=e1087]:
+                    - generic [ref=e1088]: Strong Downtrend
+                    - generic [ref=e1089]: Strong Buying
+                    - generic [ref=e1090]: EMA Transition
+                - cell [ref=e1091]:
+                  - img [ref=e1092]
+              - row "32 WLFIUSDT 53 0.527 69% +0.00% +$0.000000 -68% -$1.3M -0.0080% Strong Uptrend MACD Bearish Stoch Oversold" [ref=e1094] [cursor=pointer]:
+                - cell "32" [ref=e1095]
+                - cell "WLFIUSDT" [ref=e1096]:
+                  - generic [ref=e1097]:
+                    - text: WLFIUSDT
+                    - link "Chart for WLFIUSDT" [ref=e1098]:
+                      - /url: /symbols/WLFIUSDT
+                      - img [ref=e1099]
+                    - link "Trade WLFI/USDT on Binance" [ref=e1102]:
+                      - /url: https://www.binance.com/en/trade/WLFI_USDT
+                      - img [ref=e1103]
+                - cell "53 0.527" [ref=e1105]:
+                  - generic [ref=e1106]:
+                    - 'progressbar "Bullish score: 0.527" [ref=e1107]'
+                    - generic [ref=e1109]: "0.527"
+                - cell "69%" [ref=e1110]
+                - cell "+0.00%" [ref=e1111]:
+                  - generic [ref=e1112]: +0.00%
+                - cell "+$0.000000" [ref=e1113]:
+                  - generic [ref=e1114]: +$0.000000
+                - cell "-68%" [ref=e1115]:
+                  - generic [ref=e1116]: "-68%"
+                - cell "-$1.3M" [ref=e1117]
+                - cell "-0.0080%" [ref=e1118]:
+                  - generic [ref=e1119]: "-0.0080%"
+                - cell "Strong Uptrend MACD Bearish Stoch Oversold" [ref=e1120]:
+                  - generic [ref=e1121]:
+                    - generic [ref=e1122]: Strong Uptrend
+                    - generic [ref=e1123]: MACD Bearish
+                    - generic [ref=e1124]: Stoch Oversold
+                - cell [ref=e1125]:
+                  - img [ref=e1126]
+              - row "33 RLUSDUSDT 52 0.524 84% +0.00% +$0.000000 -100% -$209.6K — BB Squeeze EMA Transition No Trend" [ref=e1128] [cursor=pointer]:
+                - cell "33" [ref=e1129]
+                - cell "RLUSDUSDT" [ref=e1130]:
+                  - generic [ref=e1131]:
+                    - text: RLUSDUSDT
+                    - link "Chart for RLUSDUSDT" [ref=e1132]:
+                      - /url: /symbols/RLUSDUSDT
+                      - img [ref=e1133]
+                    - link "Trade RLUSD/USDT on Binance" [ref=e1136]:
+                      - /url: https://www.binance.com/en/trade/RLUSD_USDT
+                      - img [ref=e1137]
+                - cell "52 0.524" [ref=e1139]:
+                  - generic [ref=e1140]:
+                    - 'progressbar "Bullish score: 0.524" [ref=e1141]'
+                    - generic [ref=e1143]: "0.524"
+                - cell "84%" [ref=e1144]
+                - cell "+0.00%" [ref=e1145]:
+                  - generic [ref=e1146]: +0.00%
+                - cell "+$0.000000" [ref=e1147]:
+                  - generic [ref=e1148]: +$0.000000
+                - cell "-100%" [ref=e1149]:
+                  - generic [ref=e1150]: "-100%"
+                - cell "-$209.6K" [ref=e1151]
+                - cell "—" [ref=e1152]
+                - cell "BB Squeeze EMA Transition No Trend" [ref=e1153]:
+                  - generic [ref=e1154]:
+                    - generic [ref=e1155]: BB Squeeze
+                    - generic [ref=e1156]: EMA Transition
+                    - generic [ref=e1157]: No Trend
+                - cell [ref=e1158]:
+                  - img [ref=e1159]
+              - row "34 PEPEUSDT 52 0.524 84% -0.24% $-0.000000 -67% -$62.8B — MACD Bullish BB Squeeze" [ref=e1161] [cursor=pointer]:
+                - cell "34" [ref=e1162]
+                - cell "PEPEUSDT" [ref=e1163]:
+                  - generic [ref=e1164]:
+                    - text: PEPEUSDT
+                    - link "Chart for PEPEUSDT" [ref=e1165]:
+                      - /url: /symbols/PEPEUSDT
+                      - img [ref=e1166]
+                    - link "Trade PEPE/USDT on Binance" [ref=e1169]:
+                      - /url: https://www.binance.com/en/trade/PEPE_USDT
+                      - img [ref=e1170]
+                - cell "52 0.524" [ref=e1172]:
+                  - generic [ref=e1173]:
+                    - 'progressbar "Bullish score: 0.524" [ref=e1174]'
+                    - generic [ref=e1176]: "0.524"
+                - cell "84%" [ref=e1177]
+                - cell "-0.24%" [ref=e1178]:
+                  - generic [ref=e1179]: "-0.24%"
+                - cell "$-0.000000" [ref=e1180]
+                - cell "-67%" [ref=e1181]:
+                  - generic [ref=e1182]: "-67%"
+                - cell "-$62.8B" [ref=e1183]
+                - cell "—" [ref=e1184]
+                - cell "MACD Bullish BB Squeeze" [ref=e1185]:
+                  - generic [ref=e1186]:
+                    - generic [ref=e1187]: MACD Bullish
+                    - generic [ref=e1188]: BB Squeeze
+                - cell [ref=e1189]:
+                  - img [ref=e1190]
+              - row "35 GUNUSDT 52 0.521 56% -0.07% $-0.000020 -87% -$503.9K 0.0050% MACD Bearish BB Squeeze" [ref=e1192] [cursor=pointer]:
+                - cell "35" [ref=e1193]
+                - cell "GUNUSDT" [ref=e1194]:
+                  - generic [ref=e1195]:
+                    - text: GUNUSDT
+                    - link "Chart for GUNUSDT" [ref=e1196]:
+                      - /url: /symbols/GUNUSDT
+                      - img [ref=e1197]
+                    - link "Trade GUN/USDT on Binance" [ref=e1200]:
+                      - /url: https://www.binance.com/en/trade/GUN_USDT
+                      - img [ref=e1201]
+                - cell "52 0.521" [ref=e1203]:
+                  - generic [ref=e1204]:
+                    - 'progressbar "Bullish score: 0.521" [ref=e1205]'
+                    - generic [ref=e1207]: "0.521"
+                - cell "56%" [ref=e1208]
+                - cell "-0.07%" [ref=e1209]:
+                  - generic [ref=e1210]: "-0.07%"
+                - cell "$-0.000020" [ref=e1211]
+                - cell "-87%" [ref=e1212]:
+                  - generic [ref=e1213]: "-87%"
+                - cell "-$503.9K" [ref=e1214]
+                - cell "0.0050%" [ref=e1215]:
+                  - generic [ref=e1216]: 0.0050%
+                - cell "MACD Bearish BB Squeeze" [ref=e1217]:
+                  - generic [ref=e1218]:
+                    - generic [ref=e1219]: MACD Bearish
+                    - generic [ref=e1220]: BB Squeeze
+                - cell [ref=e1221]:
+                  - img [ref=e1222]
+              - row "36 ARUSDT 52 0.520 62% -0.52% $-0.0100 -81% -$15.9K 0.0048% MACD Bullish Strong Buying EMA Transition" [ref=e1224] [cursor=pointer]:
+                - cell "36" [ref=e1225]
+                - cell "ARUSDT" [ref=e1226]:
+                  - generic [ref=e1227]:
+                    - text: ARUSDT
+                    - link "Chart for ARUSDT" [ref=e1228]:
+                      - /url: /symbols/ARUSDT
+                      - img [ref=e1229]
+                    - link "Trade AR/USDT on Binance" [ref=e1232]:
+                      - /url: https://www.binance.com/en/trade/AR_USDT
+                      - img [ref=e1233]
+                - cell "52 0.520" [ref=e1235]:
+                  - generic [ref=e1236]:
+                    - 'progressbar "Bullish score: 0.520" [ref=e1237]'
+                    - generic [ref=e1239]: "0.520"
+                - cell "62%" [ref=e1240]
+                - cell "-0.52%" [ref=e1241]:
+                  - generic [ref=e1242]: "-0.52%"
+                - cell "$-0.0100" [ref=e1243]
+                - cell "-81%" [ref=e1244]:
+                  - generic [ref=e1245]: "-81%"
+                - cell "-$15.9K" [ref=e1246]
+                - cell "0.0048%" [ref=e1247]:
+                  - generic [ref=e1248]: 0.0048%
+                - cell "MACD Bullish Strong Buying EMA Transition" [ref=e1249]:
+                  - generic [ref=e1250]:
+                    - generic [ref=e1251]: MACD Bullish
+                    - generic [ref=e1252]: Strong Buying
+                    - generic [ref=e1253]: EMA Transition
+                - cell [ref=e1254]:
+                  - img [ref=e1255]
+              - row "37 ZROUSDT 51 0.509 65% +0.34% +$0.005000 -91% -$114.2K 0.0025% Strong Uptrend MACD Bullish Stoch Overbought" [ref=e1257] [cursor=pointer]:
+                - cell "37" [ref=e1258]
+                - cell "ZROUSDT" [ref=e1259]:
+                  - generic [ref=e1260]:
+                    - text: ZROUSDT
+                    - link "Chart for ZROUSDT" [ref=e1261]:
+                      - /url: /symbols/ZROUSDT
+                      - img [ref=e1262]
+                    - link "Trade ZRO/USDT on Binance" [ref=e1265]:
+                      - /url: https://www.binance.com/en/trade/ZRO_USDT
+                      - img [ref=e1266]
+                - cell "51 0.509" [ref=e1268]:
+                  - generic [ref=e1269]:
+                    - 'progressbar "Bullish score: 0.509" [ref=e1270]'
+                    - generic [ref=e1272]: "0.509"
+                - cell "65%" [ref=e1273]
+                - cell "+0.34%" [ref=e1274]:
+                  - generic [ref=e1275]: +0.34%
+                - cell "+$0.005000" [ref=e1276]:
+                  - generic [ref=e1277]: +$0.005000
+                - cell "-91%" [ref=e1278]:
+                  - generic [ref=e1279]: "-91%"
+                - cell "-$114.2K" [ref=e1280]
+                - cell "0.0025%" [ref=e1281]:
+                  - generic [ref=e1282]: 0.0025%
+                - cell "Strong Uptrend MACD Bullish Stoch Overbought" [ref=e1283]:
+                  - generic [ref=e1284]:
+                    - generic [ref=e1285]: Strong Uptrend
+                    - generic [ref=e1286]: MACD Bullish
+                    - generic [ref=e1287]: Stoch Overbought
+                - cell [ref=e1288]:
+                  - img [ref=e1289]
+              - row "38 USD1USDT 50 0.499 87% -0.01% $-0.000100 -77% -$921.9K — EMA Bearish BB Squeeze" [ref=e1291] [cursor=pointer]:
+                - cell "38" [ref=e1292]
+                - cell "USD1USDT" [ref=e1293]:
+                  - generic [ref=e1294]:
+                    - text: USD1USDT
+                    - link "Chart for USD1USDT" [ref=e1295]:
+                      - /url: /symbols/USD1USDT
+                      - img [ref=e1296]
+                    - link "Trade USD1/USDT on Binance" [ref=e1299]:
+                      - /url: https://www.binance.com/en/trade/USD1_USDT
+                      - img [ref=e1300]
+                - cell "50 0.499" [ref=e1302]:
+                  - generic [ref=e1303]:
+                    - 'progressbar "Bullish score: 0.499" [ref=e1304]'
+                    - generic [ref=e1306]: "0.499"
+                - cell "87%" [ref=e1307]
+                - cell "-0.01%" [ref=e1308]:
+                  - generic [ref=e1309]: "-0.01%"
+                - cell "$-0.000100" [ref=e1310]
+                - cell "-77%" [ref=e1311]:
+                  - generic [ref=e1312]: "-77%"
+                - cell "-$921.9K" [ref=e1313]
+                - cell "—" [ref=e1314]
+                - cell "EMA Bearish BB Squeeze" [ref=e1315]:
+                  - generic [ref=e1316]:
+                    - generic [ref=e1317]: EMA Bearish
+                    - generic [ref=e1318]: BB Squeeze
+                - cell [ref=e1319]:
+                  - img [ref=e1320]
+              - row "39 RPLUSDT 50 0.498 51% +0.45% +$0.0100 -90% -$28.6K -0.0215% Stoch Oversold" [ref=e1322] [cursor=pointer]:
+                - cell "39" [ref=e1323]
+                - cell "RPLUSDT" [ref=e1324]:
+                  - generic [ref=e1325]:
+                    - text: RPLUSDT
+                    - link "Chart for RPLUSDT" [ref=e1326]:
+                      - /url: /symbols/RPLUSDT
+                      - img [ref=e1327]
+                    - link "Trade RPL/USDT on Binance" [ref=e1330]:
+                      - /url: https://www.binance.com/en/trade/RPL_USDT
+                      - img [ref=e1331]
+                - cell "50 0.498" [ref=e1333]:
+                  - generic [ref=e1334]:
+                    - 'progressbar "Bullish score: 0.498" [ref=e1335]'
+                    - generic [ref=e1337]: "0.498"
+                - cell "51%" [ref=e1338]
+                - cell "+0.45%" [ref=e1339]:
+                  - generic [ref=e1340]: +0.45%
+                - cell "+$0.0100" [ref=e1341]:
+                  - generic [ref=e1342]: +$0.0100
+                - cell "-90%" [ref=e1343]:
+                  - generic [ref=e1344]: "-90%"
+                - cell "-$28.6K" [ref=e1345]
+                - cell "-0.0215%" [ref=e1346]:
+                  - generic [ref=e1347]: "-0.0215%"
+                - cell "Stoch Oversold" [ref=e1348]:
+                  - generic [ref=e1350]: Stoch Oversold
+                - cell [ref=e1351]:
+                  - img [ref=e1352]
+              - row "40 PROMUSDT 50 0.498 54% +0.22% +$0.003000 -91% -$14.7K -0.0127% No Trend" [ref=e1354] [cursor=pointer]:
+                - cell "40" [ref=e1355]
+                - cell "PROMUSDT" [ref=e1356]:
+                  - generic [ref=e1357]:
+                    - text: PROMUSDT
+                    - link "Chart for PROMUSDT" [ref=e1358]:
+                      - /url: /symbols/PROMUSDT
+                      - img [ref=e1359]
+                    - link "Trade PROM/USDT on Binance" [ref=e1362]:
+                      - /url: https://www.binance.com/en/trade/PROM_USDT
+                      - img [ref=e1363]
+                - cell "50 0.498" [ref=e1365]:
+                  - generic [ref=e1366]:
+                    - 'progressbar "Bullish score: 0.498" [ref=e1367]'
+                    - generic [ref=e1369]: "0.498"
+                - cell "54%" [ref=e1370]
+                - cell "+0.22%" [ref=e1371]:
+                  - generic [ref=e1372]: +0.22%
+                - cell "+$0.003000" [ref=e1373]:
+                  - generic [ref=e1374]: +$0.003000
+                - cell "-91%" [ref=e1375]:
+                  - generic [ref=e1376]: "-91%"
+                - cell "-$14.7K" [ref=e1377]
+                - cell "-0.0127%" [ref=e1378]:
+                  - generic [ref=e1379]: "-0.0127%"
+                - cell "No Trend" [ref=e1380]:
+                  - generic [ref=e1382]: No Trend
+                - cell [ref=e1383]:
+                  - img [ref=e1384]
+              - row "41 DOGEUSDT 50 0.495 86% -0.06% $-0.000060 -80% -$8.6M 0.0067% MACD Bullish BB Squeeze EMA Transition" [ref=e1386] [cursor=pointer]:
+                - cell "41" [ref=e1387]
+                - cell "DOGEUSDT" [ref=e1388]:
+                  - generic [ref=e1389]:
+                    - text: DOGEUSDT
+                    - link "Chart for DOGEUSDT" [ref=e1390]:
+                      - /url: /symbols/DOGEUSDT
+                      - img [ref=e1391]
+                    - link "Trade DOGE/USDT on Binance" [ref=e1394]:
+                      - /url: https://www.binance.com/en/trade/DOGE_USDT
+                      - img [ref=e1395]
+                - cell "50 0.495" [ref=e1397]:
+                  - generic [ref=e1398]:
+                    - 'progressbar "Bullish score: 0.495" [ref=e1399]'
+                    - generic [ref=e1401]: "0.495"
+                - cell "86%" [ref=e1402]
+                - cell "-0.06%" [ref=e1403]:
+                  - generic [ref=e1404]: "-0.06%"
+                - cell "$-0.000060" [ref=e1405]
+                - cell "-80%" [ref=e1406]:
+                  - generic [ref=e1407]: "-80%"
+                - cell "-$8.6M" [ref=e1408]
+                - cell "0.0067%" [ref=e1409]:
+                  - generic [ref=e1410]: 0.0067%
+                - cell "MACD Bullish BB Squeeze EMA Transition" [ref=e1411]:
+                  - generic [ref=e1412]:
+                    - generic [ref=e1413]: MACD Bullish
+                    - generic [ref=e1414]: BB Squeeze
+                    - generic [ref=e1415]: EMA Transition
+                - cell [ref=e1416]:
+                  - img [ref=e1417]
+              - row "42 PAXGUSDT 49 0.490 93% -0.04% $-2.12 +9% +$4 -0.0016% EMA Bullish BB Squeeze No Trend" [ref=e1419] [cursor=pointer]:
+                - cell "42" [ref=e1420]
+                - cell "PAXGUSDT" [ref=e1421]:
+                  - generic [ref=e1422]:
+                    - text: PAXGUSDT
+                    - link "Chart for PAXGUSDT" [ref=e1423]:
+                      - /url: /symbols/PAXGUSDT
+                      - img [ref=e1424]
+                    - link "Trade PAXG/USDT on Binance" [ref=e1427]:
+                      - /url: https://www.binance.com/en/trade/PAXG_USDT
+                      - img [ref=e1428]
+                - cell "49 0.490" [ref=e1430]:
+                  - generic [ref=e1431]:
+                    - 'progressbar "Bullish score: 0.490" [ref=e1432]'
+                    - generic [ref=e1434]: "0.490"
+                - cell "93%" [ref=e1435]
+                - cell "-0.04%" [ref=e1436]:
+                  - generic [ref=e1437]: "-0.04%"
+                - cell "$-2.12" [ref=e1438]
+                - cell "+9%" [ref=e1439]:
+                  - generic [ref=e1440]: +9%
+                - cell "+$4" [ref=e1441]:
+                  - generic [ref=e1442]: +$4
+                - cell "-0.0016%" [ref=e1443]:
+                  - generic [ref=e1444]: "-0.0016%"
+                - cell "EMA Bullish BB Squeeze No Trend" [ref=e1445]:
+                  - generic [ref=e1446]:
+                    - generic [ref=e1447]: EMA Bullish
+                    - generic [ref=e1448]: BB Squeeze
+                    - generic [ref=e1449]: No Trend
+                - cell [ref=e1450]:
+                  - img [ref=e1451]
+              - row "43 RENDERUSDT 48 0.480 80% -0.21% $-0.003000 -81% -$61.3K 0.0015% EMA Bearish No Trend" [ref=e1453] [cursor=pointer]:
+                - cell "43" [ref=e1454]
+                - cell "RENDERUSDT" [ref=e1455]:
+                  - generic [ref=e1456]:
+                    - text: RENDERUSDT
+                    - link "Chart for RENDERUSDT" [ref=e1457]:
+                      - /url: /symbols/RENDERUSDT
+                      - img [ref=e1458]
+                    - link "Trade RENDER/USDT on Binance" [ref=e1461]:
+                      - /url: https://www.binance.com/en/trade/RENDER_USDT
+                      - img [ref=e1462]
+                - cell "48 0.480" [ref=e1464]:
+                  - generic [ref=e1465]:
+                    - 'progressbar "Bullish score: 0.480" [ref=e1466]'
+                    - generic [ref=e1468]: "0.480"
+                - cell "80%" [ref=e1469]
+                - cell "-0.21%" [ref=e1470]:
+                  - generic [ref=e1471]: "-0.21%"
+                - cell "$-0.003000" [ref=e1472]
+                - cell "-81%" [ref=e1473]:
+                  - generic [ref=e1474]: "-81%"
+                - cell "-$61.3K" [ref=e1475]
+                - cell "0.0015%" [ref=e1476]:
+                  - generic [ref=e1477]: 0.0015%
+                - cell "EMA Bearish No Trend" [ref=e1478]:
+                  - generic [ref=e1479]:
+                    - generic [ref=e1480]: EMA Bearish
+                    - generic [ref=e1481]: No Trend
+                - cell [ref=e1482]:
+                  - img [ref=e1483]
+              - row "44 POLUSDT 48 0.477 75% -0.10% $-0.000100 -95% -$2.1M -0.0245% No Trend" [ref=e1485] [cursor=pointer]:
+                - cell "44" [ref=e1486]
+                - cell "POLUSDT" [ref=e1487]:
+                  - generic [ref=e1488]:
+                    - text: POLUSDT
+                    - link "Chart for POLUSDT" [ref=e1489]:
+                      - /url: /symbols/POLUSDT
+                      - img [ref=e1490]
+                    - link "Trade POL/USDT on Binance" [ref=e1493]:
+                      - /url: https://www.binance.com/en/trade/POL_USDT
+                      - img [ref=e1494]
+                - cell "48 0.477" [ref=e1496]:
+                  - generic [ref=e1497]:
+                    - 'progressbar "Bullish score: 0.477" [ref=e1498]'
+                    - generic [ref=e1500]: "0.477"
+                - cell "75%" [ref=e1501]
+                - cell "-0.10%" [ref=e1502]:
+                  - generic [ref=e1503]: "-0.10%"
+                - cell "$-0.000100" [ref=e1504]
+                - cell "-95%" [ref=e1505]:
+                  - generic [ref=e1506]: "-95%"
+                - cell "-$2.1M" [ref=e1507]
+                - cell "-0.0245%" [ref=e1508]:
+                  - generic [ref=e1509]: "-0.0245%"
+                - cell "No Trend" [ref=e1510]:
+                  - generic [ref=e1512]: No Trend
+                - cell [ref=e1513]:
+                  - img [ref=e1514]
+              - row "45 JTOUSDT 48 0.475 60% +0.07% +$0.000200 -52% -$54.2K -0.0438% No Trend" [ref=e1516] [cursor=pointer]:
+                - cell "45" [ref=e1517]
+                - cell "JTOUSDT" [ref=e1518]:
+                  - generic [ref=e1519]:
+                    - text: JTOUSDT
+                    - link "Chart for JTOUSDT" [ref=e1520]:
+                      - /url: /symbols/JTOUSDT
+                      - img [ref=e1521]
+                    - link "Trade JTO/USDT on Binance" [ref=e1524]:
+                      - /url: https://www.binance.com/en/trade/JTO_USDT
+                      - img [ref=e1525]
+                - cell "48 0.475" [ref=e1527]:
+                  - generic [ref=e1528]:
+                    - 'progressbar "Bullish score: 0.475" [ref=e1529]'
+                    - generic [ref=e1531]: "0.475"
+                - cell "60%" [ref=e1532]
+                - cell "+0.07%" [ref=e1533]:
+                  - generic [ref=e1534]: +0.07%
+                - cell "+$0.000200" [ref=e1535]:
+                  - generic [ref=e1536]: +$0.000200
+                - cell "-52%" [ref=e1537]:
+                  - generic [ref=e1538]: "-52%"
+                - cell "-$54.2K" [ref=e1539]
+                - cell "-0.0438%" [ref=e1540]:
+                  - generic [ref=e1541]: "-0.0438%"
+                - cell "No Trend" [ref=e1542]:
+                  - generic [ref=e1544]: No Trend
+                - cell [ref=e1545]:
+                  - img [ref=e1546]
+              - row "46 NEARUSDT 47 0.472 83% +0.10% +$0.001000 -88% -$219.9K -0.0015% EMA Bearish" [ref=e1548] [cursor=pointer]:
+                - cell "46" [ref=e1549]
+                - cell "NEARUSDT" [ref=e1550]:
+                  - generic [ref=e1551]:
+                    - text: NEARUSDT
+                    - link "Chart for NEARUSDT" [ref=e1552]:
+                      - /url: /symbols/NEARUSDT
+                      - img [ref=e1553]
+                    - link "Trade NEAR/USDT on Binance" [ref=e1556]:
+                      - /url: https://www.binance.com/en/trade/NEAR_USDT
+                      - img [ref=e1557]
+                - cell "47 0.472" [ref=e1559]:
+                  - generic [ref=e1560]:
+                    - 'progressbar "Bullish score: 0.472" [ref=e1561]'
+                    - generic [ref=e1563]: "0.472"
+                - cell "83%" [ref=e1564]
+                - cell "+0.10%" [ref=e1565]:
+                  - generic [ref=e1566]: +0.10%
+                - cell "+$0.001000" [ref=e1567]:
+                  - generic [ref=e1568]: +$0.001000
+                - cell "-88%" [ref=e1569]:
+                  - generic [ref=e1570]: "-88%"
+                - cell "-$219.9K" [ref=e1571]
+                - cell "-0.0015%" [ref=e1572]:
+                  - generic [ref=e1573]: "-0.0015%"
+                - cell "EMA Bearish" [ref=e1574]:
+                  - generic [ref=e1576]: EMA Bearish
+                - cell [ref=e1577]:
+                  - img [ref=e1578]
+              - row "47 ETHUSDT 47 0.471 88% +0.10% +$2.01 -80% -$5.5K -0.0061% EMA Bearish No Trend" [ref=e1580] [cursor=pointer]:
+                - cell "47" [ref=e1581]
+                - cell "ETHUSDT" [ref=e1582]:
+                  - generic [ref=e1583]:
+                    - text: ETHUSDT
+                    - link "Chart for ETHUSDT" [ref=e1584]:
+                      - /url: /symbols/ETHUSDT
+                      - img [ref=e1585]
+                    - link "Trade ETH/USDT on Binance" [ref=e1588]:
+                      - /url: https://www.binance.com/en/trade/ETH_USDT
+                      - img [ref=e1589]
+                - cell "47 0.471" [ref=e1591]:
+                  - generic [ref=e1592]:
+                    - 'progressbar "Bullish score: 0.471" [ref=e1593]'
+                    - generic [ref=e1595]: "0.471"
+                - cell "88%" [ref=e1596]
+                - cell "+0.10%" [ref=e1597]:
+                  - generic [ref=e1598]: +0.10%
+                - cell "+$2.01" [ref=e1599]:
+                  - generic [ref=e1600]: +$2.01
+                - cell "-80%" [ref=e1601]:
+                  - generic [ref=e1602]: "-80%"
+                - cell "-$5.5K" [ref=e1603]
+                - cell "-0.0061%" [ref=e1604]:
+                  - generic [ref=e1605]: "-0.0061%"
+                - cell "EMA Bearish No Trend" [ref=e1606]:
+                  - generic [ref=e1607]:
+                    - generic [ref=e1608]: EMA Bearish
+                    - generic [ref=e1609]: No Trend
+                - cell [ref=e1610]:
+                  - img [ref=e1611]
+              - row "48 BNBUSDT 47 0.467 74% -0.04% $-0.2400 -81% -$1.5K 0.0000% MACD Bullish Strong Selling BB Squeeze" [ref=e1613] [cursor=pointer]:
+                - cell "48" [ref=e1614]
+                - cell "BNBUSDT" [ref=e1615]:
+                  - generic [ref=e1616]:
+                    - text: BNBUSDT
+                    - link "Chart for BNBUSDT" [ref=e1617]:
+                      - /url: /symbols/BNBUSDT
+                      - img [ref=e1618]
+                    - link "Trade BNB/USDT on Binance" [ref=e1621]:
+                      - /url: https://www.binance.com/en/trade/BNB_USDT
+                      - img [ref=e1622]
+                - cell "47 0.467" [ref=e1624]:
+                  - generic [ref=e1625]:
+                    - 'progressbar "Bullish score: 0.467" [ref=e1626]'
+                    - generic [ref=e1628]: "0.467"
+                - cell "74%" [ref=e1629]
+                - cell "-0.04%" [ref=e1630]:
+                  - generic [ref=e1631]: "-0.04%"
+                - cell "$-0.2400" [ref=e1632]
+                - cell "-81%" [ref=e1633]:
+                  - generic [ref=e1634]: "-81%"
+                - cell "-$1.5K" [ref=e1635]
+                - cell "0.0000%" [ref=e1636]:
+                  - generic [ref=e1637]: 0.0000%
+                - cell "MACD Bullish Strong Selling BB Squeeze" [ref=e1638]:
+                  - generic [ref=e1639]:
+                    - generic [ref=e1640]: MACD Bullish
+                    - generic [ref=e1641]: Strong Selling
+                    - generic [ref=e1642]: BB Squeeze
+                - cell [ref=e1643]:
+                  - img [ref=e1644]
+              - row "49 WBETHUSDT 46 0.463 79% -0.11% $-2.31 -88% -$4 — EMA Bearish No Trend" [ref=e1646] [cursor=pointer]:
+                - cell "49" [ref=e1647]
+                - cell "WBETHUSDT" [ref=e1648]:
+                  - generic [ref=e1649]:
+                    - text: WBETHUSDT
+                    - link "Chart for WBETHUSDT" [ref=e1650]:
+                      - /url: /symbols/WBETHUSDT
+                      - img [ref=e1651]
+                    - link "Trade WBETH/USDT on Binance" [ref=e1654]:
+                      - /url: https://www.binance.com/en/trade/WBETH_USDT
+                      - img [ref=e1655]
+                - cell "46 0.463" [ref=e1657]:
+                  - generic [ref=e1658]:
+                    - 'progressbar "Bullish score: 0.463" [ref=e1659]'
+                    - generic [ref=e1661]: "0.463"
+                - cell "79%" [ref=e1662]
+                - cell "-0.11%" [ref=e1663]:
+                  - generic [ref=e1664]: "-0.11%"
+                - cell "$-2.31" [ref=e1665]
+                - cell "-88%" [ref=e1666]:
+                  - generic [ref=e1667]: "-88%"
+                - cell "-$4" [ref=e1668]
+                - cell "—" [ref=e1669]
+                - cell "EMA Bearish No Trend" [ref=e1670]:
+                  - generic [ref=e1671]:
+                    - generic [ref=e1672]: EMA Bearish
+                    - generic [ref=e1673]: No Trend
+                - cell [ref=e1674]:
+                  - img [ref=e1675]
+              - row "50 HBARUSDT 46 0.461 83% -0.05% $-0.000050 -81% -$1.4M -0.0034% EMA Bearish" [ref=e1677] [cursor=pointer]:
+                - cell "50" [ref=e1678]
+                - cell "HBARUSDT" [ref=e1679]:
+                  - generic [ref=e1680]:
+                    - text: HBARUSDT
+                    - link "Chart for HBARUSDT" [ref=e1681]:
+                      - /url: /symbols/HBARUSDT
+                      - img [ref=e1682]
+                    - link "Trade HBAR/USDT on Binance" [ref=e1685]:
+                      - /url: https://www.binance.com/en/trade/HBAR_USDT
+                      - img [ref=e1686]
+                - cell "46 0.461" [ref=e1688]:
+                  - generic [ref=e1689]:
+                    - 'progressbar "Bullish score: 0.461" [ref=e1690]'
+                    - generic [ref=e1692]: "0.461"
+                - cell "83%" [ref=e1693]
+                - cell "-0.05%" [ref=e1694]:
+                  - generic [ref=e1695]: "-0.05%"
+                - cell "$-0.000050" [ref=e1696]
+                - cell "-81%" [ref=e1697]:
+                  - generic [ref=e1698]: "-81%"
+                - cell "-$1.4M" [ref=e1699]
+                - cell "-0.0034%" [ref=e1700]:
+                  - generic [ref=e1701]: "-0.0034%"
+                - cell "EMA Bearish" [ref=e1702]:
+                  - generic [ref=e1704]: EMA Bearish
+                - cell [ref=e1705]:
+                  - img [ref=e1706]
+              - row "51 FOGOUSDT 46 0.461 56% -0.08% $-0.000020 -60% -$914.7K 0.0050% Stoch Oversold" [ref=e1708] [cursor=pointer]:
+                - cell "51" [ref=e1709]
+                - cell "FOGOUSDT" [ref=e1710]:
+                  - generic [ref=e1711]:
+                    - text: FOGOUSDT
+                    - link "Chart for FOGOUSDT" [ref=e1712]:
+                      - /url: /symbols/FOGOUSDT
+                      - img [ref=e1713]
+                    - link "Trade FOGO/USDT on Binance" [ref=e1716]:
+                      - /url: https://www.binance.com/en/trade/FOGO_USDT
+                      - img [ref=e1717]
+                - cell "46 0.461" [ref=e1719]:
+                  - generic [ref=e1720]:
+                    - 'progressbar "Bullish score: 0.461" [ref=e1721]'
+                    - generic [ref=e1723]: "0.461"
+                - cell "56%" [ref=e1724]
+                - cell "-0.08%" [ref=e1725]:
+                  - generic [ref=e1726]: "-0.08%"
+                - cell "$-0.000020" [ref=e1727]
+                - cell "-60%" [ref=e1728]:
+                  - generic [ref=e1729]: "-60%"
+                - cell "-$914.7K" [ref=e1730]
+                - cell "0.0050%" [ref=e1731]:
+                  - generic [ref=e1732]: 0.0050%
+                - cell "Stoch Oversold" [ref=e1733]:
+                  - generic [ref=e1735]: Stoch Oversold
+                - cell [ref=e1736]:
+                  - img [ref=e1737]
+              - row "52 OGUSDT 46 0.458 65% -0.12% $-0.004000 -93% -$21.9K 0.0050% BB Squeeze EMA Transition No Trend" [ref=e1739] [cursor=pointer]:
+                - cell "52" [ref=e1740]
+                - cell "OGUSDT" [ref=e1741]:
+                  - generic [ref=e1742]:
+                    - text: OGUSDT
+                    - link "Chart for OGUSDT" [ref=e1743]:
+                      - /url: /symbols/OGUSDT
+                      - img [ref=e1744]
+                    - link "Trade OG/USDT on Binance" [ref=e1747]:
+                      - /url: https://www.binance.com/en/trade/OG_USDT
+                      - img [ref=e1748]
+                - cell "46 0.458" [ref=e1750]:
+                  - generic [ref=e1751]:
+                    - 'progressbar "Bullish score: 0.458" [ref=e1752]'
+                    - generic [ref=e1754]: "0.458"
+                - cell "65%" [ref=e1755]
+                - cell "-0.12%" [ref=e1756]:
+                  - generic [ref=e1757]: "-0.12%"
+                - cell "$-0.004000" [ref=e1758]
+                - cell "-93%" [ref=e1759]:
+                  - generic [ref=e1760]: "-93%"
+                - cell "-$21.9K" [ref=e1761]
+                - cell "0.0050%" [ref=e1762]:
+                  - generic [ref=e1763]: 0.0050%
+                - cell "BB Squeeze EMA Transition No Trend" [ref=e1764]:
+                  - generic [ref=e1765]:
+                    - generic [ref=e1766]: BB Squeeze
+                    - generic [ref=e1767]: EMA Transition
+                    - generic [ref=e1768]: No Trend
+                - cell [ref=e1769]:
+                  - img [ref=e1770]
+              - row "53 LINKUSDT 46 0.456 84% +0.12% +$0.010000 -78% -$32.2K -0.0018% EMA Bearish" [ref=e1772] [cursor=pointer]:
+                - cell "53" [ref=e1773]
+                - cell "LINKUSDT" [ref=e1774]:
+                  - generic [ref=e1775]:
+                    - text: LINKUSDT
+                    - link "Chart for LINKUSDT" [ref=e1776]:
+                      - /url: /symbols/LINKUSDT
+                      - img [ref=e1777]
+                    - link "Trade LINK/USDT on Binance" [ref=e1780]:
+                      - /url: https://www.binance.com/en/trade/LINK_USDT
+                      - img [ref=e1781]
+                - cell "46 0.456" [ref=e1783]:
+                  - generic [ref=e1784]:
+                    - 'progressbar "Bullish score: 0.456" [ref=e1785]'
+                    - generic [ref=e1787]: "0.456"
+                - cell "84%" [ref=e1788]
+                - cell "+0.12%" [ref=e1789]:
+                  - generic [ref=e1790]: +0.12%
+                - cell "+$0.010000" [ref=e1791]:
+                  - generic [ref=e1792]: +$0.010000
+                - cell "-78%" [ref=e1793]:
+                  - generic [ref=e1794]: "-78%"
+                - cell "-$32.2K" [ref=e1795]
+                - cell "-0.0018%" [ref=e1796]:
+                  - generic [ref=e1797]: "-0.0018%"
+                - cell "EMA Bearish" [ref=e1798]:
+                  - generic [ref=e1800]: EMA Bearish
+                - cell [ref=e1801]:
+                  - img [ref=e1802]
+              - row "54 ALGOUSDT 45 0.454 52% -0.11% $-0.000100 -65% -$425.2K -0.0302% Strong Downtrend EMA Bearish Strong Buying" [ref=e1804] [cursor=pointer]:
+                - cell "54" [ref=e1805]
+                - cell "ALGOUSDT" [ref=e1806]:
+                  - generic [ref=e1807]:
+                    - text: ALGOUSDT
+                    - link "Chart for ALGOUSDT" [ref=e1808]:
+                      - /url: /symbols/ALGOUSDT
+                      - img [ref=e1809]
+                    - link "Trade ALGO/USDT on Binance" [ref=e1812]:
+                      - /url: https://www.binance.com/en/trade/ALGO_USDT
+                      - img [ref=e1813]
+                - cell "45 0.454" [ref=e1815]:
+                  - generic [ref=e1816]:
+                    - 'progressbar "Bullish score: 0.454" [ref=e1817]'
+                    - generic [ref=e1819]: "0.454"
+                - cell "52%" [ref=e1820]
+                - cell "-0.11%" [ref=e1821]:
+                  - generic [ref=e1822]: "-0.11%"
+                - cell "$-0.000100" [ref=e1823]
+                - cell "-65%" [ref=e1824]:
+                  - generic [ref=e1825]: "-65%"
+                - cell "-$425.2K" [ref=e1826]
+                - cell "-0.0302%" [ref=e1827]:
+                  - generic [ref=e1828]: "-0.0302%"
+                - cell "Strong Downtrend EMA Bearish Strong Buying" [ref=e1829]:
+                  - generic [ref=e1830]:
+                    - generic [ref=e1831]: Strong Downtrend
+                    - generic [ref=e1832]: EMA Bearish
+                    - generic [ref=e1833]: Strong Buying
+                - cell [ref=e1834]:
+                  - img [ref=e1835]
+              - row "55 DUSKUSDT 45 0.450 61% +0.34% +$0.000300 -77% -$547.6K -0.9993% EMA Bearish MACD Bullish" [ref=e1837] [cursor=pointer]:
+                - cell "55" [ref=e1838]
+                - cell "DUSKUSDT" [ref=e1839]:
+                  - generic [ref=e1840]:
+                    - text: DUSKUSDT
+                    - link "Chart for DUSKUSDT" [ref=e1841]:
+                      - /url: /symbols/DUSKUSDT
+                      - img [ref=e1842]
+                    - link "Trade DUSK/USDT on Binance" [ref=e1845]:
+                      - /url: https://www.binance.com/en/trade/DUSK_USDT
+                      - img [ref=e1846]
+                - cell "45 0.450" [ref=e1848]:
+                  - generic [ref=e1849]:
+                    - 'progressbar "Bullish score: 0.450" [ref=e1850]'
+                    - generic [ref=e1852]: "0.450"
+                - cell "61%" [ref=e1853]
+                - cell "+0.34%" [ref=e1854]:
+                  - generic [ref=e1855]: +0.34%
+                - cell "+$0.000300" [ref=e1856]:
+                  - generic [ref=e1857]: +$0.000300
+                - cell "-77%" [ref=e1858]:
+                  - generic [ref=e1859]: "-77%"
+                - cell "-$547.6K" [ref=e1860]
+                - cell "-0.9993%" [ref=e1861]:
+                  - generic [ref=e1862]: "-0.9993%"
+                - cell "EMA Bearish MACD Bullish" [ref=e1863]:
+                  - generic [ref=e1864]:
+                    - generic [ref=e1865]: EMA Bearish
+                    - generic [ref=e1866]: MACD Bullish
+                - cell [ref=e1867]:
+                  - img [ref=e1868]
+              - row "56 GIGGLEUSDT 45 0.448 61% -0.24% $-0.0700 -24% -$281 0.0014% Strong Downtrend EMA Transition" [ref=e1870] [cursor=pointer]:
+                - cell "56" [ref=e1871]
+                - cell "GIGGLEUSDT" [ref=e1872]:
+                  - generic [ref=e1873]:
+                    - text: GIGGLEUSDT
+                    - link "Chart for GIGGLEUSDT" [ref=e1874]:
+                      - /url: /symbols/GIGGLEUSDT
+                      - img [ref=e1875]
+                    - link "Trade GIGGLE/USDT on Binance" [ref=e1878]:
+                      - /url: https://www.binance.com/en/trade/GIGGLE_USDT
+                      - img [ref=e1879]
+                - cell "45 0.448" [ref=e1881]:
+                  - generic [ref=e1882]:
+                    - 'progressbar "Bullish score: 0.448" [ref=e1883]'
+                    - generic [ref=e1885]: "0.448"
+                - cell "61%" [ref=e1886]
+                - cell "-0.24%" [ref=e1887]:
+                  - generic [ref=e1888]: "-0.24%"
+                - cell "$-0.0700" [ref=e1889]
+                - cell "-24%" [ref=e1890]:
+                  - generic [ref=e1891]: "-24%"
+                - cell "-$281" [ref=e1892]
+                - cell "0.0014%" [ref=e1893]:
+                  - generic [ref=e1894]: 0.0014%
+                - cell "Strong Downtrend EMA Transition" [ref=e1895]:
+                  - generic [ref=e1896]:
+                    - generic [ref=e1897]: Strong Downtrend
+                    - generic [ref=e1898]: EMA Transition
+                - cell [ref=e1899]:
+                  - img [ref=e1900]
+              - row "57 UNIUSDT 44 0.442 81% +0.18% +$0.006000 -94% -$119.2K 0.0049% EMA Bearish" [ref=e1902] [cursor=pointer]:
+                - cell "57" [ref=e1903]
+                - cell "UNIUSDT" [ref=e1904]:
+                  - generic [ref=e1905]:
+                    - text: UNIUSDT
+                    - link "Chart for UNIUSDT" [ref=e1906]:
+                      - /url: /symbols/UNIUSDT
+                      - img [ref=e1907]
+                    - link "Trade UNI/USDT on Binance" [ref=e1910]:
+                      - /url: https://www.binance.com/en/trade/UNI_USDT
+                      - img [ref=e1911]
+                - cell "44 0.442" [ref=e1913]:
+                  - generic [ref=e1914]:
+                    - 'progressbar "Bullish score: 0.442" [ref=e1915]'
+                    - generic [ref=e1917]: "0.442"
+                - cell "81%" [ref=e1918]
+                - cell "+0.18%" [ref=e1919]:
+                  - generic [ref=e1920]: +0.18%
+                - cell "+$0.006000" [ref=e1921]:
+                  - generic [ref=e1922]: +$0.006000
+                - cell "-94%" [ref=e1923]:
+                  - generic [ref=e1924]: "-94%"
+                - cell "-$119.2K" [ref=e1925]
+                - cell "0.0049%" [ref=e1926]:
+                  - generic [ref=e1927]: 0.0049%
+                - cell "EMA Bearish" [ref=e1928]:
+                  - generic [ref=e1930]: EMA Bearish
+                - cell [ref=e1931]:
+                  - img [ref=e1932]
+              - row "58 DASHUSDT 44 0.441 56% -0.12% $-0.0400 -77% -$3.9K 0.0054% EMA Bearish Strong Buying" [ref=e1934] [cursor=pointer]:
+                - cell "58" [ref=e1935]
+                - cell "DASHUSDT" [ref=e1936]:
+                  - generic [ref=e1937]:
+                    - text: DASHUSDT
+                    - link "Chart for DASHUSDT" [ref=e1938]:
+                      - /url: /symbols/DASHUSDT
+                      - img [ref=e1939]
+                    - link "Trade DASH/USDT on Binance" [ref=e1942]:
+                      - /url: https://www.binance.com/en/trade/DASH_USDT
+                      - img [ref=e1943]
+                - cell "44 0.441" [ref=e1945]:
+                  - generic [ref=e1946]:
+                    - 'progressbar "Bullish score: 0.441" [ref=e1947]'
+                    - generic [ref=e1949]: "0.441"
+                - cell "56%" [ref=e1950]
+                - cell "-0.12%" [ref=e1951]:
+                  - generic [ref=e1952]: "-0.12%"
+                - cell "$-0.0400" [ref=e1953]
+                - cell "-77%" [ref=e1954]:
+                  - generic [ref=e1955]: "-77%"
+                - cell "-$3.9K" [ref=e1956]
+                - cell "0.0054%" [ref=e1957]:
+                  - generic [ref=e1958]: 0.0054%
+                - cell "EMA Bearish Strong Buying" [ref=e1959]:
+                  - generic [ref=e1960]:
+                    - generic [ref=e1961]: EMA Bearish
+                    - generic [ref=e1962]: Strong Buying
+                - cell [ref=e1963]:
+                  - img [ref=e1964]
+              - row "59 ETHFIUSDT 44 0.440 67% +0.22% +$0.001000 -81% -$91.7K 0.0028% EMA Bearish" [ref=e1966] [cursor=pointer]:
+                - cell "59" [ref=e1967]
+                - cell "ETHFIUSDT" [ref=e1968]:
+                  - generic [ref=e1969]:
+                    - text: ETHFIUSDT
+                    - link "Chart for ETHFIUSDT" [ref=e1970]:
+                      - /url: /symbols/ETHFIUSDT
+                      - img [ref=e1971]
+                    - link "Trade ETHFI/USDT on Binance" [ref=e1974]:
+                      - /url: https://www.binance.com/en/trade/ETHFI_USDT
+                      - img [ref=e1975]
+                - cell "44 0.440" [ref=e1977]:
+                  - generic [ref=e1978]:
+                    - 'progressbar "Bullish score: 0.440" [ref=e1979]'
+                    - generic [ref=e1981]: "0.440"
+                - cell "67%" [ref=e1982]
+                - cell "+0.22%" [ref=e1983]:
+                  - generic [ref=e1984]: +0.22%
+                - cell "+$0.001000" [ref=e1985]:
+                  - generic [ref=e1986]: +$0.001000
+                - cell "-81%" [ref=e1987]:
+                  - generic [ref=e1988]: "-81%"
+                - cell "-$91.7K" [ref=e1989]
+                - cell "0.0028%" [ref=e1990]:
+                  - generic [ref=e1991]: 0.0028%
+                - cell "EMA Bearish" [ref=e1992]:
+                  - generic [ref=e1994]: EMA Bearish
+                - cell [ref=e1995]:
+                  - img [ref=e1996]
+              - row "60 SHIBUSDT 44 0.440 74% +0.00% +$0.000000 -63% -$9.2B — EMA Bearish BB Squeeze" [ref=e1998] [cursor=pointer]:
+                - cell "60" [ref=e1999]
+                - cell "SHIBUSDT" [ref=e2000]:
+                  - generic [ref=e2001]:
+                    - text: SHIBUSDT
+                    - link "Chart for SHIBUSDT" [ref=e2002]:
+                      - /url: /symbols/SHIBUSDT
+                      - img [ref=e2003]
+                    - link "Trade SHIB/USDT on Binance" [ref=e2006]:
+                      - /url: https://www.binance.com/en/trade/SHIB_USDT
+                      - img [ref=e2007]
+                - cell "44 0.440" [ref=e2009]:
+                  - generic [ref=e2010]:
+                    - 'progressbar "Bullish score: 0.440" [ref=e2011]'
+                    - generic [ref=e2013]: "0.440"
+                - cell "74%" [ref=e2014]
+                - cell "+0.00%" [ref=e2015]:
+                  - generic [ref=e2016]: +0.00%
+                - cell "+$0.000000" [ref=e2017]:
+                  - generic [ref=e2018]: +$0.000000
+                - cell "-63%" [ref=e2019]:
+                  - generic [ref=e2020]: "-63%"
+                - cell "-$9.2B" [ref=e2021]
+                - cell "—" [ref=e2022]
+                - cell "EMA Bearish BB Squeeze" [ref=e2023]:
+                  - generic [ref=e2024]:
+                    - generic [ref=e2025]: EMA Bearish
+                    - generic [ref=e2026]: BB Squeeze
+                - cell [ref=e2027]:
+                  - img [ref=e2028]
+              - row "61 STRKUSDT 44 0.436 53% +0.00% +$0.000000 -74% -$841.1K 0.0050% Strong Downtrend EMA Bearish Strong Buying" [ref=e2030] [cursor=pointer]:
+                - cell "61" [ref=e2031]
+                - cell "STRKUSDT" [ref=e2032]:
+                  - generic [ref=e2033]:
+                    - text: STRKUSDT
+                    - link "Chart for STRKUSDT" [ref=e2034]:
+                      - /url: /symbols/STRKUSDT
+                      - img [ref=e2035]
+                    - link "Trade STRK/USDT on Binance" [ref=e2038]:
+                      - /url: https://www.binance.com/en/trade/STRK_USDT
+                      - img [ref=e2039]
+                - cell "44 0.436" [ref=e2041]:
+                  - generic [ref=e2042]:
+                    - 'progressbar "Bullish score: 0.436" [ref=e2043]'
+                    - generic [ref=e2045]: "0.436"
+                - cell "53%" [ref=e2046]
+                - cell "+0.00%" [ref=e2047]:
+                  - generic [ref=e2048]: +0.00%
+                - cell "+$0.000000" [ref=e2049]:
+                  - generic [ref=e2050]: +$0.000000
+                - cell "-74%" [ref=e2051]:
+                  - generic [ref=e2052]: "-74%"
+                - cell "-$841.1K" [ref=e2053]
+                - cell "0.0050%" [ref=e2054]:
+                  - generic [ref=e2055]: 0.0050%
+                - cell "Strong Downtrend EMA Bearish Strong Buying" [ref=e2056]:
+                  - generic [ref=e2057]:
+                    - generic [ref=e2058]: Strong Downtrend
+                    - generic [ref=e2059]: EMA Bearish
+                    - generic [ref=e2060]: Strong Buying
+                - cell [ref=e2061]:
+                  - img [ref=e2062]
+              - row "62 ENAUSDT 43 0.434 60% -0.27% $-0.000300 -86% -$1.8M 0.0050% Strong Downtrend EMA Bearish Strong Buying" [ref=e2064] [cursor=pointer]:
+                - cell "62" [ref=e2065]
+                - cell "ENAUSDT" [ref=e2066]:
+                  - generic [ref=e2067]:
+                    - text: ENAUSDT
+                    - link "Chart for ENAUSDT" [ref=e2068]:
+                      - /url: /symbols/ENAUSDT
+                      - img [ref=e2069]
+                    - link "Trade ENA/USDT on Binance" [ref=e2072]:
+                      - /url: https://www.binance.com/en/trade/ENA_USDT
+                      - img [ref=e2073]
+                - cell "43 0.434" [ref=e2075]:
+                  - generic [ref=e2076]:
+                    - 'progressbar "Bullish score: 0.434" [ref=e2077]'
+                    - generic [ref=e2079]: "0.434"
+                - cell "60%" [ref=e2080]
+                - cell "-0.27%" [ref=e2081]:
+                  - generic [ref=e2082]: "-0.27%"
+                - cell "$-0.000300" [ref=e2083]
+                - cell "-86%" [ref=e2084]:
+                  - generic [ref=e2085]: "-86%"
+                - cell "-$1.8M" [ref=e2086]
+                - cell "0.0050%" [ref=e2087]:
+                  - generic [ref=e2088]: 0.0050%
+                - cell "Strong Downtrend EMA Bearish Strong Buying" [ref=e2089]:
+                  - generic [ref=e2090]:
+                    - generic [ref=e2091]: Strong Downtrend
+                    - generic [ref=e2092]: EMA Bearish
+                    - generic [ref=e2093]: Strong Buying
+                - cell [ref=e2094]:
+                  - img [ref=e2095]
+              - row "63 BONKUSDT 43 0.427 66% +0.00% +$0.000000 -62% -$12.2B — Strong Downtrend EMA Bearish" [ref=e2097] [cursor=pointer]:
+                - cell "63" [ref=e2098]
+                - cell "BONKUSDT" [ref=e2099]:
+                  - generic [ref=e2100]:
+                    - text: BONKUSDT
+                    - link "Chart for BONKUSDT" [ref=e2101]:
+                      - /url: /symbols/BONKUSDT
+                      - img [ref=e2102]
+                    - link "Trade BONK/USDT on Binance" [ref=e2105]:
+                      - /url: https://www.binance.com/en/trade/BONK_USDT
+                      - img [ref=e2106]
+                - cell "43 0.427" [ref=e2108]:
+                  - generic [ref=e2109]:
+                    - 'progressbar "Bullish score: 0.427" [ref=e2110]'
+                    - generic [ref=e2112]: "0.427"
+                - cell "66%" [ref=e2113]
+                - cell "+0.00%" [ref=e2114]:
+                  - generic [ref=e2115]: +0.00%
+                - cell "+$0.000000" [ref=e2116]:
+                  - generic [ref=e2117]: +$0.000000
+                - cell "-62%" [ref=e2118]:
+                  - generic [ref=e2119]: "-62%"
+                - cell "-$12.2B" [ref=e2120]
+                - cell "—" [ref=e2121]
+                - cell "Strong Downtrend EMA Bearish" [ref=e2122]:
+                  - generic [ref=e2123]:
+                    - generic [ref=e2124]: Strong Downtrend
+                    - generic [ref=e2125]: EMA Bearish
+                - cell [ref=e2126]:
+                  - img [ref=e2127]
+              - row "64 ADAUSDT 43 0.427 78% +0.11% +$0.000300 -78% -$1.3M 0.0056% EMA Bearish Strong Selling BB Squeeze" [ref=e2129] [cursor=pointer]:
+                - cell "64" [ref=e2130]
+                - cell "ADAUSDT" [ref=e2131]:
+                  - generic [ref=e2132]:
+                    - text: ADAUSDT
+                    - link "Chart for ADAUSDT" [ref=e2133]:
+                      - /url: /symbols/ADAUSDT
+                      - img [ref=e2134]
+                    - link "Trade ADA/USDT on Binance" [ref=e2137]:
+                      - /url: https://www.binance.com/en/trade/ADA_USDT
+                      - img [ref=e2138]
+                - cell "43 0.427" [ref=e2140]:
+                  - generic [ref=e2141]:
+                    - 'progressbar "Bullish score: 0.427" [ref=e2142]'
+                    - generic [ref=e2144]: "0.427"
+                - cell "78%" [ref=e2145]
+                - cell "+0.11%" [ref=e2146]:
+                  - generic [ref=e2147]: +0.11%
+                - cell "+$0.000300" [ref=e2148]:
+                  - generic [ref=e2149]: +$0.000300
+                - cell "-78%" [ref=e2150]:
+                  - generic [ref=e2151]: "-78%"
+                - cell "-$1.3M" [ref=e2152]
+                - cell "0.0056%" [ref=e2153]:
+                  - generic [ref=e2154]: 0.0056%
+                - cell "EMA Bearish Strong Selling BB Squeeze" [ref=e2155]:
+                  - generic [ref=e2156]:
+                    - generic [ref=e2157]: EMA Bearish
+                    - generic [ref=e2158]: Strong Selling
+                    - generic [ref=e2159]: BB Squeeze
+                - cell [ref=e2160]:
+                  - img [ref=e2161]
+              - row "65 CRVUSDT 43 0.425 64% +0.00% +$0.000000 -92% -$230.3K 0.0100% Strong Downtrend EMA Bearish" [ref=e2163] [cursor=pointer]:
+                - cell "65" [ref=e2164]
+                - cell "CRVUSDT" [ref=e2165]:
+                  - generic [ref=e2166]:
+                    - text: CRVUSDT
+                    - link "Chart for CRVUSDT" [ref=e2167]:
+                      - /url: /symbols/CRVUSDT
+                      - img [ref=e2168]
+                    - link "Trade CRV/USDT on Binance" [ref=e2171]:
+                      - /url: https://www.binance.com/en/trade/CRV_USDT
+                      - img [ref=e2172]
+                - cell "43 0.425" [ref=e2174]:
+                  - generic [ref=e2175]:
+                    - 'progressbar "Bullish score: 0.425" [ref=e2176]'
+                    - generic [ref=e2178]: "0.425"
+                - cell "64%" [ref=e2179]
+                - cell "+0.00%" [ref=e2180]:
+                  - generic [ref=e2181]: +0.00%
+                - cell "+$0.000000" [ref=e2182]:
+                  - generic [ref=e2183]: +$0.000000
+                - cell "-92%" [ref=e2184]:
+                  - generic [ref=e2185]: "-92%"
+                - cell "-$230.3K" [ref=e2186]
+                - cell "0.0100%" [ref=e2187]:
+                  - generic [ref=e2188]: 0.0100%
+                - cell "Strong Downtrend EMA Bearish" [ref=e2189]:
+                  - generic [ref=e2190]:
+                    - generic [ref=e2191]: Strong Downtrend
+                    - generic [ref=e2192]: EMA Bearish
+                - cell [ref=e2193]:
+                  - img [ref=e2194]
+              - row "66 JUPUSDT 42 0.423 65% +0.07% +$0.000100 -71% -$117.4K 0.0033% EMA Bearish" [ref=e2196] [cursor=pointer]:
+                - cell "66" [ref=e2197]
+                - cell "JUPUSDT" [ref=e2198]:
+                  - generic [ref=e2199]:
+                    - text: JUPUSDT
+                    - link "Chart for JUPUSDT" [ref=e2200]:
+                      - /url: /symbols/JUPUSDT
+                      - img [ref=e2201]
+                    - link "Trade JUP/USDT on Binance" [ref=e2204]:
+                      - /url: https://www.binance.com/en/trade/JUP_USDT
+                      - img [ref=e2205]
+                - cell "42 0.423" [ref=e2207]:
+                  - generic [ref=e2208]:
+                    - 'progressbar "Bullish score: 0.423" [ref=e2209]'
+                    - generic [ref=e2211]: "0.423"
+                - cell "65%" [ref=e2212]
+                - cell "+0.07%" [ref=e2213]:
+                  - generic [ref=e2214]: +0.07%
+                - cell "+$0.000100" [ref=e2215]:
+                  - generic [ref=e2216]: +$0.000100
+                - cell "-71%" [ref=e2217]:
+                  - generic [ref=e2218]: "-71%"
+                - cell "-$117.4K" [ref=e2219]
+                - cell "0.0033%" [ref=e2220]:
+                  - generic [ref=e2221]: 0.0033%
+                - cell "EMA Bearish" [ref=e2222]:
+                  - generic [ref=e2224]: EMA Bearish
+                - cell [ref=e2225]:
+                  - img [ref=e2226]
+              - row "67 TAOUSDT 42 0.423 74% -0.11% $-0.2000 -85% -$1.9K -0.0329% EMA Bearish" [ref=e2228] [cursor=pointer]:
+                - cell "67" [ref=e2229]
+                - cell "TAOUSDT" [ref=e2230]:
+                  - generic [ref=e2231]:
+                    - text: TAOUSDT
+                    - link "Chart for TAOUSDT" [ref=e2232]:
+                      - /url: /symbols/TAOUSDT
+                      - img [ref=e2233]
+                    - link "Trade TAO/USDT on Binance" [ref=e2236]:
+                      - /url: https://www.binance.com/en/trade/TAO_USDT
+                      - img [ref=e2237]
+                - cell "42 0.423" [ref=e2239]:
+                  - generic [ref=e2240]:
+                    - 'progressbar "Bullish score: 0.423" [ref=e2241]'
+                    - generic [ref=e2243]: "0.423"
+                - cell "74%" [ref=e2244]
+                - cell "-0.11%" [ref=e2245]:
+                  - generic [ref=e2246]: "-0.11%"
+                - cell "$-0.2000" [ref=e2247]
+                - cell "-85%" [ref=e2248]:
+                  - generic [ref=e2249]: "-85%"
+                - cell "-$1.9K" [ref=e2250]
+                - cell "-0.0329%" [ref=e2251]:
+                  - generic [ref=e2252]: "-0.0329%"
+                - cell "EMA Bearish" [ref=e2253]:
+                  - generic [ref=e2255]: EMA Bearish
+                - cell [ref=e2256]:
+                  - img [ref=e2257]
+              - row "68 BERAUSDT 42 0.422 61% +0.00% +$0.000000 -75% -$173.4K -0.0631% Strong Downtrend EMA Bearish" [ref=e2259] [cursor=pointer]:
+                - cell "68" [ref=e2260]
+                - cell "BERAUSDT" [ref=e2261]:
+                  - generic [ref=e2262]:
+                    - text: BERAUSDT
+                    - link "Chart for BERAUSDT" [ref=e2263]:
+                      - /url: /symbols/BERAUSDT
+                      - img [ref=e2264]
+                    - link "Trade BERA/USDT on Binance" [ref=e2267]:
+                      - /url: https://www.binance.com/en/trade/BERA_USDT
+                      - img [ref=e2268]
+                - cell "42 0.422" [ref=e2270]:
+                  - generic [ref=e2271]:
+                    - 'progressbar "Bullish score: 0.422" [ref=e2272]'
+                    - generic [ref=e2274]: "0.422"
+                - cell "61%" [ref=e2275]
+                - cell "+0.00%" [ref=e2276]:
+                  - generic [ref=e2277]: +0.00%
+                - cell "+$0.000000" [ref=e2278]:
+                  - generic [ref=e2279]: +$0.000000
+                - cell "-75%" [ref=e2280]:
+                  - generic [ref=e2281]: "-75%"
+                - cell "-$173.4K" [ref=e2282]
+                - cell "-0.0631%" [ref=e2283]:
+                  - generic [ref=e2284]: "-0.0631%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e2285]:
+                  - generic [ref=e2286]:
+                    - generic [ref=e2287]: Strong Downtrend
+                    - generic [ref=e2288]: EMA Bearish
+                - cell [ref=e2289]:
+                  - img [ref=e2290]
+              - row "69 XRPUSDT 42 0.421 82% +0.06% +$0.000800 -82% -$2.7M 0.0035% EMA Bearish" [ref=e2292] [cursor=pointer]:
+                - cell "69" [ref=e2293]
+                - cell "XRPUSDT" [ref=e2294]:
+                  - generic [ref=e2295]:
+                    - text: XRPUSDT
+                    - link "Chart for XRPUSDT" [ref=e2296]:
+                      - /url: /symbols/XRPUSDT
+                      - img [ref=e2297]
+                    - link "Trade XRP/USDT on Binance" [ref=e2300]:
+                      - /url: https://www.binance.com/en/trade/XRP_USDT
+                      - img [ref=e2301]
+                - cell "42 0.421" [ref=e2303]:
+                  - generic [ref=e2304]:
+                    - 'progressbar "Bullish score: 0.421" [ref=e2305]'
+                    - generic [ref=e2307]: "0.421"
+                - cell "82%" [ref=e2308]
+                - cell "+0.06%" [ref=e2309]:
+                  - generic [ref=e2310]: +0.06%
+                - cell "+$0.000800" [ref=e2311]:
+                  - generic [ref=e2312]: +$0.000800
+                - cell "-82%" [ref=e2313]:
+                  - generic [ref=e2314]: "-82%"
+                - cell "-$2.7M" [ref=e2315]
+                - cell "0.0035%" [ref=e2316]:
+                  - generic [ref=e2317]: 0.0035%
+                - cell "EMA Bearish" [ref=e2318]:
+                  - generic [ref=e2320]: EMA Bearish
+                - cell [ref=e2321]:
+                  - img [ref=e2322]
+              - row "70 EIGENUSDT 42 0.420 55% +0.00% +$0.000000 -99% -$347.8K -0.0234% Strong Downtrend EMA Bearish Strong Buying" [ref=e2324] [cursor=pointer]:
+                - cell "70" [ref=e2325]
+                - cell "EIGENUSDT" [ref=e2326]:
+                  - generic [ref=e2327]:
+                    - text: EIGENUSDT
+                    - link "Chart for EIGENUSDT" [ref=e2328]:
+                      - /url: /symbols/EIGENUSDT
+                      - img [ref=e2329]
+                    - link "Trade EIGEN/USDT on Binance" [ref=e2332]:
+                      - /url: https://www.binance.com/en/trade/EIGEN_USDT
+                      - img [ref=e2333]
+                - cell "42 0.420" [ref=e2335]:
+                  - generic [ref=e2336]:
+                    - 'progressbar "Bullish score: 0.420" [ref=e2337]'
+                    - generic [ref=e2339]: "0.420"
+                - cell "55%" [ref=e2340]
+                - cell "+0.00%" [ref=e2341]:
+                  - generic [ref=e2342]: +0.00%
+                - cell "+$0.000000" [ref=e2343]:
+                  - generic [ref=e2344]: +$0.000000
+                - cell "-99%" [ref=e2345]:
+                  - generic [ref=e2346]: "-99%"
+                - cell "-$347.8K" [ref=e2347]
+                - cell "-0.0234%" [ref=e2348]:
+                  - generic [ref=e2349]: "-0.0234%"
+                - cell "Strong Downtrend EMA Bearish Strong Buying" [ref=e2350]:
+                  - generic [ref=e2351]:
+                    - generic [ref=e2352]: Strong Downtrend
+                    - generic [ref=e2353]: EMA Bearish
+                    - generic [ref=e2354]: Strong Buying
+                - cell [ref=e2355]:
+                  - img [ref=e2356]
+              - row "71 ZECUSDT 42 0.418 72% -0.09% $-0.2300 -68% -$2.2K -0.0053% EMA Bearish MACD Bullish" [ref=e2358] [cursor=pointer]:
+                - cell "71" [ref=e2359]
+                - cell "ZECUSDT" [ref=e2360]:
+                  - generic [ref=e2361]:
+                    - text: ZECUSDT
+                    - link "Chart for ZECUSDT" [ref=e2362]:
+                      - /url: /symbols/ZECUSDT
+                      - img [ref=e2363]
+                    - link "Trade ZEC/USDT on Binance" [ref=e2366]:
+                      - /url: https://www.binance.com/en/trade/ZEC_USDT
+                      - img [ref=e2367]
+                - cell "42 0.418" [ref=e2369]:
+                  - generic [ref=e2370]:
+                    - 'progressbar "Bullish score: 0.418" [ref=e2371]'
+                    - generic [ref=e2373]: "0.418"
+                - cell "72%" [ref=e2374]
+                - cell "-0.09%" [ref=e2375]:
+                  - generic [ref=e2376]: "-0.09%"
+                - cell "$-0.2300" [ref=e2377]
+                - cell "-68%" [ref=e2378]:
+                  - generic [ref=e2379]: "-68%"
+                - cell "-$2.2K" [ref=e2380]
+                - cell "-0.0053%" [ref=e2381]:
+                  - generic [ref=e2382]: "-0.0053%"
+                - cell "EMA Bearish MACD Bullish" [ref=e2383]:
+                  - generic [ref=e2384]:
+                    - generic [ref=e2385]: EMA Bearish
+                    - generic [ref=e2386]: MACD Bullish
+                - cell [ref=e2387]:
+                  - img [ref=e2388]
+              - row "72 CYBERUSDT 41 0.414 62% +0.17% +$0.001000 -59% -$58.0K -0.1061% EMA Bearish" [ref=e2390] [cursor=pointer]:
+                - cell "72" [ref=e2391]
+                - cell "CYBERUSDT" [ref=e2392]:
+                  - generic [ref=e2393]:
+                    - text: CYBERUSDT
+                    - link "Chart for CYBERUSDT" [ref=e2394]:
+                      - /url: /symbols/CYBERUSDT
+                      - img [ref=e2395]
+                    - link "Trade CYBER/USDT on Binance" [ref=e2398]:
+                      - /url: https://www.binance.com/en/trade/CYBER_USDT
+                      - img [ref=e2399]
+                - cell "41 0.414" [ref=e2401]:
+                  - generic [ref=e2402]:
+                    - 'progressbar "Bullish score: 0.414" [ref=e2403]'
+                    - generic [ref=e2405]: "0.414"
+                - cell "62%" [ref=e2406]
+                - cell "+0.17%" [ref=e2407]:
+                  - generic [ref=e2408]: +0.17%
+                - cell "+$0.001000" [ref=e2409]:
+                  - generic [ref=e2410]: +$0.001000
+                - cell "-59%" [ref=e2411]:
+                  - generic [ref=e2412]: "-59%"
+                - cell "-$58.0K" [ref=e2413]
+                - cell "-0.1061%" [ref=e2414]:
+                  - generic [ref=e2415]: "-0.1061%"
+                - cell "EMA Bearish" [ref=e2416]:
+                  - generic [ref=e2418]: EMA Bearish
+                - cell [ref=e2419]:
+                  - img [ref=e2420]
+              - row "73 ZAMAUSDT 41 0.410 80% +0.35% +$0.000070 -70% -$5.7M 0.0050% MACD Bearish" [ref=e2422] [cursor=pointer]:
+                - cell "73" [ref=e2423]
+                - cell "ZAMAUSDT" [ref=e2424]:
+                  - generic [ref=e2425]:
+                    - text: ZAMAUSDT
+                    - link "Chart for ZAMAUSDT" [ref=e2426]:
+                      - /url: /symbols/ZAMAUSDT
+                      - img [ref=e2427]
+                    - link "Trade ZAMA/USDT on Binance" [ref=e2430]:
+                      - /url: https://www.binance.com/en/trade/ZAMA_USDT
+                      - img [ref=e2431]
+                - cell "41 0.410" [ref=e2433]:
+                  - generic [ref=e2434]:
+                    - 'progressbar "Bullish score: 0.410" [ref=e2435]'
+                    - generic [ref=e2437]: "0.410"
+                - cell "80%" [ref=e2438]
+                - cell "+0.35%" [ref=e2439]:
+                  - generic [ref=e2440]: +0.35%
+                - cell "+$0.000070" [ref=e2441]:
+                  - generic [ref=e2442]: +$0.000070
+                - cell "-70%" [ref=e2443]:
+                  - generic [ref=e2444]: "-70%"
+                - cell "-$5.7M" [ref=e2445]
+                - cell "0.0050%" [ref=e2446]:
+                  - generic [ref=e2447]: 0.0050%
+                - cell "MACD Bearish" [ref=e2448]:
+                  - generic [ref=e2450]: MACD Bearish
+                - cell [ref=e2451]:
+                  - img [ref=e2452]
+              - row "74 DOTUSDT 41 0.409 71% -0.08% $-0.001000 -70% -$59.8K -0.0105% Strong Downtrend EMA Bearish" [ref=e2454] [cursor=pointer]:
+                - cell "74" [ref=e2455]
+                - cell "DOTUSDT" [ref=e2456]:
+                  - generic [ref=e2457]:
+                    - text: DOTUSDT
+                    - link "Chart for DOTUSDT" [ref=e2458]:
+                      - /url: /symbols/DOTUSDT
+                      - img [ref=e2459]
+                    - link "Trade DOT/USDT on Binance" [ref=e2462]:
+                      - /url: https://www.binance.com/en/trade/DOT_USDT
+                      - img [ref=e2463]
+                - cell "41 0.409" [ref=e2465]:
+                  - generic [ref=e2466]:
+                    - 'progressbar "Bullish score: 0.409" [ref=e2467]'
+                    - generic [ref=e2469]: "0.409"
+                - cell "71%" [ref=e2470]
+                - cell "-0.08%" [ref=e2471]:
+                  - generic [ref=e2472]: "-0.08%"
+                - cell "$-0.001000" [ref=e2473]
+                - cell "-70%" [ref=e2474]:
+                  - generic [ref=e2475]: "-70%"
+                - cell "-$59.8K" [ref=e2476]
+                - cell "-0.0105%" [ref=e2477]:
+                  - generic [ref=e2478]: "-0.0105%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e2479]:
+                  - generic [ref=e2480]:
+                    - generic [ref=e2481]: Strong Downtrend
+                    - generic [ref=e2482]: EMA Bearish
+                - cell [ref=e2483]:
+                  - img [ref=e2484]
+              - row "75 APEUSDT 41 0.407 57% -0.09% $-0.000100 -82% -$394.4K -0.1610% Strong Downtrend EMA Bearish" [ref=e2486] [cursor=pointer]:
+                - cell "75" [ref=e2487]
+                - cell "APEUSDT" [ref=e2488]:
+                  - generic [ref=e2489]:
+                    - text: APEUSDT
+                    - link "Chart for APEUSDT" [ref=e2490]:
+                      - /url: /symbols/APEUSDT
+                      - img [ref=e2491]
+                    - link "Trade APE/USDT on Binance" [ref=e2494]:
+                      - /url: https://www.binance.com/en/trade/APE_USDT
+                      - img [ref=e2495]
+                - cell "41 0.407" [ref=e2497]:
+                  - generic [ref=e2498]:
+                    - 'progressbar "Bullish score: 0.407" [ref=e2499]'
+                    - generic [ref=e2501]: "0.407"
+                - cell "57%" [ref=e2502]
+                - cell "-0.09%" [ref=e2503]:
+                  - generic [ref=e2504]: "-0.09%"
+                - cell "$-0.000100" [ref=e2505]
+                - cell "-82%" [ref=e2506]:
+                  - generic [ref=e2507]: "-82%"
+                - cell "-$394.4K" [ref=e2508]
+                - cell "-0.1610%" [ref=e2509]:
+                  - generic [ref=e2510]: "-0.1610%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e2511]:
+                  - generic [ref=e2512]:
+                    - generic [ref=e2513]: Strong Downtrend
+                    - generic [ref=e2514]: EMA Bearish
+                - cell [ref=e2515]:
+                  - img [ref=e2516]
+              - row "76 FETUSDT 41 0.405 67% +0.00% +$0.000000 -78% -$254.3K -0.0392% Strong Downtrend EMA Bearish" [ref=e2518] [cursor=pointer]:
+                - cell "76" [ref=e2519]
+                - cell "FETUSDT" [ref=e2520]:
+                  - generic [ref=e2521]:
+                    - text: FETUSDT
+                    - link "Chart for FETUSDT" [ref=e2522]:
+                      - /url: /symbols/FETUSDT
+                      - img [ref=e2523]
+                    - link "Trade FET/USDT on Binance" [ref=e2526]:
+                      - /url: https://www.binance.com/en/trade/FET_USDT
+                      - img [ref=e2527]
+                - cell "41 0.405" [ref=e2529]:
+                  - generic [ref=e2530]:
+                    - 'progressbar "Bullish score: 0.405" [ref=e2531]'
+                    - generic [ref=e2533]: "0.405"
+                - cell "67%" [ref=e2534]
+                - cell "+0.00%" [ref=e2535]:
+                  - generic [ref=e2536]: +0.00%
+                - cell "+$0.000000" [ref=e2537]:
+                  - generic [ref=e2538]: +$0.000000
+                - cell "-78%" [ref=e2539]:
+                  - generic [ref=e2540]: "-78%"
+                - cell "-$254.3K" [ref=e2541]
+                - cell "-0.0392%" [ref=e2542]:
+                  - generic [ref=e2543]: "-0.0392%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e2544]:
+                  - generic [ref=e2545]:
+                    - generic [ref=e2546]: Strong Downtrend
+                    - generic [ref=e2547]: EMA Bearish
+                - cell [ref=e2548]:
+                  - img [ref=e2549]
+              - row "77 MUBARAKUSDT 40 0.402 60% -0.91% $-0.000150 -79% -$3.2M -0.0283% EMA Bearish No Trend" [ref=e2551] [cursor=pointer]:
+                - cell "77" [ref=e2552]
+                - cell "MUBARAKUSDT" [ref=e2553]:
+                  - generic [ref=e2554]:
+                    - text: MUBARAKUSDT
+                    - link "Chart for MUBARAKUSDT" [ref=e2555]:
+                      - /url: /symbols/MUBARAKUSDT
+                      - img [ref=e2556]
+                    - link "Trade MUBARAK/USDT on Binance" [ref=e2559]:
+                      - /url: https://www.binance.com/en/trade/MUBARAK_USDT
+                      - img [ref=e2560]
+                - cell "40 0.402" [ref=e2562]:
+                  - generic [ref=e2563]:
+                    - 'progressbar "Bullish score: 0.402" [ref=e2564]'
+                    - generic [ref=e2566]: "0.402"
+                - cell "60%" [ref=e2567]
+                - cell "-0.91%" [ref=e2568]:
+                  - generic [ref=e2569]: "-0.91%"
+                - cell "$-0.000150" [ref=e2570]
+                - cell "-79%" [ref=e2571]:
+                  - generic [ref=e2572]: "-79%"
+                - cell "-$3.2M" [ref=e2573]
+                - cell "-0.0283%" [ref=e2574]:
+                  - generic [ref=e2575]: "-0.0283%"
+                - cell "EMA Bearish No Trend" [ref=e2576]:
+                  - generic [ref=e2577]:
+                    - generic [ref=e2578]: EMA Bearish
+                    - generic [ref=e2579]: No Trend
+                - cell [ref=e2580]:
+                  - img [ref=e2581]
+              - row "78 APTUSDT 40 0.398 69% +0.12% +$0.001000 -7% -$4.6K -0.0095% Strong Downtrend EMA Bearish" [ref=e2583] [cursor=pointer]:
+                - cell "78" [ref=e2584]
+                - cell "APTUSDT" [ref=e2585]:
+                  - generic [ref=e2586]:
+                    - text: APTUSDT
+                    - link "Chart for APTUSDT" [ref=e2587]:
+                      - /url: /symbols/APTUSDT
+                      - img [ref=e2588]
+                    - link "Trade APT/USDT on Binance" [ref=e2591]:
+                      - /url: https://www.binance.com/en/trade/APT_USDT
+                      - img [ref=e2592]
+                - cell "40 0.398" [ref=e2594]:
+                  - generic [ref=e2595]:
+                    - 'progressbar "Bullish score: 0.398" [ref=e2596]'
+                    - generic [ref=e2598]: "0.398"
+                - cell "69%" [ref=e2599]
+                - cell "+0.12%" [ref=e2600]:
+                  - generic [ref=e2601]: +0.12%
+                - cell "+$0.001000" [ref=e2602]:
+                  - generic [ref=e2603]: +$0.001000
+                - cell "-7%" [ref=e2604]:
+                  - generic [ref=e2605]: "-7%"
+                - cell "-$4.6K" [ref=e2606]
+                - cell "-0.0095%" [ref=e2607]:
+                  - generic [ref=e2608]: "-0.0095%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e2609]:
+                  - generic [ref=e2610]:
+                    - generic [ref=e2611]: Strong Downtrend
+                    - generic [ref=e2612]: EMA Bearish
+                - cell [ref=e2613]:
+                  - img [ref=e2614]
+              - row "79 TONUSDT 39 0.394 59% -0.51% $-0.007000 -79% -$63.1K -0.0099% Strong Downtrend EMA Bearish" [ref=e2616] [cursor=pointer]:
+                - cell "79" [ref=e2617]
+                - cell "TONUSDT" [ref=e2618]:
+                  - generic [ref=e2619]:
+                    - text: TONUSDT
+                    - link "Chart for TONUSDT" [ref=e2620]:
+                      - /url: /symbols/TONUSDT
+                      - img [ref=e2621]
+                    - link "Trade TON/USDT on Binance" [ref=e2624]:
+                      - /url: https://www.binance.com/en/trade/TON_USDT
+                      - img [ref=e2625]
+                - cell "39 0.394" [ref=e2627]:
+                  - generic [ref=e2628]:
+                    - 'progressbar "Bullish score: 0.394" [ref=e2629]'
+                    - generic [ref=e2631]: "0.394"
+                - cell "59%" [ref=e2632]
+                - cell "-0.51%" [ref=e2633]:
+                  - generic [ref=e2634]: "-0.51%"
+                - cell "$-0.007000" [ref=e2635]
+                - cell "-79%" [ref=e2636]:
+                  - generic [ref=e2637]: "-79%"
+                - cell "-$63.1K" [ref=e2638]
+                - cell "-0.0099%" [ref=e2639]:
+                  - generic [ref=e2640]: "-0.0099%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e2641]:
+                  - generic [ref=e2642]:
+                    - generic [ref=e2643]: Strong Downtrend
+                    - generic [ref=e2644]: EMA Bearish
+                - cell [ref=e2645]:
+                  - img [ref=e2646]
+              - row "80 币安人生USDT 39 0.388 62% +0.12% +$0.000100 -61% -$718.9K 0.0019% Strong Downtrend EMA Bearish" [ref=e2648] [cursor=pointer]:
+                - cell "80" [ref=e2649]
+                - cell "币安人生USDT" [ref=e2650]:
+                  - generic [ref=e2651]:
+                    - text: 币安人生USDT
+                    - link "Chart for 币安人生USDT" [ref=e2652]:
+                      - /url: /symbols/币安人生USDT
+                      - img [ref=e2653]
+                    - link "Trade 币安人生/USDT on Binance" [ref=e2656]:
+                      - /url: https://www.binance.com/en/trade/币安人生_USDT
+                      - img [ref=e2657]
+                - cell "39 0.388" [ref=e2659]:
+                  - generic [ref=e2660]:
+                    - 'progressbar "Bullish score: 0.388" [ref=e2661]'
+                    - generic [ref=e2663]: "0.388"
+                - cell "62%" [ref=e2664]
+                - cell "+0.12%" [ref=e2665]:
+                  - generic [ref=e2666]: +0.12%
+                - cell "+$0.000100" [ref=e2667]:
+                  - generic [ref=e2668]: +$0.000100
+                - cell "-61%" [ref=e2669]:
+                  - generic [ref=e2670]: "-61%"
+                - cell "-$718.9K" [ref=e2671]
+                - cell "0.0019%" [ref=e2672]:
+                  - generic [ref=e2673]: 0.0019%
+                - cell "Strong Downtrend EMA Bearish" [ref=e2674]:
+                  - generic [ref=e2675]:
+                    - generic [ref=e2676]: Strong Downtrend
+                    - generic [ref=e2677]: EMA Bearish
+                - cell [ref=e2678]:
+                  - img [ref=e2679]
+              - row "81 FLOKIUSDT 39 0.386 63% -0.03% $-0.000000 -81% -$1.7B — Strong Downtrend EMA Bearish" [ref=e2681] [cursor=pointer]:
+                - cell "81" [ref=e2682]
+                - cell "FLOKIUSDT" [ref=e2683]:
+                  - generic [ref=e2684]:
+                    - text: FLOKIUSDT
+                    - link "Chart for FLOKIUSDT" [ref=e2685]:
+                      - /url: /symbols/FLOKIUSDT
+                      - img [ref=e2686]
+                    - link "Trade FLOKI/USDT on Binance" [ref=e2689]:
+                      - /url: https://www.binance.com/en/trade/FLOKI_USDT
+                      - img [ref=e2690]
+                - cell "39 0.386" [ref=e2692]:
+                  - generic [ref=e2693]:
+                    - 'progressbar "Bullish score: 0.386" [ref=e2694]'
+                    - generic [ref=e2696]: "0.386"
+                - cell "63%" [ref=e2697]
+                - cell "-0.03%" [ref=e2698]:
+                  - generic [ref=e2699]: "-0.03%"
+                - cell "$-0.000000" [ref=e2700]
+                - cell "-81%" [ref=e2701]:
+                  - generic [ref=e2702]: "-81%"
+                - cell "-$1.7B" [ref=e2703]
+                - cell "—" [ref=e2704]
+                - cell "Strong Downtrend EMA Bearish" [ref=e2705]:
+                  - generic [ref=e2706]:
+                    - generic [ref=e2707]: Strong Downtrend
+                    - generic [ref=e2708]: EMA Bearish
+                - cell [ref=e2709]:
+                  - img [ref=e2710]
+              - row "82 SENTUSDT 38 0.383 60% +0.19% +$0.000040 -74% -$2.1M -0.0452% EMA Bearish" [ref=e2712] [cursor=pointer]:
+                - cell "82" [ref=e2713]
+                - cell "SENTUSDT" [ref=e2714]:
+                  - generic [ref=e2715]:
+                    - text: SENTUSDT
+                    - link "Chart for SENTUSDT" [ref=e2716]:
+                      - /url: /symbols/SENTUSDT
+                      - img [ref=e2717]
+                    - link "Trade SENT/USDT on Binance" [ref=e2720]:
+                      - /url: https://www.binance.com/en/trade/SENT_USDT
+                      - img [ref=e2721]
+                - cell "38 0.383" [ref=e2723]:
+                  - generic [ref=e2724]:
+                    - 'progressbar "Bullish score: 0.383" [ref=e2725]'
+                    - generic [ref=e2727]: "0.383"
+                - cell "60%" [ref=e2728]
+                - cell "+0.19%" [ref=e2729]:
+                  - generic [ref=e2730]: +0.19%
+                - cell "+$0.000040" [ref=e2731]:
+                  - generic [ref=e2732]: +$0.000040
+                - cell "-74%" [ref=e2733]:
+                  - generic [ref=e2734]: "-74%"
+                - cell "-$2.1M" [ref=e2735]
+                - cell "-0.0452%" [ref=e2736]:
+                  - generic [ref=e2737]: "-0.0452%"
+                - cell "EMA Bearish" [ref=e2738]:
+                  - generic [ref=e2740]: EMA Bearish
+                - cell [ref=e2741]:
+                  - img [ref=e2742]
+              - row "83 CAKEUSDT 38 0.381 67% +0.08% +$0.001000 -77% -$71.0K 0.0050% EMA Bearish" [ref=e2744] [cursor=pointer]:
+                - cell "83" [ref=e2745]
+                - cell "CAKEUSDT" [ref=e2746]:
+                  - generic [ref=e2747]:
+                    - text: CAKEUSDT
+                    - link "Chart for CAKEUSDT" [ref=e2748]:
+                      - /url: /symbols/CAKEUSDT
+                      - img [ref=e2749]
+                    - link "Trade CAKE/USDT on Binance" [ref=e2752]:
+                      - /url: https://www.binance.com/en/trade/CAKE_USDT
+                      - img [ref=e2753]
+                - cell "38 0.381" [ref=e2755]:
+                  - generic [ref=e2756]:
+                    - 'progressbar "Bullish score: 0.381" [ref=e2757]'
+                    - generic [ref=e2759]: "0.381"
+                - cell "67%" [ref=e2760]
+                - cell "+0.08%" [ref=e2761]:
+                  - generic [ref=e2762]: +0.08%
+                - cell "+$0.001000" [ref=e2763]:
+                  - generic [ref=e2764]: +$0.001000
+                - cell "-77%" [ref=e2765]:
+                  - generic [ref=e2766]: "-77%"
+                - cell "-$71.0K" [ref=e2767]
+                - cell "0.0050%" [ref=e2768]:
+                  - generic [ref=e2769]: 0.0050%
+                - cell "EMA Bearish" [ref=e2770]:
+                  - generic [ref=e2772]: EMA Bearish
+                - cell [ref=e2773]:
+                  - img [ref=e2774]
+              - row "84 CHZUSDT 38 0.380 61% +0.31% +$0.000120 -21% -$158.0K -0.0076% Strong Downtrend EMA Bearish" [ref=e2776] [cursor=pointer]:
+                - cell "84" [ref=e2777]
+                - cell "CHZUSDT" [ref=e2778]:
+                  - generic [ref=e2779]:
+                    - text: CHZUSDT
+                    - link "Chart for CHZUSDT" [ref=e2780]:
+                      - /url: /symbols/CHZUSDT
+                      - img [ref=e2781]
+                    - link "Trade CHZ/USDT on Binance" [ref=e2784]:
+                      - /url: https://www.binance.com/en/trade/CHZ_USDT
+                      - img [ref=e2785]
+                - cell "38 0.380" [ref=e2787]:
+                  - generic [ref=e2788]:
+                    - 'progressbar "Bullish score: 0.380" [ref=e2789]'
+                    - generic [ref=e2791]: "0.380"
+                - cell "61%" [ref=e2792]
+                - cell "+0.31%" [ref=e2793]:
+                  - generic [ref=e2794]: +0.31%
+                - cell "+$0.000120" [ref=e2795]:
+                  - generic [ref=e2796]: +$0.000120
+                - cell "-21%" [ref=e2797]:
+                  - generic [ref=e2798]: "-21%"
+                - cell "-$158.0K" [ref=e2799]
+                - cell "-0.0076%" [ref=e2800]:
+                  - generic [ref=e2801]: "-0.0076%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e2802]:
+                  - generic [ref=e2803]:
+                    - generic [ref=e2804]: Strong Downtrend
+                    - generic [ref=e2805]: EMA Bearish
+                - cell [ref=e2806]:
+                  - img [ref=e2807]
+              - row "85 LINEAUSDT 38 0.379 52% +0.31% +$0.000010 -94% -$19.7M -0.0016% Strong Downtrend EMA Bearish Stoch Oversold" [ref=e2809] [cursor=pointer]:
+                - cell "85" [ref=e2810]
+                - cell "LINEAUSDT" [ref=e2811]:
+                  - generic [ref=e2812]:
+                    - text: LINEAUSDT
+                    - link "Chart for LINEAUSDT" [ref=e2813]:
+                      - /url: /symbols/LINEAUSDT
+                      - img [ref=e2814]
+                    - link "Trade LINEA/USDT on Binance" [ref=e2817]:
+                      - /url: https://www.binance.com/en/trade/LINEA_USDT
+                      - img [ref=e2818]
+                - cell "38 0.379" [ref=e2820]:
+                  - generic [ref=e2821]:
+                    - 'progressbar "Bullish score: 0.379" [ref=e2822]'
+                    - generic [ref=e2824]: "0.379"
+                - cell "52%" [ref=e2825]
+                - cell "+0.31%" [ref=e2826]:
+                  - generic [ref=e2827]: +0.31%
+                - cell "+$0.000010" [ref=e2828]:
+                  - generic [ref=e2829]: +$0.000010
+                - cell "-94%" [ref=e2830]:
+                  - generic [ref=e2831]: "-94%"
+                - cell "-$19.7M" [ref=e2832]
+                - cell "-0.0016%" [ref=e2833]:
+                  - generic [ref=e2834]: "-0.0016%"
+                - cell "Strong Downtrend EMA Bearish Stoch Oversold" [ref=e2835]:
+                  - generic [ref=e2836]:
+                    - generic [ref=e2837]: Strong Downtrend
+                    - generic [ref=e2838]: EMA Bearish
+                    - generic [ref=e2839]: Stoch Oversold
+                - cell [ref=e2840]:
+                  - img [ref=e2841]
+              - row "86 ZKUSDT 37 0.374 56% -0.25% $-0.000050 -62% -$1.7M -0.0231% Strong Downtrend EMA Bearish" [ref=e2843] [cursor=pointer]:
+                - cell "86" [ref=e2844]
+                - cell "ZKUSDT" [ref=e2845]:
+                  - generic [ref=e2846]:
+                    - text: ZKUSDT
+                    - link "Chart for ZKUSDT" [ref=e2847]:
+                      - /url: /symbols/ZKUSDT
+                      - img [ref=e2848]
+                    - link "Trade ZK/USDT on Binance" [ref=e2851]:
+                      - /url: https://www.binance.com/en/trade/ZK_USDT
+                      - img [ref=e2852]
+                - cell "37 0.374" [ref=e2854]:
+                  - generic [ref=e2855]:
+                    - 'progressbar "Bullish score: 0.374" [ref=e2856]'
+                    - generic [ref=e2858]: "0.374"
+                - cell "56%" [ref=e2859]
+                - cell "-0.25%" [ref=e2860]:
+                  - generic [ref=e2861]: "-0.25%"
+                - cell "$-0.000050" [ref=e2862]
+                - cell "-62%" [ref=e2863]:
+                  - generic [ref=e2864]: "-62%"
+                - cell "-$1.7M" [ref=e2865]
+                - cell "-0.0231%" [ref=e2866]:
+                  - generic [ref=e2867]: "-0.0231%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e2868]:
+                  - generic [ref=e2869]:
+                    - generic [ref=e2870]: Strong Downtrend
+                    - generic [ref=e2871]: EMA Bearish
+                - cell [ref=e2872]:
+                  - img [ref=e2873]
+              - row "87 ROSEUSDT 37 0.372 60% +0.08% +$0.000010 -81% -$6.5M -0.0331% EMA Bearish" [ref=e2875] [cursor=pointer]:
+                - cell "87" [ref=e2876]
+                - cell "ROSEUSDT" [ref=e2877]:
+                  - generic [ref=e2878]:
+                    - text: ROSEUSDT
+                    - link "Chart for ROSEUSDT" [ref=e2879]:
+                      - /url: /symbols/ROSEUSDT
+                      - img [ref=e2880]
+                    - link "Trade ROSE/USDT on Binance" [ref=e2883]:
+                      - /url: https://www.binance.com/en/trade/ROSE_USDT
+                      - img [ref=e2884]
+                - cell "37 0.372" [ref=e2886]:
+                  - generic [ref=e2887]:
+                    - 'progressbar "Bullish score: 0.372" [ref=e2888]'
+                    - generic [ref=e2890]: "0.372"
+                - cell "60%" [ref=e2891]
+                - cell "+0.08%" [ref=e2892]:
+                  - generic [ref=e2893]: +0.08%
+                - cell "+$0.000010" [ref=e2894]:
+                  - generic [ref=e2895]: +$0.000010
+                - cell "-81%" [ref=e2896]:
+                  - generic [ref=e2897]: "-81%"
+                - cell "-$6.5M" [ref=e2898]
+                - cell "-0.0331%" [ref=e2899]:
+                  - generic [ref=e2900]: "-0.0331%"
+                - cell "EMA Bearish" [ref=e2901]:
+                  - generic [ref=e2903]: EMA Bearish
+                - cell [ref=e2904]:
+                  - img [ref=e2905]
+              - row "88 ESPUSDT 37 0.371 75% +0.66% +$0.000470 -73% -$3.3M -0.0015% MACD Bearish Stoch Oversold" [ref=e2907] [cursor=pointer]:
+                - cell "88" [ref=e2908]
+                - cell "ESPUSDT" [ref=e2909]:
+                  - generic [ref=e2910]:
+                    - text: ESPUSDT
+                    - link "Chart for ESPUSDT" [ref=e2911]:
+                      - /url: /symbols/ESPUSDT
+                      - img [ref=e2912]
+                    - link "Trade ESP/USDT on Binance" [ref=e2915]:
+                      - /url: https://www.binance.com/en/trade/ESP_USDT
+                      - img [ref=e2916]
+                - cell "37 0.371" [ref=e2918]:
+                  - generic [ref=e2919]:
+                    - 'progressbar "Bullish score: 0.371" [ref=e2920]'
+                    - generic [ref=e2922]: "0.371"
+                - cell "75%" [ref=e2923]
+                - cell "+0.66%" [ref=e2924]:
+                  - generic [ref=e2925]: +0.66%
+                - cell "+$0.000470" [ref=e2926]:
+                  - generic [ref=e2927]: +$0.000470
+                - cell "-73%" [ref=e2928]:
+                  - generic [ref=e2929]: "-73%"
+                - cell "-$3.3M" [ref=e2930]
+                - cell "-0.0015%" [ref=e2931]:
+                  - generic [ref=e2932]: "-0.0015%"
+                - cell "MACD Bearish Stoch Oversold" [ref=e2933]:
+                  - generic [ref=e2934]:
+                    - generic [ref=e2935]: MACD Bearish
+                    - generic [ref=e2936]: Stoch Oversold
+                - cell [ref=e2937]:
+                  - img [ref=e2938]
+              - row "89 WLDUSDT 36 0.364 65% +0.13% +$0.000500 -86% -$972.5K 0.0100% EMA Bearish Strong Selling" [ref=e2940] [cursor=pointer]:
+                - cell "89" [ref=e2941]
+                - cell "WLDUSDT" [ref=e2942]:
+                  - generic [ref=e2943]:
+                    - text: WLDUSDT
+                    - link "Chart for WLDUSDT" [ref=e2944]:
+                      - /url: /symbols/WLDUSDT
+                      - img [ref=e2945]
+                    - link "Trade WLD/USDT on Binance" [ref=e2948]:
+                      - /url: https://www.binance.com/en/trade/WLD_USDT
+                      - img [ref=e2949]
+                - cell "36 0.364" [ref=e2951]:
+                  - generic [ref=e2952]:
+                    - 'progressbar "Bullish score: 0.364" [ref=e2953]'
+                    - generic [ref=e2955]: "0.364"
+                - cell "65%" [ref=e2956]
+                - cell "+0.13%" [ref=e2957]:
+                  - generic [ref=e2958]: +0.13%
+                - cell "+$0.000500" [ref=e2959]:
+                  - generic [ref=e2960]: +$0.000500
+                - cell "-86%" [ref=e2961]:
+                  - generic [ref=e2962]: "-86%"
+                - cell "-$972.5K" [ref=e2963]
+                - cell "0.0100%" [ref=e2964]:
+                  - generic [ref=e2965]: 0.0100%
+                - cell "EMA Bearish Strong Selling" [ref=e2966]:
+                  - generic [ref=e2967]:
+                    - generic [ref=e2968]: EMA Bearish
+                    - generic [ref=e2969]: Strong Selling
+                - cell [ref=e2970]:
+                  - img [ref=e2971]
+              - row "90 PENGUUSDT 36 0.363 68% +0.18% +$0.000012 -64% -$10.9M 0.0050% Strong Downtrend EMA Bearish" [ref=e2973] [cursor=pointer]:
+                - cell "90" [ref=e2974]
+                - cell "PENGUUSDT" [ref=e2975]:
+                  - generic [ref=e2976]:
+                    - text: PENGUUSDT
+                    - link "Chart for PENGUUSDT" [ref=e2977]:
+                      - /url: /symbols/PENGUUSDT
+                      - img [ref=e2978]
+                    - link "Trade PENGU/USDT on Binance" [ref=e2981]:
+                      - /url: https://www.binance.com/en/trade/PENGU_USDT
+                      - img [ref=e2982]
+                - cell "36 0.363" [ref=e2984]:
+                  - generic [ref=e2985]:
+                    - 'progressbar "Bullish score: 0.363" [ref=e2986]'
+                    - generic [ref=e2988]: "0.363"
+                - cell "68%" [ref=e2989]
+                - cell "+0.18%" [ref=e2990]:
+                  - generic [ref=e2991]: +0.18%
+                - cell "+$0.000012" [ref=e2992]:
+                  - generic [ref=e2993]: +$0.000012
+                - cell "-64%" [ref=e2994]:
+                  - generic [ref=e2995]: "-64%"
+                - cell "-$10.9M" [ref=e2996]
+                - cell "0.0050%" [ref=e2997]:
+                  - generic [ref=e2998]: 0.0050%
+                - cell "Strong Downtrend EMA Bearish" [ref=e2999]:
+                  - generic [ref=e3000]:
+                    - generic [ref=e3001]: Strong Downtrend
+                    - generic [ref=e3002]: EMA Bearish
+                - cell [ref=e3003]:
+                  - img [ref=e3004]
+              - row "91 SUSDT 36 0.361 54% -0.09% $-0.000040 -96% -$1.4M -0.0161% Strong Downtrend EMA Bearish" [ref=e3006] [cursor=pointer]:
+                - cell "91" [ref=e3007]
+                - cell "SUSDT" [ref=e3008]:
+                  - generic [ref=e3009]:
+                    - text: SUSDT
+                    - link "Chart for SUSDT" [ref=e3010]:
+                      - /url: /symbols/SUSDT
+                      - img [ref=e3011]
+                    - link "Trade S/USDT on Binance" [ref=e3014]:
+                      - /url: https://www.binance.com/en/trade/S_USDT
+                      - img [ref=e3015]
+                - cell "36 0.361" [ref=e3017]:
+                  - generic [ref=e3018]:
+                    - 'progressbar "Bullish score: 0.361" [ref=e3019]'
+                    - generic [ref=e3021]: "0.361"
+                - cell "54%" [ref=e3022]
+                - cell "-0.09%" [ref=e3023]:
+                  - generic [ref=e3024]: "-0.09%"
+                - cell "$-0.000040" [ref=e3025]
+                - cell "-96%" [ref=e3026]:
+                  - generic [ref=e3027]: "-96%"
+                - cell "-$1.4M" [ref=e3028]
+                - cell "-0.0161%" [ref=e3029]:
+                  - generic [ref=e3030]: "-0.0161%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e3031]:
+                  - generic [ref=e3032]:
+                    - generic [ref=e3033]: Strong Downtrend
+                    - generic [ref=e3034]: EMA Bearish
+                - cell [ref=e3035]:
+                  - img [ref=e3036]
+              - row "92 BIOUSDT 36 0.361 53% +0.45% +$0.000100 -83% -$1.4M -0.0100% Strong Downtrend EMA Bearish" [ref=e3038] [cursor=pointer]:
+                - cell "92" [ref=e3039]
+                - cell "BIOUSDT" [ref=e3040]:
+                  - generic [ref=e3041]:
+                    - text: BIOUSDT
+                    - link "Chart for BIOUSDT" [ref=e3042]:
+                      - /url: /symbols/BIOUSDT
+                      - img [ref=e3043]
+                    - link "Trade BIO/USDT on Binance" [ref=e3046]:
+                      - /url: https://www.binance.com/en/trade/BIO_USDT
+                      - img [ref=e3047]
+                - cell "36 0.361" [ref=e3049]:
+                  - generic [ref=e3050]:
+                    - 'progressbar "Bullish score: 0.361" [ref=e3051]'
+                    - generic [ref=e3053]: "0.361"
+                - cell "53%" [ref=e3054]
+                - cell "+0.45%" [ref=e3055]:
+                  - generic [ref=e3056]: +0.45%
+                - cell "+$0.000100" [ref=e3057]:
+                  - generic [ref=e3058]: +$0.000100
+                - cell "-83%" [ref=e3059]:
+                  - generic [ref=e3060]: "-83%"
+                - cell "-$1.4M" [ref=e3061]
+                - cell "-0.0100%" [ref=e3062]:
+                  - generic [ref=e3063]: "-0.0100%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e3064]:
+                  - generic [ref=e3065]:
+                    - generic [ref=e3066]: Strong Downtrend
+                    - generic [ref=e3067]: EMA Bearish
+                - cell [ref=e3068]:
+                  - img [ref=e3069]
+              - row "93 FILUSDT 35 0.353 68% -0.22% $-0.002000 -49% -$70.8K -0.0085% Strong Downtrend EMA Bearish Strong Selling" [ref=e3071] [cursor=pointer]:
+                - cell "93" [ref=e3072]
+                - cell "FILUSDT" [ref=e3073]:
+                  - generic [ref=e3074]:
+                    - text: FILUSDT
+                    - link "Chart for FILUSDT" [ref=e3075]:
+                      - /url: /symbols/FILUSDT
+                      - img [ref=e3076]
+                    - link "Trade FIL/USDT on Binance" [ref=e3079]:
+                      - /url: https://www.binance.com/en/trade/FIL_USDT
+                      - img [ref=e3080]
+                - cell "35 0.353" [ref=e3082]:
+                  - generic [ref=e3083]:
+                    - 'progressbar "Bullish score: 0.353" [ref=e3084]'
+                    - generic [ref=e3086]: "0.353"
+                - cell "68%" [ref=e3087]
+                - cell "-0.22%" [ref=e3088]:
+                  - generic [ref=e3089]: "-0.22%"
+                - cell "$-0.002000" [ref=e3090]
+                - cell "-49%" [ref=e3091]:
+                  - generic [ref=e3092]: "-49%"
+                - cell "-$70.8K" [ref=e3093]
+                - cell "-0.0085%" [ref=e3094]:
+                  - generic [ref=e3095]: "-0.0085%"
+                - cell "Strong Downtrend EMA Bearish Strong Selling" [ref=e3096]:
+                  - generic [ref=e3097]:
+                    - generic [ref=e3098]: Strong Downtrend
+                    - generic [ref=e3099]: EMA Bearish
+                    - generic [ref=e3100]: Strong Selling
+                - cell [ref=e3101]:
+                  - img [ref=e3102]
+              - row "94 ARBUSDT 35 0.349 63% +0.10% +$0.000100 -68% -$5.0M -0.0226% Strong Downtrend RSI Oversold EMA Bearish" [ref=e3104] [cursor=pointer]:
+                - cell "94" [ref=e3105]
+                - cell "ARBUSDT" [ref=e3106]:
+                  - generic [ref=e3107]:
+                    - text: ARBUSDT
+                    - link "Chart for ARBUSDT" [ref=e3108]:
+                      - /url: /symbols/ARBUSDT
+                      - img [ref=e3109]
+                    - link "Trade ARB/USDT on Binance" [ref=e3112]:
+                      - /url: https://www.binance.com/en/trade/ARB_USDT
+                      - img [ref=e3113]
+                - cell "35 0.349" [ref=e3115]:
+                  - generic [ref=e3116]:
+                    - 'progressbar "Bullish score: 0.349" [ref=e3117]'
+                    - generic [ref=e3119]: "0.349"
+                - cell "63%" [ref=e3120]
+                - cell "+0.10%" [ref=e3121]:
+                  - generic [ref=e3122]: +0.10%
+                - cell "+$0.000100" [ref=e3123]:
+                  - generic [ref=e3124]: +$0.000100
+                - cell "-68%" [ref=e3125]:
+                  - generic [ref=e3126]: "-68%"
+                - cell "-$5.0M" [ref=e3127]
+                - cell "-0.0226%" [ref=e3128]:
+                  - generic [ref=e3129]: "-0.0226%"
+                - cell "Strong Downtrend RSI Oversold EMA Bearish" [ref=e3130]:
+                  - generic [ref=e3131]:
+                    - generic [ref=e3132]: Strong Downtrend
+                    - generic [ref=e3133]: RSI Oversold
+                    - generic [ref=e3134]: EMA Bearish
+                - cell [ref=e3135]:
+                  - img [ref=e3136]
+              - row "95 ICPUSDT 35 0.347 63% +0.37% +$0.008000 -84% -$45.6K -0.0737% Strong Downtrend EMA Bearish Strong Selling" [ref=e3138] [cursor=pointer]:
+                - cell "95" [ref=e3139]
+                - cell "ICPUSDT" [ref=e3140]:
+                  - generic [ref=e3141]:
+                    - text: ICPUSDT
+                    - link "Chart for ICPUSDT" [ref=e3142]:
+                      - /url: /symbols/ICPUSDT
+                      - img [ref=e3143]
+                    - link "Trade ICP/USDT on Binance" [ref=e3146]:
+                      - /url: https://www.binance.com/en/trade/ICP_USDT
+                      - img [ref=e3147]
+                - cell "35 0.347" [ref=e3149]:
+                  - generic [ref=e3150]:
+                    - 'progressbar "Bullish score: 0.347" [ref=e3151]'
+                    - generic [ref=e3153]: "0.347"
+                - cell "63%" [ref=e3154]
+                - cell "+0.37%" [ref=e3155]:
+                  - generic [ref=e3156]: +0.37%
+                - cell "+$0.008000" [ref=e3157]:
+                  - generic [ref=e3158]: +$0.008000
+                - cell "-84%" [ref=e3159]:
+                  - generic [ref=e3160]: "-84%"
+                - cell "-$45.6K" [ref=e3161]
+                - cell "-0.0737%" [ref=e3162]:
+                  - generic [ref=e3163]: "-0.0737%"
+                - cell "Strong Downtrend EMA Bearish Strong Selling" [ref=e3164]:
+                  - generic [ref=e3165]:
+                    - generic [ref=e3166]: Strong Downtrend
+                    - generic [ref=e3167]: EMA Bearish
+                    - generic [ref=e3168]: Strong Selling
+                - cell [ref=e3169]:
+                  - img [ref=e3170]
+              - row "96 OPUSDT 35 0.345 67% +0.51% +$0.000700 -78% -$2.6M -0.3429% Strong Downtrend EMA Bearish" [ref=e3172] [cursor=pointer]:
+                - cell "96" [ref=e3173]
+                - cell "OPUSDT" [ref=e3174]:
+                  - generic [ref=e3175]:
+                    - text: OPUSDT
+                    - link "Chart for OPUSDT" [ref=e3176]:
+                      - /url: /symbols/OPUSDT
+                      - img [ref=e3177]
+                    - link "Trade OP/USDT on Binance" [ref=e3180]:
+                      - /url: https://www.binance.com/en/trade/OP_USDT
+                      - img [ref=e3181]
+                - cell "35 0.345" [ref=e3183]:
+                  - generic [ref=e3184]:
+                    - 'progressbar "Bullish score: 0.345" [ref=e3185]'
+                    - generic [ref=e3187]: "0.345"
+                - cell "67%" [ref=e3188]
+                - cell "+0.51%" [ref=e3189]:
+                  - generic [ref=e3190]: +0.51%
+                - cell "+$0.000700" [ref=e3191]:
+                  - generic [ref=e3192]: +$0.000700
+                - cell "-78%" [ref=e3193]:
+                  - generic [ref=e3194]: "-78%"
+                - cell "-$2.6M" [ref=e3195]
+                - cell "-0.3429%" [ref=e3196]:
+                  - generic [ref=e3197]: "-0.3429%"
+                - cell "Strong Downtrend EMA Bearish" [ref=e3198]:
+                  - generic [ref=e3199]:
+                    - generic [ref=e3200]: Strong Downtrend
+                    - generic [ref=e3201]: EMA Bearish
+                - cell [ref=e3202]:
+                  - img [ref=e3203]
+              - row "97 SEIUSDT 34 0.340 61% +0.00% +$0.000000 -82% -$1.8M -0.0349% Strong Downtrend EMA Bearish Strong Selling" [ref=e3205] [cursor=pointer]:
+                - cell "97" [ref=e3206]
+                - cell "SEIUSDT" [ref=e3207]:
+                  - generic [ref=e3208]:
+                    - text: SEIUSDT
+                    - link "Chart for SEIUSDT" [ref=e3209]:
+                      - /url: /symbols/SEIUSDT
+                      - img [ref=e3210]
+                    - link "Trade SEI/USDT on Binance" [ref=e3213]:
+                      - /url: https://www.binance.com/en/trade/SEI_USDT
+                      - img [ref=e3214]
+                - cell "34 0.340" [ref=e3216]:
+                  - generic [ref=e3217]:
+                    - 'progressbar "Bullish score: 0.340" [ref=e3218]'
+                    - generic [ref=e3220]: "0.340"
+                - cell "61%" [ref=e3221]
+                - cell "+0.00%" [ref=e3222]:
+                  - generic [ref=e3223]: +0.00%
+                - cell "+$0.000000" [ref=e3224]:
+                  - generic [ref=e3225]: +$0.000000
+                - cell "-82%" [ref=e3226]:
+                  - generic [ref=e3227]: "-82%"
+                - cell "-$1.8M" [ref=e3228]
+                - cell "-0.0349%" [ref=e3229]:
+                  - generic [ref=e3230]: "-0.0349%"
+                - cell "Strong Downtrend EMA Bearish Strong Selling" [ref=e3231]:
+                  - generic [ref=e3232]:
+                    - generic [ref=e3233]: Strong Downtrend
+                    - generic [ref=e3234]: EMA Bearish
+                    - generic [ref=e3235]: Strong Selling
+                - cell [ref=e3236]:
+                  - img [ref=e3237]
+              - row "98 XLMUSDT 34 0.338 66% -0.13% $-0.000200 -82% -$1.1M -0.0033% EMA Bearish Strong Selling BB Squeeze" [ref=e3239] [cursor=pointer]:
+                - cell "98" [ref=e3240]
+                - cell "XLMUSDT" [ref=e3241]:
+                  - generic [ref=e3242]:
+                    - text: XLMUSDT
+                    - link "Chart for XLMUSDT" [ref=e3243]:
+                      - /url: /symbols/XLMUSDT
+                      - img [ref=e3244]
+                    - link "Trade XLM/USDT on Binance" [ref=e3247]:
+                      - /url: https://www.binance.com/en/trade/XLM_USDT
+                      - img [ref=e3248]
+                - cell "34 0.338" [ref=e3250]:
+                  - generic [ref=e3251]:
+                    - 'progressbar "Bullish score: 0.338" [ref=e3252]'
+                    - generic [ref=e3254]: "0.338"
+                - cell "66%" [ref=e3255]
+                - cell "-0.13%" [ref=e3256]:
+                  - generic [ref=e3257]: "-0.13%"
+                - cell "$-0.000200" [ref=e3258]
+                - cell "-82%" [ref=e3259]:
+                  - generic [ref=e3260]: "-82%"
+                - cell "-$1.1M" [ref=e3261]
+                - cell "-0.0033%" [ref=e3262]:
+                  - generic [ref=e3263]: "-0.0033%"
+                - cell "EMA Bearish Strong Selling BB Squeeze" [ref=e3264]:
+                  - generic [ref=e3265]:
+                    - generic [ref=e3266]: EMA Bearish
+                    - generic [ref=e3267]: Strong Selling
+                    - generic [ref=e3268]: BB Squeeze
+                - cell [ref=e3269]:
+                  - img [ref=e3270]
+              - row "99 WIFUSDT 33 0.326 60% +0.00% +$0.000000 -55% -$288.1K -0.0123% Strong Downtrend EMA Bearish Strong Selling" [ref=e3272] [cursor=pointer]:
+                - cell "99" [ref=e3273]
+                - cell "WIFUSDT" [ref=e3274]:
+                  - generic [ref=e3275]:
+                    - text: WIFUSDT
+                    - link "Chart for WIFUSDT" [ref=e3276]:
+                      - /url: /symbols/WIFUSDT
+                      - img [ref=e3277]
+                    - link "Trade WIF/USDT on Binance" [ref=e3280]:
+                      - /url: https://www.binance.com/en/trade/WIF_USDT
+                      - img [ref=e3281]
+                - cell "33 0.326" [ref=e3283]:
+                  - generic [ref=e3284]:
+                    - 'progressbar "Bullish score: 0.326" [ref=e3285]'
+                    - generic [ref=e3287]: "0.326"
+                - cell "60%" [ref=e3288]
+                - cell "+0.00%" [ref=e3289]:
+                  - generic [ref=e3290]: +0.00%
+                - cell "+$0.000000" [ref=e3291]:
+                  - generic [ref=e3292]: +$0.000000
+                - cell "-55%" [ref=e3293]:
+                  - generic [ref=e3294]: "-55%"
+                - cell "-$288.1K" [ref=e3295]
+                - cell "-0.0123%" [ref=e3296]:
+                  - generic [ref=e3297]: "-0.0123%"
+                - cell "Strong Downtrend EMA Bearish Strong Selling" [ref=e3298]:
+                  - generic [ref=e3299]:
+                    - generic [ref=e3300]: Strong Downtrend
+                    - generic [ref=e3301]: EMA Bearish
+                    - generic [ref=e3302]: Strong Selling
+                - cell [ref=e3303]:
+                  - img [ref=e3304]
+              - row "100 AWEUSDT 30 0.300 62% -0.06% $-0.000040 -81% -$2.4M -0.6869% Strong Downtrend RSI Oversold EMA Bearish" [ref=e3306] [cursor=pointer]:
+                - cell "100" [ref=e3307]
+                - cell "AWEUSDT" [ref=e3308]:
+                  - generic [ref=e3309]:
+                    - text: AWEUSDT
+                    - link "Chart for AWEUSDT" [ref=e3310]:
+                      - /url: /symbols/AWEUSDT
+                      - img [ref=e3311]
+                    - link "Trade AWE/USDT on Binance" [ref=e3314]:
+                      - /url: https://www.binance.com/en/trade/AWE_USDT
+                      - img [ref=e3315]
+                - cell "30 0.300" [ref=e3317]:
+                  - generic [ref=e3318]:
+                    - 'progressbar "Bullish score: 0.300" [ref=e3319]'
+                    - generic [ref=e3321]: "0.300"
+                - cell "62%" [ref=e3322]
+                - cell "-0.06%" [ref=e3323]:
+                  - generic [ref=e3324]: "-0.06%"
+                - cell "$-0.000040" [ref=e3325]
+                - cell "-81%" [ref=e3326]:
+                  - generic [ref=e3327]: "-81%"
+                - cell "-$2.4M" [ref=e3328]
+                - cell "-0.6869%" [ref=e3329]:
+                  - generic [ref=e3330]: "-0.6869%"
+                - cell "Strong Downtrend RSI Oversold EMA Bearish" [ref=e3331]:
+                  - generic [ref=e3332]:
+                    - generic [ref=e3333]: Strong Downtrend
+                    - generic [ref=e3334]: RSI Oversold
+                    - generic [ref=e3335]: EMA Bearish
+                - cell [ref=e3336]:
+                  - img [ref=e3337]
+  - complementary [ref=e3339]:
+    - generic [ref=e3340]:
+      - generic [ref=e3341]:
+        - heading "Trade Feed" [level=2] [ref=e3342]
+        - generic [ref=e3343]: 300 trades
+      - generic [ref=e3344]:
+        - button "Mark read" [ref=e3345]
+        - button "Close trade feed" [ref=e3346]:
+          - img [ref=e3347]
+    - generic [ref=e3350]:
+      - 'button "Close long SOMI 1m ago RB Breakout Hunter (1H) #111 +$18.93 (+2.57%)" [ref=e3352]':
+        - generic [ref=e3353]: Close long
+        - generic [ref=e3354]:
+          - generic [ref=e3355]:
+            - generic [ref=e3356]: SOMI
+            - generic [ref=e3357]: 1m ago
+          - generic [ref=e3358]:
+            - generic [ref=e3359]: RB Breakout Hunter (1H)
+            - generic [ref=e3360]: "#111"
+            - link [ref=e3361] [cursor=pointer]:
+              - /url: /agents/39
+              - img [ref=e3362]
+            - generic [ref=e3365]: +$18.93
+            - generic [ref=e3366]: (+2.57%)
+      - 'button "Close long SOMI 2m ago HYB Breakout Trader (1H) #117 +$20.31 (+2.57%)" [ref=e3368]':
+        - generic [ref=e3369]: Close long
+        - generic [ref=e3370]:
+          - generic [ref=e3371]:
+            - generic [ref=e3372]: SOMI
+            - generic [ref=e3373]: 2m ago
+          - generic [ref=e3374]:
+            - generic [ref=e3375]: HYB Breakout Trader (1H)
+            - generic [ref=e3376]: "#117"
+            - link [ref=e3377] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e3378]
+            - generic [ref=e3381]: +$20.31
+            - generic [ref=e3382]: (+2.57%)
+      - 'button "Close short ORCA 6m ago HYB Mean Reversion Trader (15M) #125 $-27.76 (-3.10%)" [ref=e3384]':
+        - generic [ref=e3385]: Close short
+        - generic [ref=e3386]:
+          - generic [ref=e3387]:
+            - generic [ref=e3388]: ORCA
+            - generic [ref=e3389]: 6m ago
+          - generic [ref=e3390]:
+            - generic [ref=e3391]: HYB Mean Reversion Trader (15M)
+            - generic [ref=e3392]: "#125"
+            - link [ref=e3393] [cursor=pointer]:
+              - /url: /agents/153
+              - img [ref=e3394]
+            - generic [ref=e3397]: $-27.76
+            - generic [ref=e3398]: (-3.10%)
+      - 'button "Close short ORCA 8m ago RB Mean Reversion (15M) #121 $-27.99 (-3.10%)" [ref=e3400]':
+        - generic [ref=e3401]: Close short
+        - generic [ref=e3402]:
+          - generic [ref=e3403]:
+            - generic [ref=e3404]: ORCA
+            - generic [ref=e3405]: 8m ago
+          - generic [ref=e3406]:
+            - generic [ref=e3407]: RB Mean Reversion (15M)
+            - generic [ref=e3408]: "#121"
+            - link [ref=e3409] [cursor=pointer]:
+              - /url: /agents/30
+              - img [ref=e3410]
+            - generic [ref=e3413]: $-27.99
+            - generic [ref=e3414]: (-3.10%)
+      - 'button "Open long ASTER 13m ago HYB Breakout Trader (1H) #117" [ref=e3416]':
+        - generic [ref=e3417]: Open long
+        - generic [ref=e3418]:
+          - generic [ref=e3419]:
+            - generic [ref=e3420]: ASTER
+            - generic [ref=e3421]: 13m ago
+          - generic [ref=e3422]:
+            - generic [ref=e3423]: HYB Breakout Trader (1H)
+            - generic [ref=e3424]: "#117"
+            - link [ref=e3425] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e3426]
+      - 'button "Open long BERA 13m ago RB Breakout Hunter (15M) #128" [ref=e3430]':
+        - generic [ref=e3431]: Open long
+        - generic [ref=e3432]:
+          - generic [ref=e3433]:
+            - generic [ref=e3434]: BERA
+            - generic [ref=e3435]: 13m ago
+          - generic [ref=e3436]:
+            - generic [ref=e3437]: RB Breakout Hunter (15M)
+            - generic [ref=e3438]: "#128"
+            - link [ref=e3439] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e3440]
+      - 'button "Open long BERA 14m ago HYB Breakout Trader (15M) #124" [ref=e3444]':
+        - generic [ref=e3445]: Open long
+        - generic [ref=e3446]:
+          - generic [ref=e3447]:
+            - generic [ref=e3448]: BERA
+            - generic [ref=e3449]: 14m ago
+          - generic [ref=e3450]:
+            - generic [ref=e3451]: HYB Breakout Trader (15M)
+            - generic [ref=e3452]: "#124"
+            - link [ref=e3453] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e3454]
+      - 'button "Open short XPL 42m ago HYB Mean Reversion Trader (1H) #82" [ref=e3458]':
+        - generic [ref=e3459]: Open short
+        - generic [ref=e3460]:
+          - generic [ref=e3461]:
+            - generic [ref=e3462]: XPL
+            - generic [ref=e3463]: 42m ago
+          - generic [ref=e3464]:
+            - generic [ref=e3465]: HYB Mean Reversion Trader (1H)
+            - generic [ref=e3466]: "#82"
+            - link [ref=e3467] [cursor=pointer]:
+              - /url: /agents/169
+              - img [ref=e3468]
+      - 'button "Close long ASTER 42m ago HYB Breakout Trader (1H) #117 $-6.30 (-0.80%)" [ref=e3472]':
+        - generic [ref=e3473]: Close long
+        - generic [ref=e3474]:
+          - generic [ref=e3475]:
+            - generic [ref=e3476]: ASTER
+            - generic [ref=e3477]: 42m ago
+          - generic [ref=e3478]:
+            - generic [ref=e3479]: HYB Breakout Trader (1H)
+            - generic [ref=e3480]: "#117"
+            - link [ref=e3481] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e3482]
+            - generic [ref=e3485]: $-6.30
+            - generic [ref=e3486]: (-0.80%)
+      - 'button "Open short XPL 43m ago RB Mean Reversion (1H) #11" [ref=e3488]':
+        - generic [ref=e3489]: Open short
+        - generic [ref=e3490]:
+          - generic [ref=e3491]:
+            - generic [ref=e3492]: XPL
+            - generic [ref=e3493]: 43m ago
+          - generic [ref=e3494]:
+            - generic [ref=e3495]: RB Mean Reversion (1H)
+            - generic [ref=e3496]: "#11"
+            - link [ref=e3497] [cursor=pointer]:
+              - /url: /agents/38
+              - img [ref=e3498]
+      - 'button "Open short LUNA 1h ago HYB Mean Reversion Trader (30M) #120" [ref=e3502]':
+        - generic [ref=e3503]: Open short
+        - generic [ref=e3504]:
+          - generic [ref=e3505]:
+            - generic [ref=e3506]: LUNA
+            - generic [ref=e3507]: 1h ago
+          - generic [ref=e3508]:
+            - generic [ref=e3509]: HYB Mean Reversion Trader (30M)
+            - generic [ref=e3510]: "#120"
+            - link [ref=e3511] [cursor=pointer]:
+              - /url: /agents/161
+              - img [ref=e3512]
+      - 'button "Open short LUNA 1h ago RB Mean Reversion (30M) #122" [ref=e3516]':
+        - generic [ref=e3517]: Open short
+        - generic [ref=e3518]:
+          - generic [ref=e3519]:
+            - generic [ref=e3520]: LUNA
+            - generic [ref=e3521]: 1h ago
+          - generic [ref=e3522]:
+            - generic [ref=e3523]: RB Mean Reversion (30M)
+            - generic [ref=e3524]: "#122"
+            - link [ref=e3525] [cursor=pointer]:
+              - /url: /agents/34
+              - img [ref=e3526]
+      - 'button "Open long INJ 1h ago RB Momentum Trader (1H) #102" [ref=e3530]':
+        - generic [ref=e3531]: Open long
+        - generic [ref=e3532]:
+          - generic [ref=e3533]:
+            - generic [ref=e3534]: INJ
+            - generic [ref=e3535]: 1h ago
+          - generic [ref=e3536]:
+            - generic [ref=e3537]: RB Momentum Trader (1H)
+            - generic [ref=e3538]: "#102"
+            - link [ref=e3539] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e3540]
+      - 'button "Close long TRX 1h ago HYB Breakout Trader (1H) #117 +$4.17 (+0.57%)" [ref=e3544]':
+        - generic [ref=e3545]: Close long
+        - generic [ref=e3546]:
+          - generic [ref=e3547]:
+            - generic [ref=e3548]: TRX
+            - generic [ref=e3549]: 1h ago
+          - generic [ref=e3550]:
+            - generic [ref=e3551]: HYB Breakout Trader (1H)
+            - generic [ref=e3552]: "#117"
+            - link [ref=e3553] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e3554]
+            - generic [ref=e3557]: +$4.17
+            - generic [ref=e3558]: (+0.57%)
+      - 'button "Open long INJ 1h ago HYB Momentum Trader (1H) #90" [ref=e3560]':
+        - generic [ref=e3561]: Open long
+        - generic [ref=e3562]:
+          - generic [ref=e3563]:
+            - generic [ref=e3564]: INJ
+            - generic [ref=e3565]: 1h ago
+          - generic [ref=e3566]:
+            - generic [ref=e3567]: HYB Momentum Trader (1H)
+            - generic [ref=e3568]: "#90"
+            - link [ref=e3569] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e3570]
+      - 'button "Open short XPL 1h ago HYB Mean Reversion Trader (30M) #120" [ref=e3574]':
+        - generic [ref=e3575]: Open short
+        - generic [ref=e3576]:
+          - generic [ref=e3577]:
+            - generic [ref=e3578]: XPL
+            - generic [ref=e3579]: 1h ago
+          - generic [ref=e3580]:
+            - generic [ref=e3581]: HYB Mean Reversion Trader (30M)
+            - generic [ref=e3582]: "#120"
+            - link [ref=e3583] [cursor=pointer]:
+              - /url: /agents/161
+              - img [ref=e3584]
+      - 'button "Open short XPL 1h ago RB Mean Reversion (30M) #122" [ref=e3588]':
+        - generic [ref=e3589]: Open short
+        - generic [ref=e3590]:
+          - generic [ref=e3591]:
+            - generic [ref=e3592]: XPL
+            - generic [ref=e3593]: 1h ago
+          - generic [ref=e3594]:
+            - generic [ref=e3595]: RB Mean Reversion (30M)
+            - generic [ref=e3596]: "#122"
+            - link [ref=e3597] [cursor=pointer]:
+              - /url: /agents/34
+              - img [ref=e3598]
+      - 'button "Open long OM 1h ago RB Momentum Trader (4H) #6" [ref=e3602]':
+        - generic [ref=e3603]: Open long
+        - generic [ref=e3604]:
+          - generic [ref=e3605]:
+            - generic [ref=e3606]: OM
+            - generic [ref=e3607]: 1h ago
+          - generic [ref=e3608]:
+            - generic [ref=e3609]: RB Momentum Trader (4H)
+            - generic [ref=e3610]: "#6"
+            - link [ref=e3611] [cursor=pointer]:
+              - /url: /agents/41
+              - img [ref=e3612]
+      - 'button "Open long OM 1h ago HYB Momentum Trader (4H) #96" [ref=e3616]':
+        - generic [ref=e3617]: Open long
+        - generic [ref=e3618]:
+          - generic [ref=e3619]:
+            - generic [ref=e3620]: OM
+            - generic [ref=e3621]: 1h ago
+          - generic [ref=e3622]:
+            - generic [ref=e3623]: HYB Momentum Trader (4H)
+            - generic [ref=e3624]: "#96"
+            - link [ref=e3625] [cursor=pointer]:
+              - /url: /agents/175
+              - img [ref=e3626]
+      - 'button "Close long SNX 1h ago HYB Momentum Trader (30M) #83 +$46.85 (+5.90%)" [ref=e3630]':
+        - generic [ref=e3631]: Close long
+        - generic [ref=e3632]:
+          - generic [ref=e3633]:
+            - generic [ref=e3634]: SNX
+            - generic [ref=e3635]: 1h ago
+          - generic [ref=e3636]:
+            - generic [ref=e3637]: HYB Momentum Trader (30M)
+            - generic [ref=e3638]: "#83"
+            - link [ref=e3639] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e3640]
+            - generic [ref=e3643]: +$46.85
+            - generic [ref=e3644]: (+5.90%)
+      - 'button "Open short XPL 2h ago HYB Mean Reversion Trader (15M) #125" [ref=e3646]':
+        - generic [ref=e3647]: Open short
+        - generic [ref=e3648]:
+          - generic [ref=e3649]:
+            - generic [ref=e3650]: XPL
+            - generic [ref=e3651]: 2h ago
+          - generic [ref=e3652]:
+            - generic [ref=e3653]: HYB Mean Reversion Trader (15M)
+            - generic [ref=e3654]: "#125"
+            - link [ref=e3655] [cursor=pointer]:
+              - /url: /agents/153
+              - img [ref=e3656]
+      - 'button "Open short XPL 2h ago RB Mean Reversion (15M) #121" [ref=e3660]':
+        - generic [ref=e3661]: Open short
+        - generic [ref=e3662]:
+          - generic [ref=e3663]:
+            - generic [ref=e3664]: XPL
+            - generic [ref=e3665]: 2h ago
+          - generic [ref=e3666]:
+            - generic [ref=e3667]: RB Mean Reversion (15M)
+            - generic [ref=e3668]: "#121"
+            - link [ref=e3669] [cursor=pointer]:
+              - /url: /agents/30
+              - img [ref=e3670]
+      - 'button "Close long ASTER 2h ago RB Breakout Hunter (30M) #127 +$1.30 (+0.18%)" [ref=e3674]':
+        - generic [ref=e3675]: Close long
+        - generic [ref=e3676]:
+          - generic [ref=e3677]:
+            - generic [ref=e3678]: ASTER
+            - generic [ref=e3679]: 2h ago
+          - generic [ref=e3680]:
+            - generic [ref=e3681]: RB Breakout Hunter (30M)
+            - generic [ref=e3682]: "#127"
+            - link [ref=e3683] [cursor=pointer]:
+              - /url: /agents/35
+              - img [ref=e3684]
+            - generic [ref=e3687]: +$1.30
+            - generic [ref=e3688]: (+0.18%)
+      - 'button "Close long ASTER 2h ago HYB Breakout Trader (30M) #119 +$1.32 (+0.18%)" [ref=e3690]':
+        - generic [ref=e3691]: Close long
+        - generic [ref=e3692]:
+          - generic [ref=e3693]:
+            - generic [ref=e3694]: ASTER
+            - generic [ref=e3695]: 2h ago
+          - generic [ref=e3696]:
+            - generic [ref=e3697]: HYB Breakout Trader (30M)
+            - generic [ref=e3698]: "#119"
+            - link [ref=e3699] [cursor=pointer]:
+              - /url: /agents/163
+              - img [ref=e3700]
+            - generic [ref=e3703]: +$1.32
+            - generic [ref=e3704]: (+0.18%)
+      - 'button "Close long ORCA 2h ago HYB Mean Reversion Trader (1H) #82 +$38.74 (+3.90%)" [ref=e3706]':
+        - generic [ref=e3707]: Close long
+        - generic [ref=e3708]:
+          - generic [ref=e3709]:
+            - generic [ref=e3710]: ORCA
+            - generic [ref=e3711]: 2h ago
+          - generic [ref=e3712]:
+            - generic [ref=e3713]: HYB Mean Reversion Trader (1H)
+            - generic [ref=e3714]: "#82"
+            - link [ref=e3715] [cursor=pointer]:
+              - /url: /agents/169
+              - img [ref=e3716]
+            - generic [ref=e3719]: +$38.74
+            - generic [ref=e3720]: (+3.90%)
+      - 'button "Close long ORCA 2h ago RB Mean Reversion (1H) #11 +$38.88 (+3.90%)" [ref=e3722]':
+        - generic [ref=e3723]: Close long
+        - generic [ref=e3724]:
+          - generic [ref=e3725]:
+            - generic [ref=e3726]: ORCA
+            - generic [ref=e3727]: 2h ago
+          - generic [ref=e3728]:
+            - generic [ref=e3729]: RB Mean Reversion (1H)
+            - generic [ref=e3730]: "#11"
+            - link [ref=e3731] [cursor=pointer]:
+              - /url: /agents/38
+              - img [ref=e3732]
+            - generic [ref=e3735]: +$38.88
+            - generic [ref=e3736]: (+3.90%)
+      - 'button "Close long XPL 2h ago RB Breakout Hunter (15M) #128 $-1.47 (-0.21%)" [ref=e3738]':
+        - generic [ref=e3739]: Close long
+        - generic [ref=e3740]:
+          - generic [ref=e3741]:
+            - generic [ref=e3742]: XPL
+            - generic [ref=e3743]: 2h ago
+          - generic [ref=e3744]:
+            - generic [ref=e3745]: RB Breakout Hunter (15M)
+            - generic [ref=e3746]: "#128"
+            - link [ref=e3747] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e3748]
+            - generic [ref=e3751]: $-1.47
+            - generic [ref=e3752]: (-0.21%)
+      - 'button "Close long XPL 2h ago HYB Breakout Trader (15M) #124 $-1.49 (-0.21%)" [ref=e3754]':
+        - generic [ref=e3755]: Close long
+        - generic [ref=e3756]:
+          - generic [ref=e3757]:
+            - generic [ref=e3758]: XPL
+            - generic [ref=e3759]: 2h ago
+          - generic [ref=e3760]:
+            - generic [ref=e3761]: HYB Breakout Trader (15M)
+            - generic [ref=e3762]: "#124"
+            - link [ref=e3763] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e3764]
+            - generic [ref=e3767]: $-1.49
+            - generic [ref=e3768]: (-0.21%)
+      - 'button "Close long ASTER 2h ago RB Breakout Hunter (30M) #127 $-1.72 (-0.24%)" [ref=e3770]':
+        - generic [ref=e3771]: Close long
+        - generic [ref=e3772]:
+          - generic [ref=e3773]:
+            - generic [ref=e3774]: ASTER
+            - generic [ref=e3775]: 2h ago
+          - generic [ref=e3776]:
+            - generic [ref=e3777]: RB Breakout Hunter (30M)
+            - generic [ref=e3778]: "#127"
+            - link [ref=e3779] [cursor=pointer]:
+              - /url: /agents/35
+              - img [ref=e3780]
+            - generic [ref=e3783]: $-1.72
+            - generic [ref=e3784]: (-0.24%)
+      - 'button "Close long ATOM 2h ago RB Momentum Trader (4H) #6 $-13.54 (-1.82%)" [ref=e3786]':
+        - generic [ref=e3787]: Close long
+        - generic [ref=e3788]:
+          - generic [ref=e3789]:
+            - generic [ref=e3790]: ATOM
+            - generic [ref=e3791]: 2h ago
+          - generic [ref=e3792]:
+            - generic [ref=e3793]: RB Momentum Trader (4H)
+            - generic [ref=e3794]: "#6"
+            - link [ref=e3795] [cursor=pointer]:
+              - /url: /agents/41
+              - img [ref=e3796]
+            - generic [ref=e3799]: $-13.54
+            - generic [ref=e3800]: (-1.82%)
+      - 'button "Close long CITY 2h ago RB Momentum Trader (4H) #6 +$48.75 (+5.90%)" [ref=e3802]':
+        - generic [ref=e3803]: Close long
+        - generic [ref=e3804]:
+          - generic [ref=e3805]:
+            - generic [ref=e3806]: CITY
+            - generic [ref=e3807]: 2h ago
+          - generic [ref=e3808]:
+            - generic [ref=e3809]: RB Momentum Trader (4H)
+            - generic [ref=e3810]: "#6"
+            - link [ref=e3811] [cursor=pointer]:
+              - /url: /agents/41
+              - img [ref=e3812]
+            - generic [ref=e3815]: +$48.75
+            - generic [ref=e3816]: (+5.90%)
+      - 'button "Close long ATOM 2h ago HYB Momentum Trader (4H) #96 $-14.29 (-1.82%)" [ref=e3818]':
+        - generic [ref=e3819]: Close long
+        - generic [ref=e3820]:
+          - generic [ref=e3821]:
+            - generic [ref=e3822]: ATOM
+            - generic [ref=e3823]: 2h ago
+          - generic [ref=e3824]:
+            - generic [ref=e3825]: HYB Momentum Trader (4H)
+            - generic [ref=e3826]: "#96"
+            - link [ref=e3827] [cursor=pointer]:
+              - /url: /agents/175
+              - img [ref=e3828]
+            - generic [ref=e3831]: $-14.29
+            - generic [ref=e3832]: (-1.82%)
+      - 'button "Close long OM 2h ago HYB Momentum Trader (4H) #96 +$45.98 (+5.90%)" [ref=e3834]':
+        - generic [ref=e3835]: Close long
+        - generic [ref=e3836]:
+          - generic [ref=e3837]:
+            - generic [ref=e3838]: OM
+            - generic [ref=e3839]: 2h ago
+          - generic [ref=e3840]:
+            - generic [ref=e3841]: HYB Momentum Trader (4H)
+            - generic [ref=e3842]: "#96"
+            - link [ref=e3843] [cursor=pointer]:
+              - /url: /agents/175
+              - img [ref=e3844]
+            - generic [ref=e3847]: +$45.98
+            - generic [ref=e3848]: (+5.90%)
+      - 'button "Close long ASTER 2h ago HYB Breakout Trader (30M) #119 $-1.75 (-0.24%)" [ref=e3850]':
+        - generic [ref=e3851]: Close long
+        - generic [ref=e3852]:
+          - generic [ref=e3853]:
+            - generic [ref=e3854]: ASTER
+            - generic [ref=e3855]: 2h ago
+          - generic [ref=e3856]:
+            - generic [ref=e3857]: HYB Breakout Trader (30M)
+            - generic [ref=e3858]: "#119"
+            - link [ref=e3859] [cursor=pointer]:
+              - /url: /agents/163
+              - img [ref=e3860]
+            - generic [ref=e3863]: $-1.75
+            - generic [ref=e3864]: (-0.24%)
+      - 'button "Close long OM 3h ago HYB Momentum Trader (1H) #90 +$46.24 (+5.90%)" [ref=e3866]':
+        - generic [ref=e3867]: Close long
+        - generic [ref=e3868]:
+          - generic [ref=e3869]:
+            - generic [ref=e3870]: OM
+            - generic [ref=e3871]: 3h ago
+          - generic [ref=e3872]:
+            - generic [ref=e3873]: HYB Momentum Trader (1H)
+            - generic [ref=e3874]: "#90"
+            - link [ref=e3875] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e3876]
+            - generic [ref=e3879]: +$46.24
+            - generic [ref=e3880]: (+5.90%)
+      - 'button "Close long INJ 3h ago HYB Momentum Trader (1H) #90 $-32.28 (-4.10%)" [ref=e3882]':
+        - generic [ref=e3883]: Close long
+        - generic [ref=e3884]:
+          - generic [ref=e3885]:
+            - generic [ref=e3886]: INJ
+            - generic [ref=e3887]: 3h ago
+          - generic [ref=e3888]:
+            - generic [ref=e3889]: HYB Momentum Trader (1H)
+            - generic [ref=e3890]: "#90"
+            - link [ref=e3891] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e3892]
+            - generic [ref=e3895]: $-32.28
+            - generic [ref=e3896]: (-4.10%)
+      - 'button "Close long INJ 3h ago RB Momentum Trader (1H) #102 $-31.16 (-4.10%)" [ref=e3898]':
+        - generic [ref=e3899]: Close long
+        - generic [ref=e3900]:
+          - generic [ref=e3901]:
+            - generic [ref=e3902]: INJ
+            - generic [ref=e3903]: 3h ago
+          - generic [ref=e3904]:
+            - generic [ref=e3905]: RB Momentum Trader (1H)
+            - generic [ref=e3906]: "#102"
+            - link [ref=e3907] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e3908]
+            - generic [ref=e3911]: $-31.16
+            - generic [ref=e3912]: (-4.10%)
+      - 'button "Close long OM 3h ago RB Momentum Trader (1H) #102 +$44.63 (+5.90%)" [ref=e3914]':
+        - generic [ref=e3915]: Close long
+        - generic [ref=e3916]:
+          - generic [ref=e3917]:
+            - generic [ref=e3918]: OM
+            - generic [ref=e3919]: 3h ago
+          - generic [ref=e3920]:
+            - generic [ref=e3921]: RB Momentum Trader (1H)
+            - generic [ref=e3922]: "#102"
+            - link [ref=e3923] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e3924]
+            - generic [ref=e3927]: +$44.63
+            - generic [ref=e3928]: (+5.90%)
+      - 'button "Open short ENA 3h ago HYB Mean Reversion Trader (15M) #125" [ref=e3930]':
+        - generic [ref=e3931]: Open short
+        - generic [ref=e3932]:
+          - generic [ref=e3933]:
+            - generic [ref=e3934]: ENA
+            - generic [ref=e3935]: 3h ago
+          - generic [ref=e3936]:
+            - generic [ref=e3937]: HYB Mean Reversion Trader (15M)
+            - generic [ref=e3938]: "#125"
+            - link [ref=e3939] [cursor=pointer]:
+              - /url: /agents/153
+              - img [ref=e3940]
+      - 'button "Open short ENA 3h ago RB Mean Reversion (15M) #121" [ref=e3944]':
+        - generic [ref=e3945]: Open short
+        - generic [ref=e3946]:
+          - generic [ref=e3947]:
+            - generic [ref=e3948]: ENA
+            - generic [ref=e3949]: 3h ago
+          - generic [ref=e3950]:
+            - generic [ref=e3951]: RB Mean Reversion (15M)
+            - generic [ref=e3952]: "#121"
+            - link [ref=e3953] [cursor=pointer]:
+              - /url: /agents/30
+              - img [ref=e3954]
+      - 'button "Open long ENSO 3h ago RB Momentum Trader (30M) #137" [ref=e3958]':
+        - generic [ref=e3959]: Open long
+        - generic [ref=e3960]:
+          - generic [ref=e3961]:
+            - generic [ref=e3962]: ENSO
+            - generic [ref=e3963]: 3h ago
+          - generic [ref=e3964]:
+            - generic [ref=e3965]: RB Momentum Trader (30M)
+            - generic [ref=e3966]: "#137"
+            - link [ref=e3967] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e3968]
+      - 'button "Close long INJ 3h ago RB Momentum Trader (30M) #137 $-27.19 (-4.10%)" [ref=e3972]':
+        - generic [ref=e3973]: Close long
+        - generic [ref=e3974]:
+          - generic [ref=e3975]:
+            - generic [ref=e3976]: INJ
+            - generic [ref=e3977]: 3h ago
+          - generic [ref=e3978]:
+            - generic [ref=e3979]: RB Momentum Trader (30M)
+            - generic [ref=e3980]: "#137"
+            - link [ref=e3981] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e3982]
+            - generic [ref=e3985]: $-27.19
+            - generic [ref=e3986]: (-4.10%)
+      - 'button "Close long INJ 3h ago HYB Momentum Trader (30M) #83 $-32.66 (-4.10%)" [ref=e3988]':
+        - generic [ref=e3989]: Close long
+        - generic [ref=e3990]:
+          - generic [ref=e3991]:
+            - generic [ref=e3992]: INJ
+            - generic [ref=e3993]: 3h ago
+          - generic [ref=e3994]:
+            - generic [ref=e3995]: HYB Momentum Trader (30M)
+            - generic [ref=e3996]: "#83"
+            - link [ref=e3997] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e3998]
+            - generic [ref=e4001]: $-32.66
+            - generic [ref=e4002]: (-4.10%)
+      - 'button "Close long XPL 3h ago RB Breakout Hunter (15M) #128 $-2.26 (-0.32%)" [ref=e4004]':
+        - generic [ref=e4005]: Close long
+        - generic [ref=e4006]:
+          - generic [ref=e4007]:
+            - generic [ref=e4008]: XPL
+            - generic [ref=e4009]: 3h ago
+          - generic [ref=e4010]:
+            - generic [ref=e4011]: RB Breakout Hunter (15M)
+            - generic [ref=e4012]: "#128"
+            - link [ref=e4013] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e4014]
+            - generic [ref=e4017]: $-2.26
+            - generic [ref=e4018]: (-0.32%)
+      - 'button "Close long XPL 3h ago HYB Breakout Trader (15M) #124 $-2.28 (-0.32%)" [ref=e4020]':
+        - generic [ref=e4021]: Close long
+        - generic [ref=e4022]:
+          - generic [ref=e4023]:
+            - generic [ref=e4024]: XPL
+            - generic [ref=e4025]: 3h ago
+          - generic [ref=e4026]:
+            - generic [ref=e4027]: HYB Breakout Trader (15M)
+            - generic [ref=e4028]: "#124"
+            - link [ref=e4029] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e4030]
+            - generic [ref=e4033]: $-2.28
+            - generic [ref=e4034]: (-0.32%)
+      - 'button "Close long SOMI 4h ago HYB Breakout Trader (1H) #117 $-12.46 (-1.58%)" [ref=e4036]':
+        - generic [ref=e4037]: Close long
+        - generic [ref=e4038]:
+          - generic [ref=e4039]:
+            - generic [ref=e4040]: SOMI
+            - generic [ref=e4041]: 4h ago
+          - generic [ref=e4042]:
+            - generic [ref=e4043]: HYB Breakout Trader (1H)
+            - generic [ref=e4044]: "#117"
+            - link [ref=e4045] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e4046]
+            - generic [ref=e4049]: $-12.46
+            - generic [ref=e4050]: (-1.58%)
+      - 'button "Close long SOMI 4h ago RB Breakout Hunter (1H) #111 $-11.61 (-1.58%)" [ref=e4052]':
+        - generic [ref=e4053]: Close long
+        - generic [ref=e4054]:
+          - generic [ref=e4055]:
+            - generic [ref=e4056]: SOMI
+            - generic [ref=e4057]: 4h ago
+          - generic [ref=e4058]:
+            - generic [ref=e4059]: RB Breakout Hunter (1H)
+            - generic [ref=e4060]: "#111"
+            - link [ref=e4061] [cursor=pointer]:
+              - /url: /agents/39
+              - img [ref=e4062]
+            - generic [ref=e4065]: $-11.61
+            - generic [ref=e4066]: (-1.58%)
+      - 'button "Open long ENSO 4h ago HYB Momentum Trader (30M) #83" [ref=e4068]':
+        - generic [ref=e4069]: Open long
+        - generic [ref=e4070]:
+          - generic [ref=e4071]:
+            - generic [ref=e4072]: ENSO
+            - generic [ref=e4073]: 4h ago
+          - generic [ref=e4074]:
+            - generic [ref=e4075]: HYB Momentum Trader (30M)
+            - generic [ref=e4076]: "#83"
+            - link [ref=e4077] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e4078]
+      - 'button "Open long SOMI 4h ago HYB Momentum Trader (15M) #94" [ref=e4082]':
+        - generic [ref=e4083]: Open long
+        - generic [ref=e4084]:
+          - generic [ref=e4085]:
+            - generic [ref=e4086]: SOMI
+            - generic [ref=e4087]: 4h ago
+          - generic [ref=e4088]:
+            - generic [ref=e4089]: HYB Momentum Trader (15M)
+            - generic [ref=e4090]: "#94"
+            - link [ref=e4091] [cursor=pointer]:
+              - /url: /agents/151
+              - img [ref=e4092]
+      - 'button "Close long TRX 4h ago RB Breakout Hunter (30M) #127 +$6.08 (+0.79%)" [ref=e4096]':
+        - generic [ref=e4097]: Close long
+        - generic [ref=e4098]:
+          - generic [ref=e4099]:
+            - generic [ref=e4100]: TRX
+            - generic [ref=e4101]: 4h ago
+          - generic [ref=e4102]:
+            - generic [ref=e4103]: RB Breakout Hunter (30M)
+            - generic [ref=e4104]: "#127"
+            - link [ref=e4105] [cursor=pointer]:
+              - /url: /agents/35
+              - img [ref=e4106]
+            - generic [ref=e4109]: +$6.08
+            - generic [ref=e4110]: (+0.79%)
+      - 'button "Close long CRV 4h ago RB Breakout Hunter (15M) #128 +$1.66 (+0.23%)" [ref=e4112]':
+        - generic [ref=e4113]: Close long
+        - generic [ref=e4114]:
+          - generic [ref=e4115]:
+            - generic [ref=e4116]: CRV
+            - generic [ref=e4117]: 4h ago
+          - generic [ref=e4118]:
+            - generic [ref=e4119]: RB Breakout Hunter (15M)
+            - generic [ref=e4120]: "#128"
+            - link [ref=e4121] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e4122]
+            - generic [ref=e4125]: +$1.66
+            - generic [ref=e4126]: (+0.23%)
+      - 'button "Close long CRV 4h ago HYB Breakout Trader (15M) #124 +$1.68 (+0.23%)" [ref=e4128]':
+        - generic [ref=e4129]: Close long
+        - generic [ref=e4130]:
+          - generic [ref=e4131]:
+            - generic [ref=e4132]: CRV
+            - generic [ref=e4133]: 4h ago
+          - generic [ref=e4134]:
+            - generic [ref=e4135]: HYB Breakout Trader (15M)
+            - generic [ref=e4136]: "#124"
+            - link [ref=e4137] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e4138]
+            - generic [ref=e4141]: +$1.68
+            - generic [ref=e4142]: (+0.23%)
+      - 'button "Open long SOMI 4h ago RB Momentum Trader (15M) #131" [ref=e4144]':
+        - generic [ref=e4145]: Open long
+        - generic [ref=e4146]:
+          - generic [ref=e4147]:
+            - generic [ref=e4148]: SOMI
+            - generic [ref=e4149]: 4h ago
+          - generic [ref=e4150]:
+            - generic [ref=e4151]: RB Momentum Trader (15M)
+            - generic [ref=e4152]: "#131"
+            - link [ref=e4153] [cursor=pointer]:
+              - /url: /agents/29
+              - img [ref=e4154]
+      - 'button "Close long TRX 4h ago HYB Breakout Trader (30M) #119 +$6.20 (+0.79%)" [ref=e4158]':
+        - generic [ref=e4159]: Close long
+        - generic [ref=e4160]:
+          - generic [ref=e4161]:
+            - generic [ref=e4162]: TRX
+            - generic [ref=e4163]: 4h ago
+          - generic [ref=e4164]:
+            - generic [ref=e4165]: HYB Breakout Trader (30M)
+            - generic [ref=e4166]: "#119"
+            - link [ref=e4167] [cursor=pointer]:
+              - /url: /agents/163
+              - img [ref=e4168]
+            - generic [ref=e4171]: +$6.20
+            - generic [ref=e4172]: (+0.79%)
+      - 'button "Close long SNX 4h ago RB Momentum Trader (30M) #137 $-27.28 (-4.10%)" [ref=e4174]':
+        - generic [ref=e4175]: Close long
+        - generic [ref=e4176]:
+          - generic [ref=e4177]:
+            - generic [ref=e4178]: SNX
+            - generic [ref=e4179]: 4h ago
+          - generic [ref=e4180]:
+            - generic [ref=e4181]: RB Momentum Trader (30M)
+            - generic [ref=e4182]: "#137"
+            - link [ref=e4183] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e4184]
+            - generic [ref=e4187]: $-27.28
+            - generic [ref=e4188]: (-4.10%)
+      - 'button "Close long SNX 4h ago HYB Momentum Trader (30M) #83 $-32.77 (-4.10%)" [ref=e4190]':
+        - generic [ref=e4191]: Close long
+        - generic [ref=e4192]:
+          - generic [ref=e4193]:
+            - generic [ref=e4194]: SNX
+            - generic [ref=e4195]: 4h ago
+          - generic [ref=e4196]:
+            - generic [ref=e4197]: HYB Momentum Trader (30M)
+            - generic [ref=e4198]: "#83"
+            - link [ref=e4199] [cursor=pointer]:
+              - /url: /agents/159
+              - img [ref=e4200]
+            - generic [ref=e4203]: $-32.77
+            - generic [ref=e4204]: (-4.10%)
+      - 'button "Close long INJ 4h ago RB Momentum Trader (1H) #102 +$44.71 (+5.90%)" [ref=e4206]':
+        - generic [ref=e4207]: Close long
+        - generic [ref=e4208]:
+          - generic [ref=e4209]:
+            - generic [ref=e4210]: INJ
+            - generic [ref=e4211]: 4h ago
+          - generic [ref=e4212]:
+            - generic [ref=e4213]: RB Momentum Trader (1H)
+            - generic [ref=e4214]: "#102"
+            - link [ref=e4215] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e4216]
+            - generic [ref=e4219]: +$44.71
+            - generic [ref=e4220]: (+5.90%)
+      - 'button "Close long INJ 4h ago HYB Momentum Trader (1H) #90 +$46.32 (+5.90%)" [ref=e4222]':
+        - generic [ref=e4223]: Close long
+        - generic [ref=e4224]:
+          - generic [ref=e4225]:
+            - generic [ref=e4226]: INJ
+            - generic [ref=e4227]: 4h ago
+          - generic [ref=e4228]:
+            - generic [ref=e4229]: HYB Momentum Trader (1H)
+            - generic [ref=e4230]: "#90"
+            - link [ref=e4231] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e4232]
+            - generic [ref=e4235]: +$46.32
+            - generic [ref=e4236]: (+5.90%)
+      - 'button "Close long SNX 4h ago HYB Momentum Trader (15M) #94 $-12.40 (-1.58%)" [ref=e4238]':
+        - generic [ref=e4239]: Close long
+        - generic [ref=e4240]:
+          - generic [ref=e4241]:
+            - generic [ref=e4242]: SNX
+            - generic [ref=e4243]: 4h ago
+          - generic [ref=e4244]:
+            - generic [ref=e4245]: HYB Momentum Trader (15M)
+            - generic [ref=e4246]: "#94"
+            - link [ref=e4247] [cursor=pointer]:
+              - /url: /agents/151
+              - img [ref=e4248]
+            - generic [ref=e4251]: $-12.40
+            - generic [ref=e4252]: (-1.58%)
+      - 'button "Close long SNX 4h ago RB Momentum Trader (15M) #131 $-11.00 (-1.58%)" [ref=e4254]':
+        - generic [ref=e4255]: Close long
+        - generic [ref=e4256]:
+          - generic [ref=e4257]:
+            - generic [ref=e4258]: SNX
+            - generic [ref=e4259]: 4h ago
+          - generic [ref=e4260]:
+            - generic [ref=e4261]: RB Momentum Trader (15M)
+            - generic [ref=e4262]: "#131"
+            - link [ref=e4263] [cursor=pointer]:
+              - /url: /agents/29
+              - img [ref=e4264]
+            - generic [ref=e4267]: $-11.00
+            - generic [ref=e4268]: (-1.58%)
+      - 'button "Open long ENSO 4h ago HYB Momentum Trader (15M) #94" [ref=e4270]':
+        - generic [ref=e4271]: Open long
+        - generic [ref=e4272]:
+          - generic [ref=e4273]:
+            - generic [ref=e4274]: ENSO
+            - generic [ref=e4275]: 4h ago
+          - generic [ref=e4276]:
+            - generic [ref=e4277]: HYB Momentum Trader (15M)
+            - generic [ref=e4278]: "#94"
+            - link [ref=e4279] [cursor=pointer]:
+              - /url: /agents/151
+              - img [ref=e4280]
+      - 'button "Close long SOMI 4h ago RB Breakout Hunter (15M) #128 +$1.05 (+0.15%)" [ref=e4284]':
+        - generic [ref=e4285]: Close long
+        - generic [ref=e4286]:
+          - generic [ref=e4287]:
+            - generic [ref=e4288]: SOMI
+            - generic [ref=e4289]: 4h ago
+          - generic [ref=e4290]:
+            - generic [ref=e4291]: RB Breakout Hunter (15M)
+            - generic [ref=e4292]: "#128"
+            - link [ref=e4293] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e4294]
+            - generic [ref=e4297]: +$1.05
+            - generic [ref=e4298]: (+0.15%)
+      - 'button "Close long SOMI 4h ago HYB Breakout Trader (15M) #124 +$1.06 (+0.15%)" [ref=e4300]':
+        - generic [ref=e4301]: Close long
+        - generic [ref=e4302]:
+          - generic [ref=e4303]:
+            - generic [ref=e4304]: SOMI
+            - generic [ref=e4305]: 4h ago
+          - generic [ref=e4306]:
+            - generic [ref=e4307]: HYB Breakout Trader (15M)
+            - generic [ref=e4308]: "#124"
+            - link [ref=e4309] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e4310]
+            - generic [ref=e4313]: +$1.06
+            - generic [ref=e4314]: (+0.15%)
+      - 'button "Open long ENSO 4h ago RB Momentum Trader (15M) #131" [ref=e4316]':
+        - generic [ref=e4317]: Open long
+        - generic [ref=e4318]:
+          - generic [ref=e4319]:
+            - generic [ref=e4320]: ENSO
+            - generic [ref=e4321]: 4h ago
+          - generic [ref=e4322]:
+            - generic [ref=e4323]: RB Momentum Trader (15M)
+            - generic [ref=e4324]: "#131"
+            - link [ref=e4325] [cursor=pointer]:
+              - /url: /agents/29
+              - img [ref=e4326]
+      - 'button "Close long POL 4h ago HYB Mean Reversion Trader (1H) #82 +$18.07 (+1.82%)" [ref=e4330]':
+        - generic [ref=e4331]: Close long
+        - generic [ref=e4332]:
+          - generic [ref=e4333]:
+            - generic [ref=e4334]: POL
+            - generic [ref=e4335]: 4h ago
+          - generic [ref=e4336]:
+            - generic [ref=e4337]: HYB Mean Reversion Trader (1H)
+            - generic [ref=e4338]: "#82"
+            - link [ref=e4339] [cursor=pointer]:
+              - /url: /agents/169
+              - img [ref=e4340]
+            - generic [ref=e4343]: +$18.07
+            - generic [ref=e4344]: (+1.82%)
+      - 'button "Close short PENDLE 4h ago HYB Breakout Trader (1H) #117 $-16.54 (-2.09%)" [ref=e4346]':
+        - generic [ref=e4347]: Close short
+        - generic [ref=e4348]:
+          - generic [ref=e4349]:
+            - generic [ref=e4350]: PENDLE
+            - generic [ref=e4351]: 4h ago
+          - generic [ref=e4352]:
+            - generic [ref=e4353]: HYB Breakout Trader (1H)
+            - generic [ref=e4354]: "#117"
+            - link [ref=e4355] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e4356]
+            - generic [ref=e4359]: $-16.54
+            - generic [ref=e4360]: (-2.09%)
+      - 'button "Close short PENDLE 4h ago RB Breakout Hunter (1H) #111 $-15.42 (-2.09%)" [ref=e4362]':
+        - generic [ref=e4363]: Close short
+        - generic [ref=e4364]:
+          - generic [ref=e4365]:
+            - generic [ref=e4366]: PENDLE
+            - generic [ref=e4367]: 4h ago
+          - generic [ref=e4368]:
+            - generic [ref=e4369]: RB Breakout Hunter (1H)
+            - generic [ref=e4370]: "#111"
+            - link [ref=e4371] [cursor=pointer]:
+              - /url: /agents/39
+              - img [ref=e4372]
+            - generic [ref=e4375]: $-15.42
+            - generic [ref=e4376]: (-2.09%)
+      - 'button "Close long POL 4h ago RB Mean Reversion (1H) #11 +$18.14 (+1.82%)" [ref=e4378]':
+        - generic [ref=e4379]: Close long
+        - generic [ref=e4380]:
+          - generic [ref=e4381]:
+            - generic [ref=e4382]: POL
+            - generic [ref=e4383]: 4h ago
+          - generic [ref=e4384]:
+            - generic [ref=e4385]: RB Mean Reversion (1H)
+            - generic [ref=e4386]: "#11"
+            - link [ref=e4387] [cursor=pointer]:
+              - /url: /agents/38
+              - img [ref=e4388]
+            - generic [ref=e4391]: +$18.14
+            - generic [ref=e4392]: (+1.82%)
+      - 'button "Close long SOMI 5h ago RB Breakout Hunter (15M) #128 +$2.89 (+0.41%)" [ref=e4394]':
+        - generic [ref=e4395]: Close long
+        - generic [ref=e4396]:
+          - generic [ref=e4397]:
+            - generic [ref=e4398]: SOMI
+            - generic [ref=e4399]: 5h ago
+          - generic [ref=e4400]:
+            - generic [ref=e4401]: RB Breakout Hunter (15M)
+            - generic [ref=e4402]: "#128"
+            - link [ref=e4403] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e4404]
+            - generic [ref=e4407]: +$2.89
+            - generic [ref=e4408]: (+0.41%)
+      - 'button "Close long SOMI 5h ago HYB Breakout Trader (15M) #124 +$2.92 (+0.41%)" [ref=e4410]':
+        - generic [ref=e4411]: Close long
+        - generic [ref=e4412]:
+          - generic [ref=e4413]:
+            - generic [ref=e4414]: SOMI
+            - generic [ref=e4415]: 5h ago
+          - generic [ref=e4416]:
+            - generic [ref=e4417]: HYB Breakout Trader (15M)
+            - generic [ref=e4418]: "#124"
+            - link [ref=e4419] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e4420]
+            - generic [ref=e4423]: +$2.92
+            - generic [ref=e4424]: (+0.41%)
+      - 'button "Close long ASTER 5h ago HYB Swing Trader (4H) #141 $-37.84 (-4.10%)" [ref=e4426]':
+        - generic [ref=e4427]: Close long
+        - generic [ref=e4428]:
+          - generic [ref=e4429]:
+            - generic [ref=e4430]: ASTER
+            - generic [ref=e4431]: 5h ago
+          - generic [ref=e4432]:
+            - generic [ref=e4433]: HYB Swing Trader (4H)
+            - generic [ref=e4434]: "#141"
+            - link [ref=e4435] [cursor=pointer]:
+              - /url: /agents/181
+              - img [ref=e4436]
+            - generic [ref=e4439]: $-37.84
+            - generic [ref=e4440]: (-4.10%)
+      - 'button "Close long OM 5h ago HYB Momentum Trader (4H) #96 $-32.07 (-4.10%)" [ref=e4442]':
+        - generic [ref=e4443]: Close long
+        - generic [ref=e4444]:
+          - generic [ref=e4445]:
+            - generic [ref=e4446]: OM
+            - generic [ref=e4447]: 5h ago
+          - generic [ref=e4448]:
+            - generic [ref=e4449]: HYB Momentum Trader (4H)
+            - generic [ref=e4450]: "#96"
+            - link [ref=e4451] [cursor=pointer]:
+              - /url: /agents/175
+              - img [ref=e4452]
+            - generic [ref=e4455]: $-32.07
+            - generic [ref=e4456]: (-4.10%)
+      - 'button "Close short WBETH 5h ago HYB Breakout Trader (1H) #117 $-3.49 (-0.44%)" [ref=e4458]':
+        - generic [ref=e4459]: Close short
+        - generic [ref=e4460]:
+          - generic [ref=e4461]:
+            - generic [ref=e4462]: WBETH
+            - generic [ref=e4463]: 5h ago
+          - generic [ref=e4464]:
+            - generic [ref=e4465]: HYB Breakout Trader (1H)
+            - generic [ref=e4466]: "#117"
+            - link [ref=e4467] [cursor=pointer]:
+              - /url: /agents/171
+              - img [ref=e4468]
+            - generic [ref=e4471]: $-3.49
+            - generic [ref=e4472]: (-0.44%)
+      - 'button "Open long MITO 5h ago RB Breakout Hunter (30M) #127" [ref=e4474]':
+        - generic [ref=e4475]: Open long
+        - generic [ref=e4476]:
+          - generic [ref=e4477]:
+            - generic [ref=e4478]: MITO
+            - generic [ref=e4479]: 5h ago
+          - generic [ref=e4480]:
+            - generic [ref=e4481]: RB Breakout Hunter (30M)
+            - generic [ref=e4482]: "#127"
+            - link [ref=e4483] [cursor=pointer]:
+              - /url: /agents/35
+              - img [ref=e4484]
+      - 'button "Open long MITO 5h ago HYB Breakout Trader (30M) #119" [ref=e4488]':
+        - generic [ref=e4489]: Open long
+        - generic [ref=e4490]:
+          - generic [ref=e4491]:
+            - generic [ref=e4492]: MITO
+            - generic [ref=e4493]: 5h ago
+          - generic [ref=e4494]:
+            - generic [ref=e4495]: HYB Breakout Trader (30M)
+            - generic [ref=e4496]: "#119"
+            - link [ref=e4497] [cursor=pointer]:
+              - /url: /agents/163
+              - img [ref=e4498]
+      - 'button "Open short MITO 5h ago HYB Mean Reversion Trader (30M) #120" [ref=e4502]':
+        - generic [ref=e4503]: Open short
+        - generic [ref=e4504]:
+          - generic [ref=e4505]:
+            - generic [ref=e4506]: MITO
+            - generic [ref=e4507]: 5h ago
+          - generic [ref=e4508]:
+            - generic [ref=e4509]: HYB Mean Reversion Trader (30M)
+            - generic [ref=e4510]: "#120"
+            - link [ref=e4511] [cursor=pointer]:
+              - /url: /agents/161
+              - img [ref=e4512]
+      - 'button "Open short MITO 5h ago RB Mean Reversion (30M) #122" [ref=e4516]':
+        - generic [ref=e4517]: Open short
+        - generic [ref=e4518]:
+          - generic [ref=e4519]:
+            - generic [ref=e4520]: MITO
+            - generic [ref=e4521]: 5h ago
+          - generic [ref=e4522]:
+            - generic [ref=e4523]: RB Mean Reversion (30M)
+            - generic [ref=e4524]: "#122"
+            - link [ref=e4525] [cursor=pointer]:
+              - /url: /agents/34
+              - img [ref=e4526]
+      - 'button "Open long SNX 5h ago RB Momentum Trader (1H) #102" [ref=e4530]':
+        - generic [ref=e4531]: Open long
+        - generic [ref=e4532]:
+          - generic [ref=e4533]:
+            - generic [ref=e4534]: SNX
+            - generic [ref=e4535]: 5h ago
+          - generic [ref=e4536]:
+            - generic [ref=e4537]: RB Momentum Trader (1H)
+            - generic [ref=e4538]: "#102"
+            - link [ref=e4539] [cursor=pointer]:
+              - /url: /agents/37
+              - img [ref=e4540]
+      - 'button "Open long SNX 5h ago HYB Momentum Trader (1H) #90" [ref=e4544]':
+        - generic [ref=e4545]: Open long
+        - generic [ref=e4546]:
+          - generic [ref=e4547]:
+            - generic [ref=e4548]: SNX
+            - generic [ref=e4549]: 5h ago
+          - generic [ref=e4550]:
+            - generic [ref=e4551]: HYB Momentum Trader (1H)
+            - generic [ref=e4552]: "#90"
+            - link [ref=e4553] [cursor=pointer]:
+              - /url: /agents/167
+              - img [ref=e4554]
+      - 'button "Open short MITO 5h ago HYB Mean Reversion Trader (15M) #125" [ref=e4558]':
+        - generic [ref=e4559]: Open short
+        - generic [ref=e4560]:
+          - generic [ref=e4561]:
+            - generic [ref=e4562]: MITO
+            - generic [ref=e4563]: 5h ago
+          - generic [ref=e4564]:
+            - generic [ref=e4565]: HYB Mean Reversion Trader (15M)
+            - generic [ref=e4566]: "#125"
+            - link [ref=e4567] [cursor=pointer]:
+              - /url: /agents/153
+              - img [ref=e4568]
+      - 'button "Open short MITO 5h ago RB Mean Reversion (15M) #121" [ref=e4572]':
+        - generic [ref=e4573]: Open short
+        - generic [ref=e4574]:
+          - generic [ref=e4575]:
+            - generic [ref=e4576]: MITO
+            - generic [ref=e4577]: 5h ago
+          - generic [ref=e4578]:
+            - generic [ref=e4579]: RB Mean Reversion (15M)
+            - generic [ref=e4580]: "#121"
+            - link [ref=e4581] [cursor=pointer]:
+              - /url: /agents/30
+              - img [ref=e4582]
+      - 'button "Open short BCH 5h ago HYB Mean Reversion Trader (15M) #125" [ref=e4586]':
+        - generic [ref=e4587]: Open short
+        - generic [ref=e4588]:
+          - generic [ref=e4589]:
+            - generic [ref=e4590]: BCH
+            - generic [ref=e4591]: 5h ago
+          - generic [ref=e4592]:
+            - generic [ref=e4593]: HYB Mean Reversion Trader (15M)
+            - generic [ref=e4594]: "#125"
+            - link [ref=e4595] [cursor=pointer]:
+              - /url: /agents/153
+              - img [ref=e4596]
+      - 'button "Open short BCH 5h ago RB Mean Reversion (15M) #121" [ref=e4600]':
+        - generic [ref=e4601]: Open short
+        - generic [ref=e4602]:
+          - generic [ref=e4603]:
+            - generic [ref=e4604]: BCH
+            - generic [ref=e4605]: 5h ago
+          - generic [ref=e4606]:
+            - generic [ref=e4607]: RB Mean Reversion (15M)
+            - generic [ref=e4608]: "#121"
+            - link [ref=e4609] [cursor=pointer]:
+              - /url: /agents/30
+              - img [ref=e4610]
+      - 'button "Open long WLFI 6h ago HYB Swing Trader (1H) #148" [ref=e4614]':
+        - generic [ref=e4615]: Open long
+        - generic [ref=e4616]:
+          - generic [ref=e4617]:
+            - generic [ref=e4618]: WLFI
+            - generic [ref=e4619]: 6h ago
+          - generic [ref=e4620]:
+            - generic [ref=e4621]: HYB Swing Trader (1H)
+            - generic [ref=e4622]: "#148"
+            - link [ref=e4623] [cursor=pointer]:
+              - /url: /agents/173
+              - img [ref=e4624]
+      - 'button "Open long ATM 7h ago HYB Swing Trader (15M) #152" [ref=e4628]':
+        - generic [ref=e4629]: Open long
+        - generic [ref=e4630]:
+          - generic [ref=e4631]:
+            - generic [ref=e4632]: ATM
+            - generic [ref=e4633]: 7h ago
+          - generic [ref=e4634]:
+            - generic [ref=e4635]: HYB Swing Trader (15M)
+            - generic [ref=e4636]: "#152"
+            - link [ref=e4637] [cursor=pointer]:
+              - /url: /agents/157
+              - img [ref=e4638]
+      - 'button "Open long ATM 7h ago RB Swing Trader (15M) #150" [ref=e4642]':
+        - generic [ref=e4643]: Open long
+        - generic [ref=e4644]:
+          - generic [ref=e4645]:
+            - generic [ref=e4646]: ATM
+            - generic [ref=e4647]: 7h ago
+          - generic [ref=e4648]:
+            - generic [ref=e4649]: RB Swing Trader (15M)
+            - generic [ref=e4650]: "#150"
+            - link [ref=e4651] [cursor=pointer]:
+              - /url: /agents/32
+              - img [ref=e4652]
+      - 'button "Open short EUR 9h ago HYB Breakout Trader (4H) #114" [ref=e4656]':
+        - generic [ref=e4657]: Open short
+        - generic [ref=e4658]:
+          - generic [ref=e4659]:
+            - generic [ref=e4660]: EUR
+            - generic [ref=e4661]: 9h ago
+          - generic [ref=e4662]:
+            - generic [ref=e4663]: HYB Breakout Trader (4H)
+            - generic [ref=e4664]: "#114"
+            - link [ref=e4665] [cursor=pointer]:
+              - /url: /agents/179
+              - img [ref=e4666]
+      - 'button "Open short EUR 9h ago RB Breakout Hunter (4H) #115" [ref=e4670]':
+        - generic [ref=e4671]: Open short
+        - generic [ref=e4672]:
+          - generic [ref=e4673]:
+            - generic [ref=e4674]: EUR
+            - generic [ref=e4675]: 9h ago
+          - generic [ref=e4676]:
+            - generic [ref=e4677]: RB Breakout Hunter (4H)
+            - generic [ref=e4678]: "#115"
+            - link [ref=e4679] [cursor=pointer]:
+              - /url: /agents/43
+              - img [ref=e4680]
+      - 'button "Open long ATM 14h ago HYB Swing Trader (30M) #144" [ref=e4684]':
+        - generic [ref=e4685]: Open long
+        - generic [ref=e4686]:
+          - generic [ref=e4687]:
+            - generic [ref=e4688]: ATM
+            - generic [ref=e4689]: 14h ago
+          - generic [ref=e4690]:
+            - generic [ref=e4691]: HYB Swing Trader (30M)
+            - generic [ref=e4692]: "#144"
+            - link [ref=e4693] [cursor=pointer]:
+              - /url: /agents/165
+              - img [ref=e4694]
+      - 'button "Open long GUN 18h ago HYB Momentum Trader (4H) #96" [ref=e4698]':
+        - generic [ref=e4699]: Open long
+        - generic [ref=e4700]:
+          - generic [ref=e4701]:
+            - generic [ref=e4702]: GUN
+            - generic [ref=e4703]: 18h ago
+          - generic [ref=e4704]:
+            - generic [ref=e4705]: HYB Momentum Trader (4H)
+            - generic [ref=e4706]: "#96"
+            - link [ref=e4707] [cursor=pointer]:
+              - /url: /agents/175
+              - img [ref=e4708]
+      - 'button "Open long GUN 18h ago RB Momentum Trader (4H) #6" [ref=e4712]':
+        - generic [ref=e4713]: Open long
+        - generic [ref=e4714]:
+          - generic [ref=e4715]:
+            - generic [ref=e4716]: GUN
+            - generic [ref=e4717]: 18h ago
+          - generic [ref=e4718]:
+            - generic [ref=e4719]: RB Momentum Trader (4H)
+            - generic [ref=e4720]: "#6"
+            - link [ref=e4721] [cursor=pointer]:
+              - /url: /agents/41
+              - img [ref=e4722]
+      - 'button "Open long GPS 20h ago RB Momentum Trader (1D) #116" [ref=e4726]':
+        - generic [ref=e4727]: Open long
+        - generic [ref=e4728]:
+          - generic [ref=e4729]:
+            - generic [ref=e4730]: GPS
+            - generic [ref=e4731]: 20h ago
+          - generic [ref=e4732]:
+            - generic [ref=e4733]: RB Momentum Trader (1D)
+            - generic [ref=e4734]: "#116"
+            - link [ref=e4735] [cursor=pointer]:
+              - /url: /agents/45
+              - img [ref=e4736]
+      - 'button "Open long GPS 20h ago HYB Momentum Trader (1D) #109" [ref=e4740]':
+        - generic [ref=e4741]: Open long
+        - generic [ref=e4742]:
+          - generic [ref=e4743]:
+            - generic [ref=e4744]: GPS
+            - generic [ref=e4745]: 20h ago
+          - generic [ref=e4746]:
+            - generic [ref=e4747]: HYB Momentum Trader (1D)
+            - generic [ref=e4748]: "#109"
+            - link [ref=e4749] [cursor=pointer]:
+              - /url: /agents/183
+              - img [ref=e4750]
+      - 'button "Open short ATOM 1d ago RB Mean Reversion (1D) #85" [ref=e4754]':
+        - generic [ref=e4755]: Open short
+        - generic [ref=e4756]:
+          - generic [ref=e4757]:
+            - generic [ref=e4758]: ATOM
+            - generic [ref=e4759]: 1d ago
+          - generic [ref=e4760]:
+            - generic [ref=e4761]: RB Mean Reversion (1D)
+            - generic [ref=e4762]: "#85"
+            - link [ref=e4763] [cursor=pointer]:
+              - /url: /agents/46
+              - img [ref=e4764]
+      - 'button "Open short PEPE 1d ago RB Swing Trader (1D) #139" [ref=e4768]':
+        - generic [ref=e4769]: Open short
+        - generic [ref=e4770]:
+          - generic [ref=e4771]:
+            - generic [ref=e4772]: PEPE
+            - generic [ref=e4773]: 1d ago
+          - generic [ref=e4774]:
+            - generic [ref=e4775]: RB Swing Trader (1D)
+            - generic [ref=e4776]: "#139"
+            - link [ref=e4777] [cursor=pointer]:
+              - /url: /agents/48
+              - img [ref=e4778]
+      - 'button "Open short ATOM 1d ago HYB Mean Reversion Trader (1D) #84" [ref=e4782]':
+        - generic [ref=e4783]: Open short
+        - generic [ref=e4784]:
+          - generic [ref=e4785]:
+            - generic [ref=e4786]: ATOM
+            - generic [ref=e4787]: 1d ago
+          - generic [ref=e4788]:
+            - generic [ref=e4789]: HYB Mean Reversion Trader (1D)
+            - generic [ref=e4790]: "#84"
+            - link [ref=e4791] [cursor=pointer]:
+              - /url: /agents/185
+              - img [ref=e4792]
+      - 'button "Open short PEPE 1d ago HYB Swing Trader (1D) #81" [ref=e4796]':
+        - generic [ref=e4797]: Open short
+        - generic [ref=e4798]:
+          - generic [ref=e4799]:
+            - generic [ref=e4800]: PEPE
+            - generic [ref=e4801]: 1d ago
+          - generic [ref=e4802]:
+            - generic [ref=e4803]: HYB Swing Trader (1D)
+            - generic [ref=e4804]: "#81"
+            - link [ref=e4805] [cursor=pointer]:
+              - /url: /agents/189
+              - img [ref=e4806]
+      - 'button "Open long GUN 1d ago RB Swing Trader (30M) #142" [ref=e4810]':
+        - generic [ref=e4811]: Open long
+        - generic [ref=e4812]:
+          - generic [ref=e4813]:
+            - generic [ref=e4814]: GUN
+            - generic [ref=e4815]: 1d ago
+          - generic [ref=e4816]:
+            - generic [ref=e4817]: RB Swing Trader (30M)
+            - generic [ref=e4818]: "#142"
+            - link [ref=e4819] [cursor=pointer]:
+              - /url: /agents/36
+              - img [ref=e4820]
+      - 'button "Open long GUN 1d ago HYB Swing Trader (30M) #144" [ref=e4824]':
+        - generic [ref=e4825]: Open long
+        - generic [ref=e4826]:
+          - generic [ref=e4827]:
+            - generic [ref=e4828]: GUN
+            - generic [ref=e4829]: 1d ago
+          - generic [ref=e4830]:
+            - generic [ref=e4831]: HYB Swing Trader (30M)
+            - generic [ref=e4832]: "#144"
+            - link [ref=e4833] [cursor=pointer]:
+              - /url: /agents/165
+              - img [ref=e4834]
+      - 'button "Open short AAVE 1d ago RB Swing Trader (1D) #139" [ref=e4838]':
+        - generic [ref=e4839]: Open short
+        - generic [ref=e4840]:
+          - generic [ref=e4841]:
+            - generic [ref=e4842]: AAVE
+            - generic [ref=e4843]: 1d ago
+          - generic [ref=e4844]:
+            - generic [ref=e4845]: RB Swing Trader (1D)
+            - generic [ref=e4846]: "#139"
+            - link [ref=e4847] [cursor=pointer]:
+              - /url: /agents/48
+              - img [ref=e4848]
+      - 'button "Open short AAVE 1d ago HYB Swing Trader (1D) #81" [ref=e4852]':
+        - generic [ref=e4853]: Open short
+        - generic [ref=e4854]:
+          - generic [ref=e4855]:
+            - generic [ref=e4856]: AAVE
+            - generic [ref=e4857]: 1d ago
+          - generic [ref=e4858]:
+            - generic [ref=e4859]: HYB Swing Trader (1D)
+            - generic [ref=e4860]: "#81"
+            - link [ref=e4861] [cursor=pointer]:
+              - /url: /agents/189
+              - img [ref=e4862]
+      - 'button "Open short UNI 1d ago RB Swing Trader (4H) #110" [ref=e4866]':
+        - generic [ref=e4867]: Open short
+        - generic [ref=e4868]:
+          - generic [ref=e4869]:
+            - generic [ref=e4870]: UNI
+            - generic [ref=e4871]: 1d ago
+          - generic [ref=e4872]:
+            - generic [ref=e4873]: RB Swing Trader (4H)
+            - generic [ref=e4874]: "#110"
+            - link [ref=e4875] [cursor=pointer]:
+              - /url: /agents/44
+              - img [ref=e4876]
+      - 'button "Open long ESP 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e4880]':
+        - generic [ref=e4881]: Open long
+        - generic [ref=e4882]:
+          - generic [ref=e4883]:
+            - generic [ref=e4884]: ESP
+            - generic [ref=e4885]: 2d ago
+          - generic [ref=e4886]:
+            - generic [ref=e4887]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e4888]: "#105"
+            - link [ref=e4889] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e4890]
+      - 'button "Open long MMT 2d ago HYB-LLM Mean Reversion Trader (1H) #7" [ref=e4894]':
+        - generic [ref=e4895]: Open long
+        - generic [ref=e4896]:
+          - generic [ref=e4897]:
+            - generic [ref=e4898]: MMT
+            - generic [ref=e4899]: 2d ago
+          - generic [ref=e4900]:
+            - generic [ref=e4901]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e4902]: "#7"
+            - link [ref=e4903] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e4904]
+      - 'button "Open long ORCA 2d ago HYB-LLM Momentum Trader (4H) #130" [ref=e4908]':
+        - generic [ref=e4909]: Open long
+        - generic [ref=e4910]:
+          - generic [ref=e4911]:
+            - generic [ref=e4912]: ORCA
+            - generic [ref=e4913]: 2d ago
+          - generic [ref=e4914]:
+            - generic [ref=e4915]: HYB-LLM Momentum Trader (4H)
+            - generic [ref=e4916]: "#130"
+            - link [ref=e4917] [cursor=pointer]:
+              - /url: /agents/176
+              - img [ref=e4918]
+      - 'button "Open long INIT 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e4922]':
+        - generic [ref=e4923]: Open long
+        - generic [ref=e4924]:
+          - generic [ref=e4925]:
+            - generic [ref=e4926]: INIT
+            - generic [ref=e4927]: 2d ago
+          - generic [ref=e4928]:
+            - generic [ref=e4929]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e4930]: "#99"
+            - link [ref=e4931] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e4932]
+      - 'button "Open long ATM 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e4936]':
+        - generic [ref=e4937]: Open long
+        - generic [ref=e4938]:
+          - generic [ref=e4939]:
+            - generic [ref=e4940]: ATM
+            - generic [ref=e4941]: 2d ago
+          - generic [ref=e4942]:
+            - generic [ref=e4943]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e4944]: "#107"
+            - link [ref=e4945] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e4946]
+      - 'button "Open long ESP 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e4950]':
+        - generic [ref=e4951]: Open long
+        - generic [ref=e4952]:
+          - generic [ref=e4953]:
+            - generic [ref=e4954]: ESP
+            - generic [ref=e4955]: 2d ago
+          - generic [ref=e4956]:
+            - generic [ref=e4957]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e4958]: "#132"
+            - link [ref=e4959] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e4960]
+      - 'button "Open long 0G 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e4964]':
+        - generic [ref=e4965]: Open long
+        - generic [ref=e4966]:
+          - generic [ref=e4967]:
+            - generic [ref=e4968]: 0G
+            - generic [ref=e4969]: 2d ago
+          - generic [ref=e4970]:
+            - generic [ref=e4971]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e4972]: "#132"
+            - link [ref=e4973] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e4974]
+      - 'button "Open long HUMA 2d ago HYB-LLM Mean Reversion Trader (1H) #7" [ref=e4978]':
+        - generic [ref=e4979]: Open long
+        - generic [ref=e4980]:
+          - generic [ref=e4981]:
+            - generic [ref=e4982]: HUMA
+            - generic [ref=e4983]: 2d ago
+          - generic [ref=e4984]:
+            - generic [ref=e4985]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e4986]: "#7"
+            - link [ref=e4987] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e4988]
+      - 'button "Open long ATM 2d ago HYB-LLM Breakout Trader (15M) #143" [ref=e4992]':
+        - generic [ref=e4993]: Open long
+        - generic [ref=e4994]:
+          - generic [ref=e4995]:
+            - generic [ref=e4996]: ATM
+            - generic [ref=e4997]: 2d ago
+          - generic [ref=e4998]:
+            - generic [ref=e4999]: HYB-LLM Breakout Trader (15M)
+            - generic [ref=e5000]: "#143"
+            - link [ref=e5001] [cursor=pointer]:
+              - /url: /agents/156
+              - img [ref=e5002]
+      - 'button "Open long INIT 2d ago TW-LLM Momentum Rider (1D) #88" [ref=e5006]':
+        - generic [ref=e5007]: Open long
+        - generic [ref=e5008]:
+          - generic [ref=e5009]:
+            - generic [ref=e5010]: INIT
+            - generic [ref=e5011]: 2d ago
+          - generic [ref=e5012]:
+            - generic [ref=e5013]: TW-LLM Momentum Rider (1D)
+            - generic [ref=e5014]: "#88"
+            - link [ref=e5015] [cursor=pointer]:
+              - /url: /agents/90
+              - img [ref=e5016]
+      - 'button "Open long ALLO 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e5020]':
+        - generic [ref=e5021]: Open long
+        - generic [ref=e5022]:
+          - generic [ref=e5023]:
+            - generic [ref=e5024]: ALLO
+            - generic [ref=e5025]: 2d ago
+          - generic [ref=e5026]:
+            - generic [ref=e5027]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e5028]: "#105"
+            - link [ref=e5029] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e5030]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Mean Reversion Trader (1W) #3" [ref=e5034]':
+        - generic [ref=e5035]: Open long
+        - generic [ref=e5036]:
+          - generic [ref=e5037]:
+            - generic [ref=e5038]: FDUSD
+            - generic [ref=e5039]: 2d ago
+          - generic [ref=e5040]:
+            - generic [ref=e5041]: HYB-LLM Mean Reversion Trader (1W)
+            - generic [ref=e5042]: "#3"
+            - link [ref=e5043] [cursor=pointer]:
+              - /url: /agents/194
+              - img [ref=e5044]
+      - 'button "Open long BTC 2d ago RB Mean Reversion (1W) #4" [ref=e5048]':
+        - generic [ref=e5049]: Open long
+        - generic [ref=e5050]:
+          - generic [ref=e5051]:
+            - generic [ref=e5052]: BTC
+            - generic [ref=e5053]: 2d ago
+          - generic [ref=e5054]:
+            - generic [ref=e5055]: RB Mean Reversion (1W)
+            - generic [ref=e5056]: "#4"
+            - link [ref=e5057] [cursor=pointer]:
+              - /url: /agents/50
+              - img [ref=e5058]
+      - 'button "Open long INIT 2d ago HYB-LLM Momentum Trader (1D) #134" [ref=e5062]':
+        - generic [ref=e5063]: Open long
+        - generic [ref=e5064]:
+          - generic [ref=e5065]:
+            - generic [ref=e5066]: INIT
+            - generic [ref=e5067]: 2d ago
+          - generic [ref=e5068]:
+            - generic [ref=e5069]: HYB-LLM Momentum Trader (1D)
+            - generic [ref=e5070]: "#134"
+            - link [ref=e5071] [cursor=pointer]:
+              - /url: /agents/184
+              - img [ref=e5072]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Breakout Trader (1W) #113" [ref=e5076]':
+        - generic [ref=e5077]: Open long
+        - generic [ref=e5078]:
+          - generic [ref=e5079]:
+            - generic [ref=e5080]: FDUSD
+            - generic [ref=e5081]: 2d ago
+          - generic [ref=e5082]:
+            - generic [ref=e5083]: HYB-LLM Breakout Trader (1W)
+            - generic [ref=e5084]: "#113"
+            - link [ref=e5085] [cursor=pointer]:
+              - /url: /agents/196
+              - img [ref=e5086]
+      - 'button "Open long BTC 2d ago HYB Mean Reversion Trader (1W) #8" [ref=e5090]':
+        - generic [ref=e5091]: Open long
+        - generic [ref=e5092]:
+          - generic [ref=e5093]:
+            - generic [ref=e5094]: BTC
+            - generic [ref=e5095]: 2d ago
+          - generic [ref=e5096]:
+            - generic [ref=e5097]: HYB Mean Reversion Trader (1W)
+            - generic [ref=e5098]: "#8"
+            - link [ref=e5099] [cursor=pointer]:
+              - /url: /agents/193
+              - img [ref=e5100]
+      - 'button "Open long KITE 2d ago HYB-LLM Mean Reversion Trader (1D) #10" [ref=e5104]':
+        - generic [ref=e5105]: Open long
+        - generic [ref=e5106]:
+          - generic [ref=e5107]:
+            - generic [ref=e5108]: KITE
+            - generic [ref=e5109]: 2d ago
+          - generic [ref=e5110]:
+            - generic [ref=e5111]: HYB-LLM Mean Reversion Trader (1D)
+            - generic [ref=e5112]: "#10"
+            - link [ref=e5113] [cursor=pointer]:
+              - /url: /agents/186
+              - img [ref=e5114]
+      - 'button "Open long ESP 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e5118]':
+        - generic [ref=e5119]: Open long
+        - generic [ref=e5120]:
+          - generic [ref=e5121]:
+            - generic [ref=e5122]: ESP
+            - generic [ref=e5123]: 2d ago
+          - generic [ref=e5124]:
+            - generic [ref=e5125]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e5126]: "#140"
+            - link [ref=e5127] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e5128]
+      - 'button "Open long MMT 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e5132]':
+        - generic [ref=e5133]: Open long
+        - generic [ref=e5134]:
+          - generic [ref=e5135]:
+            - generic [ref=e5136]: MMT
+            - generic [ref=e5137]: 2d ago
+          - generic [ref=e5138]:
+            - generic [ref=e5139]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e5140]: "#107"
+            - link [ref=e5141] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e5142]
+      - 'button "Open long JTO 2d ago HYB-LLM Mean Reversion Trader (1H) #7" [ref=e5146]':
+        - generic [ref=e5147]: Open long
+        - generic [ref=e5148]:
+          - generic [ref=e5149]:
+            - generic [ref=e5150]: JTO
+            - generic [ref=e5151]: 2d ago
+          - generic [ref=e5152]:
+            - generic [ref=e5153]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e5154]: "#7"
+            - link [ref=e5155] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e5156]
+      - 'button "Open long MUBARAK 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e5160]':
+        - generic [ref=e5161]: Open long
+        - generic [ref=e5162]:
+          - generic [ref=e5163]:
+            - generic [ref=e5164]: MUBARAK
+            - generic [ref=e5165]: 2d ago
+          - generic [ref=e5166]:
+            - generic [ref=e5167]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e5168]: "#132"
+            - link [ref=e5169] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e5170]
+      - 'button "Open long MUBARAK 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e5174]':
+        - generic [ref=e5175]: Open long
+        - generic [ref=e5176]:
+          - generic [ref=e5177]:
+            - generic [ref=e5178]: MUBARAK
+            - generic [ref=e5179]: 2d ago
+          - generic [ref=e5180]:
+            - generic [ref=e5181]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e5182]: "#108"
+            - link [ref=e5183] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e5184]
+      - 'button "Open long PAXG 2d ago HYB-LLM Momentum Trader (1W) #133" [ref=e5188]':
+        - generic [ref=e5189]: Open long
+        - generic [ref=e5190]:
+          - generic [ref=e5191]:
+            - generic [ref=e5192]: PAXG
+            - generic [ref=e5193]: 2d ago
+          - generic [ref=e5194]:
+            - generic [ref=e5195]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e5196]: "#133"
+            - link [ref=e5197] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e5198]
+      - 'button "Open long TAO 2d ago HYB-LLM Swing Trader (1H) #112" [ref=e5202]':
+        - generic [ref=e5203]: Open long
+        - generic [ref=e5204]:
+          - generic [ref=e5205]:
+            - generic [ref=e5206]: TAO
+            - generic [ref=e5207]: 2d ago
+          - generic [ref=e5208]:
+            - generic [ref=e5209]: HYB-LLM Swing Trader (1H)
+            - generic [ref=e5210]: "#112"
+            - link [ref=e5211] [cursor=pointer]:
+              - /url: /agents/174
+              - img [ref=e5212]
+      - 'button "Open short TWT 2d ago HYB Mean Reversion Trader (4H) #123" [ref=e5216]':
+        - generic [ref=e5217]: Open short
+        - generic [ref=e5218]:
+          - generic [ref=e5219]:
+            - generic [ref=e5220]: TWT
+            - generic [ref=e5221]: 2d ago
+          - generic [ref=e5222]:
+            - generic [ref=e5223]: HYB Mean Reversion Trader (4H)
+            - generic [ref=e5224]: "#123"
+            - link [ref=e5225] [cursor=pointer]:
+              - /url: /agents/177
+              - img [ref=e5226]
+      - 'button "Open long RPL 2d ago HYB-LLM Swing Trader (4H) #95" [ref=e5230]':
+        - generic [ref=e5231]: Open long
+        - generic [ref=e5232]:
+          - generic [ref=e5233]:
+            - generic [ref=e5234]: RPL
+            - generic [ref=e5235]: 2d ago
+          - generic [ref=e5236]:
+            - generic [ref=e5237]: HYB-LLM Swing Trader (4H)
+            - generic [ref=e5238]: "#95"
+            - link [ref=e5239] [cursor=pointer]:
+              - /url: /agents/182
+              - img [ref=e5240]
+      - 'button "Open short TWT 2d ago RB Mean Reversion (4H) #126" [ref=e5244]':
+        - generic [ref=e5245]: Open short
+        - generic [ref=e5246]:
+          - generic [ref=e5247]:
+            - generic [ref=e5248]: TWT
+            - generic [ref=e5249]: 2d ago
+          - generic [ref=e5250]:
+            - generic [ref=e5251]: RB Mean Reversion (4H)
+            - generic [ref=e5252]: "#126"
+            - link [ref=e5253] [cursor=pointer]:
+              - /url: /agents/42
+              - img [ref=e5254]
+      - 'button "Open long TAO 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e5258]':
+        - generic [ref=e5259]: Open long
+        - generic [ref=e5260]:
+          - generic [ref=e5261]:
+            - generic [ref=e5262]: TAO
+            - generic [ref=e5263]: 2d ago
+          - generic [ref=e5264]:
+            - generic [ref=e5265]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e5266]: "#107"
+            - link [ref=e5267] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e5268]
+      - 'button "Open long TAO 2d ago TW-LLM Narrative Follower (15M) #103" [ref=e5272]':
+        - generic [ref=e5273]: Open long
+        - generic [ref=e5274]:
+          - generic [ref=e5275]:
+            - generic [ref=e5276]: TAO
+            - generic [ref=e5277]: 2d ago
+          - generic [ref=e5278]:
+            - generic [ref=e5279]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e5280]: "#103"
+            - link [ref=e5281] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e5282]
+      - 'button "Open long ESP 2d ago HYB-LLM Momentum Trader (15M) #100" [ref=e5286]':
+        - generic [ref=e5287]: Open long
+        - generic [ref=e5288]:
+          - generic [ref=e5289]:
+            - generic [ref=e5290]: ESP
+            - generic [ref=e5291]: 2d ago
+          - generic [ref=e5292]:
+            - generic [ref=e5293]: HYB-LLM Momentum Trader (15M)
+            - generic [ref=e5294]: "#100"
+            - link [ref=e5295] [cursor=pointer]:
+              - /url: /agents/152
+              - img [ref=e5296]
+      - 'button "Open long TAO 2d ago HYB-LLM Mean Reversion Trader (15M) #135" [ref=e5300]':
+        - generic [ref=e5301]: Open long
+        - generic [ref=e5302]:
+          - generic [ref=e5303]:
+            - generic [ref=e5304]: TAO
+            - generic [ref=e5305]: 2d ago
+          - generic [ref=e5306]:
+            - generic [ref=e5307]: HYB-LLM Mean Reversion Trader (15M)
+            - generic [ref=e5308]: "#135"
+            - link [ref=e5309] [cursor=pointer]:
+              - /url: /agents/154
+              - img [ref=e5310]
+      - 'button "Open long 0G 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e5314]':
+        - generic [ref=e5315]: Open long
+        - generic [ref=e5316]:
+          - generic [ref=e5317]:
+            - generic [ref=e5318]: 0G
+            - generic [ref=e5319]: 2d ago
+          - generic [ref=e5320]:
+            - generic [ref=e5321]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e5322]: "#108"
+            - link [ref=e5323] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e5324]
+      - 'button "Open long TAO 2d ago HYB-LLM Mean Reversion Trader (1H) #7" [ref=e5328]':
+        - generic [ref=e5329]: Open long
+        - generic [ref=e5330]:
+          - generic [ref=e5331]:
+            - generic [ref=e5332]: TAO
+            - generic [ref=e5333]: 2d ago
+          - generic [ref=e5334]:
+            - generic [ref=e5335]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e5336]: "#7"
+            - link [ref=e5337] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e5338]
+      - 'button "Open long TAO 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e5342]':
+        - generic [ref=e5343]: Open long
+        - generic [ref=e5344]:
+          - generic [ref=e5345]:
+            - generic [ref=e5346]: TAO
+            - generic [ref=e5347]: 2d ago
+          - generic [ref=e5348]:
+            - generic [ref=e5349]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e5350]: "#132"
+            - link [ref=e5351] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e5352]
+      - 'button "Open long ALLO 2d ago HYB-LLM Breakout Trader (30M) #129" [ref=e5356]':
+        - generic [ref=e5357]: Open long
+        - generic [ref=e5358]:
+          - generic [ref=e5359]:
+            - generic [ref=e5360]: ALLO
+            - generic [ref=e5361]: 2d ago
+          - generic [ref=e5362]:
+            - generic [ref=e5363]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e5364]: "#129"
+            - link [ref=e5365] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e5366]
+      - 'button "Open long MMT 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e5370]':
+        - generic [ref=e5371]: Open long
+        - generic [ref=e5372]:
+          - generic [ref=e5373]:
+            - generic [ref=e5374]: MMT
+            - generic [ref=e5375]: 2d ago
+          - generic [ref=e5376]:
+            - generic [ref=e5377]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e5378]: "#105"
+            - link [ref=e5379] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e5380]
+      - 'button "Open long TAO 2d ago HYB-LLM Breakout Trader (15M) #143" [ref=e5384]':
+        - generic [ref=e5385]: Open long
+        - generic [ref=e5386]:
+          - generic [ref=e5387]:
+            - generic [ref=e5388]: TAO
+            - generic [ref=e5389]: 2d ago
+          - generic [ref=e5390]:
+            - generic [ref=e5391]: HYB-LLM Breakout Trader (15M)
+            - generic [ref=e5392]: "#143"
+            - link [ref=e5393] [cursor=pointer]:
+              - /url: /agents/156
+              - img [ref=e5394]
+      - 'button "Open long JTO 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e5398]':
+        - generic [ref=e5399]: Open long
+        - generic [ref=e5400]:
+          - generic [ref=e5401]:
+            - generic [ref=e5402]: JTO
+            - generic [ref=e5403]: 2d ago
+          - generic [ref=e5404]:
+            - generic [ref=e5405]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e5406]: "#107"
+            - link [ref=e5407] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e5408]
+      - 'button "Open long MMT 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e5412]':
+        - generic [ref=e5413]: Open long
+        - generic [ref=e5414]:
+          - generic [ref=e5415]:
+            - generic [ref=e5416]: MMT
+            - generic [ref=e5417]: 2d ago
+          - generic [ref=e5418]:
+            - generic [ref=e5419]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e5420]: "#108"
+            - link [ref=e5421] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e5422]
+      - 'button "Open long FDUSD 2d ago TW-LLM Momentum Rider (1D) #88" [ref=e5426]':
+        - generic [ref=e5427]: Open long
+        - generic [ref=e5428]:
+          - generic [ref=e5429]:
+            - generic [ref=e5430]: FDUSD
+            - generic [ref=e5431]: 2d ago
+          - generic [ref=e5432]:
+            - generic [ref=e5433]: TW-LLM Momentum Rider (1D)
+            - generic [ref=e5434]: "#88"
+            - link [ref=e5435] [cursor=pointer]:
+              - /url: /agents/90
+              - img [ref=e5436]
+      - 'button "Open long MMT 2d ago HYB-LLM Momentum Trader (15M) #100" [ref=e5440]':
+        - generic [ref=e5441]: Open long
+        - generic [ref=e5442]:
+          - generic [ref=e5443]:
+            - generic [ref=e5444]: MMT
+            - generic [ref=e5445]: 2d ago
+          - generic [ref=e5446]:
+            - generic [ref=e5447]: HYB-LLM Momentum Trader (15M)
+            - generic [ref=e5448]: "#100"
+            - link [ref=e5449] [cursor=pointer]:
+              - /url: /agents/152
+              - img [ref=e5450]
+      - 'button "Open long RPL 2d ago TW-LLM Narrative Follower (15M) #103" [ref=e5454]':
+        - generic [ref=e5455]: Open long
+        - generic [ref=e5456]:
+          - generic [ref=e5457]:
+            - generic [ref=e5458]: RPL
+            - generic [ref=e5459]: 2d ago
+          - generic [ref=e5460]:
+            - generic [ref=e5461]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e5462]: "#103"
+            - link [ref=e5463] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e5464]
+      - 'button "Open long TRX 2d ago HYB-LLM Mean Reversion Trader (1W) #3" [ref=e5468]':
+        - generic [ref=e5469]: Open long
+        - generic [ref=e5470]:
+          - generic [ref=e5471]:
+            - generic [ref=e5472]: TRX
+            - generic [ref=e5473]: 2d ago
+          - generic [ref=e5474]:
+            - generic [ref=e5475]: HYB-LLM Mean Reversion Trader (1W)
+            - generic [ref=e5476]: "#3"
+            - link [ref=e5477] [cursor=pointer]:
+              - /url: /agents/194
+              - img [ref=e5478]
+      - 'button "Open long BERA 2d ago HYB-LLM Mean Reversion Trader (1H) #7" [ref=e5482]':
+        - generic [ref=e5483]: Open long
+        - generic [ref=e5484]:
+          - generic [ref=e5485]:
+            - generic [ref=e5486]: BERA
+            - generic [ref=e5487]: 2d ago
+          - generic [ref=e5488]:
+            - generic [ref=e5489]: HYB-LLM Mean Reversion Trader (1H)
+            - generic [ref=e5490]: "#7"
+            - link [ref=e5491] [cursor=pointer]:
+              - /url: /agents/170
+              - img [ref=e5492]
+      - 'button "Open long ASTER 2d ago HYB-LLM Breakout Trader (1D) #118" [ref=e5496]':
+        - generic [ref=e5497]: Open long
+        - generic [ref=e5498]:
+          - generic [ref=e5499]:
+            - generic [ref=e5500]: ASTER
+            - generic [ref=e5501]: 2d ago
+          - generic [ref=e5502]:
+            - generic [ref=e5503]: HYB-LLM Breakout Trader (1D)
+            - generic [ref=e5504]: "#118"
+            - link [ref=e5505] [cursor=pointer]:
+              - /url: /agents/188
+              - img [ref=e5506]
+      - 'button "Open long EUR 2d ago HYB-LLM Momentum Trader (1W) #133" [ref=e5510]':
+        - generic [ref=e5511]: Open long
+        - generic [ref=e5512]:
+          - generic [ref=e5513]:
+            - generic [ref=e5514]: EUR
+            - generic [ref=e5515]: 2d ago
+          - generic [ref=e5516]:
+            - generic [ref=e5517]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e5518]: "#133"
+            - link [ref=e5519] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e5520]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Swing Trader (1W) #86" [ref=e5524]':
+        - generic [ref=e5525]: Open long
+        - generic [ref=e5526]:
+          - generic [ref=e5527]:
+            - generic [ref=e5528]: FDUSD
+            - generic [ref=e5529]: 2d ago
+          - generic [ref=e5530]:
+            - generic [ref=e5531]: HYB-LLM Swing Trader (1W)
+            - generic [ref=e5532]: "#86"
+            - link [ref=e5533] [cursor=pointer]:
+              - /url: /agents/198
+              - img [ref=e5534]
+      - 'button "Open long BCH 2d ago HYB-LLM Breakout Trader (1W) #113" [ref=e5538]':
+        - generic [ref=e5539]: Open long
+        - generic [ref=e5540]:
+          - generic [ref=e5541]:
+            - generic [ref=e5542]: BCH
+            - generic [ref=e5543]: 2d ago
+          - generic [ref=e5544]:
+            - generic [ref=e5545]: HYB-LLM Breakout Trader (1W)
+            - generic [ref=e5546]: "#113"
+            - link [ref=e5547] [cursor=pointer]:
+              - /url: /agents/196
+              - img [ref=e5548]
+      - 'button "Open long ASTER 2d ago HYB-LLM Mean Reversion Trader (1D) #10" [ref=e5552]':
+        - generic [ref=e5553]: Open long
+        - generic [ref=e5554]:
+          - generic [ref=e5555]:
+            - generic [ref=e5556]: ASTER
+            - generic [ref=e5557]: 2d ago
+          - generic [ref=e5558]:
+            - generic [ref=e5559]: HYB-LLM Mean Reversion Trader (1D)
+            - generic [ref=e5560]: "#10"
+            - link [ref=e5561] [cursor=pointer]:
+              - /url: /agents/186
+              - img [ref=e5562]
+      - 'button "Open long ATOM 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e5566]':
+        - generic [ref=e5567]: Open long
+        - generic [ref=e5568]:
+          - generic [ref=e5569]:
+            - generic [ref=e5570]: ATOM
+            - generic [ref=e5571]: 2d ago
+          - generic [ref=e5572]:
+            - generic [ref=e5573]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e5574]: "#140"
+            - link [ref=e5575] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e5576]
+      - 'button "Open long ATOM 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e5580]':
+        - generic [ref=e5581]: Open long
+        - generic [ref=e5582]:
+          - generic [ref=e5583]:
+            - generic [ref=e5584]: ATOM
+            - generic [ref=e5585]: 2d ago
+          - generic [ref=e5586]:
+            - generic [ref=e5587]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e5588]: "#108"
+            - link [ref=e5589] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e5590]
+      - 'button "Open long NEXO 2d ago HYB-LLM Breakout Trader (1H) #138" [ref=e5594]':
+        - generic [ref=e5595]: Open long
+        - generic [ref=e5596]:
+          - generic [ref=e5597]:
+            - generic [ref=e5598]: NEXO
+            - generic [ref=e5599]: 2d ago
+          - generic [ref=e5600]:
+            - generic [ref=e5601]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e5602]: "#138"
+            - link [ref=e5603] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e5604]
+      - 'button "Open long NEXO 2d ago HYB-LLM Momentum Trader (1H) #147" [ref=e5608]':
+        - generic [ref=e5609]: Open long
+        - generic [ref=e5610]:
+          - generic [ref=e5611]:
+            - generic [ref=e5612]: NEXO
+            - generic [ref=e5613]: 2d ago
+          - generic [ref=e5614]:
+            - generic [ref=e5615]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e5616]: "#147"
+            - link [ref=e5617] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e5618]
+      - 'button "Open long RPL 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e5622]':
+        - generic [ref=e5623]: Open long
+        - generic [ref=e5624]:
+          - generic [ref=e5625]:
+            - generic [ref=e5626]: RPL
+            - generic [ref=e5627]: 2d ago
+          - generic [ref=e5628]:
+            - generic [ref=e5629]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e5630]: "#99"
+            - link [ref=e5631] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e5632]
+      - 'button "Open long JTO 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e5636]':
+        - generic [ref=e5637]: Open long
+        - generic [ref=e5638]:
+          - generic [ref=e5639]:
+            - generic [ref=e5640]: JTO
+            - generic [ref=e5641]: 2d ago
+          - generic [ref=e5642]:
+            - generic [ref=e5643]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e5644]: "#105"
+            - link [ref=e5645] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e5646]
+      - 'button "Open long MAGIC 2d ago TW-LLM Narrative Follower (15M) #103" [ref=e5650]':
+        - generic [ref=e5651]: Open long
+        - generic [ref=e5652]:
+          - generic [ref=e5653]:
+            - generic [ref=e5654]: MAGIC
+            - generic [ref=e5655]: 2d ago
+          - generic [ref=e5656]:
+            - generic [ref=e5657]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e5658]: "#103"
+            - link [ref=e5659] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e5660]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Momentum Trader (1W) #133" [ref=e5664]':
+        - generic [ref=e5665]: Open long
+        - generic [ref=e5666]:
+          - generic [ref=e5667]:
+            - generic [ref=e5668]: FDUSD
+            - generic [ref=e5669]: 2d ago
+          - generic [ref=e5670]:
+            - generic [ref=e5671]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e5672]: "#133"
+            - link [ref=e5673] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e5674]
+      - 'button "Open long ASTER 2d ago HYB-LLM Swing Trader (1D) #136" [ref=e5678]':
+        - generic [ref=e5679]: Open long
+        - generic [ref=e5680]:
+          - generic [ref=e5681]:
+            - generic [ref=e5682]: ASTER
+            - generic [ref=e5683]: 2d ago
+          - generic [ref=e5684]:
+            - generic [ref=e5685]: HYB-LLM Swing Trader (1D)
+            - generic [ref=e5686]: "#136"
+            - link [ref=e5687] [cursor=pointer]:
+              - /url: /agents/190
+              - img [ref=e5688]
+      - 'button "Open long LISTA 2d ago HYB Breakout Trader (15M) #124" [ref=e5692]':
+        - generic [ref=e5693]: Open long
+        - generic [ref=e5694]:
+          - generic [ref=e5695]:
+            - generic [ref=e5696]: LISTA
+            - generic [ref=e5697]: 2d ago
+          - generic [ref=e5698]:
+            - generic [ref=e5699]: HYB Breakout Trader (15M)
+            - generic [ref=e5700]: "#124"
+            - link [ref=e5701] [cursor=pointer]:
+              - /url: /agents/155
+              - img [ref=e5702]
+      - 'button "Open long LISTA 2d ago RB Breakout Hunter (15M) #128" [ref=e5706]':
+        - generic [ref=e5707]: Open long
+        - generic [ref=e5708]:
+          - generic [ref=e5709]:
+            - generic [ref=e5710]: LISTA
+            - generic [ref=e5711]: 2d ago
+          - generic [ref=e5712]:
+            - generic [ref=e5713]: RB Breakout Hunter (15M)
+            - generic [ref=e5714]: "#128"
+            - link [ref=e5715] [cursor=pointer]:
+              - /url: /agents/31
+              - img [ref=e5716]
+      - 'button "Open long REZ 2d ago HYB-LLM Mean Reversion Trader (30M) #132" [ref=e5720]':
+        - generic [ref=e5721]: Open long
+        - generic [ref=e5722]:
+          - generic [ref=e5723]:
+            - generic [ref=e5724]: REZ
+            - generic [ref=e5725]: 2d ago
+          - generic [ref=e5726]:
+            - generic [ref=e5727]: HYB-LLM Mean Reversion Trader (30M)
+            - generic [ref=e5728]: "#132"
+            - link [ref=e5729] [cursor=pointer]:
+              - /url: /agents/162
+              - img [ref=e5730]
+      - 'button "Open long REZ 2d ago HYB-LLM Swing Trader (15M) #151" [ref=e5734]':
+        - generic [ref=e5735]: Open long
+        - generic [ref=e5736]:
+          - generic [ref=e5737]:
+            - generic [ref=e5738]: REZ
+            - generic [ref=e5739]: 2d ago
+          - generic [ref=e5740]:
+            - generic [ref=e5741]: HYB-LLM Swing Trader (15M)
+            - generic [ref=e5742]: "#151"
+            - link [ref=e5743] [cursor=pointer]:
+              - /url: /agents/158
+              - img [ref=e5744]
+      - 'button "Open long REZ 2d ago HYB-LLM Mean Reversion Trader (15M) #135" [ref=e5748]':
+        - generic [ref=e5749]: Open long
+        - generic [ref=e5750]:
+          - generic [ref=e5751]:
+            - generic [ref=e5752]: REZ
+            - generic [ref=e5753]: 2d ago
+          - generic [ref=e5754]:
+            - generic [ref=e5755]: HYB-LLM Mean Reversion Trader (15M)
+            - generic [ref=e5756]: "#135"
+            - link [ref=e5757] [cursor=pointer]:
+              - /url: /agents/154
+              - img [ref=e5758]
+      - 'button "Open long REZ 2d ago HYB-LLM Momentum Trader (1H) #147" [ref=e5762]':
+        - generic [ref=e5763]: Open long
+        - generic [ref=e5764]:
+          - generic [ref=e5765]:
+            - generic [ref=e5766]: REZ
+            - generic [ref=e5767]: 2d ago
+          - generic [ref=e5768]:
+            - generic [ref=e5769]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e5770]: "#147"
+            - link [ref=e5771] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e5772]
+      - 'button "Open long REZ 2d ago HYB-LLM Breakout Trader (1H) #138" [ref=e5776]':
+        - generic [ref=e5777]: Open long
+        - generic [ref=e5778]:
+          - generic [ref=e5779]:
+            - generic [ref=e5780]: REZ
+            - generic [ref=e5781]: 2d ago
+          - generic [ref=e5782]:
+            - generic [ref=e5783]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e5784]: "#138"
+            - link [ref=e5785] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e5786]
+      - 'button "Open long REZ 2d ago HYB-LLM Breakout Trader (15M) #143" [ref=e5790]':
+        - generic [ref=e5791]: Open long
+        - generic [ref=e5792]:
+          - generic [ref=e5793]:
+            - generic [ref=e5794]: REZ
+            - generic [ref=e5795]: 2d ago
+          - generic [ref=e5796]:
+            - generic [ref=e5797]: HYB-LLM Breakout Trader (15M)
+            - generic [ref=e5798]: "#143"
+            - link [ref=e5799] [cursor=pointer]:
+              - /url: /agents/156
+              - img [ref=e5800]
+      - 'button "Open long ATM 2d ago HYB-LLM Momentum Trader (1D) #134" [ref=e5804]':
+        - generic [ref=e5805]: Open long
+        - generic [ref=e5806]:
+          - generic [ref=e5807]:
+            - generic [ref=e5808]: ATM
+            - generic [ref=e5809]: 2d ago
+          - generic [ref=e5810]:
+            - generic [ref=e5811]: HYB-LLM Momentum Trader (1D)
+            - generic [ref=e5812]: "#134"
+            - link [ref=e5813] [cursor=pointer]:
+              - /url: /agents/184
+              - img [ref=e5814]
+      - 'button "Open long AI 2d ago HYB Swing Trader (15M) #152" [ref=e5818]':
+        - generic [ref=e5819]: Open long
+        - generic [ref=e5820]:
+          - generic [ref=e5821]:
+            - generic [ref=e5822]: AI
+            - generic [ref=e5823]: 2d ago
+          - generic [ref=e5824]:
+            - generic [ref=e5825]: HYB Swing Trader (15M)
+            - generic [ref=e5826]: "#152"
+            - link [ref=e5827] [cursor=pointer]:
+              - /url: /agents/157
+              - img [ref=e5828]
+      - 'button "Open long GPS 2d ago HYB-LLM Mean Reversion Trader (15M) #135" [ref=e5832]':
+        - generic [ref=e5833]: Open long
+        - generic [ref=e5834]:
+          - generic [ref=e5835]:
+            - generic [ref=e5836]: GPS
+            - generic [ref=e5837]: 2d ago
+          - generic [ref=e5838]:
+            - generic [ref=e5839]: HYB-LLM Mean Reversion Trader (15M)
+            - generic [ref=e5840]: "#135"
+            - link [ref=e5841] [cursor=pointer]:
+              - /url: /agents/154
+              - img [ref=e5842]
+      - 'button "Open long AI 2d ago RB Swing Trader (15M) #150" [ref=e5846]':
+        - generic [ref=e5847]: Open long
+        - generic [ref=e5848]:
+          - generic [ref=e5849]:
+            - generic [ref=e5850]: AI
+            - generic [ref=e5851]: 2d ago
+          - generic [ref=e5852]:
+            - generic [ref=e5853]: RB Swing Trader (15M)
+            - generic [ref=e5854]: "#150"
+            - link [ref=e5855] [cursor=pointer]:
+              - /url: /agents/32
+              - img [ref=e5856]
+      - 'button "Open long OM 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e5860]':
+        - generic [ref=e5861]: Open long
+        - generic [ref=e5862]:
+          - generic [ref=e5863]:
+            - generic [ref=e5864]: OM
+            - generic [ref=e5865]: 2d ago
+          - generic [ref=e5866]:
+            - generic [ref=e5867]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e5868]: "#99"
+            - link [ref=e5869] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e5870]
+      - 'button "Open long JST 2d ago TW-LLM Insider Tracker (1W) #89" [ref=e5874]':
+        - generic [ref=e5875]: Open long
+        - generic [ref=e5876]:
+          - generic [ref=e5877]:
+            - generic [ref=e5878]: JST
+            - generic [ref=e5879]: 2d ago
+          - generic [ref=e5880]:
+            - generic [ref=e5881]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e5882]: "#89"
+            - link [ref=e5883] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e5884]
+      - 'button "Open long GPS 2d ago HYB-LLM Breakout Trader (1H) #138" [ref=e5888]':
+        - generic [ref=e5889]: Open long
+        - generic [ref=e5890]:
+          - generic [ref=e5891]:
+            - generic [ref=e5892]: GPS
+            - generic [ref=e5893]: 2d ago
+          - generic [ref=e5894]:
+            - generic [ref=e5895]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e5896]: "#138"
+            - link [ref=e5897] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e5898]
+      - 'button "Open long NEXO 2d ago HYB-LLM Momentum Trader (4H) #130" [ref=e5902]':
+        - generic [ref=e5903]: Open long
+        - generic [ref=e5904]:
+          - generic [ref=e5905]:
+            - generic [ref=e5906]: NEXO
+            - generic [ref=e5907]: 2d ago
+          - generic [ref=e5908]:
+            - generic [ref=e5909]: HYB-LLM Momentum Trader (4H)
+            - generic [ref=e5910]: "#130"
+            - link [ref=e5911] [cursor=pointer]:
+              - /url: /agents/176
+              - img [ref=e5912]
+      - 'button "Open long NEXO 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e5916]':
+        - generic [ref=e5917]: Open long
+        - generic [ref=e5918]:
+          - generic [ref=e5919]:
+            - generic [ref=e5920]: NEXO
+            - generic [ref=e5921]: 2d ago
+          - generic [ref=e5922]:
+            - generic [ref=e5923]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e5924]: "#99"
+            - link [ref=e5925] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e5926]
+      - 'button "Open long GPS 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e5930]':
+        - generic [ref=e5931]: Open long
+        - generic [ref=e5932]:
+          - generic [ref=e5933]:
+            - generic [ref=e5934]: GPS
+            - generic [ref=e5935]: 2d ago
+          - generic [ref=e5936]:
+            - generic [ref=e5937]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e5938]: "#140"
+            - link [ref=e5939] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e5940]
+      - 'button "Open long OM 2d ago HYB-LLM Momentum Trader (4H) #130" [ref=e5944]':
+        - generic [ref=e5945]: Open long
+        - generic [ref=e5946]:
+          - generic [ref=e5947]:
+            - generic [ref=e5948]: OM
+            - generic [ref=e5949]: 2d ago
+          - generic [ref=e5950]:
+            - generic [ref=e5951]: HYB-LLM Momentum Trader (4H)
+            - generic [ref=e5952]: "#130"
+            - link [ref=e5953] [cursor=pointer]:
+              - /url: /agents/176
+              - img [ref=e5954]
+      - 'button "Open long NEXO 2d ago HYB-LLM Breakout Trader (15M) #143" [ref=e5958]':
+        - generic [ref=e5959]: Open long
+        - generic [ref=e5960]:
+          - generic [ref=e5961]:
+            - generic [ref=e5962]: NEXO
+            - generic [ref=e5963]: 2d ago
+          - generic [ref=e5964]:
+            - generic [ref=e5965]: HYB-LLM Breakout Trader (15M)
+            - generic [ref=e5966]: "#143"
+            - link [ref=e5967] [cursor=pointer]:
+              - /url: /agents/156
+              - img [ref=e5968]
+      - 'button "Open long EUR 2d ago HYB-LLM Mean Reversion Trader (15M) #135" [ref=e5972]':
+        - generic [ref=e5973]: Open long
+        - generic [ref=e5974]:
+          - generic [ref=e5975]:
+            - generic [ref=e5976]: EUR
+            - generic [ref=e5977]: 2d ago
+          - generic [ref=e5978]:
+            - generic [ref=e5979]: HYB-LLM Mean Reversion Trader (15M)
+            - generic [ref=e5980]: "#135"
+            - link [ref=e5981] [cursor=pointer]:
+              - /url: /agents/154
+              - img [ref=e5982]
+      - 'button "Open long SHELL 2d ago HYB-LLM Breakout Trader (30M) #129" [ref=e5986]':
+        - generic [ref=e5987]: Open long
+        - generic [ref=e5988]:
+          - generic [ref=e5989]:
+            - generic [ref=e5990]: SHELL
+            - generic [ref=e5991]: 2d ago
+          - generic [ref=e5992]:
+            - generic [ref=e5993]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e5994]: "#129"
+            - link [ref=e5995] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e5996]
+      - 'button "Open long GPS 2d ago TW-LLM Momentum Rider (30M) #105" [ref=e6000]':
+        - generic [ref=e6001]: Open long
+        - generic [ref=e6002]:
+          - generic [ref=e6003]:
+            - generic [ref=e6004]: GPS
+            - generic [ref=e6005]: 2d ago
+          - generic [ref=e6006]:
+            - generic [ref=e6007]: TW-LLM Momentum Rider (30M)
+            - generic [ref=e6008]: "#105"
+            - link [ref=e6009] [cursor=pointer]:
+              - /url: /agents/66
+              - img [ref=e6010]
+      - 'button "Open long IO 2d ago HYB-LLM Momentum Trader (1H) #147" [ref=e6014]':
+        - generic [ref=e6015]: Open long
+        - generic [ref=e6016]:
+          - generic [ref=e6017]:
+            - generic [ref=e6018]: IO
+            - generic [ref=e6019]: 2d ago
+          - generic [ref=e6020]:
+            - generic [ref=e6021]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e6022]: "#147"
+            - link [ref=e6023] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e6024]
+      - 'button "Open long ASTER 2d ago HYB-LLM Momentum Trader (1D) #134" [ref=e6028]':
+        - generic [ref=e6029]: Open long
+        - generic [ref=e6030]:
+          - generic [ref=e6031]:
+            - generic [ref=e6032]: ASTER
+            - generic [ref=e6033]: 2d ago
+          - generic [ref=e6034]:
+            - generic [ref=e6035]: HYB-LLM Momentum Trader (1D)
+            - generic [ref=e6036]: "#134"
+            - link [ref=e6037] [cursor=pointer]:
+              - /url: /agents/184
+              - img [ref=e6038]
+      - 'button "Open long IO 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e6042]':
+        - generic [ref=e6043]: Open long
+        - generic [ref=e6044]:
+          - generic [ref=e6045]:
+            - generic [ref=e6046]: IO
+            - generic [ref=e6047]: 2d ago
+          - generic [ref=e6048]:
+            - generic [ref=e6049]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e6050]: "#140"
+            - link [ref=e6051] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e6052]
+      - 'button "Open long GPS 2d ago TW-LLM Momentum Rider (15M) #108" [ref=e6056]':
+        - generic [ref=e6057]: Open long
+        - generic [ref=e6058]:
+          - generic [ref=e6059]:
+            - generic [ref=e6060]: GPS
+            - generic [ref=e6061]: 2d ago
+          - generic [ref=e6062]:
+            - generic [ref=e6063]: TW-LLM Momentum Rider (15M)
+            - generic [ref=e6064]: "#108"
+            - link [ref=e6065] [cursor=pointer]:
+              - /url: /agents/58
+              - img [ref=e6066]
+      - 'button "Open long DYM 2d ago HYB Swing Trader (15M) #152" [ref=e6070]':
+        - generic [ref=e6071]: Open long
+        - generic [ref=e6072]:
+          - generic [ref=e6073]:
+            - generic [ref=e6074]: DYM
+            - generic [ref=e6075]: 2d ago
+          - generic [ref=e6076]:
+            - generic [ref=e6077]: HYB Swing Trader (15M)
+            - generic [ref=e6078]: "#152"
+            - link [ref=e6079] [cursor=pointer]:
+              - /url: /agents/157
+              - img [ref=e6080]
+      - 'button "Open long IO 2d ago HYB-LLM Momentum Trader (30M) #145" [ref=e6084]':
+        - generic [ref=e6085]: Open long
+        - generic [ref=e6086]:
+          - generic [ref=e6087]:
+            - generic [ref=e6088]: IO
+            - generic [ref=e6089]: 2d ago
+          - generic [ref=e6090]:
+            - generic [ref=e6091]: HYB-LLM Momentum Trader (30M)
+            - generic [ref=e6092]: "#145"
+            - link [ref=e6093] [cursor=pointer]:
+              - /url: /agents/160
+              - img [ref=e6094]
+      - 'button "Open long COW 2d ago HYB-LLM Momentum Trader (1H) #147" [ref=e6098]':
+        - generic [ref=e6099]: Open long
+        - generic [ref=e6100]:
+          - generic [ref=e6101]:
+            - generic [ref=e6102]: COW
+            - generic [ref=e6103]: 2d ago
+          - generic [ref=e6104]:
+            - generic [ref=e6105]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e6106]: "#147"
+            - link [ref=e6107] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e6108]
+      - 'button "Open long OM 2d ago HYB-LLM Swing Trader (4H) #95" [ref=e6112]':
+        - generic [ref=e6113]: Open long
+        - generic [ref=e6114]:
+          - generic [ref=e6115]:
+            - generic [ref=e6116]: OM
+            - generic [ref=e6117]: 2d ago
+          - generic [ref=e6118]:
+            - generic [ref=e6119]: HYB-LLM Swing Trader (4H)
+            - generic [ref=e6120]: "#95"
+            - link [ref=e6121] [cursor=pointer]:
+              - /url: /agents/182
+              - img [ref=e6122]
+      - 'button "Open long ORCA 2d ago TW-LLM Momentum Rider (4H) #99" [ref=e6126]':
+        - generic [ref=e6127]: Open long
+        - generic [ref=e6128]:
+          - generic [ref=e6129]:
+            - generic [ref=e6130]: ORCA
+            - generic [ref=e6131]: 2d ago
+          - generic [ref=e6132]:
+            - generic [ref=e6133]: TW-LLM Momentum Rider (4H)
+            - generic [ref=e6134]: "#99"
+            - link [ref=e6135] [cursor=pointer]:
+              - /url: /agents/82
+              - img [ref=e6136]
+      - 'button "Open long ZKP 2d ago HYB-LLM Swing Trader (30M) #140" [ref=e6140]':
+        - generic [ref=e6141]: Open long
+        - generic [ref=e6142]:
+          - generic [ref=e6143]:
+            - generic [ref=e6144]: ZKP
+            - generic [ref=e6145]: 2d ago
+          - generic [ref=e6146]:
+            - generic [ref=e6147]: HYB-LLM Swing Trader (30M)
+            - generic [ref=e6148]: "#140"
+            - link [ref=e6149] [cursor=pointer]:
+              - /url: /agents/166
+              - img [ref=e6150]
+      - 'button "Open long ARPA 2d ago HYB Swing Trader (30M) #144" [ref=e6154]':
+        - generic [ref=e6155]: Open long
+        - generic [ref=e6156]:
+          - generic [ref=e6157]:
+            - generic [ref=e6158]: ARPA
+            - generic [ref=e6159]: 2d ago
+          - generic [ref=e6160]:
+            - generic [ref=e6161]: HYB Swing Trader (30M)
+            - generic [ref=e6162]: "#144"
+            - link [ref=e6163] [cursor=pointer]:
+              - /url: /agents/165
+              - img [ref=e6164]
+      - 'button "Open long RAY 2d ago HYB-LLM Breakout Trader (30M) #129" [ref=e6168]':
+        - generic [ref=e6169]: Open long
+        - generic [ref=e6170]:
+          - generic [ref=e6171]:
+            - generic [ref=e6172]: RAY
+            - generic [ref=e6173]: 2d ago
+          - generic [ref=e6174]:
+            - generic [ref=e6175]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e6176]: "#129"
+            - link [ref=e6177] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e6178]
+      - 'button "Open long DUSK 2d ago TW-LLM Momentum Rider (1W) #87" [ref=e6182]':
+        - generic [ref=e6183]: Open long
+        - generic [ref=e6184]:
+          - generic [ref=e6185]:
+            - generic [ref=e6186]: DUSK
+            - generic [ref=e6187]: 2d ago
+          - generic [ref=e6188]:
+            - generic [ref=e6189]: TW-LLM Momentum Rider (1W)
+            - generic [ref=e6190]: "#87"
+            - link [ref=e6191] [cursor=pointer]:
+              - /url: /agents/98
+              - img [ref=e6192]
+      - 'button "Open long PAXG 2d ago TW-LLM Momentum Rider (1W) #87" [ref=e6196]':
+        - generic [ref=e6197]: Open long
+        - generic [ref=e6198]:
+          - generic [ref=e6199]:
+            - generic [ref=e6200]: PAXG
+            - generic [ref=e6201]: 2d ago
+          - generic [ref=e6202]:
+            - generic [ref=e6203]: TW-LLM Momentum Rider (1W)
+            - generic [ref=e6204]: "#87"
+            - link [ref=e6205] [cursor=pointer]:
+              - /url: /agents/98
+              - img [ref=e6206]
+      - 'button "Open long RPL 2d ago TW-LLM Narrative Follower (4H) #106" [ref=e6210]':
+        - generic [ref=e6211]: Open long
+        - generic [ref=e6212]:
+          - generic [ref=e6213]:
+            - generic [ref=e6214]: RPL
+            - generic [ref=e6215]: 2d ago
+          - generic [ref=e6216]:
+            - generic [ref=e6217]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e6218]: "#106"
+            - link [ref=e6219] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e6220]
+      - 'button "Open long INIT 2d ago TW-LLM Narrative Follower (4H) #106" [ref=e6224]':
+        - generic [ref=e6225]: Open long
+        - generic [ref=e6226]:
+          - generic [ref=e6227]:
+            - generic [ref=e6228]: INIT
+            - generic [ref=e6229]: 2d ago
+          - generic [ref=e6230]:
+            - generic [ref=e6231]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e6232]: "#106"
+            - link [ref=e6233] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e6234]
+      - 'button "Open long TWT 2d ago HYB-LLM Swing Trader (15M) #151" [ref=e6238]':
+        - generic [ref=e6239]: Open long
+        - generic [ref=e6240]:
+          - generic [ref=e6241]:
+            - generic [ref=e6242]: TWT
+            - generic [ref=e6243]: 2d ago
+          - generic [ref=e6244]:
+            - generic [ref=e6245]: HYB-LLM Swing Trader (15M)
+            - generic [ref=e6246]: "#151"
+            - link [ref=e6247] [cursor=pointer]:
+              - /url: /agents/158
+              - img [ref=e6248]
+      - 'button "Open long DUSK 2d ago TW-LLM Insider Tracker (1W) #89" [ref=e6252]':
+        - generic [ref=e6253]: Open long
+        - generic [ref=e6254]:
+          - generic [ref=e6255]:
+            - generic [ref=e6256]: DUSK
+            - generic [ref=e6257]: 2d ago
+          - generic [ref=e6258]:
+            - generic [ref=e6259]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e6260]: "#89"
+            - link [ref=e6261] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e6262]
+      - 'button "Open long DASH 2d ago HYB-LLM Swing Trader (1H) #112" [ref=e6266]':
+        - generic [ref=e6267]: Open long
+        - generic [ref=e6268]:
+          - generic [ref=e6269]:
+            - generic [ref=e6270]: DASH
+            - generic [ref=e6271]: 2d ago
+          - generic [ref=e6272]:
+            - generic [ref=e6273]: HYB-LLM Swing Trader (1H)
+            - generic [ref=e6274]: "#112"
+            - link [ref=e6275] [cursor=pointer]:
+              - /url: /agents/174
+              - img [ref=e6276]
+      - 'button "Open long COW 2d ago HYB-LLM Swing Trader (15M) #151" [ref=e6280]':
+        - generic [ref=e6281]: Open long
+        - generic [ref=e6282]:
+          - generic [ref=e6283]:
+            - generic [ref=e6284]: COW
+            - generic [ref=e6285]: 2d ago
+          - generic [ref=e6286]:
+            - generic [ref=e6287]: HYB-LLM Swing Trader (15M)
+            - generic [ref=e6288]: "#151"
+            - link [ref=e6289] [cursor=pointer]:
+              - /url: /agents/158
+              - img [ref=e6290]
+      - 'button "Open long JST 2d ago TW-LLM Momentum Rider (1W) #87" [ref=e6294]':
+        - generic [ref=e6295]: Open long
+        - generic [ref=e6296]:
+          - generic [ref=e6297]:
+            - generic [ref=e6298]: JST
+            - generic [ref=e6299]: 2d ago
+          - generic [ref=e6300]:
+            - generic [ref=e6301]: TW-LLM Momentum Rider (1W)
+            - generic [ref=e6302]: "#87"
+            - link [ref=e6303] [cursor=pointer]:
+              - /url: /agents/98
+              - img [ref=e6304]
+      - 'button "Open long JST 2d ago HYB-LLM Momentum Trader (1W) #133" [ref=e6308]':
+        - generic [ref=e6309]: Open long
+        - generic [ref=e6310]:
+          - generic [ref=e6311]:
+            - generic [ref=e6312]: JST
+            - generic [ref=e6313]: 2d ago
+          - generic [ref=e6314]:
+            - generic [ref=e6315]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e6316]: "#133"
+            - link [ref=e6317] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e6318]
+      - 'button "Open long ATM 2d ago TW-LLM Narrative Follower (1D) #1" [ref=e6322]':
+        - generic [ref=e6323]: Open long
+        - generic [ref=e6324]:
+          - generic [ref=e6325]:
+            - generic [ref=e6326]: ATM
+            - generic [ref=e6327]: 2d ago
+          - generic [ref=e6328]:
+            - generic [ref=e6329]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e6330]: "#1"
+            - link [ref=e6331] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e6332]
+      - 'button "Open long ORCA 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e6336]':
+        - generic [ref=e6337]: Open long
+        - generic [ref=e6338]:
+          - generic [ref=e6339]:
+            - generic [ref=e6340]: ORCA
+            - generic [ref=e6341]: 2d ago
+          - generic [ref=e6342]:
+            - generic [ref=e6343]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e6344]: "#2"
+            - link [ref=e6345] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e6346]
+      - 'button "Open long RAY 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e6350]':
+        - generic [ref=e6351]: Open long
+        - generic [ref=e6352]:
+          - generic [ref=e6353]:
+            - generic [ref=e6354]: RAY
+            - generic [ref=e6355]: 2d ago
+          - generic [ref=e6356]:
+            - generic [ref=e6357]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e6358]: "#2"
+            - link [ref=e6359] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e6360]
+      - 'button "Open long ETH 2d ago TW-LLM Momentum Rider (1D) #88" [ref=e6364]':
+        - generic [ref=e6365]: Open long
+        - generic [ref=e6366]:
+          - generic [ref=e6367]:
+            - generic [ref=e6368]: ETH
+            - generic [ref=e6369]: 2d ago
+          - generic [ref=e6370]:
+            - generic [ref=e6371]: TW-LLM Momentum Rider (1D)
+            - generic [ref=e6372]: "#88"
+            - link [ref=e6373] [cursor=pointer]:
+              - /url: /agents/90
+              - img [ref=e6374]
+      - 'button "Open long HUMA 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e6378]':
+        - generic [ref=e6379]: Open long
+        - generic [ref=e6380]:
+          - generic [ref=e6381]:
+            - generic [ref=e6382]: HUMA
+            - generic [ref=e6383]: 2d ago
+          - generic [ref=e6384]:
+            - generic [ref=e6385]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e6386]: "#2"
+            - link [ref=e6387] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e6388]
+      - 'button "Open long ATM 2d ago HYB-LLM Swing Trader (1D) #136" [ref=e6392]':
+        - generic [ref=e6393]: Open long
+        - generic [ref=e6394]:
+          - generic [ref=e6395]:
+            - generic [ref=e6396]: ATM
+            - generic [ref=e6397]: 2d ago
+          - generic [ref=e6398]:
+            - generic [ref=e6399]: HYB-LLM Swing Trader (1D)
+            - generic [ref=e6400]: "#136"
+            - link [ref=e6401] [cursor=pointer]:
+              - /url: /agents/190
+              - img [ref=e6402]
+      - 'button "Open long ATM 2d ago HYB-LLM Breakout Trader (1D) #118" [ref=e6406]':
+        - generic [ref=e6407]: Open long
+        - generic [ref=e6408]:
+          - generic [ref=e6409]:
+            - generic [ref=e6410]: ATM
+            - generic [ref=e6411]: 2d ago
+          - generic [ref=e6412]:
+            - generic [ref=e6413]: HYB-LLM Breakout Trader (1D)
+            - generic [ref=e6414]: "#118"
+            - link [ref=e6415] [cursor=pointer]:
+              - /url: /agents/188
+              - img [ref=e6416]
+      - 'button "Open long FDUSD 2d ago HYB-LLM Mean Reversion Trader (1D) #10" [ref=e6420]':
+        - generic [ref=e6421]: Open long
+        - generic [ref=e6422]:
+          - generic [ref=e6423]:
+            - generic [ref=e6424]: FDUSD
+            - generic [ref=e6425]: 2d ago
+          - generic [ref=e6426]:
+            - generic [ref=e6427]: HYB-LLM Mean Reversion Trader (1D)
+            - generic [ref=e6428]: "#10"
+            - link [ref=e6429] [cursor=pointer]:
+              - /url: /agents/186
+              - img [ref=e6430]
+      - 'button "Open long KITE 2d ago HYB-LLM Momentum Trader (1D) #134" [ref=e6434]':
+        - generic [ref=e6435]: Open long
+        - generic [ref=e6436]:
+          - generic [ref=e6437]:
+            - generic [ref=e6438]: KITE
+            - generic [ref=e6439]: 2d ago
+          - generic [ref=e6440]:
+            - generic [ref=e6441]: HYB-LLM Momentum Trader (1D)
+            - generic [ref=e6442]: "#134"
+            - link [ref=e6443] [cursor=pointer]:
+              - /url: /agents/184
+              - img [ref=e6444]
+      - 'button "Open long MUBARAK 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e6448]':
+        - generic [ref=e6449]: Open long
+        - generic [ref=e6450]:
+          - generic [ref=e6451]:
+            - generic [ref=e6452]: MUBARAK
+            - generic [ref=e6453]: 2d ago
+          - generic [ref=e6454]:
+            - generic [ref=e6455]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e6456]: "#2"
+            - link [ref=e6457] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e6458]
+      - 'button "Open long RAY 2d ago TW-LLM Narrative Follower (1D) #1" [ref=e6462]':
+        - generic [ref=e6463]: Open long
+        - generic [ref=e6464]:
+          - generic [ref=e6465]:
+            - generic [ref=e6466]: RAY
+            - generic [ref=e6467]: 2d ago
+          - generic [ref=e6468]:
+            - generic [ref=e6469]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e6470]: "#1"
+            - link [ref=e6471] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e6472]
+      - 'button "Open long LISTA 2d ago TW-LLM Narrative Follower (30M) #2" [ref=e6476]':
+        - generic [ref=e6477]: Open long
+        - generic [ref=e6478]:
+          - generic [ref=e6479]:
+            - generic [ref=e6480]: LISTA
+            - generic [ref=e6481]: 2d ago
+          - generic [ref=e6482]:
+            - generic [ref=e6483]: TW-LLM Narrative Follower (30M)
+            - generic [ref=e6484]: "#2"
+            - link [ref=e6485] [cursor=pointer]:
+              - /url: /agents/70
+              - img [ref=e6486]
+      - 'button "Open long INIT 2d ago TW-LLM Insider Tracker (1D) #9" [ref=e6490]':
+        - generic [ref=e6491]: Open long
+        - generic [ref=e6492]:
+          - generic [ref=e6493]:
+            - generic [ref=e6494]: INIT
+            - generic [ref=e6495]: 2d ago
+          - generic [ref=e6496]:
+            - generic [ref=e6497]: TW-LLM Insider Tracker (1D)
+            - generic [ref=e6498]: "#9"
+            - link [ref=e6499] [cursor=pointer]:
+              - /url: /agents/96
+              - img [ref=e6500]
+      - 'button "Open long COW 2d ago HYB Swing Trader (4H) #141" [ref=e6504]':
+        - generic [ref=e6505]: Open long
+        - generic [ref=e6506]:
+          - generic [ref=e6507]:
+            - generic [ref=e6508]: COW
+            - generic [ref=e6509]: 2d ago
+          - generic [ref=e6510]:
+            - generic [ref=e6511]: HYB Swing Trader (4H)
+            - generic [ref=e6512]: "#141"
+            - link [ref=e6513] [cursor=pointer]:
+              - /url: /agents/181
+              - img [ref=e6514]
+      - 'button "Open long OGN 2d ago TW-LLM Insider Tracker (4H) #104" [ref=e6518]':
+        - generic [ref=e6519]: Open long
+        - generic [ref=e6520]:
+          - generic [ref=e6521]:
+            - generic [ref=e6522]: OGN
+            - generic [ref=e6523]: 2d ago
+          - generic [ref=e6524]:
+            - generic [ref=e6525]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e6526]: "#104"
+            - link [ref=e6527] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e6528]
+      - 'button "Open long ENSO 2d ago HYB-LLM Momentum Trader (15M) #100" [ref=e6532]':
+        - generic [ref=e6533]: Open long
+        - generic [ref=e6534]:
+          - generic [ref=e6535]:
+            - generic [ref=e6536]: ENSO
+            - generic [ref=e6537]: 2d ago
+          - generic [ref=e6538]:
+            - generic [ref=e6539]: HYB-LLM Momentum Trader (15M)
+            - generic [ref=e6540]: "#100"
+            - link [ref=e6541] [cursor=pointer]:
+              - /url: /agents/152
+              - img [ref=e6542]
+      - 'button "Open long RAY 2d ago TW-LLM Momentum Rider (1H) #107" [ref=e6546]':
+        - generic [ref=e6547]: Open long
+        - generic [ref=e6548]:
+          - generic [ref=e6549]:
+            - generic [ref=e6550]: RAY
+            - generic [ref=e6551]: 2d ago
+          - generic [ref=e6552]:
+            - generic [ref=e6553]: TW-LLM Momentum Rider (1H)
+            - generic [ref=e6554]: "#107"
+            - link [ref=e6555] [cursor=pointer]:
+              - /url: /agents/74
+              - img [ref=e6556]
+      - 'button "Open long DUSK 2d ago TW-LLM Narrative Follower (1W) #91" [ref=e6560]':
+        - generic [ref=e6561]: Open long
+        - generic [ref=e6562]:
+          - generic [ref=e6563]:
+            - generic [ref=e6564]: DUSK
+            - generic [ref=e6565]: 2d ago
+          - generic [ref=e6566]:
+            - generic [ref=e6567]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e6568]: "#91"
+            - link [ref=e6569] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e6570]
+      - 'button "Open long ETH 3d ago TW-LLM Momentum Rider (1W) #87" [ref=e6574]':
+        - generic [ref=e6575]: Open long
+        - generic [ref=e6576]:
+          - generic [ref=e6577]:
+            - generic [ref=e6578]: ETH
+            - generic [ref=e6579]: 3d ago
+          - generic [ref=e6580]:
+            - generic [ref=e6581]: TW-LLM Momentum Rider (1W)
+            - generic [ref=e6582]: "#87"
+            - link [ref=e6583] [cursor=pointer]:
+              - /url: /agents/98
+              - img [ref=e6584]
+      - 'button "Open long RPL 3d ago TW-LLM Insider Tracker (4H) #104" [ref=e6588]':
+        - generic [ref=e6589]: Open long
+        - generic [ref=e6590]:
+          - generic [ref=e6591]:
+            - generic [ref=e6592]: RPL
+            - generic [ref=e6593]: 3d ago
+          - generic [ref=e6594]:
+            - generic [ref=e6595]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e6596]: "#104"
+            - link [ref=e6597] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e6598]
+      - 'button "Open long ATOM 3d ago TW-LLM Narrative Follower (15M) #103" [ref=e6602]':
+        - generic [ref=e6603]: Open long
+        - generic [ref=e6604]:
+          - generic [ref=e6605]:
+            - generic [ref=e6606]: ATOM
+            - generic [ref=e6607]: 3d ago
+          - generic [ref=e6608]:
+            - generic [ref=e6609]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e6610]: "#103"
+            - link [ref=e6611] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e6612]
+      - 'button "Open long ARPA 3d ago TW-LLM Insider Tracker (1H) #97" [ref=e6616]':
+        - generic [ref=e6617]: Open long
+        - generic [ref=e6618]:
+          - generic [ref=e6619]:
+            - generic [ref=e6620]: ARPA
+            - generic [ref=e6621]: 3d ago
+          - generic [ref=e6622]:
+            - generic [ref=e6623]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e6624]: "#97"
+            - link [ref=e6625] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e6626]
+      - 'button "Open long OM 3d ago TW-LLM Narrative Follower (4H) #106" [ref=e6630]':
+        - generic [ref=e6631]: Open long
+        - generic [ref=e6632]:
+          - generic [ref=e6633]:
+            - generic [ref=e6634]: OM
+            - generic [ref=e6635]: 3d ago
+          - generic [ref=e6636]:
+            - generic [ref=e6637]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e6638]: "#106"
+            - link [ref=e6639] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e6640]
+      - 'button "Open long OM 3d ago TW-LLM Insider Tracker (1H) #97" [ref=e6644]':
+        - generic [ref=e6645]: Open long
+        - generic [ref=e6646]:
+          - generic [ref=e6647]:
+            - generic [ref=e6648]: OM
+            - generic [ref=e6649]: 3d ago
+          - generic [ref=e6650]:
+            - generic [ref=e6651]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e6652]: "#97"
+            - link [ref=e6653] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e6654]
+      - 'button "Open long BTC 3d ago TW-LLM Narrative Follower (1D) #1" [ref=e6658]':
+        - generic [ref=e6659]: Open long
+        - generic [ref=e6660]:
+          - generic [ref=e6661]:
+            - generic [ref=e6662]: BTC
+            - generic [ref=e6663]: 3d ago
+          - generic [ref=e6664]:
+            - generic [ref=e6665]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e6666]: "#1"
+            - link [ref=e6667] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e6668]
+      - 'button "Open long ATM 3d ago TW-LLM Insider Tracker (1D) #9" [ref=e6672]':
+        - generic [ref=e6673]: Open long
+        - generic [ref=e6674]:
+          - generic [ref=e6675]:
+            - generic [ref=e6676]: ATM
+            - generic [ref=e6677]: 3d ago
+          - generic [ref=e6678]:
+            - generic [ref=e6679]: TW-LLM Insider Tracker (1D)
+            - generic [ref=e6680]: "#9"
+            - link [ref=e6681] [cursor=pointer]:
+              - /url: /agents/96
+              - img [ref=e6682]
+      - 'button "Open long UMA 3d ago TW-LLM Insider Tracker (1H) #97" [ref=e6686]':
+        - generic [ref=e6687]: Open long
+        - generic [ref=e6688]:
+          - generic [ref=e6689]:
+            - generic [ref=e6690]: UMA
+            - generic [ref=e6691]: 3d ago
+          - generic [ref=e6692]:
+            - generic [ref=e6693]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e6694]: "#97"
+            - link [ref=e6695] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e6696]
+      - 'button "Open long PAXG 3d ago HYB-LLM Mean Reversion Trader (1W) #3" [ref=e6700]':
+        - generic [ref=e6701]: Open long
+        - generic [ref=e6702]:
+          - generic [ref=e6703]:
+            - generic [ref=e6704]: PAXG
+            - generic [ref=e6705]: 3d ago
+          - generic [ref=e6706]:
+            - generic [ref=e6707]: HYB-LLM Mean Reversion Trader (1W)
+            - generic [ref=e6708]: "#3"
+            - link [ref=e6709] [cursor=pointer]:
+              - /url: /agents/194
+              - img [ref=e6710]
+      - 'button "Open long OM 3d ago TW-LLM Narrative Follower (15M) #103" [ref=e6714]':
+        - generic [ref=e6715]: Open long
+        - generic [ref=e6716]:
+          - generic [ref=e6717]:
+            - generic [ref=e6718]: OM
+            - generic [ref=e6719]: 3d ago
+          - generic [ref=e6720]:
+            - generic [ref=e6721]: TW-LLM Narrative Follower (15M)
+            - generic [ref=e6722]: "#103"
+            - link [ref=e6723] [cursor=pointer]:
+              - /url: /agents/62
+              - img [ref=e6724]
+      - 'button "Open long DUSK 3d ago HYB-LLM Breakout Trader (1W) #113" [ref=e6728]':
+        - generic [ref=e6729]: Open long
+        - generic [ref=e6730]:
+          - generic [ref=e6731]:
+            - generic [ref=e6732]: DUSK
+            - generic [ref=e6733]: 3d ago
+          - generic [ref=e6734]:
+            - generic [ref=e6735]: HYB-LLM Breakout Trader (1W)
+            - generic [ref=e6736]: "#113"
+            - link [ref=e6737] [cursor=pointer]:
+              - /url: /agents/196
+              - img [ref=e6738]
+      - 'button "Open long OM 3d ago TW-LLM Insider Tracker (15M) #101" [ref=e6742]':
+        - generic [ref=e6743]: Open long
+        - generic [ref=e6744]:
+          - generic [ref=e6745]:
+            - generic [ref=e6746]: OM
+            - generic [ref=e6747]: 3d ago
+          - generic [ref=e6748]:
+            - generic [ref=e6749]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e6750]: "#101"
+            - link [ref=e6751] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e6752]
+      - 'button "Open long PAXG 3d ago TW-LLM Narrative Follower (1W) #91" [ref=e6756]':
+        - generic [ref=e6757]: Open long
+        - generic [ref=e6758]:
+          - generic [ref=e6759]:
+            - generic [ref=e6760]: PAXG
+            - generic [ref=e6761]: 3d ago
+          - generic [ref=e6762]:
+            - generic [ref=e6763]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e6764]: "#91"
+            - link [ref=e6765] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e6766]
+      - 'button "Open long NIL 3d ago TW-LLM Insider Tracker (4H) #104" [ref=e6770]':
+        - generic [ref=e6771]: Open long
+        - generic [ref=e6772]:
+          - generic [ref=e6773]:
+            - generic [ref=e6774]: NIL
+            - generic [ref=e6775]: 3d ago
+          - generic [ref=e6776]:
+            - generic [ref=e6777]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e6778]: "#104"
+            - link [ref=e6779] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e6780]
+      - 'button "Open long STO 3d ago HYB-LLM Momentum Trader (30M) #145" [ref=e6784]':
+        - generic [ref=e6785]: Open long
+        - generic [ref=e6786]:
+          - generic [ref=e6787]:
+            - generic [ref=e6788]: STO
+            - generic [ref=e6789]: 3d ago
+          - generic [ref=e6790]:
+            - generic [ref=e6791]: HYB-LLM Momentum Trader (30M)
+            - generic [ref=e6792]: "#145"
+            - link [ref=e6793] [cursor=pointer]:
+              - /url: /agents/160
+              - img [ref=e6794]
+      - 'button "Open long UMA 3d ago HYB-LLM Breakout Trader (1H) #138" [ref=e6798]':
+        - generic [ref=e6799]: Open long
+        - generic [ref=e6800]:
+          - generic [ref=e6801]:
+            - generic [ref=e6802]: UMA
+            - generic [ref=e6803]: 3d ago
+          - generic [ref=e6804]:
+            - generic [ref=e6805]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e6806]: "#138"
+            - link [ref=e6807] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e6808]
+      - 'button "Open long HAEDAL 3d ago TW-LLM Insider Tracker (30M) #98" [ref=e6812]':
+        - generic [ref=e6813]: Open long
+        - generic [ref=e6814]:
+          - generic [ref=e6815]:
+            - generic [ref=e6816]: HAEDAL
+            - generic [ref=e6817]: 3d ago
+          - generic [ref=e6818]:
+            - generic [ref=e6819]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e6820]: "#98"
+            - link [ref=e6821] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e6822]
+      - 'button "Open long POL 3d ago TW-LLM Insider Tracker (1H) #97" [ref=e6826]':
+        - generic [ref=e6827]: Open long
+        - generic [ref=e6828]:
+          - generic [ref=e6829]:
+            - generic [ref=e6830]: POL
+            - generic [ref=e6831]: 3d ago
+          - generic [ref=e6832]:
+            - generic [ref=e6833]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e6834]: "#97"
+            - link [ref=e6835] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e6836]
+      - 'button "Open long POL 3d ago HYB-LLM Momentum Trader (1H) #147" [ref=e6840]':
+        - generic [ref=e6841]: Open long
+        - generic [ref=e6842]:
+          - generic [ref=e6843]:
+            - generic [ref=e6844]: POL
+            - generic [ref=e6845]: 3d ago
+          - generic [ref=e6846]:
+            - generic [ref=e6847]: HYB-LLM Momentum Trader (1H)
+            - generic [ref=e6848]: "#147"
+            - link [ref=e6849] [cursor=pointer]:
+              - /url: /agents/168
+              - img [ref=e6850]
+      - 'button "Open long SOL 3d ago TW-LLM Momentum Rider (1D) #88" [ref=e6854]':
+        - generic [ref=e6855]: Open long
+        - generic [ref=e6856]:
+          - generic [ref=e6857]:
+            - generic [ref=e6858]: SOL
+            - generic [ref=e6859]: 3d ago
+          - generic [ref=e6860]:
+            - generic [ref=e6861]: TW-LLM Momentum Rider (1D)
+            - generic [ref=e6862]: "#88"
+            - link [ref=e6863] [cursor=pointer]:
+              - /url: /agents/90
+              - img [ref=e6864]
+      - 'button "Open long ETH 3d ago TW-LLM Insider Tracker (1D) #9" [ref=e6868]':
+        - generic [ref=e6869]: Open long
+        - generic [ref=e6870]:
+          - generic [ref=e6871]:
+            - generic [ref=e6872]: ETH
+            - generic [ref=e6873]: 3d ago
+          - generic [ref=e6874]:
+            - generic [ref=e6875]: TW-LLM Insider Tracker (1D)
+            - generic [ref=e6876]: "#9"
+            - link [ref=e6877] [cursor=pointer]:
+              - /url: /agents/96
+              - img [ref=e6878]
+      - 'button "Open long OM 3d ago TW-LLM Insider Tracker (4H) #104" [ref=e6882]':
+        - generic [ref=e6883]: Open long
+        - generic [ref=e6884]:
+          - generic [ref=e6885]:
+            - generic [ref=e6886]: OM
+            - generic [ref=e6887]: 3d ago
+          - generic [ref=e6888]:
+            - generic [ref=e6889]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e6890]: "#104"
+            - link [ref=e6891] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e6892]
+      - 'button "Open long OGN 3d ago TW-LLM Insider Tracker (1H) #97" [ref=e6896]':
+        - generic [ref=e6897]: Open long
+        - generic [ref=e6898]:
+          - generic [ref=e6899]:
+            - generic [ref=e6900]: OGN
+            - generic [ref=e6901]: 3d ago
+          - generic [ref=e6902]:
+            - generic [ref=e6903]: TW-LLM Insider Tracker (1H)
+            - generic [ref=e6904]: "#97"
+            - link [ref=e6905] [cursor=pointer]:
+              - /url: /agents/80
+              - img [ref=e6906]
+      - 'button "Open long NIL 3d ago TW-LLM Insider Tracker (30M) #98" [ref=e6910]':
+        - generic [ref=e6911]: Open long
+        - generic [ref=e6912]:
+          - generic [ref=e6913]:
+            - generic [ref=e6914]: NIL
+            - generic [ref=e6915]: 3d ago
+          - generic [ref=e6916]:
+            - generic [ref=e6917]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e6918]: "#98"
+            - link [ref=e6919] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e6920]
+      - 'button "Open long RPL 3d ago TW-LLM Insider Tracker (15M) #101" [ref=e6924]':
+        - generic [ref=e6925]: Open long
+        - generic [ref=e6926]:
+          - generic [ref=e6927]:
+            - generic [ref=e6928]: RPL
+            - generic [ref=e6929]: 3d ago
+          - generic [ref=e6930]:
+            - generic [ref=e6931]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e6932]: "#101"
+            - link [ref=e6933] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e6934]
+      - 'button "Open long PAXG 3d ago TW-LLM Insider Tracker (1W) #89" [ref=e6938]':
+        - generic [ref=e6939]: Open long
+        - generic [ref=e6940]:
+          - generic [ref=e6941]:
+            - generic [ref=e6942]: PAXG
+            - generic [ref=e6943]: 3d ago
+          - generic [ref=e6944]:
+            - generic [ref=e6945]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e6946]: "#89"
+            - link [ref=e6947] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e6948]
+      - 'button "Open long NEXO 3d ago HYB-LLM Swing Trader (15M) #151" [ref=e6952]':
+        - generic [ref=e6953]: Open long
+        - generic [ref=e6954]:
+          - generic [ref=e6955]:
+            - generic [ref=e6956]: NEXO
+            - generic [ref=e6957]: 3d ago
+          - generic [ref=e6958]:
+            - generic [ref=e6959]: HYB-LLM Swing Trader (15M)
+            - generic [ref=e6960]: "#151"
+            - link [ref=e6961] [cursor=pointer]:
+              - /url: /agents/158
+              - img [ref=e6962]
+      - 'button "Open long NEXO 3d ago TW-LLM Insider Tracker (15M) #101" [ref=e6966]':
+        - generic [ref=e6967]: Open long
+        - generic [ref=e6968]:
+          - generic [ref=e6969]:
+            - generic [ref=e6970]: NEXO
+            - generic [ref=e6971]: 3d ago
+          - generic [ref=e6972]:
+            - generic [ref=e6973]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e6974]: "#101"
+            - link [ref=e6975] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e6976]
+      - 'button "Open long BTC 3d ago TW-LLM Insider Tracker (1W) #89" [ref=e6980]':
+        - generic [ref=e6981]: Open long
+        - generic [ref=e6982]:
+          - generic [ref=e6983]:
+            - generic [ref=e6984]: BTC
+            - generic [ref=e6985]: 3d ago
+          - generic [ref=e6986]:
+            - generic [ref=e6987]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e6988]: "#89"
+            - link [ref=e6989] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e6990]
+      - 'button "Open long SOL 3d ago TW-LLM Narrative Follower (1D) #1" [ref=e6994]':
+        - generic [ref=e6995]: Open long
+        - generic [ref=e6996]:
+          - generic [ref=e6997]:
+            - generic [ref=e6998]: SOL
+            - generic [ref=e6999]: 3d ago
+          - generic [ref=e7000]:
+            - generic [ref=e7001]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e7002]: "#1"
+            - link [ref=e7003] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e7004]
+      - 'button "Open long RPL 3d ago TW-LLM Insider Tracker (30M) #98" [ref=e7008]':
+        - generic [ref=e7009]: Open long
+        - generic [ref=e7010]:
+          - generic [ref=e7011]:
+            - generic [ref=e7012]: RPL
+            - generic [ref=e7013]: 3d ago
+          - generic [ref=e7014]:
+            - generic [ref=e7015]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e7016]: "#98"
+            - link [ref=e7017] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e7018]
+      - 'button "Open long ETH 3d ago TW-LLM Narrative Follower (1W) #91" [ref=e7022]':
+        - generic [ref=e7023]: Open long
+        - generic [ref=e7024]:
+          - generic [ref=e7025]:
+            - generic [ref=e7026]: ETH
+            - generic [ref=e7027]: 3d ago
+          - generic [ref=e7028]:
+            - generic [ref=e7029]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e7030]: "#91"
+            - link [ref=e7031] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e7032]
+      - 'button "Open long OM 3d ago HYB-LLM Swing Trader (1H) #112" [ref=e7036]':
+        - generic [ref=e7037]: Open long
+        - generic [ref=e7038]:
+          - generic [ref=e7039]:
+            - generic [ref=e7040]: OM
+            - generic [ref=e7041]: 3d ago
+          - generic [ref=e7042]:
+            - generic [ref=e7043]: HYB-LLM Swing Trader (1H)
+            - generic [ref=e7044]: "#112"
+            - link [ref=e7045] [cursor=pointer]:
+              - /url: /agents/174
+              - img [ref=e7046]
+      - 'button "Open long TAO 3d ago HYB-LLM Momentum Trader (30M) #145" [ref=e7050]':
+        - generic [ref=e7051]: Open long
+        - generic [ref=e7052]:
+          - generic [ref=e7053]:
+            - generic [ref=e7054]: TAO
+            - generic [ref=e7055]: 3d ago
+          - generic [ref=e7056]:
+            - generic [ref=e7057]: HYB-LLM Momentum Trader (30M)
+            - generic [ref=e7058]: "#145"
+            - link [ref=e7059] [cursor=pointer]:
+              - /url: /agents/160
+              - img [ref=e7060]
+      - 'button "Open long OM 3d ago TW-LLM Insider Tracker (30M) #98" [ref=e7064]':
+        - generic [ref=e7065]: Open long
+        - generic [ref=e7066]:
+          - generic [ref=e7067]:
+            - generic [ref=e7068]: OM
+            - generic [ref=e7069]: 3d ago
+          - generic [ref=e7070]:
+            - generic [ref=e7071]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e7072]: "#98"
+            - link [ref=e7073] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e7074]
+      - 'button "Open long TAO 3d ago HYB-LLM Momentum Trader (15M) #100" [ref=e7078]':
+        - generic [ref=e7079]: Open long
+        - generic [ref=e7080]:
+          - generic [ref=e7081]:
+            - generic [ref=e7082]: TAO
+            - generic [ref=e7083]: 3d ago
+          - generic [ref=e7084]:
+            - generic [ref=e7085]: HYB-LLM Momentum Trader (15M)
+            - generic [ref=e7086]: "#100"
+            - link [ref=e7087] [cursor=pointer]:
+              - /url: /agents/152
+              - img [ref=e7088]
+      - 'button "Open long INIT 3d ago TW-LLM Insider Tracker (15M) #101" [ref=e7092]':
+        - generic [ref=e7093]: Open long
+        - generic [ref=e7094]:
+          - generic [ref=e7095]:
+            - generic [ref=e7096]: INIT
+            - generic [ref=e7097]: 3d ago
+          - generic [ref=e7098]:
+            - generic [ref=e7099]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e7100]: "#101"
+            - link [ref=e7101] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e7102]
+      - 'button "Open long BTC 3d ago TW-LLM Narrative Follower (1W) #91" [ref=e7106]':
+        - generic [ref=e7107]: Open long
+        - generic [ref=e7108]:
+          - generic [ref=e7109]:
+            - generic [ref=e7110]: BTC
+            - generic [ref=e7111]: 3d ago
+          - generic [ref=e7112]:
+            - generic [ref=e7113]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e7114]: "#91"
+            - link [ref=e7115] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e7116]
+      - 'button "Open long BEAMX 3d ago HYB Swing Trader (1H) #148" [ref=e7120]':
+        - generic [ref=e7121]: Open long
+        - generic [ref=e7122]:
+          - generic [ref=e7123]:
+            - generic [ref=e7124]: BEAMX
+            - generic [ref=e7125]: 3d ago
+          - generic [ref=e7126]:
+            - generic [ref=e7127]: HYB Swing Trader (1H)
+            - generic [ref=e7128]: "#148"
+            - link [ref=e7129] [cursor=pointer]:
+              - /url: /agents/173
+              - img [ref=e7130]
+      - 'button "Open long ETH 3d ago TW-LLM Narrative Follower (4H) #106" [ref=e7134]':
+        - generic [ref=e7135]: Open long
+        - generic [ref=e7136]:
+          - generic [ref=e7137]:
+            - generic [ref=e7138]: ETH
+            - generic [ref=e7139]: 3d ago
+          - generic [ref=e7140]:
+            - generic [ref=e7141]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e7142]: "#106"
+            - link [ref=e7143] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e7144]
+      - 'button "Open long SUPER 3d ago RB Swing Trader (1H) #146" [ref=e7148]':
+        - generic [ref=e7149]: Open long
+        - generic [ref=e7150]:
+          - generic [ref=e7151]:
+            - generic [ref=e7152]: SUPER
+            - generic [ref=e7153]: 3d ago
+          - generic [ref=e7154]:
+            - generic [ref=e7155]: RB Swing Trader (1H)
+            - generic [ref=e7156]: "#146"
+            - link [ref=e7157] [cursor=pointer]:
+              - /url: /agents/40
+              - img [ref=e7158]
+      - 'button "Open long TAO 3d ago HYB-LLM Breakout Trader (30M) #129" [ref=e7162]':
+        - generic [ref=e7163]: Open long
+        - generic [ref=e7164]:
+          - generic [ref=e7165]:
+            - generic [ref=e7166]: TAO
+            - generic [ref=e7167]: 3d ago
+          - generic [ref=e7168]:
+            - generic [ref=e7169]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e7170]: "#129"
+            - link [ref=e7171] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e7172]
+      - 'button "Open long MAGIC 3d ago TW-LLM Insider Tracker (30M) #98" [ref=e7176]':
+        - generic [ref=e7177]: Open long
+        - generic [ref=e7178]:
+          - generic [ref=e7179]:
+            - generic [ref=e7180]: MAGIC
+            - generic [ref=e7181]: 3d ago
+          - generic [ref=e7182]:
+            - generic [ref=e7183]: TW-LLM Insider Tracker (30M)
+            - generic [ref=e7184]: "#98"
+            - link [ref=e7185] [cursor=pointer]:
+              - /url: /agents/72
+              - img [ref=e7186]
+      - 'button "Open long PAXG 3d ago HYB-LLM Swing Trader (1W) #86" [ref=e7190]':
+        - generic [ref=e7191]: Open long
+        - generic [ref=e7192]:
+          - generic [ref=e7193]:
+            - generic [ref=e7194]: PAXG
+            - generic [ref=e7195]: 3d ago
+          - generic [ref=e7196]:
+            - generic [ref=e7197]: HYB-LLM Swing Trader (1W)
+            - generic [ref=e7198]: "#86"
+            - link [ref=e7199] [cursor=pointer]:
+              - /url: /agents/198
+              - img [ref=e7200]
+      - 'button "Open long BANANAS31 3d ago HYB Swing Trader (4H) #141" [ref=e7204]':
+        - generic [ref=e7205]: Open long
+        - generic [ref=e7206]:
+          - generic [ref=e7207]:
+            - generic [ref=e7208]: BANANAS31
+            - generic [ref=e7209]: 3d ago
+          - generic [ref=e7210]:
+            - generic [ref=e7211]: HYB Swing Trader (4H)
+            - generic [ref=e7212]: "#141"
+            - link [ref=e7213] [cursor=pointer]:
+              - /url: /agents/181
+              - img [ref=e7214]
+      - 'button "Open long BCH 3d ago HYB-LLM Momentum Trader (1W) #133" [ref=e7218]':
+        - generic [ref=e7219]: Open long
+        - generic [ref=e7220]:
+          - generic [ref=e7221]:
+            - generic [ref=e7222]: BCH
+            - generic [ref=e7223]: 3d ago
+          - generic [ref=e7224]:
+            - generic [ref=e7225]: HYB-LLM Momentum Trader (1W)
+            - generic [ref=e7226]: "#133"
+            - link [ref=e7227] [cursor=pointer]:
+              - /url: /agents/192
+              - img [ref=e7228]
+      - 'button "Open long SUPER 3d ago HYB Swing Trader (1H) #148" [ref=e7232]':
+        - generic [ref=e7233]: Open long
+        - generic [ref=e7234]:
+          - generic [ref=e7235]:
+            - generic [ref=e7236]: SUPER
+            - generic [ref=e7237]: 3d ago
+          - generic [ref=e7238]:
+            - generic [ref=e7239]: HYB Swing Trader (1H)
+            - generic [ref=e7240]: "#148"
+            - link [ref=e7241] [cursor=pointer]:
+              - /url: /agents/173
+              - img [ref=e7242]
+      - 'button "Open long OM 3d ago HYB-LLM Breakout Trader (1H) #138" [ref=e7246]':
+        - generic [ref=e7247]: Open long
+        - generic [ref=e7248]:
+          - generic [ref=e7249]:
+            - generic [ref=e7250]: OM
+            - generic [ref=e7251]: 3d ago
+          - generic [ref=e7252]:
+            - generic [ref=e7253]: HYB-LLM Breakout Trader (1H)
+            - generic [ref=e7254]: "#138"
+            - link [ref=e7255] [cursor=pointer]:
+              - /url: /agents/172
+              - img [ref=e7256]
+      - 'button "Open long OM 3d ago HYB-LLM Breakout Trader (30M) #129" [ref=e7260]':
+        - generic [ref=e7261]: Open long
+        - generic [ref=e7262]:
+          - generic [ref=e7263]:
+            - generic [ref=e7264]: OM
+            - generic [ref=e7265]: 3d ago
+          - generic [ref=e7266]:
+            - generic [ref=e7267]: HYB-LLM Breakout Trader (30M)
+            - generic [ref=e7268]: "#129"
+            - link [ref=e7269] [cursor=pointer]:
+              - /url: /agents/164
+              - img [ref=e7270]
+      - 'button "Open long SUPER 3d ago HYB-LLM Momentum Trader (30M) #145" [ref=e7274]':
+        - generic [ref=e7275]: Open long
+        - generic [ref=e7276]:
+          - generic [ref=e7277]:
+            - generic [ref=e7278]: SUPER
+            - generic [ref=e7279]: 3d ago
+          - generic [ref=e7280]:
+            - generic [ref=e7281]: HYB-LLM Momentum Trader (30M)
+            - generic [ref=e7282]: "#145"
+            - link [ref=e7283] [cursor=pointer]:
+              - /url: /agents/160
+              - img [ref=e7284]
+      - 'button "Open long SOL 3d ago TW-LLM Insider Tracker (1W) #89" [ref=e7288]':
+        - generic [ref=e7289]: Open long
+        - generic [ref=e7290]:
+          - generic [ref=e7291]:
+            - generic [ref=e7292]: SOL
+            - generic [ref=e7293]: 3d ago
+          - generic [ref=e7294]:
+            - generic [ref=e7295]: TW-LLM Insider Tracker (1W)
+            - generic [ref=e7296]: "#89"
+            - link [ref=e7297] [cursor=pointer]:
+              - /url: /agents/104
+              - img [ref=e7298]
+      - 'button "Open long SOL 3d ago TW-LLM Narrative Follower (1W) #91" [ref=e7302]':
+        - generic [ref=e7303]: Open long
+        - generic [ref=e7304]:
+          - generic [ref=e7305]:
+            - generic [ref=e7306]: SOL
+            - generic [ref=e7307]: 3d ago
+          - generic [ref=e7308]:
+            - generic [ref=e7309]: TW-LLM Narrative Follower (1W)
+            - generic [ref=e7310]: "#91"
+            - link [ref=e7311] [cursor=pointer]:
+              - /url: /agents/102
+              - img [ref=e7312]
+      - 'button "Open long BTC 3d ago TW-LLM Insider Tracker (1D) #9" [ref=e7316]':
+        - generic [ref=e7317]: Open long
+        - generic [ref=e7318]:
+          - generic [ref=e7319]:
+            - generic [ref=e7320]: BTC
+            - generic [ref=e7321]: 3d ago
+          - generic [ref=e7322]:
+            - generic [ref=e7323]: TW-LLM Insider Tracker (1D)
+            - generic [ref=e7324]: "#9"
+            - link [ref=e7325] [cursor=pointer]:
+              - /url: /agents/96
+              - img [ref=e7326]
+      - 'button "Open long ETH 3d ago TW-LLM Narrative Follower (1D) #1" [ref=e7330]':
+        - generic [ref=e7331]: Open long
+        - generic [ref=e7332]:
+          - generic [ref=e7333]:
+            - generic [ref=e7334]: ETH
+            - generic [ref=e7335]: 3d ago
+          - generic [ref=e7336]:
+            - generic [ref=e7337]: TW-LLM Narrative Follower (1D)
+            - generic [ref=e7338]: "#1"
+            - link [ref=e7339] [cursor=pointer]:
+              - /url: /agents/94
+              - img [ref=e7340]
+      - 'button "Open long INIT 3d ago TW-LLM Insider Tracker (4H) #104" [ref=e7344]':
+        - generic [ref=e7345]: Open long
+        - generic [ref=e7346]:
+          - generic [ref=e7347]:
+            - generic [ref=e7348]: INIT
+            - generic [ref=e7349]: 3d ago
+          - generic [ref=e7350]:
+            - generic [ref=e7351]: TW-LLM Insider Tracker (4H)
+            - generic [ref=e7352]: "#104"
+            - link [ref=e7353] [cursor=pointer]:
+              - /url: /agents/88
+              - img [ref=e7354]
+      - 'button "Open long BTC 3d ago TW-LLM Narrative Follower (4H) #106" [ref=e7358]':
+        - generic [ref=e7359]: Open long
+        - generic [ref=e7360]:
+          - generic [ref=e7361]:
+            - generic [ref=e7362]: BTC
+            - generic [ref=e7363]: 3d ago
+          - generic [ref=e7364]:
+            - generic [ref=e7365]: TW-LLM Narrative Follower (4H)
+            - generic [ref=e7366]: "#106"
+            - link [ref=e7367] [cursor=pointer]:
+              - /url: /agents/86
+              - img [ref=e7368]
+      - 'button "Open long XPL 3d ago TW-LLM Insider Tracker (15M) #101" [ref=e7372]':
+        - generic [ref=e7373]: Open long
+        - generic [ref=e7374]:
+          - generic [ref=e7375]:
+            - generic [ref=e7376]: XPL
+            - generic [ref=e7377]: 3d ago
+          - generic [ref=e7378]:
+            - generic [ref=e7379]: TW-LLM Insider Tracker (15M)
+            - generic [ref=e7380]: "#101"
+            - link [ref=e7381] [cursor=pointer]:
+              - /url: /agents/64
+              - img [ref=e7382]
+      - 'button "Open long GLMR 3d ago RB Breakout Hunter (1H) #111" [ref=e7386]':
+        - generic [ref=e7387]: Open long
+        - generic [ref=e7388]:
+          - generic [ref=e7389]:
+            - generic [ref=e7390]: GLMR
+            - generic [ref=e7391]: 3d ago
+          - generic [ref=e7392]:
+            - generic [ref=e7393]: RB Breakout Hunter (1H)
+            - generic [ref=e7394]: "#111"
+            - link [ref=e7395] [cursor=pointer]:
+              - /url: /agents/39
+              - img [ref=e7396]
+      - 'button "Open long MANTA 3d ago RB Swing Trader (15M) #150" [ref=e7400]':
+        - generic [ref=e7401]: Open long
+        - generic [ref=e7402]:
+          - generic [ref=e7403]:
+            - generic [ref=e7404]: MANTA
+            - generic [ref=e7405]: 3d ago
+          - generic [ref=e7406]:
+            - generic [ref=e7407]: RB Swing Trader (15M)
+            - generic [ref=e7408]: "#150"
+            - link [ref=e7409] [cursor=pointer]:
+              - /url: /agents/32
+              - img [ref=e7410]
+      - 'button "Open long BANANAS31 3d ago RB Swing Trader (4H) #110" [ref=e7414]':
+        - generic [ref=e7415]: Open long
+        - generic [ref=e7416]:
+          - generic [ref=e7417]:
+            - generic [ref=e7418]: BANANAS31
+            - generic [ref=e7419]: 3d ago
+          - generic [ref=e7420]:
+            - generic [ref=e7421]: RB Swing Trader (4H)
+            - generic [ref=e7422]: "#110"
+            - link [ref=e7423] [cursor=pointer]:
+              - /url: /agents/44
+              - img [ref=e7424]
+      - 'button "Open long MIRA 3d ago RB Swing Trader (30M) #142" [ref=e7428]':
+        - generic [ref=e7429]: Open long
+        - generic [ref=e7430]:
+          - generic [ref=e7431]:
+            - generic [ref=e7432]: MIRA
+            - generic [ref=e7433]: 3d ago
+          - generic [ref=e7434]:
+            - generic [ref=e7435]: RB Swing Trader (30M)
+            - generic [ref=e7436]: "#142"
+            - link [ref=e7437] [cursor=pointer]:
+              - /url: /agents/36
+              - img [ref=e7438]
+      - 'button "Open long STRAX 6d ago RB Swing Trader (1H) #146" [ref=e7442]':
+        - generic [ref=e7443]: Open long
+        - generic [ref=e7444]:
+          - generic [ref=e7445]:
+            - generic [ref=e7446]: STRAX
+            - generic [ref=e7447]: 6d ago
+          - generic [ref=e7448]:
+            - generic [ref=e7449]: RB Swing Trader (1H)
+            - generic [ref=e7450]: "#146"
+            - link [ref=e7451] [cursor=pointer]:
+              - /url: /agents/40
+              - img [ref=e7452]
+      - 'button "Open long DCR 6d ago RB Multi-TF Confluence #149" [ref=e7456]':
+        - generic [ref=e7457]: Open long
+        - generic [ref=e7458]:
+          - generic [ref=e7459]:
+            - generic [ref=e7460]: DCR
+            - generic [ref=e7461]: 6d ago
+          - generic [ref=e7462]:
+            - generic [ref=e7463]: RB Multi-TF Confluence
+            - generic [ref=e7464]: "#149"
+            - link [ref=e7465] [cursor=pointer]:
+              - /url: /agents/53
+              - img [ref=e7466]
+      - 'button "Open long STRAX 6d ago RB Swing Trader (30M) #142" [ref=e7470]':
+        - generic [ref=e7471]: Open long
+        - generic [ref=e7472]:
+          - generic [ref=e7473]:
+            - generic [ref=e7474]: STRAX
+            - generic [ref=e7475]: 6d ago
+          - generic [ref=e7476]:
+            - generic [ref=e7477]: RB Swing Trader (30M)
+            - generic [ref=e7478]: "#142"
+            - link [ref=e7479] [cursor=pointer]:
+              - /url: /agents/36
+              - img [ref=e7480]
+      - 'button "Open long ERA 6d ago RB Momentum Trader (15M) #131" [ref=e7484]':
+        - generic [ref=e7485]: Open long
+        - generic [ref=e7486]:
+          - generic [ref=e7487]:
+            - generic [ref=e7488]: ERA
+            - generic [ref=e7489]: 6d ago
+          - generic [ref=e7490]:
+            - generic [ref=e7491]: RB Momentum Trader (15M)
+            - generic [ref=e7492]: "#131"
+            - link [ref=e7493] [cursor=pointer]:
+              - /url: /agents/29
+              - img [ref=e7494]
+      - 'button "Open long LAYER 6d ago RB Momentum Trader (30M) #137" [ref=e7498]':
+        - generic [ref=e7499]: Open long
+        - generic [ref=e7500]:
+          - generic [ref=e7501]:
+            - generic [ref=e7502]: LAYER
+            - generic [ref=e7503]: 6d ago
+          - generic [ref=e7504]:
+            - generic [ref=e7505]: RB Momentum Trader (30M)
+            - generic [ref=e7506]: "#137"
+            - link [ref=e7507] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e7508]
+      - 'button "Open long AUCTION 6d ago RB Momentum Trader (30M) #137" [ref=e7512]':
+        - generic [ref=e7513]: Open long
+        - generic [ref=e7514]:
+          - generic [ref=e7515]:
+            - generic [ref=e7516]: AUCTION
+            - generic [ref=e7517]: 6d ago
+          - generic [ref=e7518]:
+            - generic [ref=e7519]: RB Momentum Trader (30M)
+            - generic [ref=e7520]: "#137"
+            - link [ref=e7521] [cursor=pointer]:
+              - /url: /agents/33
+              - img [ref=e7522]
+      - 'button "Open long FDUSD 7d ago RB Swing Trader (1D) #139" [ref=e7526]':
+        - generic [ref=e7527]: Open long
+        - generic [ref=e7528]:
+          - generic [ref=e7529]:
+            - generic [ref=e7530]: FDUSD
+            - generic [ref=e7531]: 7d ago
+          - generic [ref=e7532]:
+            - generic [ref=e7533]: RB Swing Trader (1D)
+            - generic [ref=e7534]: "#139"
+            - link [ref=e7535] [cursor=pointer]:
+              - /url: /agents/48
+              - img [ref=e7536]
+      - 'button "Open long ACH 7d ago RB Swing Trader (1H) #146" [ref=e7540]':
+        - generic [ref=e7541]: Open long
+        - generic [ref=e7542]:
+          - generic [ref=e7543]:
+            - generic [ref=e7544]: ACH
+            - generic [ref=e7545]: 7d ago
+          - generic [ref=e7546]:
+            - generic [ref=e7547]: RB Swing Trader (1H)
+            - generic [ref=e7548]: "#146"
+            - link [ref=e7549] [cursor=pointer]:
+              - /url: /agents/40
+              - img [ref=e7550]
+      - 'button "Open long ZEC 8d ago Momentum Trader (1H) #5" [ref=e7554]':
+        - generic [ref=e7555]: Open long
+        - generic [ref=e7556]:
+          - generic [ref=e7557]:
+            - generic [ref=e7558]: ZEC
+            - generic [ref=e7559]: 8d ago
+          - generic [ref=e7560]:
+            - generic [ref=e7561]: Momentum Trader (1H)
+            - generic [ref=e7562]: "#5"
+            - link [ref=e7563] [cursor=pointer]:
+              - /url: /agents/9
+              - img [ref=e7564]
+      - 'button "Open long MUBARAK 8d ago Momentum Trader (15M) #12" [ref=e7568]':
+        - generic [ref=e7569]: Open long
+        - generic [ref=e7570]:
+          - generic [ref=e7571]:
+            - generic [ref=e7572]: MUBARAK
+            - generic [ref=e7573]: 8d ago
+          - generic [ref=e7574]:
+            - generic [ref=e7575]: Momentum Trader (15M)
+            - generic [ref=e7576]: "#12"
+            - link [ref=e7577] [cursor=pointer]:
+              - /url: /agents/1
+              - img [ref=e7578]
+      - 'button "Open long ZEC 8d ago Momentum Trader (15M) #12" [ref=e7582]':
+        - generic [ref=e7583]: Open long
+        - generic [ref=e7584]:
+          - generic [ref=e7585]:
+            - generic [ref=e7586]: ZEC
+            - generic [ref=e7587]: 8d ago
+          - generic [ref=e7588]:
+            - generic [ref=e7589]: Momentum Trader (15M)
+            - generic [ref=e7590]: "#12"
+            - link [ref=e7591] [cursor=pointer]:
+              - /url: /agents/1
+              - img [ref=e7592]
+      - 'button "Open long ACE 8d ago Momentum Trader (15M) #12" [ref=e7596]':
+        - generic [ref=e7597]: Open long
+        - generic [ref=e7598]:
+          - generic [ref=e7599]:
+            - generic [ref=e7600]: ACE
+            - generic [ref=e7601]: 8d ago
+          - generic [ref=e7602]:
+            - generic [ref=e7603]: Momentum Trader (15M)
+            - generic [ref=e7604]: "#12"
+            - link [ref=e7605] [cursor=pointer]:
+              - /url: /agents/1
+              - img [ref=e7606]
+      - 'button "Open long ACE 8d ago Momentum Trader (1H) #5" [ref=e7610]':
+        - generic [ref=e7611]: Open long
+        - generic [ref=e7612]:
+          - generic [ref=e7613]:
+            - generic [ref=e7614]: ACE
+            - generic [ref=e7615]: 8d ago
+          - generic [ref=e7616]:
+            - generic [ref=e7617]: Momentum Trader (1H)
+            - generic [ref=e7618]: "#5"
+            - link [ref=e7619] [cursor=pointer]:
+              - /url: /agents/9
+              - img [ref=e7620]
+      - 'button "Open long STG 8d ago Momentum Trader (1W) #32" [ref=e7624]':
+        - generic [ref=e7625]: Open long
+        - generic [ref=e7626]:
+          - generic [ref=e7627]:
+            - generic [ref=e7628]: STG
+            - generic [ref=e7629]: 8d ago
+          - generic [ref=e7630]:
+            - generic [ref=e7631]: Momentum Trader (1W)
+            - generic [ref=e7632]: "#32"
+            - link [ref=e7633] [cursor=pointer]:
+              - /url: /agents/21
+              - img [ref=e7634]
+      - 'button "Open long DUSK 8d ago Momentum Trader (1H) #5" [ref=e7638]':
+        - generic [ref=e7639]: Open long
+        - generic [ref=e7640]:
+          - generic [ref=e7641]:
+            - generic [ref=e7642]: DUSK
+            - generic [ref=e7643]: 8d ago
+          - generic [ref=e7644]:
+            - generic [ref=e7645]: Momentum Trader (1H)
+            - generic [ref=e7646]: "#5"
+            - link [ref=e7647] [cursor=pointer]:
+              - /url: /agents/9
+              - img [ref=e7648]
+  - alert [ref=e7651]

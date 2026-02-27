@@ -66,7 +66,7 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
   const [sortField, setSortField] = useState<SortField>("rank");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
-  // Live state: initialized from server-fetched data, updated via SSE
+  // react-doctor: intentional — local mutation of server-fetched initial data
   const [rankingsData, setRankingsData] = useState<AllTimeframeRankings>(data);
 
   const handleSSEMessage = useCallback((event: RankingSSEEvent) => {

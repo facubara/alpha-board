@@ -5,6 +5,7 @@ import {
   getRecentMemecoinTweets,
   getMemecoinStats,
   getTrendingTokens,
+  getTokenAnalyses,
 } from "@/lib/queries/memecoins";
 import { StatsBar } from "@/components/memecoins/stats-bar";
 import { TrendingTokens } from "@/components/memecoins/trending-tokens";
@@ -12,11 +13,13 @@ import { WalletLeaderboard } from "@/components/memecoins/wallet-leaderboard";
 import { WalletActivityFeed } from "@/components/memecoins/wallet-activity-feed";
 import { MemecoinAccountManager } from "@/components/memecoins/memecoin-account-manager";
 import { MemecoinTweetFeed } from "@/components/memecoins/memecoin-tweet-feed";
+import { TokenAnalyzer } from "@/components/memecoins/token-analyzer";
+import { TokenChecker } from "@/components/memecoins/token-checker";
 
 /**
  * Memecoins Page (Server Component)
  *
- * Wallet cross-referencing leaderboard, live activity feed,
+ * Token analysis, cross-referencing, wallet leaderboard, live activity feed,
  * and memecoin-focused Twitter feed with token discovery.
  * ISR: Revalidates every 60 seconds.
  */
@@ -24,7 +27,7 @@ import { MemecoinTweetFeed } from "@/components/memecoins/memecoin-tweet-feed";
 export const revalidate = 60;
 
 export default async function MemecoinsPage() {
-  const [wallets, walletActivity, twitterAccounts, tweets, stats, trendingTokens] =
+  const [wallets, walletActivity, twitterAccounts, tweets, stats, trendingTokens, analyses] =
     await Promise.all([
       getWatchWallets(),
       getRecentWalletActivity(50),
@@ -32,6 +35,7 @@ export default async function MemecoinsPage() {
       getRecentMemecoinTweets(50),
       getMemecoinStats(),
       getTrendingTokens(24),
+      getTokenAnalyses(),
     ]);
 
   return (
@@ -40,12 +44,34 @@ export default async function MemecoinsPage() {
       <div>
         <h1 className="text-xl font-semibold text-primary">Memecoins</h1>
         <p className="mt-1 text-sm text-secondary">
-          Wallet cross-referencing, live activity monitoring, and memecoin Twitter intelligence.
+          Token analysis, wallet cross-referencing, live activity monitoring, and memecoin Twitter intelligence.
         </p>
       </div>
 
       {/* Stats */}
       <StatsBar stats={stats} />
+
+      {/* Token Analysis */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-lg font-medium text-primary">Analyze Token</h2>
+          <p className="mt-0.5 text-xs text-muted">
+            Paste a Solana token CA to extract early buyers and build wallet profiles
+          </p>
+        </div>
+        <TokenAnalyzer initialAnalyses={analyses} />
+      </section>
+
+      {/* Cross-Reference Check */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="text-lg font-medium text-primary">Check Token</h2>
+          <p className="mt-0.5 text-xs text-muted">
+            Cross-reference a new token's buyers against the analyzed wallet database
+          </p>
+        </div>
+        <TokenChecker />
+      </section>
 
       {/* Trending Tokens */}
       <section className="space-y-4">

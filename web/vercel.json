@@ -8,5 +8,6 @@
         { "key": "Cache-Control", "value": "no-store" }
       ]
     }
-  ]
+  ],
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- web/"
 }

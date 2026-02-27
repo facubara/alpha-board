@@ -18,6 +18,7 @@ from src.notifications.models import (
     DailyDigestData,
     EquityAlertEvent,
     EvolutionEvent,
+    MemecoinBuyEvent,
     TradeClosedEvent,
     TradeOpenedEvent,
 )
@@ -158,6 +159,18 @@ class NotificationService:
             await self.client.send_message(text)
         except Exception:
             logger.exception("Error sending agent discarded notification")
+
+    async def notify_memecoin_buy(self, event: MemecoinBuyEvent) -> None:
+        try:
+            if not self.client.is_configured:
+                return
+            prefs = await self._get_preferences()
+            if not prefs or not prefs.enabled or not prefs.notify_memecoin_buys:
+                return
+            text = templates.memecoin_buy_message(event)
+            await self.client.send_message(text)
+        except Exception:
+            logger.exception("Error sending memecoin buy notification")
 
     async def send_daily_digest(self, data: DailyDigestData) -> None:
         try:

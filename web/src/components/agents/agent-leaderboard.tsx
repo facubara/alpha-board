@@ -8,15 +8,16 @@
  * uPnL is calculated client-side from Binance prices + open positions.
  */
 
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
-import { ChevronUp, ChevronDown, PauseCircle, GitCompareArrows, Search, X } from "lucide-react";
+import { useState, useMemo, useCallback, useReducer } from "react";
+import { ChevronUp, ChevronDown, GitCompareArrows } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useSSE } from "@/hooks/use-sse";
-import { useBinancePrices } from "@/hooks/use-binance-prices";
-import { calculateAgentUpnl } from "@/hooks/use-live-upnl";
+import { useAgentPositions } from "@/hooks/use-agent-positions";
+import { useDebouncedFetch } from "@/hooks/use-debounced-fetch";
 import { PauseModal } from "./pause-modal";
+import { AgentLeaderboardFilters } from "./agent-leaderboard-filters";
 import {
   Table,
   TableBody,
@@ -27,21 +28,10 @@ import {
 import type {
   AgentEngine,
   AgentLeaderboardRow,
-  AgentPosition,
   AgentSource,
   AgentTimeframe,
   StrategyArchetype,
   SymbolAgentActivity,
-} from "@/lib/types";
-import {
-  AGENT_ENGINES,
-  AGENT_ENGINE_LABELS,
-  AGENT_SOURCES,
-  AGENT_SOURCE_LABELS,
-  AGENT_TIMEFRAMES,
-  AGENT_TIMEFRAME_LABELS,
-  STRATEGY_ARCHETYPES,
-  STRATEGY_ARCHETYPE_LABELS,
 } from "@/lib/types";
 import { AgentRow } from "./agent-row";
 
@@ -71,6 +61,49 @@ interface AgentLeaderboardProps {
 interface AgentSSEEvent {
   type: string;
   agents?: AgentLeaderboardRow[];
+}
+
+// ─── Filter reducer ───
+interface FilterState {
+  timeframe: AgentTimeframe | "all";
+  archetype: StrategyArchetype | "all";
+  engine: AgentEngine | "all";
+  source: AgentSource | "all";
+  symbolSearch: string;
+  sortField: SortField;
+  sortDirection: SortDirection;
+}
+
+type FilterAction =
+  | { type: "SET_TIMEFRAME"; value: AgentTimeframe | "all" }
+  | { type: "SET_ARCHETYPE"; value: StrategyArchetype | "all" }
+  | { type: "SET_ENGINE"; value: AgentEngine | "all" }
+  | { type: "SET_SOURCE"; value: AgentSource | "all" }
+  | { type: "SET_SYMBOL_SEARCH"; value: string }
+  | { type: "TOGGLE_SORT"; field: SortField };
+
+function filterReducer(state: FilterState, action: FilterAction): FilterState {
+  switch (action.type) {
+    case "SET_TIMEFRAME":
+      return { ...state, timeframe: action.value };
+    case "SET_ARCHETYPE":
+      return { ...state, archetype: action.value };
+    case "SET_ENGINE":
+      return { ...state, engine: action.value };
+    case "SET_SOURCE":
+      return { ...state, source: action.value };
+    case "SET_SYMBOL_SEARCH":
+      return { ...state, symbolSearch: action.value };
+    case "TOGGLE_SORT":
+      if (state.sortField === action.field) {
+        return { ...state, sortDirection: state.sortDirection === "asc" ? "desc" : "asc" };
+      }
+      return {
+        ...state,
+        sortField: action.field,
+        sortDirection: action.field === "name" ? "asc" : "desc",
+      };
+  }
 }
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
@@ -106,33 +139,24 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     }
   }, [selectedIds, router]);
 
-  // Live state: initialized from server-fetched data, updated via SSE
-  const [agentsData, setAgentsData] = useState<AgentLeaderboardRow[]>(agents);
-  const [sseActive, setSseActive] = useState(false);
+  // ─── SSE data: merge server props with live SSE updates via useMemo ───
+  // react-doctor: intentional — local mutation of server-fetched initial data
+  const [sseAgents, setSseAgents] = useState<AgentLeaderboardRow[] | null>(null);
 
-  // Sync when server-fetched prop changes (e.g. after router.refresh())
-  useEffect(() => {
-    if (!sseActive) {
-      setAgentsData(agents);
-    } else {
-      // SSE is active — only sync status changes (pause/resume) from server,
-      // but keep SSE's live values
-      setAgentsData((prev) => {
-        const serverStatusMap = new Map(agents.map((a) => [a.id, a.status]));
-        return prev.map((a) => ({
-          ...a,
-          status: serverStatusMap.get(a.id) ?? a.status,
-        }));
-      });
-    }
-  }, [agents, sseActive]);
+  const agentsData = useMemo(() => {
+    if (!sseAgents) return agents;
+    // SSE is active — merge status changes from server props into SSE live data
+    const serverStatusMap = new Map(agents.map((a) => [a.id, a.status]));
+    return sseAgents.map((a) => ({
+      ...a,
+      status: serverStatusMap.get(a.id) ?? a.status,
+    }));
+  }, [agents, sseAgents]);
 
   const handleSSEMessage = useCallback((event: AgentSSEEvent) => {
     if (event.type === "agent_update" && event.agents) {
-      setSseActive(true);
-      // SSE updates non-price agent data; uPnL from SSE is ignored (client-side calc takes precedence)
-      setAgentsData((prev) => {
-        const sourceMap = new Map(prev.map((a) => [a.id, a.source]));
+      setSseAgents((prev) => {
+        const sourceMap = prev ? new Map(prev.map((a) => [a.id, a.source])) : new Map<number, AgentSource>();
         return event.agents!.map((a) => ({
           ...a,
           source: a.source || sourceMap.get(a.id) || "technical",
@@ -147,104 +171,36 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     onMessage: handleSSEMessage,
   });
 
-  // ─── Client-side uPnL: fetch all open positions + poll Binance prices ───
-  const [allPositions, setAllPositions] = useState<Record<number, AgentPosition[]>>({});
+  // ─── Client-side uPnL via extracted hook ───
+  const { agentUpnlMap } = useAgentPositions(agentsData);
 
-  useEffect(() => {
-    const fetchPositions = () => {
-      fetch("/api/positions/all")
-        .then((res) => res.ok ? res.json() : {})
-        .then((data: Record<number, AgentPosition[]>) => setAllPositions(data))
-        .catch(() => {});
-    };
+  // ─── Filters via reducer ───
+  const [filters, dispatch] = useReducer(filterReducer, {
+    timeframe: "all",
+    archetype: "all",
+    engine: "all",
+    source: "all",
+    symbolSearch: "",
+    sortField: "pnl",
+    sortDirection: "desc",
+  });
 
-    fetchPositions();
-    // Re-fetch positions every 30s to pick up new opens/closes
-    const id = setInterval(fetchPositions, 30_000);
-    return () => clearInterval(id);
-  }, []);
+  // ─── Debounced symbol search ───
+  const symbolSearchUrl = filters.symbolSearch.trim()
+    ? `/api/symbols/${encodeURIComponent(filters.symbolSearch.trim().toUpperCase())}/agents`
+    : null;
 
-  // Extract unique symbols across all positions
-  const allSymbols = useMemo(() => {
-    const symbols = new Set<string>();
-    for (const positions of Object.values(allPositions)) {
-      for (const pos of positions) {
-        symbols.add(pos.symbol);
-      }
-    }
-    return [...symbols];
-  }, [allPositions]);
+  const { data: symbolActivity, loading: symbolLoading } =
+    useDebouncedFetch<SymbolAgentActivity>(symbolSearchUrl, 300);
 
-  const { prices, pricesReady } = useBinancePrices(allSymbols);
-
-  // Pre-compute per-agent uPnL
-  const agentUpnlMap = useMemo(() => {
-    const map = new Map<number, number | undefined>();
-    if (!pricesReady) return map;
-
-    for (const agent of agentsData) {
-      const positions = allPositions[agent.id];
-      if (!positions || positions.length === 0) {
-        map.set(agent.id, 0);
-      } else {
-        map.set(agent.id, calculateAgentUpnl(positions, prices));
-      }
-    }
-    return map;
-  }, [agentsData, allPositions, prices, pricesReady]);
-
-  const [timeframeFilter, setTimeframeFilter] = useState<
-    AgentTimeframe | "all"
-  >("all");
-  const [archetypeFilter, setArchetypeFilter] = useState<
-    StrategyArchetype | "all"
-  >("all");
-  const [engineFilter, setEngineFilter] = useState<AgentEngine | "all">("all");
-  const [sourceFilter, setSourceFilter] = useState<AgentSource | "all">("all");
-  const [sortField, setSortField] = useState<SortField>("pnl");
-  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
-  const [symbolSearch, setSymbolSearch] = useState("");
-  const [symbolAgentIds, setSymbolAgentIds] = useState<Set<number> | null>(null);
-  const [symbolActivity, setSymbolActivity] = useState<SymbolAgentActivity | null>(null);
-  const [symbolLoading, setSymbolLoading] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-
-    if (!symbolSearch.trim()) {
-      setSymbolAgentIds(null);
-      setSymbolActivity(null);
-      setSymbolLoading(false);
-      return;
-    }
-
-    setSymbolLoading(true);
-    debounceRef.current = setTimeout(() => {
-      const upper = symbolSearch.trim().toUpperCase();
-      fetch(`/api/symbols/${encodeURIComponent(upper)}/agents`)
-        .then((res) => {
-          if (!res.ok) throw new Error("fetch failed");
-          return res.json();
-        })
-        .then((data: SymbolAgentActivity) => {
-          const ids = new Set<number>();
-          for (const p of data.positions) ids.add(p.agentId);
-          for (const t of data.trades) ids.add(t.agentId);
-          setSymbolAgentIds(ids);
-          setSymbolActivity(data);
-        })
-        .catch(() => {
-          setSymbolAgentIds(new Set());
-          setSymbolActivity(null);
-        })
-        .finally(() => setSymbolLoading(false));
-    }, 300);
-
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [symbolSearch]);
+  const symbolAgentIds = useMemo(() => {
+    if (!filters.symbolSearch.trim()) return null;
+    if (!symbolActivity) return symbolLoading ? null : new Set<number>();
+    const ids = new Set<number>();
+    for (const p of symbolActivity.positions) ids.add(p.agentId);
+    for (const t of symbolActivity.trades) ids.add(t.agentId);
+    return ids;
+  }, [filters.symbolSearch, symbolActivity, symbolLoading]);
 
   const [pauseModalOpen, setPauseModalOpen] = useState(false);
   const { requireAuth } = useAuth();
@@ -262,17 +218,17 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
   const filtered = useMemo(() => {
     let result = [...agentsData];
 
-    if (timeframeFilter !== "all") {
-      result = result.filter((a) => a.timeframe === timeframeFilter);
+    if (filters.timeframe !== "all") {
+      result = result.filter((a) => a.timeframe === filters.timeframe);
     }
-    if (archetypeFilter !== "all") {
-      result = result.filter((a) => a.strategyArchetype === archetypeFilter);
+    if (filters.archetype !== "all") {
+      result = result.filter((a) => a.strategyArchetype === filters.archetype);
     }
-    if (engineFilter !== "all") {
-      result = result.filter((a) => a.engine === engineFilter);
+    if (filters.engine !== "all") {
+      result = result.filter((a) => a.engine === filters.engine);
     }
-    if (sourceFilter !== "all") {
-      result = result.filter((a) => a.source === sourceFilter);
+    if (filters.source !== "all") {
+      result = result.filter((a) => a.source === filters.source);
     }
     if (symbolAgentIds !== null) {
       result = result.filter((a) => symbolAgentIds.has(a.id));
@@ -280,7 +236,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
 
     result.sort((a, b) => {
       let comparison = 0;
-      switch (sortField) {
+      switch (filters.sortField) {
         case "name":
           comparison = a.displayName.localeCompare(b.displayName);
           break;
@@ -300,174 +256,46 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
           comparison = a.totalTokenCost - b.totalTokenCost;
           break;
       }
-      return sortDirection === "asc" ? comparison : -comparison;
+      return filters.sortDirection === "asc" ? comparison : -comparison;
     });
 
     return result;
-  }, [agentsData, timeframeFilter, archetypeFilter, engineFilter, sourceFilter, symbolAgentIds, sortField, sortDirection]);
+  }, [agentsData, filters.timeframe, filters.archetype, filters.engine, filters.source, symbolAgentIds, filters.sortField, filters.sortDirection]);
 
   const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortField(field);
-      setSortDirection(field === "name" ? "asc" : "desc");
-    }
+    dispatch({ type: "TOGGLE_SORT", field });
   };
 
   return (
     <div className={cn("space-y-4", className)}>
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Timeframe filter */}
-        <div className="flex items-center gap-1">
-          <FilterButton
-            active={timeframeFilter === "all"}
-            onClick={() => setTimeframeFilter("all")}
-          >
-            All
-          </FilterButton>
-          {AGENT_TIMEFRAMES.map((tf) => (
-            <FilterButton
-              key={tf}
-              active={timeframeFilter === tf}
-              onClick={() => setTimeframeFilter(tf)}
-            >
-              {AGENT_TIMEFRAME_LABELS[tf]}
-            </FilterButton>
-          ))}
-        </div>
-
-        {/* Divider */}
-        <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
-
-        {/* Archetype filter */}
-        <div className="flex items-center gap-1">
-          <FilterButton
-            active={archetypeFilter === "all"}
-            onClick={() => setArchetypeFilter("all")}
-          >
-            All
-          </FilterButton>
-          {STRATEGY_ARCHETYPES.map((arch) => (
-            <FilterButton
-              key={arch}
-              active={archetypeFilter === arch}
-              onClick={() => setArchetypeFilter(arch)}
-            >
-              {STRATEGY_ARCHETYPE_LABELS[arch]}
-            </FilterButton>
-          ))}
-        </div>
-
-        {/* Divider */}
-        <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
-
-        {/* Engine filter */}
-        <div className="flex items-center gap-1">
-          <FilterButton
-            active={engineFilter === "all"}
-            onClick={() => setEngineFilter("all")}
-          >
-            All
-          </FilterButton>
-          {AGENT_ENGINES.map((eng) => (
-            <FilterButton
-              key={eng}
-              active={engineFilter === eng}
-              onClick={() => setEngineFilter(eng)}
-            >
-              {AGENT_ENGINE_LABELS[eng]}
-            </FilterButton>
-          ))}
-        </div>
-
-        {/* Divider */}
-        <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
-
-        {/* Source filter */}
-        <div className="flex items-center gap-1">
-          <FilterButton
-            active={sourceFilter === "all"}
-            onClick={() => setSourceFilter("all")}
-          >
-            All
-          </FilterButton>
-          {AGENT_SOURCES.map((src) => (
-            <FilterButton
-              key={src}
-              active={sourceFilter === src}
-              onClick={() => setSourceFilter(src)}
-            >
-              {AGENT_SOURCE_LABELS[src]}
-            </FilterButton>
-          ))}
-        </div>
-
-        {/* Divider */}
-        <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
-
-        {/* Symbol search */}
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
-          <input
-            type="text"
-            value={symbolSearch}
-            onChange={(e) => setSymbolSearch(e.target.value)}
-            placeholder="Search by symbol..."
-            className="h-9 w-56 rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] pl-8 pr-8 font-mono text-sm text-primary placeholder:text-muted focus:border-[var(--border-strong)] focus:outline-none"
-          />
-          {symbolSearch && (
-            <button
-              onClick={() => setSymbolSearch("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          )}
-        </div>
-
-        {/* Spacer */}
-        <div className="flex-1" />
-
-        {/* Compare + Pause All LLM */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleToggleCompare}
-            className={cn(
-              "flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
-              compareMode
-                ? "border-[var(--border-strong)] bg-[var(--bg-surface)] text-primary"
-                : "border-[var(--border-default)] text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
-            )}
-          >
-            <GitCompareArrows className="h-3.5 w-3.5" />
-            Compare
-          </button>
-          <button
-            onClick={handlePauseAllLlm}
-            className={cn(
-              "flex items-center gap-1.5 rounded-md border border-[var(--border-default)] px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
-              "text-bearish hover:bg-[var(--bearish-subtle)]"
-            )}
-          >
-            <PauseCircle className="h-3.5 w-3.5" />
-            Pause All LLM
-          </button>
-        </div>
-      </div>
+      <AgentLeaderboardFilters
+        timeframeFilter={filters.timeframe}
+        archetypeFilter={filters.archetype}
+        engineFilter={filters.engine}
+        sourceFilter={filters.source}
+        symbolSearch={filters.symbolSearch}
+        compareMode={compareMode}
+        onTimeframeChange={(v) => dispatch({ type: "SET_TIMEFRAME", value: v })}
+        onArchetypeChange={(v) => dispatch({ type: "SET_ARCHETYPE", value: v })}
+        onEngineChange={(v) => dispatch({ type: "SET_ENGINE", value: v })}
+        onSourceChange={(v) => dispatch({ type: "SET_SOURCE", value: v })}
+        onSymbolSearchChange={(v) => dispatch({ type: "SET_SYMBOL_SEARCH", value: v })}
+        onToggleCompare={handleToggleCompare}
+        onPauseAllLlm={handlePauseAllLlm}
+      />
 
       {/* Results count */}
-      {(timeframeFilter !== "all" || archetypeFilter !== "all" || engineFilter !== "all" || sourceFilter !== "all" || symbolAgentIds !== null) && (
+      {(filters.timeframe !== "all" || filters.archetype !== "all" || filters.engine !== "all" || filters.source !== "all" || symbolAgentIds !== null) && (
         <p className="text-xs text-secondary">
           {filtered.length} of {agentsData.length} agents
         </p>
       )}
 
       {/* Symbol search summary */}
-      {symbolSearch.trim() && symbolActivity && !symbolLoading && (
+      {filters.symbolSearch.trim() && symbolActivity && !symbolLoading && (
         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2 text-xs text-secondary">
-          <span className="font-mono font-semibold text-primary">{symbolSearch.trim().toUpperCase()}</span>
+          <span className="font-mono font-semibold text-primary">{filters.symbolSearch.trim().toUpperCase()}</span>
           <span className="text-muted">:</span>
           {symbolActivity.summary.agentsWithPositions > 0 && (
             <span>
@@ -476,7 +304,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
             </span>
           )}
           {symbolActivity.summary.agentsWithPositions > 0 && symbolActivity.summary.agentsThatTraded > 0 && (
-            <span className="text-muted">·</span>
+            <span className="text-muted">&middot;</span>
           )}
           {symbolActivity.summary.agentsThatTraded > 0 && (
             <span>
@@ -486,7 +314,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
           )}
           {symbolActivity.summary.totalTrades > 0 && (
             <>
-              <span className="text-muted">·</span>
+              <span className="text-muted">&middot;</span>
               <span
                 className={cn(
                   "font-mono font-medium tabular-nums",
@@ -503,7 +331,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
           )}
         </div>
       )}
-      {symbolSearch.trim() && symbolLoading && (
+      {filters.symbolSearch.trim() && symbolLoading && (
         <div className="h-4 w-48 animate-pulse rounded bg-[var(--bg-muted)]" />
       )}
 
@@ -525,7 +353,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
                   onClick={() => handleSort("name")}
                 >
                   Agent
-                  <SortIndicator field="name" sortField={sortField} sortDirection={sortDirection} />
+                  <SortIndicator field="name" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead className="hidden w-16 text-xs font-medium text-secondary sm:table-cell">
                   TF
@@ -535,7 +363,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
                   onClick={() => handleSort("pnl")}
                 >
                   Realized
-                  <SortIndicator field="pnl" sortField={sortField} sortDirection={sortDirection} />
+                  <SortIndicator field="pnl" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead
                   className="hidden w-20 select-none text-right text-xs font-medium text-secondary sm:table-cell"
@@ -547,28 +375,28 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
                   onClick={() => handleSort("winRate")}
                 >
                   Win%
-                  <SortIndicator field="winRate" sortField={sortField} sortDirection={sortDirection} />
+                  <SortIndicator field="winRate" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead
                   className="hidden w-16 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
                   onClick={() => handleSort("trades")}
                 >
                   Trades
-                  <SortIndicator field="trades" sortField={sortField} sortDirection={sortDirection} />
+                  <SortIndicator field="trades" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead
                   className="hidden w-16 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
                   onClick={() => handleSort("openPositions")}
                 >
                   Open
-                  <SortIndicator field="openPositions" sortField={sortField} sortDirection={sortDirection} />
+                  <SortIndicator field="openPositions" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead
                   className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
                   onClick={() => handleSort("tokenCost")}
                 >
                   Cost
-                  <SortIndicator field="tokenCost" sortField={sortField} sortDirection={sortDirection} />
+                  <SortIndicator field="tokenCost" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead className="w-10" />
               </TableRow>
@@ -609,32 +437,5 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
         onComplete={handlePauseComplete}
       />
     </div>
-  );
-}
-
-/**
- * Small filter button matching the timeframe selector style.
- */
-function FilterButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "rounded-md px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
-        active
-          ? "border border-[var(--border-strong)] bg-[var(--bg-surface)] text-primary"
-          : "text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
-      )}
-    >
-      {children}
-    </button>
   );
 }

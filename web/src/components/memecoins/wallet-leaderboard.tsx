@@ -5,9 +5,9 @@
  * Shows score, hit count, win rate, and expandable token summaries.
  */
 
-import { useState, useTransition } from "react";
+import { useState, useMemo, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, RefreshCw, ChevronDown, ChevronRight, Trash2 } from "lucide-react";
+import { Plus, RefreshCw, Search, ChevronDown, ChevronRight, Trash2 } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
 import type { WatchWallet } from "@/lib/types";
 
@@ -19,6 +19,7 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
   const router = useRouter();
   const { requireAuth } = useAuth();
   const [wallets, setWallets] = useState<WatchWallet[]>(initialWallets);
+  const [search, setSearch] = useState("");
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [address, setAddress] = useState("");
@@ -26,6 +27,17 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
   const [refreshing, setRefreshing] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return wallets;
+    const term = search.toLowerCase();
+    return wallets.filter(
+      (w) =>
+        w.address.toLowerCase().includes(term) ||
+        (w.label ?? "").toLowerCase().includes(term) ||
+        w.source.toLowerCase().includes(term)
+    );
+  }, [wallets, search]);
 
   async function doRefresh() {
     setRefreshing(true);
@@ -124,6 +136,20 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
         </div>
       </div>
 
+      {/* Search */}
+      {wallets.length > 0 && (
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+          <input
+            type="text"
+            placeholder="Search wallets..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] py-1.5 pl-8 pr-3 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none sm:w-64"
+          />
+        </div>
+      )}
+
       {/* Add form */}
       {showAddForm && (
         <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 space-y-2">
@@ -159,6 +185,10 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
         <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-8 text-center text-sm text-muted">
           No wallets tracked yet. Add wallets or trigger a discovery refresh.
         </div>
+      ) : filtered.length === 0 ? (
+        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-6 text-center text-sm text-muted">
+          No wallets match &ldquo;{search}&rdquo;
+        </div>
       ) : (
         <div className="overflow-x-auto rounded-md border border-[var(--border-default)]">
           <table className="w-full text-sm">
@@ -175,7 +205,7 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
               </tr>
             </thead>
             <tbody>
-              {wallets.map((wallet, i) => (
+              {filtered.map((wallet, i) => (
                 <>
                   <tr
                     key={wallet.id}

@@ -1855,6 +1855,64 @@ Birdeye overage: Lite $23/1M CUs, Premium Plus $9.9/1M CUs, Business $6.9/1M CUs
 
 ---
 
+## 26. Token Analysis Engine + Early Buyer Extraction — `COMPLETED`
+
+**What:** Paste a Solana CA, fetch the first N early buyers, store wallet profiles with rich on-chain data (SOL balance, USDC balance, transaction count, token holdings, tags). Async analysis with progress tracking and resume capability.
+
+**Why:** Building a database of "early buyer" wallets with on-chain metrics is the foundation for identifying alpha wallets that consistently buy winning tokens early. This data powers the cross-reference checker in #27.
+
+**Implementation:**
+- DB migration `026_token_analysis.py`: `token_analyses`, `analyzed_wallets`, `wallet_token_entries`, `cross_reference_checks` tables
+- `TokenAnalyzer` class with paginated transaction fetching, wallet enrichment, checkpointing
+- Extended `HeliusClient` with `get_sol_balance`, `get_token_balances`, `get_signatures_count`, `get_assets_by_owner`, and pagination support
+- Worker API: `POST /memecoins/analyze`, `GET /memecoins/analyze/{id}`, `GET /memecoins/analyses`, `POST /memecoins/analyze/{id}/resume`
+- Frontend: `TokenAnalyzer` component with input, progress bar, results table with expandable wallet rows
+- Next.js API routes proxying to worker
+
+---
+
+## 27. Cross-Reference Checker — `COMPLETED`
+
+**What:** Input a new token CA, fetch its early buyers, and check if any are in the analyzed_wallets database. Score matches by historical performance (past early entries, wallet balance, activity level).
+
+**Why:** The real alpha signal: when wallets that were early on multiple successful tokens buy a new token, that's a strong buy signal. This turns the analyzed wallet database into actionable intelligence.
+
+**Implementation:**
+- `CrossReferenceChecker` class scanning 200 buyers, matching against DB, scoring 0-100
+- Worker API: `POST /memecoins/check`, `GET /memecoins/checks`
+- Frontend: `TokenChecker` component with color-coded signal strength and expandable match details
+- Check history logged in `cross_reference_checks` table
+
+---
+
+## 28. Memecoin Wallet Notifications (Telegram + Dashboard) — `COMPLETED`
+
+**What:** When tracked/analyzed wallets buy new tokens, send notifications via Telegram with toggleable channels.
+
+**Why:** Real-time alerts when known alpha wallets make moves is critical for acting on cross-reference signals before the market catches on.
+
+**Implementation:**
+- Added `notify_memecoin_buys` and `notify_memecoin_sells` columns to `notification_preferences`
+- `MemecoinBuyEvent` model, `memecoin_buy_message` template, `notify_memecoin_buy` service method
+- Hooked into `WalletMonitor.process_event()` — checks analyzed_wallets DB on buy detection
+- SSE broadcasting already handled via existing `event_bus("memecoins")`
+
+---
+
+## 29. Auto-Track Analyzed Wallets — `PENDING`
+
+**What:** Automatically register analyzed wallets for Helius webhook monitoring so we get real-time activity notifications.
+
+**Why:** After analyzing a token and finding early buyers, the natural next step is monitoring those wallets for future buys. This closes the loop between analysis and real-time intelligence.
+
+**Implementation:**
+- After analysis completes, auto-add top-scoring wallets to `watch_wallets` (source = "analyzed")
+- Register them with Helius webhook via `WalletMonitor.sync_webhooks()`
+- Frontend: "Track" / "Track All" buttons on token analyzer results
+- Wallet leaderboard shows source tag ("on_chain" / "manual" / "analyzed")
+
+---
+
 ## Memecoins Section — UX Improvements — `COMPLETED`
 
 ### Always-Visible VIP/Delete Buttons + Confirmation — `COMPLETED`

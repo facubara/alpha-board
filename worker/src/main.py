@@ -1716,6 +1716,17 @@ class MemecoinTokenRequest(PydanticBaseModel):
     mint_address: str
 
 
+class AnalyzeTokenRequest(PydanticBaseModel):
+    """Request body for starting a token analysis."""
+    mint_address: str
+    num_buyers: int = 50
+
+
+class CheckTokenRequest(PydanticBaseModel):
+    """Request body for cross-reference checking a token."""
+    mint_address: str
+
+
 class MemecoinTwitterAccountRequest(PydanticBaseModel):
     """Request body for adding a memecoin Twitter account."""
     handle: str
@@ -1986,6 +1997,91 @@ async def get_wallet_activity(limit: int = 50):
             }
             for a, w in rows
         ]
+
+
+# -- Token Analysis & Cross-Reference Endpoints --
+
+
+@app.post("/memecoins/analyze")
+async def start_token_analysis(request: AnalyzeTokenRequest):
+    """Start a new token analysis job."""
+    if not settings.helius_api_key:
+        raise HTTPException(400, "Helius API key not configured")
+
+    mint = request.mint_address.strip()
+    if not mint or len(mint) > 64:
+        raise HTTPException(400, "Invalid mint address")
+
+    from src.memecoins.token_analyzer import TokenAnalyzer
+
+    async with async_session() as session:
+        analyzer = TokenAnalyzer(session)
+        analysis_id = await analyzer.start_analysis(mint, request.num_buyers)
+        return {"analysisId": analysis_id, "status": "pending"}
+
+
+@app.get("/memecoins/analyze/{analysis_id}")
+async def get_token_analysis(analysis_id: int):
+    """Get analysis job status and results."""
+    from src.memecoins.token_analyzer import TokenAnalyzer
+
+    async with async_session() as session:
+        analyzer = TokenAnalyzer(session)
+        result = await analyzer.get_analysis(analysis_id)
+        if not result:
+            raise HTTPException(404, "Analysis not found")
+        return result
+
+
+@app.get("/memecoins/analyses")
+async def list_token_analyses():
+    """List all token analyses."""
+    from src.memecoins.token_analyzer import TokenAnalyzer
+
+    async with async_session() as session:
+        analyzer = TokenAnalyzer(session)
+        return await analyzer.list_analyses()
+
+
+@app.post("/memecoins/analyze/{analysis_id}/resume")
+async def resume_token_analysis(analysis_id: int):
+    """Resume a paused or failed analysis."""
+    from src.memecoins.token_analyzer import TokenAnalyzer
+
+    async with async_session() as session:
+        analyzer = TokenAnalyzer(session)
+        try:
+            await analyzer.resume_analysis(analysis_id)
+            return {"analysisId": analysis_id, "status": "running"}
+        except ValueError as e:
+            raise HTTPException(400, str(e))
+
+
+@app.post("/memecoins/check")
+async def check_token_cross_reference(request: CheckTokenRequest):
+    """Cross-reference a token's buyers against the analyzed wallet database."""
+    if not settings.helius_api_key:
+        raise HTTPException(400, "Helius API key not configured")
+
+    mint = request.mint_address.strip()
+    if not mint or len(mint) > 64:
+        raise HTTPException(400, "Invalid mint address")
+
+    from src.memecoins.cross_reference import CrossReferenceChecker
+
+    async with async_session() as session:
+        checker = CrossReferenceChecker(session)
+        return await checker.check_token(mint)
+
+
+@app.get("/memecoins/checks")
+async def list_cross_reference_checks():
+    """List past cross-reference checks."""
+    from src.memecoins.cross_reference import CrossReferenceChecker
+
+    async with async_session() as session:
+        checker = CrossReferenceChecker(session)
+        return await checker.list_checks()
 
 
 @app.post("/webhooks/helius/wallet-activity")

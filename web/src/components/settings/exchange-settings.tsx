@@ -4,139 +4,204 @@
  * Exchange Settings — Configure Binance API keys for copy-trade execution.
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useReducer, useCallback, useEffect, useRef } from "react";
 import { useAuth } from "@/components/auth/auth-provider";
+import { useFetch } from "@/hooks/use-fetch";
 import type { ExchangeSettings } from "@/lib/types";
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
+// ─── Reducer ───
+interface ExchangeState {
+  apiKey: string;
+  apiSecret: string;
+  tradingMode: "spot" | "futures" | "both";
+  maxPositionUsd: string;
+  defaultLeverage: string;
+  enabled: boolean;
+  saving: boolean;
+  testing: boolean;
+  testResult: { success: boolean; message: string } | null;
+  settingsOverride: ExchangeSettings | null;
+}
+
+type ExchangeAction =
+  | { type: "SET_FIELD"; field: keyof Pick<ExchangeState, "apiKey" | "apiSecret" | "maxPositionUsd" | "defaultLeverage">; value: string }
+  | { type: "SET_TRADING_MODE"; value: "spot" | "futures" | "both" }
+  | { type: "SET_ENABLED"; value: boolean }
+  | { type: "SET_SAVING"; value: boolean }
+  | { type: "SET_TESTING"; value: boolean }
+  | { type: "SET_TEST_RESULT"; value: { success: boolean; message: string } | null }
+  | { type: "SAVE_SUCCESS" }
+  | { type: "DELETE_SUCCESS" }
+  | { type: "APPLY_FETCHED"; settings: ExchangeSettings };
+
+function exchangeReducer(state: ExchangeState, action: ExchangeAction): ExchangeState {
+  switch (action.type) {
+    case "SET_FIELD":
+      return { ...state, [action.field]: action.value };
+    case "SET_TRADING_MODE":
+      return { ...state, tradingMode: action.value };
+    case "SET_ENABLED":
+      return { ...state, enabled: action.value };
+    case "SET_SAVING":
+      return { ...state, saving: action.value };
+    case "SET_TESTING":
+      return { ...state, testing: action.value };
+    case "SET_TEST_RESULT":
+      return { ...state, testResult: action.value };
+    case "SAVE_SUCCESS":
+      return { ...state, apiKey: "", apiSecret: "", saving: false, testResult: { success: true, message: "Settings saved" } };
+    case "DELETE_SUCCESS":
+      return {
+        ...state,
+        settingsOverride: { configured: false },
+        apiKey: "",
+        apiSecret: "",
+        testResult: { success: true, message: "API keys removed" },
+      };
+    case "APPLY_FETCHED":
+      if (!action.settings.configured) return state;
+      return {
+        ...state,
+        tradingMode: action.settings.tradingMode || "futures",
+        maxPositionUsd: String(action.settings.maxPositionUsd || 100),
+        defaultLeverage: String(action.settings.defaultLeverage || 1),
+        enabled: action.settings.enabled ?? true,
+      };
+  }
+}
+
 export function ExchangeSettingsSection() {
   const { requireAuth } = useAuth();
-  const [settings, setSettings] = useState<ExchangeSettings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [testing, setTesting] = useState(false);
-  const [testResult, setTestResult] = useState<{
-    success: boolean;
-    message: string;
-  } | null>(null);
 
-  // Form state
-  const [apiKey, setApiKey] = useState("");
-  const [apiSecret, setApiSecret] = useState("");
-  const [tradingMode, setTradingMode] = useState<"spot" | "futures" | "both">(
-    "futures"
-  );
-  const [maxPositionUsd, setMaxPositionUsd] = useState("100");
-  const [defaultLeverage, setDefaultLeverage] = useState("1");
-  const [enabled, setEnabled] = useState(true);
+  const fetchUrl = WORKER_URL ? `${WORKER_URL}/exchange/settings` : null;
+  const { data: fetchedSettings, loading, refetch } = useFetch<ExchangeSettings>(fetchUrl);
 
-  const fetchSettings = useCallback(async () => {
-    try {
-      const res = await fetch(`${WORKER_URL}/exchange/settings`);
-      const data: ExchangeSettings = await res.json();
-      setSettings(data);
-      if (data.configured) {
-        setTradingMode(data.tradingMode || "futures");
-        setMaxPositionUsd(String(data.maxPositionUsd || 100));
-        setDefaultLeverage(String(data.defaultLeverage || 1));
-        setEnabled(data.enabled ?? true);
-      }
-      setLoading(false);
-    } catch {
-      setLoading(false);
-    }
-  }, []);
+  const [state, dispatch] = useReducer(exchangeReducer, {
+    apiKey: "",
+    apiSecret: "",
+    tradingMode: "futures",
+    maxPositionUsd: "100",
+    defaultLeverage: "1",
+    enabled: true,
+    saving: false,
+    testing: false,
+    testResult: null,
+    settingsOverride: null,
+  });
 
+  // Apply fetched settings once available
+  const settings = state.settingsOverride ?? fetchedSettings;
+  const appliedRef = useRef(false);
   useEffect(() => {
-    fetchSettings();
-  }, [fetchSettings]);
+    if (fetchedSettings && !appliedRef.current && fetchedSettings.configured) {
+      appliedRef.current = true;
+      dispatch({ type: "APPLY_FETCHED", settings: fetchedSettings });
+    }
+  }, [fetchedSettings]);
 
   const handleSave = () => {
     requireAuth(async () => {
-      setSaving(true);
-      setTestResult(null);
+      dispatch({ type: "SET_SAVING", value: true });
+      dispatch({ type: "SET_TEST_RESULT", value: null });
+
+      let result: Response | null = null;
       try {
-        const res = await fetch(`${WORKER_URL}/exchange/settings`, {
+        result = await fetch(`${WORKER_URL}/exchange/settings`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            api_key: apiKey,
-            api_secret: apiSecret,
-            trading_mode: tradingMode,
-            max_position_usd: parseFloat(maxPositionUsd),
-            default_leverage: parseInt(defaultLeverage, 10),
-            enabled,
+            api_key: state.apiKey,
+            api_secret: state.apiSecret,
+            trading_mode: state.tradingMode,
+            max_position_usd: parseFloat(state.maxPositionUsd),
+            default_leverage: parseInt(state.defaultLeverage, 10),
+            enabled: state.enabled,
           }),
         });
-        if (!res.ok) {
-          const err = await res.json();
-          setTestResult({
-            success: false,
-            message: err.detail || "Save failed",
-          });
-          setSaving(false);
-          return;
-        }
-        setApiKey("");
-        setApiSecret("");
-        await fetchSettings();
-        setTestResult({ success: true, message: "Settings saved" });
-        setSaving(false);
       } catch (e) {
-        setTestResult({
-          success: false,
-          message: e instanceof Error ? e.message : "Save failed",
+        dispatch({
+          type: "SET_TEST_RESULT",
+          value: {
+            success: false,
+            message: e instanceof Error ? e.message : "Save failed",
+          },
         });
-        setSaving(false);
+        dispatch({ type: "SET_SAVING", value: false });
+        return;
       }
+
+      if (!result.ok) {
+        let errMsg = "Save failed";
+        try {
+          const err = await result.json();
+          errMsg = err.detail || errMsg;
+        } catch { /* ignore parse error */ }
+        dispatch({ type: "SET_TEST_RESULT", value: { success: false, message: errMsg } });
+        dispatch({ type: "SET_SAVING", value: false });
+        return;
+      }
+
+      refetch();
+      dispatch({ type: "SAVE_SUCCESS" });
     });
   };
 
   const handleTest = () => {
     requireAuth(async () => {
-      setTesting(true);
-      setTestResult(null);
+      dispatch({ type: "SET_TESTING", value: true });
+      dispatch({ type: "SET_TEST_RESULT", value: null });
+
+      let data: { success?: boolean; canTrade?: boolean; canWithdraw?: boolean; error?: string } | null = null;
       try {
         const res = await fetch(`${WORKER_URL}/exchange/test`, {
           method: "POST",
         });
-        const data = await res.json();
-        if (data.success) {
-          setTestResult({
+        data = await res.json();
+      } catch (e) {
+        dispatch({
+          type: "SET_TEST_RESULT",
+          value: {
+            success: false,
+            message: e instanceof Error ? e.message : "Test failed",
+          },
+        });
+        dispatch({ type: "SET_TESTING", value: false });
+        return;
+      }
+
+      if (data?.success) {
+        dispatch({
+          type: "SET_TEST_RESULT",
+          value: {
             success: true,
             message: `Connected — canTrade: ${data.canTrade}, canWithdraw: ${data.canWithdraw}`,
-          });
-        } else {
-          setTestResult({
-            success: false,
-            message: data.error || "Connection failed",
-          });
-        }
-        setTesting(false);
-      } catch (e) {
-        setTestResult({
-          success: false,
-          message: e instanceof Error ? e.message : "Test failed",
+          },
         });
-        setTesting(false);
+      } else {
+        dispatch({
+          type: "SET_TEST_RESULT",
+          value: {
+            success: false,
+            message: data?.error || "Connection failed",
+          },
+        });
       }
+      dispatch({ type: "SET_TESTING", value: false });
     });
   };
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     requireAuth(async () => {
       try {
         await fetch(`${WORKER_URL}/exchange/settings`, { method: "DELETE" });
-        setSettings({ configured: false });
-        setApiKey("");
-        setApiSecret("");
-        setTestResult({ success: true, message: "API keys removed" });
       } catch {
-        /* ignore */
+        return;
       }
+      dispatch({ type: "DELETE_SUCCESS" });
     });
-  };
+  }, [requireAuth]);
 
   if (loading) {
     return (
@@ -183,8 +248,8 @@ export function ExchangeSettingsSection() {
             <input
               id="exchange-api-key"
               type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
+              value={state.apiKey}
+              onChange={(e) => dispatch({ type: "SET_FIELD", field: "apiKey", value: e.target.value })}
               placeholder={
                 settings?.configured
                   ? "Enter new key to update"
@@ -200,8 +265,8 @@ export function ExchangeSettingsSection() {
             <input
               id="exchange-api-secret"
               type="password"
-              value={apiSecret}
-              onChange={(e) => setApiSecret(e.target.value)}
+              value={state.apiSecret}
+              onChange={(e) => dispatch({ type: "SET_FIELD", field: "apiSecret", value: e.target.value })}
               placeholder={
                 settings?.configured
                   ? "Enter new secret to update"
@@ -220,9 +285,9 @@ export function ExchangeSettingsSection() {
             </label>
             <select
               id="exchange-trading-mode"
-              value={tradingMode}
+              value={state.tradingMode}
               onChange={(e) =>
-                setTradingMode(e.target.value as "spot" | "futures" | "both")
+                dispatch({ type: "SET_TRADING_MODE", value: e.target.value as "spot" | "futures" | "both" })
               }
               className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-1.5 text-sm text-[var(--text-primary)]"
             >
@@ -239,8 +304,8 @@ export function ExchangeSettingsSection() {
               id="exchange-max-position"
               type="number"
               min={1}
-              value={maxPositionUsd}
-              onChange={(e) => setMaxPositionUsd(e.target.value)}
+              value={state.maxPositionUsd}
+              onChange={(e) => dispatch({ type: "SET_FIELD", field: "maxPositionUsd", value: e.target.value })}
               className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-1.5 text-sm text-[var(--text-primary)]"
             />
           </div>
@@ -253,8 +318,8 @@ export function ExchangeSettingsSection() {
               type="number"
               min={1}
               max={125}
-              value={defaultLeverage}
-              onChange={(e) => setDefaultLeverage(e.target.value)}
+              value={state.defaultLeverage}
+              onChange={(e) => dispatch({ type: "SET_FIELD", field: "defaultLeverage", value: e.target.value })}
               className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-1.5 text-sm text-[var(--text-primary)]"
             />
           </div>
@@ -264,8 +329,8 @@ export function ExchangeSettingsSection() {
         <label className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
           <input
             type="checkbox"
-            checked={enabled}
-            onChange={(e) => setEnabled(e.target.checked)}
+            checked={state.enabled}
+            onChange={(e) => dispatch({ type: "SET_ENABLED", value: e.target.checked })}
             className="rounded"
           />
           Enable copy-trade execution
@@ -275,19 +340,19 @@ export function ExchangeSettingsSection() {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={handleSave}
-            disabled={saving || (!apiKey && !settings?.configured)}
+            disabled={state.saving || (!state.apiKey && !settings?.configured)}
             className="rounded bg-[var(--accent)] px-4 py-1.5 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
           >
-            {saving ? "Saving..." : "Save"}
+            {state.saving ? "Saving..." : "Save"}
           </button>
           {settings?.configured && (
             <>
               <button
                 onClick={handleTest}
-                disabled={testing}
+                disabled={state.testing}
                 className="rounded border border-[var(--border-default)] px-4 py-1.5 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] disabled:opacity-50"
               >
-                {testing ? "Testing..." : "Test Connection"}
+                {state.testing ? "Testing..." : "Test Connection"}
               </button>
               <button
                 onClick={handleDelete}
@@ -300,15 +365,15 @@ export function ExchangeSettingsSection() {
         </div>
 
         {/* Test result */}
-        {testResult && (
+        {state.testResult && (
           <div
             className={`rounded px-3 py-2 text-sm ${
-              testResult.success
+              state.testResult.success
                 ? "bg-green-500/10 text-green-400"
                 : "bg-red-500/10 text-red-400"
             }`}
           >
-            {testResult.message}
+            {state.testResult.message}
           </div>
         )}
 
