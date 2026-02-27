@@ -19,8 +19,6 @@ import type {
   TokenMention,
   AccountCallHistoryItem,
   TweetSetupType,
-  TokenAnalysis,
-  CrossReferenceCheckSummary,
 } from "@/lib/types";
 
 /**
@@ -408,16 +406,6 @@ export async function getAccountCallHistory(
 }
 
 /**
-<<<<<<< HEAD
- * Fetch recent token analyses.
- */
-export async function getTokenAnalyses(): Promise<TokenAnalysis[]> {
-  const rows = await sql`
-    SELECT *
-    FROM token_analyses
-    ORDER BY requested_at DESC
-    LIMIT 20
-=======
  * Fetch all active tracked tokens from token_tracker.
  */
 export async function getTrackedTokens(): Promise<TrackedToken[]> {
@@ -426,23 +414,11 @@ export async function getTrackedTokens(): Promise<TrackedToken[]> {
     FROM token_tracker
     WHERE is_active = true
     ORDER BY added_at DESC
->>>>>>> remotes/origin/master
   `;
 
   return rows.map((row) => ({
     id: Number(row.id),
     mintAddress: row.mint_address as string,
-<<<<<<< HEAD
-    tokenSymbol: (row.token_symbol as string) || null,
-    tokenName: (row.token_name as string) || null,
-    marketCapUsd: row.market_cap_usd != null ? Number(row.market_cap_usd) : null,
-    requestedBuyers: Number(row.requested_buyers),
-    foundBuyers: Number(row.found_buyers),
-    status: row.status as TokenAnalysis["status"],
-    errorMessage: (row.error_message as string) || null,
-    requestedAt: (row.requested_at as Date).toISOString(),
-    completedAt: row.completed_at ? (row.completed_at as Date).toISOString() : null,
-=======
     symbol: (row.symbol as string) || null,
     name: (row.name as string) || null,
     source: row.source as "twitter" | "manual",
@@ -460,33 +436,10 @@ export async function getTrackedTokens(): Promise<TrackedToken[]> {
       ? (row.last_refreshed_at as Date).toISOString()
       : null,
     addedAt: (row.added_at as Date).toISOString(),
->>>>>>> remotes/origin/master
   }));
 }
 
 /**
-<<<<<<< HEAD
- * Fetch recent cross-reference checks.
- */
-export async function getCrossReferenceChecks(): Promise<CrossReferenceCheckSummary[]> {
-  const rows = await sql`
-    SELECT *
-    FROM cross_reference_checks
-    ORDER BY checked_at DESC
-    LIMIT 20
-  `;
-
-  return rows.map((row) => ({
-    id: Number(row.id),
-    mintAddress: row.mint_address as string,
-    tokenSymbol: (row.token_symbol as string) || null,
-    tokenName: (row.token_name as string) || null,
-    buyersScanned: Number(row.buyers_scanned),
-    matchesFound: Number(row.matches_found),
-    topMatchScore: row.top_match_score != null ? Number(row.top_match_score) : null,
-    checkedAt: (row.checked_at as Date).toISOString(),
-  }));
-=======
  * Batch fetch snapshots for multiple tokens (for sparklines).
  * Returns a Map from token_id to snapshots.
  */
@@ -523,5 +476,4 @@ export async function getBatchTokenSnapshots(
   }
 
   return map;
->>>>>>> remotes/origin/master
 }

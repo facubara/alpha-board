@@ -1000,93 +1000,6 @@ export interface TrendingToken {
 }
 
 // =============================================================================
-<<<<<<< HEAD
-// Token Analysis Types
-// =============================================================================
-
-export type AnalysisStatus = "pending" | "running" | "paused" | "completed" | "failed";
-
-export interface TokenAnalysis {
-  id: number;
-  mintAddress: string;
-  tokenSymbol: string | null;
-  tokenName: string | null;
-  marketCapUsd: number | null;
-  requestedBuyers: number;
-  foundBuyers: number;
-  status: AnalysisStatus;
-  progress?: {
-    last_signature?: string;
-    pages_fetched?: number;
-    total_txs_scanned?: number;
-  };
-  errorMessage: string | null;
-  requestedAt: string;
-  completedAt: string | null;
-  wallets?: AnalyzedWalletResult[];
-}
-
-export interface AnalyzedWalletResult {
-  address: string;
-  entryRank: number;
-  amountSol: number | null;
-  entryBlockTime: string | null;
-  entryTxSignature: string | null;
-  solBalance: number | null;
-  usdcBalance: number | null;
-  totalTxCount: number | null;
-  estimatedPnlSol: number | null;
-  winRate: number | null;
-  tokensTraded: number | null;
-  tags: string[];
-  currentHoldings: {
-    mint: string;
-    symbol: string;
-    amount: number;
-    value_usd: number | null;
-  }[];
-  tokenEntries: WalletPastEntry[];
-}
-
-export interface WalletPastEntry {
-  mintAddress: string;
-  tokenSymbol: string | null;
-  entryRank: number;
-  amountSol: number | null;
-  tokenPeakMcap: number | null;
-}
-
-export interface CrossReferenceResult {
-  mintAddress: string;
-  tokenSymbol: string | null;
-  tokenName: string | null;
-  marketCapUsd: number | null;
-  buyersScanned: number;
-  matches: CrossReferenceMatch[];
-}
-
-export interface CrossReferenceMatch {
-  address: string;
-  score: number;
-  entryRank: number | null;
-  solBalance: number | null;
-  totalTxCount: number | null;
-  tags: string[];
-  pastTokens: WalletPastEntry[];
-  pastTokenCount: number;
-}
-
-export interface CrossReferenceCheckSummary {
-  id: number;
-  mintAddress: string;
-  tokenSymbol: string | null;
-  tokenName: string | null;
-  buyersScanned: number;
-  matchesFound: number;
-  topMatchScore: number | null;
-  checkedAt: string;
-}
-=======
 // Token Tracker Types
 // =============================================================================
 
@@ -1143,4 +1056,3 @@ export const TRACKER_REFRESH_INTERVALS = [
   { value: 60, label: "1h" },
   { value: 1440, label: "1d" },
 ] as const;
->>>>>>> remotes/origin/master

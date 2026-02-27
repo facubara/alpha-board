@@ -5,12 +5,8 @@ import {
   getRecentMemecoinTweets,
   getMemecoinStats,
   getTrendingTokens,
-<<<<<<< HEAD
-  getTokenAnalyses,
-=======
   getTrackedTokens,
   getBatchTokenSnapshots,
->>>>>>> remotes/origin/master
 } from "@/lib/queries/memecoins";
 import type { EnrichedToken } from "@/lib/types";
 import { StatsBar } from "@/components/memecoins/stats-bar";
@@ -18,8 +14,6 @@ import { TrendingTokens } from "@/components/memecoins/trending-tokens";
 import { WalletTabs } from "@/components/memecoins/wallet-tabs";
 import { MemecoinAccountManager } from "@/components/memecoins/memecoin-account-manager";
 import { MemecoinTweetFeed } from "@/components/memecoins/memecoin-tweet-feed";
-import { TokenAnalyzer } from "@/components/memecoins/token-analyzer";
-import { TokenChecker } from "@/components/memecoins/token-checker";
 
 /**
  * Memecoins Page (Server Component)
@@ -32,11 +26,7 @@ import { TokenChecker } from "@/components/memecoins/token-checker";
 export const revalidate = 60;
 
 export default async function MemecoinsPage() {
-<<<<<<< HEAD
-  const [wallets, walletActivity, twitterAccounts, tweets, stats, trendingTokens, analyses] =
-=======
   const [wallets, walletActivity, twitterAccounts, tweets, stats, trendingTokens, trackedTokens] =
->>>>>>> remotes/origin/master
     await Promise.all([
       getWatchWallets(),
       getRecentWalletActivity(50),
@@ -44,11 +34,7 @@ export default async function MemecoinsPage() {
       getRecentMemecoinTweets(50),
       getMemecoinStats(),
       getTrendingTokens(24),
-<<<<<<< HEAD
-      getTokenAnalyses(),
-=======
       getTrackedTokens(),
->>>>>>> remotes/origin/master
     ]);
 
   // Fetch snapshots for tracked tokens
@@ -118,35 +104,6 @@ export default async function MemecoinsPage() {
       {/* Stats */}
       <StatsBar stats={stats} />
 
-<<<<<<< HEAD
-      {/* Token Analysis */}
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-lg font-medium text-primary">Analyze Token</h2>
-          <p className="mt-0.5 text-xs text-muted">
-            Paste a Solana token CA to extract early buyers and build wallet profiles
-          </p>
-        </div>
-        <TokenAnalyzer initialAnalyses={analyses} />
-      </section>
-
-      {/* Cross-Reference Check */}
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-lg font-medium text-primary">Check Token</h2>
-          <p className="mt-0.5 text-xs text-muted">
-            Cross-reference a new token's buyers against the analyzed wallet database
-          </p>
-        </div>
-        <TokenChecker />
-      </section>
-
-      {/* Trending Tokens */}
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-lg font-medium text-primary">Trending Tokens</h2>
-          <p className="mt-0.5 text-xs text-muted">Most mentioned tokens in the last 24 hours</p>
-=======
       {/* Two-column command center */}
       <div className="flex flex-col gap-6 md:flex-row">
         {/* Left column — data tables & management (60%) */}
@@ -171,7 +128,6 @@ export default async function MemecoinsPage() {
             <h2 className="text-lg font-medium text-primary">Tracked Accounts</h2>
             <MemecoinAccountManager initialAccounts={twitterAccounts} />
           </section>
->>>>>>> remotes/origin/master
         </div>
 
         {/* Right column — tweet feed (40%), sticky on desktop */}

@@ -6,19 +6,12 @@
  * Clickable rows open a modal showing which accounts mentioned the token.
  */
 
-<<<<<<< HEAD
-import { useState, useMemo, useEffect, useCallback } from "react";
-import { ExternalLink, Search, Star } from "lucide-react";
-import type { TrendingToken, TokenMention, MemecoinCategory } from "@/lib/types";
-import { MEMECOIN_CATEGORY_LABELS } from "@/lib/types";
-=======
 import { useState, useEffect, useCallback } from "react";
 import { ExternalLink, Star, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { EnrichedToken, TokenMention, MemecoinCategory } from "@/lib/types";
 import { MEMECOIN_CATEGORY_LABELS, TRACKER_REFRESH_INTERVALS } from "@/lib/types";
 import { HolderSparkline } from "./holder-sparkline";
->>>>>>> remotes/origin/master
 
 const CATEGORY_BADGE_COLORS: Record<MemecoinCategory, string> = {
   caller: "bg-orange-500/10 text-orange-400 border-orange-500/20",
@@ -32,22 +25,6 @@ interface TrendingTokensProps {
 }
 
 export function TrendingTokens({ tokens }: TrendingTokensProps) {
-<<<<<<< HEAD
-  const [search, setSearch] = useState("");
-  const [selectedToken, setSelectedToken] = useState<TrendingToken | null>(null);
-  const [mentions, setMentions] = useState<TokenMention[]>([]);
-  const [loadingMentions, setLoadingMentions] = useState(false);
-
-  const filtered = useMemo(() => {
-    if (!search.trim()) return tokens;
-    const term = search.toLowerCase();
-    return tokens.filter(
-      (t) =>
-        t.tokenSymbol.toLowerCase().includes(term) ||
-        (t.tokenName ?? "").toLowerCase().includes(term)
-    );
-  }, [tokens, search]);
-=======
   const router = useRouter();
   const [selectedToken, setSelectedToken] = useState<EnrichedToken | null>(null);
   const [mentions, setMentions] = useState<TokenMention[]>([]);
@@ -58,7 +35,6 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
   const [intervalInput, setIntervalInput] = useState(15);
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState("");
->>>>>>> remotes/origin/master
 
   const closeModal = useCallback(() => setSelectedToken(null), []);
 
@@ -141,83 +117,6 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
 
   return (
     <>
-<<<<<<< HEAD
-      {/* Search */}
-      <div className="relative mb-3">
-        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
-        <input
-          type="text"
-          placeholder="Search tokens..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] py-1.5 pl-8 pr-3 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none sm:w-64"
-        />
-      </div>
-
-      <div className="overflow-x-auto rounded-md border border-[var(--border-default)]">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-[var(--border-default)] bg-[var(--bg-surface)]">
-              <th className="px-3 py-2 text-left text-xs font-medium text-muted w-8">#</th>
-              <th className="px-3 py-2 text-left text-xs font-medium text-muted">Token</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-muted">Mentions</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-muted">Price</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-muted">Market Cap</th>
-              <th className="px-3 py-2 text-right text-xs font-medium text-muted">Liquidity</th>
-              <th className="px-3 py-2 text-xs font-medium text-muted w-8"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="px-3 py-6 text-center text-sm text-muted">
-                  No tokens match &ldquo;{search}&rdquo;
-                </td>
-              </tr>
-            ) : filtered.map((token) => (
-              <tr
-                key={token.tokenMint}
-                onClick={() => handleTokenClick(token)}
-                className="cursor-pointer border-b border-[var(--border-default)] hover:bg-[var(--bg-elevated)]"
-              >
-                <td className="px-3 py-2 text-muted">{token.rank}</td>
-                <td className="px-3 py-2">
-                  <span className="font-mono text-xs font-semibold text-primary">
-                    ${token.tokenSymbol}
-                  </span>
-                  {token.tokenName && (
-                    <span className="ml-2 text-xs text-muted">
-                      {token.tokenName}
-                    </span>
-                  )}
-                </td>
-                <td className="px-3 py-2 text-right">
-                  <span className="inline-flex items-center rounded-full bg-[var(--primary)]/15 px-2 py-0.5 text-xs font-medium text-[var(--primary)]">
-                    {token.mentionCount}
-                  </span>
-                </td>
-                <td className="px-3 py-2 text-right text-secondary font-mono text-xs">
-                  {token.priceUsd != null ? `$${formatPrice(token.priceUsd)}` : "—"}
-                </td>
-                <td className="px-3 py-2 text-right text-secondary text-xs">
-                  {token.marketCapUsd != null ? formatMcap(token.marketCapUsd) : "—"}
-                </td>
-                <td className="px-3 py-2 text-right text-secondary text-xs">
-                  {token.liquidityUsd != null ? formatMcap(token.liquidityUsd) : "—"}
-                </td>
-                <td className="px-3 py-2">
-                  <a
-                    href={token.birdeyeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted hover:text-primary transition-colors-fast"
-                    title="View on Birdeye"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                </td>
-=======
       {/* Add Token Bar */}
       <form
         onSubmit={handleAddToken}
@@ -274,7 +173,6 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                 <th className="px-3 py-2 text-center text-xs font-medium text-muted">Source</th>
                 <th className="hidden md:table-cell px-3 py-2 text-center text-xs font-medium text-muted">Interval</th>
                 <th className="px-3 py-2 text-xs font-medium text-muted w-16"></th>
->>>>>>> remotes/origin/master
               </tr>
             </thead>
             <tbody>

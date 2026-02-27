@@ -59,10 +59,6 @@
       "WebFetch(domain:api.binance.com)",
       "Bash(fly secrets set:*)",
       "Bash(powershell -Command \"Invoke-RestMethod -Uri ''https://alpha-worker.fly.dev/twitter/poll'' -Method POST | ConvertTo-Json -Depth 5\")",
-<<<<<<< HEAD
-      "Bash(dir:*)",
-=======
->>>>>>> remotes/origin/master
       "WebFetch(domain:docs.x.com)",
       "mcp__playwright__browser_fill_form",
       "WebFetch(domain:devcommunity.x.com)",
@@ -82,7 +78,6 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/facubara/alpha-board/deployments --jq '.[0:3] | .[] | {environment: .environment, created_at: .created_at, sha: .sha[0:8]}')",
       "Bash(npx next lint:*)",
       "Bash(DATABASE_URL=\"postgresql://user:pass@ep-test-123.us-east-1.aws.neon.tech/dbname?sslmode=require\" npx next build:*)",
-<<<<<<< HEAD
       "Bash(grep:*)",
       "WebFetch(domain:www.helius.dev)",
       "WebFetch(domain:bds.birdeye.so)",
@@ -98,11 +93,9 @@
       "Bash(MSYS_NO_PATHCONV=1 fly machine:*)",
       "Bash(fly machine:*)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api:*)",
-      "Bash(cd /c/Users/facun/Escritorio/alpha-board/web && npx -y react-doctor@latest . --verbose --diff 2>&1)"
-=======
+      "Bash(cd /c/Users/facun/Escritorio/alpha-board/web && npx -y react-doctor@latest . --verbose --diff 2>&1)",
       "mcp__figma__generate_figma_design",
       "Bash(start:*)"
->>>>>>> remotes/origin/master
     ]
   },
   "env": {

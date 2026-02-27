@@ -945,55 +945,6 @@ class MemecoinTweetSignal(Base):
     )
 
 
-<<<<<<< HEAD
-class TokenAnalysis(Base):
-    """Tracks each token analysis job (async, resumable)."""
-
-    __tablename__ = "token_analyses"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    mint_address: Mapped[str] = mapped_column(String(64), nullable=False)
-    token_symbol: Mapped[str | None] = mapped_column(String(20))
-    token_name: Mapped[str | None] = mapped_column(String(200))
-    market_cap_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
-    requested_buyers: Mapped[int] = mapped_column(Integer, nullable=False)
-    found_buyers: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
-    status: Mapped[str] = mapped_column(String(20), nullable=False, server_default="pending")
-    progress: Mapped[dict] = mapped_column(JSONB, nullable=False, server_default="{}")
-    error_message: Mapped[str | None] = mapped_column(Text)
-    requested_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
-    )
-    completed_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
-
-    # Relationships
-    entries: Mapped[list["WalletTokenEntry"]] = relationship(back_populates="analysis")
-
-    __table_args__ = (
-        Index("idx_token_analyses_status", "status"),
-        Index("idx_token_analyses_mint", "mint_address"),
-    )
-
-
-class AnalyzedWallet(Base):
-    """Rich wallet profiles from token analysis."""
-
-    __tablename__ = "analyzed_wallets"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    address: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
-    sol_balance: Mapped[Decimal | None] = mapped_column(Numeric(20, 9))
-    usdc_balance: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
-    first_tx_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
-    total_tx_count: Mapped[int | None] = mapped_column(Integer)
-    estimated_pnl_sol: Mapped[Decimal | None] = mapped_column(Numeric(20, 9))
-    win_rate: Mapped[Decimal | None] = mapped_column(Numeric(5, 2))
-    tokens_traded: Mapped[int | None] = mapped_column(Integer)
-    current_holdings: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
-    tags: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
-    last_enriched_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
-    created_at: Mapped[datetime] = mapped_column(
-=======
 # =============================================================================
 # Token Tracker Tables
 # =============================================================================
@@ -1020,68 +971,10 @@ class TokenTracker(Base):
     latest_liquidity_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
     last_refreshed_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
     added_at: Mapped[datetime] = mapped_column(
->>>>>>> remotes/origin/master
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
 
     # Relationships
-<<<<<<< HEAD
-    token_entries: Mapped[list["WalletTokenEntry"]] = relationship(back_populates="wallet")
-
-    __table_args__ = (
-        Index("idx_analyzed_wallets_address", "address"),
-    )
-
-
-class WalletTokenEntry(Base):
-    """Which tokens a wallet bought early."""
-
-    __tablename__ = "wallet_token_entries"
-
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
-    wallet_id: Mapped[int] = mapped_column(Integer, ForeignKey("analyzed_wallets.id"), nullable=False)
-    analysis_id: Mapped[int] = mapped_column(Integer, ForeignKey("token_analyses.id"), nullable=False)
-    mint_address: Mapped[str] = mapped_column(String(64), nullable=False)
-    token_symbol: Mapped[str | None] = mapped_column(String(20))
-    entry_rank: Mapped[int] = mapped_column(Integer, nullable=False)
-    entry_tx_signature: Mapped[str | None] = mapped_column(String(128))
-    entry_block_time: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
-    amount_sol: Mapped[Decimal | None] = mapped_column(Numeric(20, 9))
-    token_mcap_at_entry: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
-    token_peak_mcap: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
-
-    # Relationships
-    wallet: Mapped["AnalyzedWallet"] = relationship(back_populates="token_entries")
-    analysis: Mapped["TokenAnalysis"] = relationship(back_populates="entries")
-
-    __table_args__ = (
-        UniqueConstraint("wallet_id", "mint_address", name="uq_wallet_token_entry"),
-        Index("idx_wte_wallet", "wallet_id"),
-        Index("idx_wte_mint", "mint_address"),
-        Index("idx_wte_analysis", "analysis_id"),
-    )
-
-
-class CrossReferenceCheck(Base):
-    """Log of cross-reference checks."""
-
-    __tablename__ = "cross_reference_checks"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    mint_address: Mapped[str] = mapped_column(String(64), nullable=False)
-    token_symbol: Mapped[str | None] = mapped_column(String(20))
-    token_name: Mapped[str | None] = mapped_column(String(200))
-    buyers_scanned: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
-    matches_found: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
-    top_match_score: Mapped[Decimal | None] = mapped_column(Numeric(5, 2))
-    results: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
-    checked_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
-    )
-
-    __table_args__ = (
-        Index("idx_xref_checks_time", checked_at.desc()),
-=======
     snapshots: Mapped[list["TokenTrackerSnapshot"]] = relationship(
         back_populates="token", cascade="all, delete-orphan"
     )
@@ -1115,5 +1008,4 @@ class TokenTrackerSnapshot(Base):
 
     __table_args__ = (
         Index("idx_token_snapshots_token_time", "token_id", snapshot_at.desc()),
->>>>>>> remotes/origin/master
     )
