@@ -89,9 +89,9 @@ export function AgentDetail({
               className={cn(
                 "inline-flex shrink-0 items-center rounded px-1.5 py-0.5 font-mono text-xs font-bold",
                 agent.source === "tweet"
-                  ? "bg-teal-500/10 text-teal-400"
+                  ? "bg-[var(--accent-teal)]/10 text-[var(--accent-teal)]"
                   : agent.source === "hybrid"
-                    ? "bg-purple-500/10 text-purple-400"
+                    ? "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)]"
                     : "bg-[var(--bg-muted)] text-muted"
               )}
             >

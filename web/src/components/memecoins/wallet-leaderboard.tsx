@@ -176,7 +176,7 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
               Add
             </button>
           </div>
-          {error && <p className="text-xs text-red-400">{error}</p>}
+          {error && <p className="text-xs text-bearish">{error}</p>}
         </div>
       )}
 
@@ -233,7 +233,7 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
                       {wallet.avgEntryRank ?? "—"}
                     </td>
                     <td className="px-3 py-2">
-                      <span className="rounded-full bg-[var(--bg-elevated)] px-2 py-0.5 text-[10px] font-medium text-secondary">
+                      <span className="rounded-full bg-[var(--bg-elevated)] px-2 py-0.5 text-xs font-medium text-secondary">
                         {wallet.source}
                       </span>
                     </td>
@@ -249,7 +249,7 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
                             e.stopPropagation();
                             handleDelete(wallet.address);
                           }}
-                          className="text-muted hover:text-red-400"
+                          className="text-muted hover:text-bearish"
                           title="Remove wallet"
                         >
                           <Trash2 className="h-3 w-3" />
@@ -275,18 +275,18 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
                               <span className="font-mono text-xs font-medium text-primary">
                                 ${token.symbol}
                               </span>
-                              <span className="ml-2 text-[10px] text-muted">
+                              <span className="ml-2 text-xs text-muted">
                                 #{token.entry_rank}
                               </span>
                               {token.peak_mcap != null && (
-                                <span className="ml-2 text-[10px] text-secondary">
+                                <span className="ml-2 text-xs text-secondary">
                                   {formatMcap(token.peak_mcap)}
                                 </span>
                               )}
                             </div>
                           ))}
                         </div>
-                        <div className="mt-2 text-[10px] text-muted font-mono break-all">
+                        <div className="mt-2 text-xs text-muted font-mono break-all">
                           {wallet.address}
                         </div>
                       </td>

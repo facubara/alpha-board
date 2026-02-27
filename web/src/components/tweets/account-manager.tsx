@@ -22,12 +22,12 @@ import {
 } from "@/components/ui/table";
 
 const CATEGORY_BADGE_COLORS: Record<TwitterAccountCategory, string> = {
-  analyst: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  founder: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  news: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-  degen: "bg-red-500/10 text-red-400 border-red-500/20",
-  insider: "bg-green-500/10 text-green-400 border-green-500/20",
-  protocol: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+  analyst: "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)] border-[var(--accent-blue)]/20",
+  founder: "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)] border-[var(--accent-purple)]/20",
+  news: "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)] border-[var(--accent-yellow)]/20",
+  degen: "bg-[var(--bearish-subtle)] text-bearish border-[var(--bearish)]/20",
+  insider: "bg-[var(--bullish-subtle)] text-bullish border-[var(--bullish)]/20",
+  protocol: "bg-[var(--accent-cyan)]/10 text-[var(--accent-cyan)] border-[var(--accent-cyan)]/20",
 };
 
 type SortField = "handle" | "category" | "followers" | "tweets" | "bio";
@@ -320,7 +320,7 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
               Add
             </button>
           </div>
-          {state.error && <p className="text-xs text-red-400">{state.error}</p>}
+          {state.error && <p className="text-xs text-bearish">{state.error}</p>}
         </div>
       )}
 
@@ -376,7 +376,7 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${
+                        className={`rounded-full border px-1.5 py-0.5 text-xs font-medium ${
                           CATEGORY_BADGE_COLORS[account.category]
                         }`}
                       >
@@ -395,7 +395,7 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
                     <TableCell>
                       <button
                         onClick={() => handleDelete(account.id)}
-                        className="text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-400"
+                        className="text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-bearish"
                         title="Remove account"
                       >
                         <Trash2 className="h-3 w-3" />

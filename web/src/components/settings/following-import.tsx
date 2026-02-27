@@ -164,10 +164,10 @@ export function FollowingImport() {
             onChange={handleFileChange}
             className="block w-full text-sm text-muted file:mr-3 file:rounded file:border-0 file:bg-[var(--bg-elevated)] file:px-3 file:py-1.5 file:text-sm file:text-primary file:cursor-pointer hover:file:bg-[var(--bg-base)]"
           />
-          {parseError && <p className="text-xs text-red-400">{parseError}</p>}
+          {parseError && <p className="text-xs text-bearish">{parseError}</p>}
           {accountIds.length > 0 && (
             <div className="flex items-center justify-between">
-              <p className="text-xs text-green-400">
+              <p className="text-xs text-bullish">
                 {accountIds.length} accounts found in file
               </p>
               <button
@@ -195,9 +195,9 @@ export function FollowingImport() {
             <div
               className={`h-full rounded-full transition-all duration-300 ${
                 progress.status === "failed"
-                  ? "bg-red-500"
+                  ? "bg-[var(--bearish)]"
                   : progress.status === "completed"
-                    ? "bg-green-500"
+                    ? "bg-[var(--bullish)]"
                     : "bg-[var(--primary)]"
               }`}
               style={{ width: `${pct}%` }}
@@ -216,13 +216,13 @@ export function FollowingImport() {
               )}
               {progress.status === "pending" && "Starting..."}
               {progress.status === "completed" && (
-                <span className="flex items-center gap-1 text-green-400">
+                <span className="flex items-center gap-1 text-bullish">
                   <CheckCircle2 className="h-3 w-3" />
                   Import complete
                 </span>
               )}
               {progress.status === "failed" && (
-                <span className="flex items-center gap-1 text-red-400">
+                <span className="flex items-center gap-1 text-bearish">
                   <XCircle className="h-3 w-3" />
                   Import failed
                   {progress.errorMessage && `: ${progress.errorMessage}`}
@@ -230,7 +230,7 @@ export function FollowingImport() {
               )}
             </span>
             {progress.rateLimitWait && (
-              <span className="text-yellow-400">
+              <span className="text-[var(--accent-yellow)]">
                 Rate limit — waiting {progress.rateLimitWait}s...
               </span>
             )}
@@ -240,25 +240,25 @@ export function FollowingImport() {
           {(progress.status === "running" || isFinished) && (
             <div className="grid grid-cols-4 gap-2 text-xs">
               <div className="rounded bg-[var(--bg-base)] p-2 text-center">
-                <div className="text-green-400 font-medium">
+                <div className="text-bullish font-medium">
                   {progress.inserted}
                 </div>
                 <div className="text-muted">Inserted</div>
               </div>
               <div className="rounded bg-[var(--bg-base)] p-2 text-center">
-                <div className="text-blue-400 font-medium">
+                <div className="text-[var(--accent-blue)] font-medium">
                   {progress.skippedExisting}
                 </div>
                 <div className="text-muted">Already exist</div>
               </div>
               <div className="rounded bg-[var(--bg-base)] p-2 text-center">
-                <div className="text-yellow-400 font-medium">
+                <div className="text-[var(--accent-yellow)] font-medium">
                   {progress.skippedDiscard}
                 </div>
                 <div className="text-muted">Discarded</div>
               </div>
               <div className="rounded bg-[var(--bg-base)] p-2 text-center">
-                <div className="text-red-400 font-medium">
+                <div className="text-bearish font-medium">
                   {progress.errors}
                 </div>
                 <div className="text-muted">Errors</div>

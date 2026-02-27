@@ -229,7 +229,7 @@ export function ExchangeSettingsSection() {
           <div className="flex items-center gap-2 text-sm">
             <span
               className={`h-2 w-2 rounded-full ${
-                settings.enabled ? "bg-green-500" : "bg-yellow-500"
+                settings.enabled ? "bg-[var(--status-connected)]" : "bg-[var(--accent-yellow)]"
               }`}
             />
             <span className="text-[var(--text-secondary)]">
@@ -356,7 +356,7 @@ export function ExchangeSettingsSection() {
               </button>
               <button
                 onClick={handleDelete}
-                className="rounded border border-red-500/30 px-4 py-1.5 text-sm font-medium text-red-400 hover:bg-red-500/10"
+                className="rounded border border-[var(--bearish)]/30 px-4 py-1.5 text-sm font-medium text-bearish hover:bg-[var(--bearish-subtle)]"
               >
                 Delete Keys
               </button>
@@ -369,8 +369,8 @@ export function ExchangeSettingsSection() {
           <div
             className={`rounded px-3 py-2 text-sm ${
               state.testResult.success
-                ? "bg-green-500/10 text-green-400"
-                : "bg-red-500/10 text-red-400"
+                ? "bg-[var(--bullish-subtle)] text-bullish"
+                : "bg-[var(--bearish-subtle)] text-bearish"
             }`}
           >
             {state.testResult.message}

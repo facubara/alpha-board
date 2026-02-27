@@ -14,10 +14,10 @@ import { MEMECOIN_CATEGORY_LABELS, TRACKER_REFRESH_INTERVALS } from "@/lib/types
 import { HolderSparkline } from "./holder-sparkline";
 
 const CATEGORY_BADGE_COLORS: Record<MemecoinCategory, string> = {
-  caller: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  influencer: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  degen: "bg-red-500/10 text-red-400 border-red-500/20",
-  news: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+  caller: "bg-[var(--accent-orange-subtle)] text-[var(--accent-orange)] border-[var(--accent-orange-subtle)]",
+  influencer: "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)] border-[var(--accent-purple-subtle)]",
+  degen: "bg-[var(--bearish-subtle)] text-bearish border-[var(--bearish-subtle)]",
+  news: "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)] border-[var(--accent-yellow-subtle)]",
 };
 
 interface TrendingTokensProps {
@@ -133,7 +133,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
         <select
           value={intervalInput}
           onChange={(e) => setIntervalInput(Number(e.target.value))}
-          className="rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)] px-1.5 py-0.5 text-[10px] text-secondary outline-none"
+          className="rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)] px-1.5 py-0.5 text-xs text-secondary outline-none"
         >
           {TRACKER_REFRESH_INTERVALS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -144,12 +144,12 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
         <button
           type="submit"
           disabled={adding || !mintInput.trim()}
-          className="rounded bg-[var(--primary)] px-2.5 py-1 text-[10px] font-medium text-white disabled:opacity-50"
+          className="rounded bg-[var(--primary)] px-2.5 py-1 text-xs font-medium text-white disabled:opacity-50"
         >
           {adding ? "..." : "Add"}
         </button>
         {addError && (
-          <span className="text-[10px] text-red-400 shrink-0">{addError}</span>
+          <span className="text-xs text-bearish shrink-0">{addError}</span>
         )}
       </form>
 
@@ -235,7 +235,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                         onChange={(e) =>
                           handleIntervalChange(token.tokenMint, Number(e.target.value))
                         }
-                        className="rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)] px-1 py-0.5 text-[10px] text-secondary outline-none"
+                        className="rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)] px-1 py-0.5 text-xs text-secondary outline-none"
                       >
                         {TRACKER_REFRESH_INTERVALS.map((opt) => (
                           <option key={opt.value} value={opt.value}>
@@ -244,7 +244,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                         ))}
                       </select>
                     ) : (
-                      <span className="text-[10px] text-muted">—</span>
+                      <span className="text-xs text-muted">—</span>
                     )}
                   </td>
                   <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
@@ -261,7 +261,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                       {token.source === "manual" && (
                         <button
                           onClick={() => handleDelete(token.tokenMint)}
-                          className="text-muted hover:text-red-400 transition-colors-fast"
+                          className="text-muted hover:text-bearish transition-colors-fast"
                           title="Remove token"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -328,11 +328,11 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                     >
                       <div className="mb-1 flex items-center gap-2">
                         <span className="text-xs font-medium text-primary">@{mention.accountHandle}</span>
-                        <span className={`rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${CATEGORY_BADGE_COLORS[mention.accountCategory]}`}>
+                        <span className={`rounded-full border px-1.5 py-0.5 text-xs font-medium ${CATEGORY_BADGE_COLORS[mention.accountCategory]}`}>
                           {MEMECOIN_CATEGORY_LABELS[mention.accountCategory]}
                         </span>
-                        {mention.isVip && <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />}
-                        <span className="ml-auto text-[10px] text-muted">
+                        {mention.isVip && <Star className="h-3 w-3 fill-[var(--accent-yellow)] text-[var(--accent-yellow)]" />}
+                        <span className="ml-auto text-xs text-muted">
                           {new Date(mention.createdAt).toLocaleString()}
                         </span>
                       </div>
@@ -350,18 +350,18 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
 }
 
 function SourceBadge({ source }: { source: "twitter" | "manual" | null }) {
-  if (!source) return <span className="text-[10px] text-muted">—</span>;
+  if (!source) return <span className="text-xs text-muted">—</span>;
 
   if (source === "twitter") {
     return (
-      <span className="inline-flex items-center rounded-full bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 text-[10px] font-medium text-blue-400">
+      <span className="inline-flex items-center rounded-full bg-[var(--accent-blue-subtle)] border border-[var(--accent-blue-subtle)] px-1.5 py-0.5 text-xs font-medium text-[var(--accent-blue)]">
         Twitter
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center rounded-full bg-zinc-500/10 border border-zinc-500/20 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400">
+    <span className="inline-flex items-center rounded-full bg-[var(--accent-zinc-subtle)] border border-[var(--accent-zinc-subtle)] px-1.5 py-0.5 text-xs font-medium text-secondary">
       Manual
     </span>
   );

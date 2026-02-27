@@ -261,11 +261,11 @@ export function AnalyticsDashboard({
                   <tr key={s.source} className="border-b border-[var(--border-subtle)] last:border-0">
                     <td className="px-4 py-2 font-medium text-primary">
                       <span
-                        className={`mr-2 inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[10px] font-bold ${
+                        className={`mr-2 inline-flex items-center rounded px-1.5 py-0.5 font-mono text-xs font-bold ${
                           s.source === "tweet"
-                            ? "bg-teal-500/10 text-teal-400"
+                            ? "bg-[var(--accent-teal)]/10 text-[var(--accent-teal)]"
                             : s.source === "hybrid"
-                              ? "bg-purple-500/10 text-purple-400"
+                              ? "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)]"
                               : "bg-[var(--bg-muted)] text-muted"
                         }`}
                       >

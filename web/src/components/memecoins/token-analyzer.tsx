@@ -141,11 +141,11 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
       : 0;
 
   const statusColor: Record<AnalysisStatus, string> = {
-    pending: "text-yellow-400",
-    running: "text-blue-400",
-    paused: "text-orange-400",
-    completed: "text-green-400",
-    failed: "text-red-400",
+    pending: "text-[var(--accent-yellow)]",
+    running: "text-[var(--accent-blue)]",
+    paused: "text-[var(--accent-orange)]",
+    completed: "text-bullish",
+    failed: "text-bearish",
   };
 
   return (
@@ -191,7 +191,7 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
             Analyze
           </button>
         </div>
-        {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
+        {error && <p className="mt-2 text-xs text-bearish">{error}</p>}
       </div>
 
       {/* Active analysis progress */}
@@ -248,7 +248,7 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
           </div>
 
           {activeAnalysis.errorMessage && (
-            <p className="mt-1 text-xs text-red-400">{activeAnalysis.errorMessage}</p>
+            <p className="mt-1 text-xs text-bearish">{activeAnalysis.errorMessage}</p>
           )}
 
           {/* Results table */}
@@ -378,7 +378,7 @@ function WalletRow({
             {wallet.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="rounded bg-accent/10 px-1.5 py-0.5 text-[10px] text-accent"
+                className="rounded bg-accent/10 px-1.5 py-0.5 text-xs text-accent"
               >
                 {tag}
               </span>
@@ -401,14 +401,14 @@ function WalletRow({
               {/* Holdings */}
               {wallet.currentHoldings.length > 0 && (
                 <div>
-                  <p className="mb-1 text-[10px] font-medium uppercase text-muted">
+                  <p className="mb-1 text-xs font-medium uppercase text-muted">
                     Current Holdings
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {wallet.currentHoldings.slice(0, 10).map((h) => (
                       <span
                         key={h.mint}
-                        className="rounded border border-primary/10 px-2 py-0.5 text-[10px] text-secondary"
+                        className="rounded border border-primary/10 px-2 py-0.5 text-xs text-secondary"
                       >
                         {h.symbol || h.mint.slice(0, 6)}:{" "}
                         {h.value_usd ? `$${h.value_usd.toFixed(0)}` : h.amount.toFixed(0)}
@@ -421,7 +421,7 @@ function WalletRow({
               {/* Past token entries */}
               {wallet.tokenEntries.length > 0 && (
                 <div>
-                  <p className="mb-1 text-[10px] font-medium uppercase text-muted">
+                  <p className="mb-1 text-xs font-medium uppercase text-muted">
                     Past Early Entries
                   </p>
                   <div className="space-y-1">
@@ -440,7 +440,7 @@ function WalletRow({
                           </span>
                         )}
                         {e.tokenPeakMcap && (
-                          <span className="text-green-400">
+                          <span className="text-bullish">
                             Peak: $
                             {e.tokenPeakMcap >= 1_000_000
                               ? `${(e.tokenPeakMcap / 1_000_000).toFixed(1)}M`
@@ -454,7 +454,7 @@ function WalletRow({
               )}
 
               {/* Full address */}
-              <div className="text-[10px] text-muted">
+              <div className="text-xs text-muted">
                 <code>{wallet.address}</code>
               </div>
             </div>

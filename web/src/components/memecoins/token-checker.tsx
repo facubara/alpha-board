@@ -55,15 +55,15 @@ export function TokenChecker() {
   }
 
   function signalColor(score: number): string {
-    if (score >= 60) return "text-green-400";
-    if (score >= 30) return "text-yellow-400";
-    return "text-orange-400";
+    if (score >= 60) return "text-bullish";
+    if (score >= 30) return "text-[var(--accent-yellow)]";
+    return "text-[var(--accent-orange)]";
   }
 
   function signalBg(score: number): string {
-    if (score >= 60) return "bg-green-400/10 border-green-400/20";
-    if (score >= 30) return "bg-yellow-400/10 border-yellow-400/20";
-    return "bg-orange-400/10 border-orange-400/20";
+    if (score >= 60) return "bg-[var(--bullish-subtle)] border-[var(--bullish-subtle)]";
+    if (score >= 30) return "bg-[var(--accent-yellow-subtle)] border-[var(--accent-yellow-subtle)]";
+    return "bg-[var(--accent-orange-subtle)] border-[var(--accent-orange-subtle)]";
   }
 
   return (
@@ -97,7 +97,7 @@ export function TokenChecker() {
             Check
           </button>
         </div>
-        {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
+        {error && <p className="mt-2 text-xs text-bearish">{error}</p>}
       </div>
 
       {/* Results */}
@@ -130,7 +130,7 @@ export function TokenChecker() {
               <span
                 className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                   result.matches.length > 0
-                    ? "bg-green-400/10 text-green-400"
+                    ? "bg-[var(--bullish-subtle)] text-bullish"
                     : "bg-primary/5 text-muted"
                 }`}
               >
@@ -209,7 +209,7 @@ function MatchRow({
             {match.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="rounded bg-accent/10 px-1.5 py-0.5 text-[10px] text-accent"
+                className="rounded bg-accent/10 px-1.5 py-0.5 text-xs text-accent"
               >
                 {tag}
               </span>
@@ -254,7 +254,7 @@ function MatchRow({
 
           {match.pastTokens.length > 0 && (
             <div className="mt-3">
-              <p className="mb-1 text-[10px] font-medium uppercase text-muted">
+              <p className="mb-1 text-xs font-medium uppercase text-muted">
                 Past Early Entries
               </p>
               <div className="space-y-1">
@@ -273,7 +273,7 @@ function MatchRow({
                       </span>
                     )}
                     {t.tokenPeakMcap && (
-                      <span className="text-green-400">
+                      <span className="text-bullish">
                         Peak: $
                         {t.tokenPeakMcap >= 1_000_000
                           ? `${(t.tokenPeakMcap / 1_000_000).toFixed(1)}M`
@@ -286,7 +286,7 @@ function MatchRow({
             </div>
           )}
 
-          <div className="mt-2 text-[10px] text-muted">
+          <div className="mt-2 text-xs text-muted">
             <code>{match.address}</code>
           </div>
         </div>

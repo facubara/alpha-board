@@ -22,6 +22,16 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
 
   const metrics = [
     {
+      label: "Total Trades",
+      value: String(summary.totalTrades),
+      color: "text-primary",
+    },
+    {
+      label: "Win Rate",
+      value: summary.totalTrades > 0 ? `${(winRate * 100).toFixed(1)}%` : "—",
+      color: "text-primary",
+    },
+    {
       label: "Total PnL",
       value: `${summary.totalPnl >= 0 ? "+" : ""}$${summary.totalPnl.toFixed(2)}`,
       color:
@@ -40,16 +50,6 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           : returnPct < 0
             ? "text-bearish"
             : "text-secondary",
-    },
-    {
-      label: "Win Rate",
-      value: summary.totalTrades > 0 ? `${(winRate * 100).toFixed(1)}%` : "—",
-      color: "text-primary",
-    },
-    {
-      label: "Total Trades",
-      value: String(summary.totalTrades),
-      color: "text-primary",
     },
     {
       label: "Max Drawdown",

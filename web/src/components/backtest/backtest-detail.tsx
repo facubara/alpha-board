@@ -67,7 +67,7 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
               ? "border-[var(--bullish-strong)]/20 bg-[var(--bullish-strong)]/10 text-[var(--bullish-strong)]"
               : run.status === "failed"
                 ? "border-[var(--bearish-strong)]/20 bg-[var(--bearish-strong)]/10 text-[var(--bearish-strong)]"
-                : "border-blue-500/20 bg-blue-500/10 text-blue-400"
+                : "border-[var(--accent-blue)]/20 bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]"
           }`}
         >
           {run.status}

@@ -10,6 +10,18 @@ interface StatsBarProps {
   stats: MemecoinStats;
 }
 
+function StatValue({ value, subtitle }: { value: number; subtitle?: string }) {
+  if (value === 0) {
+    return (
+      <div>
+        <div className="mt-1 text-lg font-semibold text-primary">&mdash;</div>
+        {subtitle && <div className="text-xs text-muted">{subtitle}</div>}
+      </div>
+    );
+  }
+  return <div className="mt-1 text-lg font-semibold text-primary">{value}</div>;
+}
+
 export function StatsBar({ stats }: StatsBarProps) {
   const [liveConnected, setLiveConnected] = useState(false);
 
@@ -27,38 +39,30 @@ export function StatsBar({ stats }: StatsBarProps) {
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
       <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="text-xs text-muted">Wallets Tracked</div>
-        <div className="mt-1 text-lg font-semibold text-primary">
-          {stats.walletsTracked}
-        </div>
+        <StatValue value={stats.walletsTracked} subtitle="No wallets yet" />
       </div>
       <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="text-xs text-muted">Avg Hit Rate</div>
-        <div className="mt-1 text-lg font-semibold text-primary">
-          {stats.avgHitRate}
-        </div>
+        <StatValue value={stats.avgHitRate} subtitle="Collecting data" />
       </div>
       <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="text-xs text-muted">Tweets Today</div>
-        <div className="mt-1 text-lg font-semibold text-primary">
-          {stats.tweetsToday}
-        </div>
+        <StatValue value={stats.tweetsToday} subtitle="No tweets yet" />
       </div>
       <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="text-xs text-muted">Token Matches</div>
-        <div className="mt-1 text-lg font-semibold text-primary">
-          {stats.tokenMatchesToday}
-        </div>
+        <StatValue value={stats.tokenMatchesToday} subtitle="No matches yet" />
       </div>
       <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="text-xs text-muted">Live Feed</div>
         <div className="mt-1 flex items-center gap-2">
           <span
             className={`inline-block h-2.5 w-2.5 rounded-full ${
-              isConnected ? "bg-green-500" : "bg-gray-500"
+              isConnected ? "bg-[var(--status-connected)]" : "bg-[var(--status-disconnected)]"
             }`}
           />
           <span className="text-sm text-secondary">
-            {isConnected ? "Connected" : "Disconnected"}
+            {isConnected ? "Connected" : "Offline"}
           </span>
         </div>
       </div>

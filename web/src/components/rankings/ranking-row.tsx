@@ -183,7 +183,7 @@ export function RankingRow({ snapshot, highlighted, className }: RankingRowProps
         {/* Funding (hidden on tablet) */}
         <TableCell className="hidden w-20 text-right font-mono text-sm tabular-nums lg:table-cell">
           {snapshot.fundingRate != null ? (
-            <span className={snapshot.fundingRate < 0 ? "text-teal-400" : "text-amber-400"}>
+            <span className={snapshot.fundingRate < 0 ? "text-[var(--accent-teal)]" : "text-[var(--accent-orange)]"}>
               {(snapshot.fundingRate * 100).toFixed(4)}%
             </span>
           ) : (

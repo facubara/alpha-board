@@ -125,7 +125,7 @@ function IncidentCard({ incident }: { incident: ServiceIncident }) {
     <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2.5">
       <div className="flex items-center gap-2">
         <span
-          className={`inline-flex rounded border px-1.5 py-0.5 text-[10px] font-medium ${badge.className}`}
+          className={`inline-flex rounded border px-1.5 py-0.5 text-xs font-medium ${badge.className}`}
         >
           {badge.label}
         </span>

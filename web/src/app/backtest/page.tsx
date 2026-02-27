@@ -9,7 +9,12 @@ export default async function BacktestPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold text-primary">Backtest</h1>
+      <div>
+        <h1 className="text-xl font-semibold text-primary">Backtest</h1>
+        <p className="mt-1 text-sm text-secondary">
+          Test strategies against historical data before deploying to live agents
+        </p>
+      </div>
       <NewBacktestForm />
       <BacktestList runs={runs} />
     </div>

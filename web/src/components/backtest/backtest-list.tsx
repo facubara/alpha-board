@@ -13,15 +13,15 @@ interface BacktestListProps {
 
 const STATUS_STYLES: Record<string, string> = {
   pending:
-    "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+    "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)] border-[var(--accent-yellow)]/20",
   running:
-    "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)] border-[var(--accent-blue)]/20",
   completed:
     "bg-[var(--bullish-strong)]/10 text-[var(--bullish-strong)] border-[var(--bullish-strong)]/20",
   failed:
     "bg-[var(--bearish-strong)]/10 text-[var(--bearish-strong)] border-[var(--bearish-strong)]/20",
   cancelled:
-    "bg-gray-500/10 text-gray-400 border-gray-500/20",
+    "bg-[var(--accent-zinc-subtle)] text-muted border-[var(--text-muted)]/20",
 };
 
 function StatusBadge({ status }: { status: string }) {

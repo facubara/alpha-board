@@ -22,10 +22,10 @@ import {
 import { MemecoinCallHistoryModal } from "./memecoin-call-history-modal";
 
 const CATEGORY_BADGE_COLORS: Record<MemecoinCategory, string> = {
-  caller: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  influencer: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  degen: "bg-red-500/10 text-red-400 border-red-500/20",
-  news: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+  caller: "bg-[var(--accent-orange-subtle)] text-[var(--accent-orange)] border-[var(--accent-orange-subtle)]",
+  influencer: "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)] border-[var(--accent-purple-subtle)]",
+  degen: "bg-[var(--bearish-subtle)] text-bearish border-[var(--bearish-subtle)]",
+  news: "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)] border-[var(--accent-yellow-subtle)]",
 };
 
 type SortField = "handle" | "category" | "followers" | "tweets" | "bio";
@@ -407,7 +407,7 @@ export function MemecoinAccountManager({
               Add
             </button>
           </div>
-          {state.error && <p className="text-xs text-red-400">{state.error}</p>}
+          {state.error && <p className="text-xs text-bearish">{state.error}</p>}
         </div>
       )}
 
@@ -466,13 +466,13 @@ export function MemecoinAccountManager({
                       <span className="flex items-center gap-1.5">
                         @{account.handle}
                         {account.isVip && (
-                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                          <Star className="h-3 w-3 fill-[var(--accent-yellow)] text-[var(--accent-yellow)]" />
                         )}
                       </span>
                     </TableCell>
                     <TableCell>
                       <span
-                        className={`rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${
+                        className={`rounded-full border px-1.5 py-0.5 text-xs font-medium ${
                           CATEGORY_BADGE_COLORS[account.category]
                         }`}
                       >
@@ -494,8 +494,8 @@ export function MemecoinAccountManager({
                           onClick={() => handleToggleVip(account.id)}
                           className={`transition-colors ${
                             account.isVip
-                              ? "text-yellow-400 hover:text-yellow-300"
-                              : "text-muted opacity-0 group-hover:opacity-100 hover:text-yellow-400"
+                              ? "text-[var(--accent-yellow)] hover:text-[var(--accent-yellow)]"
+                              : "text-muted opacity-0 group-hover:opacity-100 hover:text-[var(--accent-yellow)]"
                           }`}
                           title={account.isVip ? "Remove VIP" : "Set as VIP"}
                         >
@@ -505,7 +505,7 @@ export function MemecoinAccountManager({
                           <span className="flex items-center gap-1 text-xs">
                             <button
                               onClick={() => { handleDelete(account.id); dispatch({ type: "SET_DELETING_ID", value: null }); }}
-                              className="font-medium text-red-400 hover:text-red-300"
+                              className="font-medium text-bearish hover:text-bearish"
                             >
                               Yes
                             </button>
@@ -519,7 +519,7 @@ export function MemecoinAccountManager({
                         ) : (
                           <button
                             onClick={() => dispatch({ type: "SET_DELETING_ID", value: account.id })}
-                            className="text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-400"
+                            className="text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-bearish"
                             title="Remove account"
                           >
                             <Trash2 className="h-3 w-3" />

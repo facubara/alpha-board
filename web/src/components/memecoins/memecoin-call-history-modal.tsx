@@ -5,10 +5,10 @@ import type { MemecoinTwitterAccount, AccountCallHistoryItem, MemecoinCategory }
 import { MEMECOIN_CATEGORY_LABELS } from "@/lib/types";
 
 const CATEGORY_BADGE_COLORS: Record<MemecoinCategory, string> = {
-  caller: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  influencer: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  degen: "bg-red-500/10 text-red-400 border-red-500/20",
-  news: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+  caller: "bg-[var(--accent-orange-subtle)] text-[var(--accent-orange)] border-[var(--accent-orange-subtle)]",
+  influencer: "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)] border-[var(--accent-purple-subtle)]",
+  degen: "bg-[var(--bearish-subtle)] text-bearish border-[var(--bearish-subtle)]",
+  news: "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)] border-[var(--accent-yellow-subtle)]",
 };
 
 function formatFollowers(n: number | null): string {
@@ -49,10 +49,10 @@ export function MemecoinCallHistoryModal({
         <div className="flex items-center justify-between border-b border-[var(--border-default)] px-4 py-3">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold text-primary">@{account.handle}</span>
-            <span className={`rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${CATEGORY_BADGE_COLORS[account.category]}`}>
+            <span className={`rounded-full border px-1.5 py-0.5 text-xs font-medium ${CATEGORY_BADGE_COLORS[account.category]}`}>
               {MEMECOIN_CATEGORY_LABELS[account.category]}
             </span>
-            {account.isVip && <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />}
+            {account.isVip && <Star className="h-3 w-3 fill-[var(--accent-yellow)] text-[var(--accent-yellow)]" />}
             {account.followersCount != null && (
               <span className="text-xs text-muted">{formatFollowers(account.followersCount)} followers</span>
             )}

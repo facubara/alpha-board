@@ -33,14 +33,14 @@ export function TradeSidebar() {
             <h2 className="text-sm font-medium text-[var(--text-primary)]">
               Trade Feed
             </h2>
-            <span className="text-[10px] text-[var(--text-muted)]">
+            <span className="text-xs text-[var(--text-muted)]">
               {trades.length} trades
             </span>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={markAllRead}
-              className="rounded px-1.5 py-0.5 text-[10px] text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-secondary)]"
+              className="rounded px-1.5 py-0.5 text-xs text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-secondary)]"
             >
               Mark read
             </button>

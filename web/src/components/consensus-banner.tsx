@@ -42,7 +42,7 @@ function ConsensusRow({
 
   return (
     <div className="flex items-center gap-2 overflow-hidden">
-      <span className="shrink-0 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] w-[72px]">
+      <span className="shrink-0 text-xs font-medium uppercase tracking-wider text-[var(--text-muted)] w-[72px]">
         {label}
       </span>
       <div className="overflow-hidden flex-1">
@@ -86,7 +86,7 @@ function ConsensusItemPill({ item }: { item: ConsensusItem }) {
       <span className="font-medium text-[var(--text-primary)]">
         {item.symbol.replace("USDT", "")}
       </span>
-      <span className="uppercase text-[10px] font-semibold">
+      <span className="uppercase text-xs font-semibold">
         {item.direction === "long" ? "L" : "S"}
       </span>
       <span>{item.consensusPct}%</span>

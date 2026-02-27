@@ -153,7 +153,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
                       <Badge
                         variant="secondary"
                         className={cn(
-                          "text-[10px] uppercase",
+                          "text-xs uppercase",
                           pos.direction === "long"
                             ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
                             : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"
@@ -202,7 +202,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
                       <Badge
                         variant="secondary"
                         className={cn(
-                          "text-[10px] uppercase",
+                          "text-xs uppercase",
                           trade.direction === "long"
                             ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
                             : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"

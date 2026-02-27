@@ -74,7 +74,7 @@ function getHealthStatus(
     return { color: "bg-[var(--bullish-strong)]", label: `Active ${Math.round(ageMinutes)}m ago` };
   }
   if (ageMinutes <= thresholds.gray) {
-    return { color: "bg-yellow-500", label: `Stale ${Math.round(ageMinutes)}m ago` };
+    return { color: "bg-[var(--accent-yellow)]", label: `Stale ${Math.round(ageMinutes)}m ago` };
   }
   return { color: "bg-[var(--text-muted)]", label: `Inactive ${Math.round(ageMinutes)}m ago` };
 }
@@ -160,7 +160,7 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
             />
             <span
               className={cn(
-                "inline-flex shrink-0 items-center rounded px-1 py-0.5 font-mono text-[10px] font-bold leading-none",
+                "inline-flex shrink-0 items-center rounded px-1 py-0.5 font-mono text-xs font-bold leading-none",
                 agent.engine === "rule"
                   ? "bg-[var(--bullish-subtle)] text-bullish"
                   : "bg-[var(--bg-muted)] text-secondary"
@@ -170,11 +170,11 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
             </span>
             <span
               className={cn(
-                "inline-flex shrink-0 items-center rounded px-1 py-0.5 font-mono text-[10px] font-bold leading-none",
+                "inline-flex shrink-0 items-center rounded px-1 py-0.5 font-mono text-xs font-bold leading-none",
                 agent.source === "tweet"
-                  ? "bg-teal-500/10 text-teal-400"
+                  ? "bg-[var(--accent-teal)]/10 text-[var(--accent-teal)]"
                   : agent.source === "hybrid"
-                    ? "bg-purple-500/10 text-purple-400"
+                    ? "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)]"
                     : "bg-[var(--bg-muted)] text-muted"
               )}
             >

@@ -64,7 +64,7 @@ export function HorizontalBarChart({
               <div className="w-28 shrink-0 text-right sm:w-36">
                 <p className="truncate text-xs text-secondary">{item.label}</p>
                 {item.sublabel && (
-                  <p className="truncate font-mono text-[10px] text-muted">
+                  <p className="truncate font-mono text-xs text-muted">
                     {item.sublabel}
                   </p>
                 )}

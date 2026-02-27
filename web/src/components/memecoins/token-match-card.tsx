@@ -19,19 +19,19 @@ export function TokenMatchCard({ match }: TokenMatchCardProps) {
       </span>
 
       {match.priceUsd != null && (
-        <span className="text-[10px] text-secondary">
+        <span className="text-xs text-secondary">
           ${formatPrice(match.priceUsd)}
         </span>
       )}
 
       {match.marketCapUsd != null && (
-        <span className="text-[10px] text-muted">
+        <span className="text-xs text-muted">
           MC: {formatMcap(match.marketCapUsd)}
         </span>
       )}
 
       {match.liquidityUsd != null && (
-        <span className="text-[10px] text-muted">
+        <span className="text-xs text-muted">
           Liq: {formatMcap(match.liquidityUsd)}
         </span>
       )}
@@ -39,8 +39,8 @@ export function TokenMatchCard({ match }: TokenMatchCardProps) {
       <span
         className={`rounded px-1 py-0.5 text-[9px] font-medium ${
           match.source === "llm"
-            ? "bg-purple-500/15 text-purple-400"
-            : "bg-blue-500/15 text-blue-400"
+            ? "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)]"
+            : "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]"
         }`}
       >
         {match.source === "llm" ? "LLM" : "KEYWORD"}
@@ -51,7 +51,7 @@ export function TokenMatchCard({ match }: TokenMatchCardProps) {
           href={match.dexscreenerUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] text-blue-400 hover:text-blue-300"
+          className="text-xs text-[var(--accent-blue)] hover:text-[var(--accent-blue)]"
         >
           DEX
         </a>

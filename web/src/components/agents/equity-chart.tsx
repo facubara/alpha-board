@@ -132,7 +132,7 @@ export function EquityChart({
         {/* Y-axis labels as HTML overlays */}
         {showBaseline && (
           <span
-            className="pointer-events-none absolute font-mono text-[10px] text-muted"
+            className="pointer-events-none absolute font-mono text-xs text-muted"
             style={{
               left: 0,
               width: `${(padX / width) * 100}%`,
@@ -147,7 +147,7 @@ export function EquityChart({
         )}
         {showMax && (
           <span
-            className="pointer-events-none absolute font-mono text-[10px] text-muted"
+            className="pointer-events-none absolute font-mono text-xs text-muted"
             style={{
               left: 0,
               width: `${(padX / width) * 100}%`,
@@ -162,7 +162,7 @@ export function EquityChart({
         )}
         {showMin && (
           <span
-            className="pointer-events-none absolute font-mono text-[10px] text-muted"
+            className="pointer-events-none absolute font-mono text-xs text-muted"
             style={{
               left: 0,
               width: `${(padX / width) * 100}%`,

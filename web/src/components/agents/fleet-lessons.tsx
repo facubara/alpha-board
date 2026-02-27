@@ -13,17 +13,17 @@ const CATEGORY_CONFIG: Record<
   strength: {
     label: "Strength",
     icon: Zap,
-    colorClass: "bg-emerald-500/10 text-emerald-400",
+    colorClass: "bg-[var(--bullish-subtle)] text-bullish",
   },
   mistake: {
     label: "Mistake",
     icon: AlertTriangle,
-    colorClass: "bg-red-500/10 text-red-400",
+    colorClass: "bg-[var(--bearish-subtle)] text-bearish",
   },
   pattern: {
     label: "Pattern",
     icon: Eye,
-    colorClass: "bg-blue-500/10 text-blue-400",
+    colorClass: "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]",
   },
 };
 
@@ -122,7 +122,7 @@ export function FleetLessons({ lessons: initialLessons }: FleetLessonsProps) {
                   {/* Category badge */}
                   <span
                     className={cn(
-                      "mt-0.5 flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold leading-none",
+                      "mt-0.5 flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-xs font-semibold leading-none",
                       config.colorClass
                     )}
                   >

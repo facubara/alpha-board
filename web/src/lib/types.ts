@@ -1056,3 +1056,72 @@ export const TRACKER_REFRESH_INTERVALS = [
   { value: 60, label: "1h" },
   { value: 1440, label: "1d" },
 ] as const;
+
+// =============================================================================
+// Token Analysis
+// =============================================================================
+
+export type AnalysisStatus = "pending" | "running" | "paused" | "completed" | "failed";
+
+export interface TokenAnalysis {
+  id: number;
+  mintAddress: string;
+  tokenSymbol: string | null;
+  tokenName: string | null;
+  marketCapUsd: number | null;
+  requestedBuyers: number;
+  foundBuyers: number;
+  status: AnalysisStatus;
+  errorMessage: string | null;
+  requestedAt: string;
+  completedAt: string | null;
+  wallets?: AnalyzedWalletResult[];
+}
+
+export interface WalletTokenEntry {
+  mintAddress: string;
+  tokenSymbol: string | null;
+  entryRank: number;
+  amountSol: number | null;
+  tokenPeakMcap: number | null;
+}
+
+export interface WalletHolding {
+  mint: string;
+  symbol: string | null;
+  amount: number;
+  value_usd: number | null;
+}
+
+export interface CrossReferenceResult {
+  mintAddress: string;
+  tokenSymbol: string | null;
+  tokenName: string | null;
+  marketCapUsd: number | null;
+  buyersScanned: number;
+  matches: CrossReferenceMatch[];
+}
+
+export interface CrossReferenceMatch {
+  address: string;
+  entryRank: number | null;
+  score: number;
+  tags: string[];
+  solBalance: number | null;
+  totalTxCount: number | null;
+  pastTokenCount: number;
+  pastTokens: { mintAddress: string; tokenSymbol: string | null; entryRank: number; tokenPeakMcap: number | null; amountSol: number | null }[];
+}
+
+export interface AnalyzedWalletResult {
+  address: string;
+  entryRank: number;
+  solBalance: number | null;
+  usdcBalance: number | null;
+  totalTxCount: number | null;
+  tokensTraded: number | null;
+  tags: string[];
+  amountSol: number | null;
+  tokenEntries: WalletTokenEntry[];
+  currentHoldings: WalletHolding[];
+}

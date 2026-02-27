@@ -15,12 +15,12 @@ import { TWITTER_CATEGORY_LABELS } from "@/lib/types";
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
 const CATEGORY_COLORS: Record<TwitterAccountCategory, string> = {
-  analyst: "text-blue-400",
-  founder: "text-purple-400",
-  news: "text-yellow-400",
-  degen: "text-red-400",
-  insider: "text-green-400",
-  protocol: "text-cyan-400",
+  analyst: "text-[var(--accent-blue)]",
+  founder: "text-[var(--accent-purple)]",
+  news: "text-[var(--accent-yellow)]",
+  degen: "text-bearish",
+  insider: "text-bullish",
+  protocol: "text-[var(--accent-cyan)]",
 };
 
 interface TweetSSEEvent {
@@ -63,7 +63,7 @@ export function TweetFeed({ initialTweets }: TweetFeedProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-medium text-primary">Recent Tweets</h2>
-          <span className={`inline-block h-2 w-2 rounded-full ${isConnected ? "bg-green-500" : "bg-gray-500"}`} />
+          <span className={`inline-block h-2 w-2 rounded-full ${isConnected ? "bg-[var(--status-connected)]" : "bg-[var(--status-disconnected)]"}`} />
         </div>
 
         {/* Category filter */}
@@ -113,9 +113,9 @@ export function TweetFeed({ initialTweets }: TweetFeedProps) {
 }
 
 const SENTIMENT_COLORS = {
-  bullish: "bg-green-500/15 text-green-400 border-green-500/30",
-  bearish: "bg-red-500/15 text-red-400 border-red-500/30",
-  neutral: "bg-gray-500/15 text-gray-400 border-gray-500/30",
+  bullish: "bg-[var(--bullish-subtle)] text-bullish border-[var(--bullish)]/30",
+  bearish: "bg-[var(--bearish-subtle)] text-bearish border-[var(--bearish)]/30",
+  neutral: "bg-[var(--accent-zinc-subtle)] text-secondary border-[var(--border-default)]",
 } as const;
 
 const SETUP_LABELS: Record<TweetSetupType, string> = {
@@ -128,12 +128,12 @@ const SETUP_LABELS: Record<TweetSetupType, string> = {
 };
 
 const SETUP_COLORS: Record<TweetSetupType, string> = {
-  long_entry: "bg-green-500/15 text-green-400",
-  short_entry: "bg-red-500/15 text-red-400",
-  take_profit: "bg-yellow-500/15 text-yellow-400",
-  warning: "bg-orange-500/15 text-orange-400",
-  neutral: "bg-gray-500/15 text-gray-400",
-  informational: "bg-blue-500/15 text-blue-400",
+  long_entry: "bg-[var(--bullish-subtle)] text-bullish",
+  short_entry: "bg-[var(--bearish-subtle)] text-bearish",
+  take_profit: "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)]",
+  warning: "bg-[var(--accent-orange)]/15 text-[var(--accent-orange)]",
+  neutral: "bg-[var(--accent-zinc-subtle)] text-secondary",
+  informational: "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]",
 };
 
 function getSentimentLabel(score: number): "bullish" | "bearish" | "neutral" {
@@ -148,10 +148,10 @@ function SentimentBar({ score }: { score: number }) {
   const label = getSentimentLabel(score);
   const barColor =
     label === "bullish"
-      ? "bg-green-500"
+      ? "bg-[var(--bullish)]"
       : label === "bearish"
-        ? "bg-red-500"
-        : "bg-gray-500";
+        ? "bg-[var(--bearish)]"
+        : "bg-[var(--status-disconnected)]";
 
   return (
     <div className="flex items-center gap-2">
@@ -161,7 +161,7 @@ function SentimentBar({ score }: { score: number }) {
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-[10px] text-muted tabular-nums w-8 text-right">
+      <span className="text-xs text-muted tabular-nums w-8 text-right">
         {score > 0 ? "+" : ""}{score.toFixed(2)}
       </span>
     </div>
@@ -177,7 +177,7 @@ function ConfidenceDots({ confidence }: { confidence: number }) {
         <span
           key={i}
           className={`inline-block h-1.5 w-1.5 rounded-full ${
-            i < filled ? "bg-blue-400" : "bg-[var(--bg-elevated)]"
+            i < filled ? "bg-[var(--accent-blue)]" : "bg-[var(--bg-elevated)]"
           }`}
         />
       ))}
@@ -208,7 +208,7 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
             {tweet.accountDisplayName}
           </span>
           <span className="text-xs text-muted">@{tweet.accountHandle}</span>
-          <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${categoryColor}`}>
+          <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${categoryColor}`}>
             {TWITTER_CATEGORY_LABELS[tweet.accountCategory]}
           </span>
         </div>
@@ -258,8 +258,8 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
         {/* AI Analysis section */}
         {signal ? (
           <div className="mt-2.5 rounded border border-[var(--border-default)] bg-[var(--bg-elevated)] px-3 py-2.5">
-            <div className="flex items-center gap-1.5 text-[10px] font-medium text-muted uppercase tracking-wide mb-2">
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" className="text-blue-400 shrink-0">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-muted uppercase tracking-wide mb-2">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" className="text-[var(--accent-blue)] shrink-0">
                 <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 1.5a5.5 5.5 0 110 11 5.5 5.5 0 010-11zM8 4a.75.75 0 01.75.75v2.5h2.5a.75.75 0 010 1.5h-2.5v2.5a.75.75 0 01-1.5 0v-2.5h-2.5a.75.75 0 010-1.5h2.5v-2.5A.75.75 0 018 4z"/>
               </svg>
               AI Analysis
@@ -282,7 +282,7 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
               )}
 
               {/* Confidence */}
-              <span className="flex items-center gap-1.5 text-[10px] text-muted ml-auto">
+              <span className="flex items-center gap-1.5 text-xs text-muted ml-auto">
                 conf <ConfidenceDots confidence={signal.confidence} />
               </span>
             </div>
@@ -293,9 +293,9 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
             {/* Symbols row */}
             {signal.symbolsMentioned && signal.symbolsMentioned.length > 0 && (
               <div className="flex items-center gap-1.5 mt-2">
-                <span className="text-[10px] text-muted">Symbols:</span>
+                <span className="text-xs text-muted">Symbols:</span>
                 {signal.symbolsMentioned.map((sym) => (
-                  <span key={sym} className="rounded bg-[var(--bg-surface)] px-1.5 py-0.5 text-[10px] font-mono font-medium text-secondary">
+                  <span key={sym} className="rounded bg-[var(--bg-surface)] px-1.5 py-0.5 text-xs font-mono font-medium text-secondary">
                     {sym}
                   </span>
                 ))}
@@ -307,7 +307,7 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
               <div className="mt-2">
                 <button
                   onClick={() => setShowReasoning(!showReasoning)}
-                  className="text-[10px] text-blue-400 hover:text-blue-300 transition-colors-fast"
+                  className="text-xs text-[var(--accent-blue)] hover:text-[var(--accent-blue)] transition-colors-fast"
                 >
                   {showReasoning ? "Hide reasoning" : "Show reasoning"}
                 </button>
@@ -320,7 +320,7 @@ function TweetCard({ tweet }: { tweet: TweetData }) {
             )}
           </div>
         ) : (
-          <div className="mt-2.5 rounded border border-dashed border-[var(--border-default)] px-3 py-2 text-[10px] text-muted">
+          <div className="mt-2.5 rounded border border-dashed border-[var(--border-default)] px-3 py-2 text-xs text-muted">
             Pending analysis...
           </div>
         )}

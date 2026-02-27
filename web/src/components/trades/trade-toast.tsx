@@ -21,10 +21,10 @@ export function TradeToast() {
     >
       {/* Direction indicator */}
       <span
-        className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase ${
+        className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase ${
           isLong
-            ? "bg-green-500/20 text-green-400"
-            : "bg-red-500/20 text-red-400"
+            ? "bg-[var(--bullish-subtle)] text-bullish"
+            : "bg-[var(--bearish-subtle)] text-bearish"
         }`}
       >
         {latestToast.direction}
@@ -36,12 +36,12 @@ export function TradeToast() {
           {isOpen ? "Opened" : "Closed"}{" "}
           {latestToast.symbol.replace("USDT", "")}
         </div>
-        <div className="truncate text-[10px] text-[var(--text-secondary)]">
+        <div className="truncate text-xs text-[var(--text-secondary)]">
           {latestToast.agentName}
           {!isOpen && latestToast.pnl !== null && (
             <span
               className={`ml-1 font-mono ${
-                latestToast.pnl >= 0 ? "text-green-400" : "text-red-400"
+                latestToast.pnl >= 0 ? "text-bullish" : "text-bearish"
               }`}
             >
               {latestToast.pnl >= 0 ? "+" : ""}${latestToast.pnl.toFixed(2)}

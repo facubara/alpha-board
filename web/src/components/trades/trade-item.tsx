@@ -60,10 +60,10 @@ export function TradeItem({
       >
         {/* Action + Direction pill */}
         <span
-          className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none ${
+          className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase leading-none ${
             isLong
-              ? "bg-green-500/20 text-green-400"
-              : "bg-red-500/20 text-red-400"
+              ? "bg-[var(--bullish-subtle)] text-bullish"
+              : "bg-[var(--bearish-subtle)] text-bearish"
           }`}
         >
           {isOpen ? "Open" : "Close"} {trade.direction}
@@ -75,7 +75,7 @@ export function TradeItem({
             <span className="truncate text-sm font-medium text-[var(--text-primary)]">
               {trade.symbol.replace("USDT", "")}
             </span>
-            <span className="shrink-0 text-[10px] text-[var(--text-tertiary)]">
+            <span className="shrink-0 text-xs text-[var(--text-tertiary)]">
               {age}
             </span>
           </div>
@@ -83,7 +83,7 @@ export function TradeItem({
           <div className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)]">
             <span className="truncate">{trade.agentName}</span>
             {trade.leaderboardRank && (
-              <span className="shrink-0 text-[10px] text-[var(--text-tertiary)]">
+              <span className="shrink-0 text-xs text-[var(--text-tertiary)]">
                 #{trade.leaderboardRank}
               </span>
             )}
@@ -98,7 +98,7 @@ export function TradeItem({
               <>
                 <span
                   className={`shrink-0 font-mono font-medium ${
-                    isProfitable ? "text-green-400" : "text-red-400"
+                    isProfitable ? "text-bullish" : "text-bearish"
                   }`}
                 >
                   {trade.pnl !== null
@@ -107,8 +107,8 @@ export function TradeItem({
                 </span>
                 {trade.pnlPct !== null && (
                   <span
-                    className={`shrink-0 text-[10px] ${
-                      isProfitable ? "text-green-400" : "text-red-400"
+                    className={`shrink-0 text-xs ${
+                      isProfitable ? "text-bullish" : "text-bearish"
                     }`}
                   >
                     ({trade.pnlPct >= 0 ? "+" : ""}

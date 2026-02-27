@@ -57,9 +57,9 @@
   /* Foreground / Text */
   --text-primary: #E8E8E8;
   --text-secondary: #A0A0A0;
-  --text-muted: #6B6B6B;
+  --text-muted: #7A7A7A;
   --text-tertiary: #808080;
-  --text-ghost: #404040;
+  --text-ghost: #666666;
 
   /* Borders */
   --border-default: #262626;
@@ -79,6 +79,36 @@
   /* Semantic: Neutral */
   --neutral-strong: #FBBF24;
   --neutral-muted: #92400E;
+
+  /* Accent colors (non-semantic) */
+  --accent-blue: #60A5FA;
+  --accent-blue-muted: #1E3A5F;
+  --accent-blue-subtle: #172554;
+  --accent-purple: #C084FC;
+  --accent-purple-muted: #581C87;
+  --accent-purple-subtle: #3B0764;
+  --accent-teal: #2DD4BF;
+  --accent-teal-muted: #115E59;
+  --accent-teal-subtle: #042F2E;
+  --accent-orange: #FB923C;
+  --accent-orange-muted: #9A3412;
+  --accent-orange-subtle: #7C2D12;
+  --accent-cyan: #22D3EE;
+  --accent-cyan-muted: #155E75;
+  --accent-cyan-subtle: #083344;
+  --accent-yellow: #FACC15;
+  --accent-yellow-muted: #854D0E;
+  --accent-yellow-subtle: #713F12;
+  --accent-zinc: #A1A1AA;
+  --accent-zinc-muted: #3F3F46;
+  --accent-zinc-subtle: #27272A;
+
+  /* Status indicators */
+  --status-connected: #22C55E;
+  --status-disconnected: #7A7A7A;
+
+  /* Badge colors */
+  --badge-danger: #EF4444;
 
   /* Spacing (4px base) */
   --space-1: 4px;

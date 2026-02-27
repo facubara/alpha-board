@@ -70,8 +70,8 @@ export function CopyTradeButton({ trade, exchangeEnabled }: Props) {
       <div
         className={`mt-1.5 rounded px-2.5 py-1.5 text-xs ${
           result.ok
-            ? "bg-green-500/10 text-green-400"
-            : "bg-red-500/10 text-red-400"
+            ? "bg-[var(--bullish-subtle)] text-bullish"
+            : "bg-[var(--bearish-subtle)] text-bearish"
         }`}
       >
         {result.message}
@@ -97,7 +97,7 @@ export function CopyTradeButton({ trade, exchangeEnabled }: Props) {
           <button
             onClick={handleExecute}
             disabled={executing}
-            className="rounded bg-green-600 px-3 py-1 text-[11px] font-medium text-white hover:bg-green-500 disabled:opacity-50"
+            className="rounded bg-[var(--bullish-muted)] px-3 py-1 text-[11px] font-medium text-white hover:bg-[var(--bullish-strong)] disabled:opacity-50"
           >
             {executing ? "Sending..." : "Confirm"}
           </button>

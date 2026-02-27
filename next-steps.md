@@ -1913,6 +1913,29 @@ Birdeye overage: Lite $23/1M CUs, Premium Plus $9.9/1M CUs, Business $6.9/1M CUs
 
 ---
 
+## 30. UX/UI Report — Day 1-3 Fixes (Hero, Contrast, Design System, Analytics Reframe) — `COMPLETED`
+
+**What:** Implemented the highest-ROI frontend fixes from the UX/UI team report — purely frontend changes across ~30 files in `web/`.
+
+**Why:** The UX/UI audit identified 40+ issues across 6 review agents. These Day 1-3 "stop the bleeding" fixes address the most critical trust-killers and design inconsistencies without requiring backend changes.
+
+**Implementation:**
+- **Phase 0 — CSS Foundation:** Added accent color variables (blue, purple, teal, orange, cyan, yellow, zinc with muted/subtle variants), status indicator variables, badge-danger. Fixed WCAG contrast: `--text-muted` to #7A7A7A (4.5:1 AA), `--text-ghost` to #666666 (3:1 minimum)
+- **Phase 1 — Day 1 fixes:**
+  - Added hero section to homepage with value prop headline and two CTAs ("Explore Agents" + "View Analytics")
+  - Replaced 6-variant logo switcher with static ASCII logo (removed client-side state, localStorage, RefreshCw)
+  - Fixed memecoins stats-bar: em-dash + subtitle for zero values, CSS variable status dots, "Offline" label
+  - Fixed tweets page: "Feed paused" for zero counts, replaced hardcoded sentiment colors with design system tokens
+- **Phase 2 — Day 2 fixes:**
+  - Reordered analytics summary cards: Total Trades and Win Rate first (instead of leading with negative PnL)
+  - Replaced bare disclaimer with informative context banner + "View top performers →" link
+  - Added backtest page subtitle
+- **Phase 3 — Design system enforcement:**
+  - Replaced all hardcoded Tailwind colors (~20+ files) with CSS variable equivalents (bullish/bearish/accent tokens)
+  - Replaced all `text-[10px]` with `text-xs` (~27 files, ~72 instances) for 12px minimum site-wide
+
+---
+
 ## Memecoins Section — UX Improvements — `COMPLETED`
 
 ### Always-Visible VIP/Delete Buttons + Confirmation — `COMPLETED`

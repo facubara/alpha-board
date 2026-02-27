@@ -18,10 +18,10 @@ import { MEMECOIN_CATEGORY_LABELS } from "@/lib/types";
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
 const CATEGORY_COLORS: Record<MemecoinCategory, string> = {
-  caller: "text-orange-400",
-  influencer: "text-purple-400",
-  degen: "text-red-400",
-  news: "text-yellow-400",
+  caller: "text-[var(--accent-orange)]",
+  influencer: "text-[var(--accent-purple)]",
+  degen: "text-bearish",
+  news: "text-[var(--accent-yellow)]",
 };
 
 interface MemecoinTweetSSEEvent {
@@ -69,7 +69,7 @@ export function MemecoinTweetFeed({ initialTweets }: MemecoinTweetFeedProps) {
           <h3 className="text-sm font-medium text-primary">Recent Tweets</h3>
           <span
             className={`inline-block h-2 w-2 rounded-full ${
-              isConnected ? "bg-green-500" : "bg-gray-500"
+              isConnected ? "bg-[var(--status-connected)]" : "bg-[var(--status-disconnected)]"
             }`}
           />
         </div>
@@ -124,9 +124,9 @@ export function MemecoinTweetFeed({ initialTweets }: MemecoinTweetFeedProps) {
 }
 
 const SENTIMENT_COLORS = {
-  bullish: "bg-green-500/15 text-green-400 border-green-500/30",
-  bearish: "bg-red-500/15 text-red-400 border-red-500/30",
-  neutral: "bg-gray-500/15 text-gray-400 border-gray-500/30",
+  bullish: "bg-[var(--bullish-subtle)] text-bullish border-[var(--bullish-subtle)]",
+  bearish: "bg-[var(--bearish-subtle)] text-bearish border-[var(--bearish-subtle)]",
+  neutral: "bg-[var(--accent-zinc-subtle)] text-secondary border-[var(--accent-zinc-subtle)]",
 } as const;
 
 const SETUP_LABELS: Record<TweetSetupType, string> = {
@@ -139,12 +139,12 @@ const SETUP_LABELS: Record<TweetSetupType, string> = {
 };
 
 const SETUP_COLORS: Record<TweetSetupType, string> = {
-  long_entry: "bg-green-500/15 text-green-400",
-  short_entry: "bg-red-500/15 text-red-400",
-  take_profit: "bg-yellow-500/15 text-yellow-400",
-  warning: "bg-orange-500/15 text-orange-400",
-  neutral: "bg-gray-500/15 text-gray-400",
-  informational: "bg-blue-500/15 text-blue-400",
+  long_entry: "bg-[var(--bullish-subtle)] text-bullish",
+  short_entry: "bg-[var(--bearish-subtle)] text-bearish",
+  take_profit: "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)]",
+  warning: "bg-[var(--accent-orange-subtle)] text-[var(--accent-orange)]",
+  neutral: "bg-[var(--accent-zinc-subtle)] text-secondary",
+  informational: "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]",
 };
 
 function getSentimentLabel(
@@ -183,12 +183,12 @@ function MemecoinTweetCard({ tweet }: { tweet: MemecoinTweetData }) {
           </span>
           <span className="text-xs text-muted">@{tweet.accountHandle}</span>
           <span
-            className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${categoryColor}`}
+            className={`rounded px-1.5 py-0.5 text-xs font-medium ${categoryColor}`}
           >
             {MEMECOIN_CATEGORY_LABELS[tweet.accountCategory]}
           </span>
           {tweet.isVip && (
-            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+            <Star className="h-3 w-3 fill-[var(--accent-yellow)] text-[var(--accent-yellow)]" />
           )}
         </div>
 
@@ -240,7 +240,7 @@ function MemecoinTweetCard({ tweet }: { tweet: MemecoinTweetData }) {
         {/* Token Matches */}
         {tokenMatches.length > 0 && (
           <div className="mt-2.5 space-y-1.5">
-            <div className="text-[10px] font-medium text-muted uppercase tracking-wide">
+            <div className="text-xs font-medium text-muted uppercase tracking-wide">
               Token Matches
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -254,7 +254,7 @@ function MemecoinTweetCard({ tweet }: { tweet: MemecoinTweetData }) {
         {/* AI Analysis section */}
         {signal ? (
           <div className="mt-2.5 rounded border border-[var(--border-default)] bg-[var(--bg-elevated)] px-3 py-2.5">
-            <div className="flex items-center gap-1.5 text-[10px] font-medium text-muted uppercase tracking-wide mb-2">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-muted uppercase tracking-wide mb-2">
               AI Analysis
             </div>
 
@@ -276,18 +276,18 @@ function MemecoinTweetCard({ tweet }: { tweet: MemecoinTweetData }) {
                 </span>
               )}
 
-              <span className="text-[10px] text-muted ml-auto">
+              <span className="text-xs text-muted ml-auto">
                 conf {(signal.confidence * 100).toFixed(0)}%
               </span>
             </div>
 
             {signal.symbolsMentioned && signal.symbolsMentioned.length > 0 && (
               <div className="flex items-center gap-1.5 mt-1">
-                <span className="text-[10px] text-muted">Symbols:</span>
+                <span className="text-xs text-muted">Symbols:</span>
                 {signal.symbolsMentioned.map((sym) => (
                   <span
                     key={sym}
-                    className="rounded bg-[var(--bg-surface)] px-1.5 py-0.5 text-[10px] font-mono font-medium text-secondary"
+                    className="rounded bg-[var(--bg-surface)] px-1.5 py-0.5 text-xs font-mono font-medium text-secondary"
                   >
                     {sym}
                   </span>
@@ -299,7 +299,7 @@ function MemecoinTweetCard({ tweet }: { tweet: MemecoinTweetData }) {
               <div className="mt-1.5">
                 <button
                   onClick={() => setShowReasoning(!showReasoning)}
-                  className="text-[10px] text-blue-400 hover:text-blue-300 transition-colors-fast"
+                  className="text-xs text-[var(--accent-blue)] hover:text-[var(--accent-blue)] transition-colors-fast"
                 >
                   {showReasoning ? "Hide reasoning" : "Show reasoning"}
                 </button>
@@ -312,7 +312,7 @@ function MemecoinTweetCard({ tweet }: { tweet: MemecoinTweetData }) {
             )}
           </div>
         ) : (
-          <div className="mt-2.5 rounded border border-dashed border-[var(--border-default)] px-3 py-2 text-[10px] text-muted">
+          <div className="mt-2.5 rounded border border-dashed border-[var(--border-default)] px-3 py-2 text-xs text-muted">
             Pending analysis...
           </div>
         )}

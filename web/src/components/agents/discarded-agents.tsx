@@ -176,16 +176,16 @@ export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
                       </span>
                       <span
                         className={cn(
-                          "rounded px-1 py-0.5 font-mono text-[10px] font-semibold leading-none",
+                          "rounded px-1 py-0.5 font-mono text-xs font-semibold leading-none",
                           agent.source === "technical" && "bg-[var(--bg-muted)] text-secondary",
-                          agent.source === "tweet" && "bg-blue-500/10 text-blue-400",
-                          agent.source === "hybrid" && "bg-purple-500/10 text-purple-400"
+                          agent.source === "tweet" && "bg-[var(--accent-teal)]/10 text-[var(--accent-teal)]",
+                          agent.source === "hybrid" && "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)]"
                         )}
                       >
                         {SOURCE_BADGE[agent.source]}
                       </span>
                       {agent.engine === "rule" && (
-                        <span className="rounded bg-[var(--bg-muted)] px-1 py-0.5 font-mono text-[10px] font-semibold leading-none text-muted">
+                        <span className="rounded bg-[var(--bg-muted)] px-1 py-0.5 font-mono text-xs font-semibold leading-none text-muted">
                           RULE
                         </span>
                       )}

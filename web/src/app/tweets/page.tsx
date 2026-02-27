@@ -30,10 +30,10 @@ export default async function TweetsPage() {
   const { signalStats } = stats;
   const sentimentColor =
     signalStats.avgSentiment > 0.2
-      ? "text-green-400"
+      ? "text-bullish"
       : signalStats.avgSentiment < -0.2
-        ? "text-red-400"
-        : "text-gray-400";
+        ? "text-bearish"
+        : "text-secondary";
 
   return (
     <div className="space-y-6">
@@ -41,7 +41,7 @@ export default async function TweetsPage() {
       <div>
         <h1 className="text-xl font-semibold text-primary">Twitter Feed</h1>
         <p className="mt-1 text-sm text-secondary">
-          Tracking {stats.accounts} accounts &middot; {stats.totalTweets} tweets ingested &middot; {stats.last24h} in last 24h
+          Tracking {stats.accounts} accounts &middot; {stats.totalTweets} tweets ingested &middot; {stats.last24h > 0 ? `${stats.last24h} in last 24h` : "Feed paused"}
         </p>
       </div>
 

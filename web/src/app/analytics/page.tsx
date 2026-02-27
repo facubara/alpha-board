@@ -5,6 +5,7 @@
  * and passes to the client-side tabbed dashboard.
  */
 
+import Link from "next/link";
 import {
   getAnalyticsSummary,
   getArchetypeStats,
@@ -59,9 +60,17 @@ export default async function AnalyticsPage() {
         </p>
       </div>
 
-      {/* Disclaimer */}
-      <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2 text-xs text-muted">
-        SIMULATED TRADING — All balances and trades are virtual. Not financial advice.
+      {/* Context banner */}
+      <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
+        <p className="text-sm text-secondary">
+          Fleet overview — aggregate stats across all agents, including experimental strategies. Individual performance varies.{" "}
+          <Link href="/agents" className="text-[var(--accent-blue)] hover:underline">
+            View top performers &rarr;
+          </Link>
+        </p>
+        <p className="mt-1 text-xs text-muted">
+          SIMULATED TRADING — All balances and trades are virtual. Not financial advice.
+        </p>
       </div>
 
       {/* Dashboard */}

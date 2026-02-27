@@ -70,7 +70,7 @@ export function WalletActivityFeed({ initialActivity }: WalletActivityFeedProps)
         <h3 className="text-sm font-medium text-primary">Live Activity</h3>
         <span
           className={`inline-block h-2 w-2 rounded-full ${
-            isConnected ? "bg-green-500" : "bg-gray-500"
+            isConnected ? "bg-[var(--status-connected)]" : "bg-[var(--status-disconnected)]"
           }`}
         />
       </div>
@@ -91,7 +91,7 @@ export function WalletActivityFeed({ initialActivity }: WalletActivityFeedProps)
               </span>
               <span
                 className={`font-semibold ${
-                  item.direction === "buy" ? "text-green-400" : "text-red-400"
+                  item.direction === "buy" ? "text-bullish" : "text-bearish"
                 }`}
               >
                 {item.direction === "buy" ? "bought" : "sold"}
@@ -110,7 +110,7 @@ export function WalletActivityFeed({ initialActivity }: WalletActivityFeedProps)
                 href={`https://solscan.io/tx/${item.txSignature}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-400 hover:text-blue-300"
+                className="text-[var(--accent-blue)] hover:text-[var(--accent-blue)]"
                 onClick={(e) => e.stopPropagation()}
               >
                 tx

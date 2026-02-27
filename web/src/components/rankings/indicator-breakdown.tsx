@@ -121,7 +121,7 @@ export function IndicatorBreakdown({
               <Badge
                 variant="secondary"
                 className={cn(
-                  "ml-2 text-[10px] uppercase sm:hidden",
+                  "ml-2 text-xs uppercase sm:hidden",
                   getBadgeStyles(indicator.label)
                 )}
               >
@@ -176,7 +176,7 @@ export function IndicatorBreakdown({
             <Badge
               variant="secondary"
               className={cn(
-                "hidden w-fit text-[10px] uppercase sm:inline-flex",
+                "hidden w-fit text-xs uppercase sm:inline-flex",
                 getBadgeStyles(indicator.label)
               )}
             >

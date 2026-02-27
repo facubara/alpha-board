@@ -258,7 +258,7 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
               className="h-[3px] w-[10px] rounded-sm"
               style={{ backgroundColor: ARCHETYPE_COLORS[arch] ?? "#888" }}
             />
-            <span className="text-[10px] text-secondary">
+            <span className="text-xs text-secondary">
               {ARCHETYPE_LABELS[arch] ?? arch}
             </span>
           </div>
