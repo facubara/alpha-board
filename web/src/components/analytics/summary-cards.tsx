@@ -25,11 +25,13 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
       label: "Total Trades",
       value: String(summary.totalTrades),
       color: "text-primary",
+      size: "text-lg" as const,
     },
     {
       label: "Win Rate",
       value: summary.totalTrades > 0 ? `${(winRate * 100).toFixed(1)}%` : "—",
       color: "text-primary",
+      size: "text-lg" as const,
     },
     {
       label: "Total PnL",
@@ -40,6 +42,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           : summary.totalPnl < 0
             ? "text-bearish"
             : "text-secondary",
+      size: "text-base" as const,
     },
     {
       label: "Return %",
@@ -50,6 +53,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           : returnPct < 0
             ? "text-bearish"
             : "text-secondary",
+      size: "text-base" as const,
     },
     {
       label: "Max Drawdown",
@@ -58,11 +62,13 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           ? `${summary.maxDrawdownPct.toFixed(2)}%`
           : "0.00%",
       color: summary.maxDrawdownPct < 0 ? "text-bearish" : "text-secondary",
+      size: "text-base" as const,
     },
     {
       label: "Token Cost",
       value: `$${summary.totalTokenCost.toFixed(2)}`,
       color: "text-muted",
+      size: "text-base" as const,
     },
   ];
 
@@ -76,7 +82,8 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           <p className="text-xs text-muted">{m.label}</p>
           <p
             className={cn(
-              "font-mono text-lg font-semibold",
+              "font-mono font-semibold",
+              m.size,
               m.color
             )}
           >

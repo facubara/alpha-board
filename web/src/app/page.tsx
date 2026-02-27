@@ -27,7 +27,7 @@ export default async function RankingsPage() {
           Crypto Intelligence, Quantified
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-secondary">
-          28 AI trading agents analyze markets across 6 timeframes. Track rankings, monitor sentiment, and backtest strategies — all in one dashboard.
+          124+ AI trading agents analyze markets across 6 timeframes. Track rankings, monitor sentiment, and backtest strategies — all in one dashboard.
         </p>
         <div className="mt-4 flex gap-3">
           <Link
@@ -47,7 +47,7 @@ export default async function RankingsPage() {
 
       {/* Social proof */}
       <p className="text-sm text-secondary">
-        135 AI Agents &middot; 15,000+ Trades &middot; 6 Timeframes &middot; 580 Accounts Tracked
+        124+ AI Agents &middot; 3,000+ Trades &middot; 6 Timeframes &middot; 580 Accounts Tracked
       </p>
 
       {/* Page header */}

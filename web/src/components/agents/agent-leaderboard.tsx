@@ -8,7 +8,7 @@
  * uPnL is calculated client-side from Binance prices + open positions.
  */
 
-import { useState, useMemo, useCallback, useReducer } from "react";
+import { useState, useMemo, useCallback, useReducer, useEffect } from "react";
 import { ChevronUp, ChevronDown, GitCompareArrows } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,7 @@ import type {
   SymbolAgentActivity,
 } from "@/lib/types";
 import { AgentRow } from "./agent-row";
+import { TablePagination } from "@/components/ui/table-pagination";
 
 type SortField =
   | "name"
@@ -202,6 +203,9 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
     return ids;
   }, [filters.symbolSearch, symbolActivity, symbolLoading]);
 
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(25);
+
   const [pauseModalOpen, setPauseModalOpen] = useState(false);
   const { requireAuth } = useAuth();
 
@@ -261,6 +265,17 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
 
     return result;
   }, [agentsData, filters.timeframe, filters.archetype, filters.engine, filters.source, symbolAgentIds, filters.sortField, filters.sortDirection]);
+
+  // Reset page on filter/sort changes
+  useEffect(() => { setPage(0); }, [
+    filters.timeframe, filters.archetype, filters.engine, filters.source,
+    filters.sortField, filters.sortDirection, symbolAgentIds,
+  ]);
+
+  const paginatedRows = useMemo(() => {
+    if (pageSize >= filtered.length) return filtered;
+    return filtered.slice(page * pageSize, (page + 1) * pageSize);
+  }, [filtered, page, pageSize]);
 
   const handleSort = (field: SortField) => {
     dispatch({ type: "TOGGLE_SORT", field });
@@ -402,7 +417,7 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((agent) => (
+              {paginatedRows.map((agent) => (
                 <AgentRow
                   key={agent.id}
                   agent={agent}
@@ -415,6 +430,18 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
             </TableBody>
           </Table>
         </div>
+      )}
+
+      {/* Pagination */}
+      {filtered.length > 0 && (
+        <TablePagination
+          page={page}
+          pageSize={pageSize}
+          totalItems={filtered.length}
+          pageSizeOptions={[25, 50, 100]}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
       )}
 
       {/* Floating compare bar */}

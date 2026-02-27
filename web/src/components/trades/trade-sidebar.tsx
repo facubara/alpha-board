@@ -1,12 +1,22 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { X } from "lucide-react";
 import { useTradeNotifications } from "./trade-notification-provider";
 import { TradeItem } from "./trade-item";
 
+const TRADES_PER_PAGE = 50;
+
 export function TradeSidebar() {
   const { trades, sidebarOpen, toggleSidebar, markAllRead, exchangeEnabled } =
     useTradeNotifications();
+  const [visibleCount, setVisibleCount] = useState(TRADES_PER_PAGE);
+
+  const visibleTrades = useMemo(
+    () => trades.slice(0, visibleCount),
+    [trades, visibleCount]
+  );
+  const hasMore = trades.length > visibleCount;
 
   return (
     <>
@@ -62,13 +72,23 @@ export function TradeSidebar() {
               No trades yet
             </div>
           ) : (
-            trades.map((trade) => (
-              <TradeItem
-                key={trade.id}
-                trade={trade}
-                exchangeEnabled={exchangeEnabled}
-              />
-            ))
+            <>
+              {visibleTrades.map((trade) => (
+                <TradeItem
+                  key={trade.id}
+                  trade={trade}
+                  exchangeEnabled={exchangeEnabled}
+                />
+              ))}
+              {hasMore && (
+                <button
+                  onClick={() => setVisibleCount((c) => c + TRADES_PER_PAGE)}
+                  className="w-full border-t border-[var(--border-default)] py-2.5 text-xs font-medium text-secondary transition-colors hover:bg-[var(--bg-elevated)] hover:text-primary"
+                >
+                  Show more ({trades.length - visibleCount} remaining)
+                </button>
+              )}
+            </>
           )}
         </div>
       </aside>

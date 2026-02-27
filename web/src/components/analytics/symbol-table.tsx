@@ -4,8 +4,9 @@
  * SymbolTable — Per-symbol statistics with client-side sortable columns.
  */
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { TablePagination } from "@/components/ui/table-pagination";
 import {
   Table,
   TableBody,
@@ -25,6 +26,8 @@ interface SymbolTableProps {
 export function SymbolTable({ data }: SymbolTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>("tradeCount");
   const [sortAsc, setSortAsc] = useState(false);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(25);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -35,11 +38,19 @@ export function SymbolTable({ data }: SymbolTableProps) {
     }
   };
 
+  // Reset page on sort change
+  useEffect(() => { setPage(0); }, [sortKey, sortAsc]);
+
   const sorted = [...data].sort((a, b) => {
     const dir = sortAsc ? 1 : -1;
     if (sortKey === "symbol") return dir * a.symbol.localeCompare(b.symbol);
     return dir * (a[sortKey] - b[sortKey]);
   });
+
+  const paginatedRows = useMemo(() => {
+    if (pageSize >= sorted.length) return sorted;
+    return sorted.slice(page * pageSize, (page + 1) * pageSize);
+  }, [sorted, page, pageSize]);
 
   const arrow = (key: SortKey) =>
     sortKey === key ? (sortAsc ? " \u2191" : " \u2193") : "";
@@ -96,7 +107,7 @@ export function SymbolTable({ data }: SymbolTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sorted.map((s) => (
+          {paginatedRows.map((s) => (
             <TableRow key={s.symbol} className="h-10 hover:bg-[var(--bg-elevated)]">
               <TableCell className="font-mono text-sm font-semibold text-primary">
                 {s.symbol}
@@ -134,6 +145,18 @@ export function SymbolTable({ data }: SymbolTableProps) {
           ))}
         </TableBody>
       </Table>
+
+      {/* Pagination */}
+      {sorted.length > 0 && (
+        <TablePagination
+          page={page}
+          pageSize={pageSize}
+          totalItems={sorted.length}
+          pageSizeOptions={[25, 50, 100]}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
+      )}
     </div>
   );
 }

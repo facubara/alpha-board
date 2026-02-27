@@ -47,11 +47,11 @@ export function StatsBar({ stats }: StatsBarProps) {
       </div>
       <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="text-xs text-muted">Tweets Today</div>
-        <StatValue value={stats.tweetsToday} subtitle="No tweets yet" />
+        <StatValue value={stats.tweetsToday} subtitle="Feed paused" />
       </div>
       <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="text-xs text-muted">Token Matches</div>
-        <StatValue value={stats.tokenMatchesToday} subtitle="No matches yet" />
+        <StatValue value={stats.tokenMatchesToday} subtitle="Awaiting signals" />
       </div>
       <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="text-xs text-muted">Live Feed</div>

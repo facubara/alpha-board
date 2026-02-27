@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useState } from "react";
+import { useTransition, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { launchBacktest } from "@/app/backtest/actions";
 import { useAuth } from "@/components/auth/auth-provider";
@@ -43,11 +43,17 @@ export function NewBacktestForm() {
   }
 
   // Default dates: last 30 days
-  const today = new Date();
-  const thirtyDaysAgo = new Date(today);
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const defaultStart = thirtyDaysAgo.toISOString().split("T")[0];
-  const defaultEnd = today.toISOString().split("T")[0];
+  // Initialize on mount only (useEffect) to avoid hydration mismatch from new Date()
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  useEffect(() => {
+    const now = new Date();
+    const ago = new Date(now);
+    ago.setDate(ago.getDate() - 30);
+    setStartDate(ago.toISOString().split("T")[0]);
+    setEndDate(now.toISOString().split("T")[0]);
+  }, []);
 
   return (
     <form
@@ -119,7 +125,8 @@ export function NewBacktestForm() {
             type="date"
             name="startDate"
             required
-            defaultValue={defaultStart}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
             className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 text-sm text-primary"
           />
         </div>
@@ -132,7 +139,8 @@ export function NewBacktestForm() {
             type="date"
             name="endDate"
             required
-            defaultValue={defaultEnd}
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
             className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 text-sm text-primary"
           />
         </div>

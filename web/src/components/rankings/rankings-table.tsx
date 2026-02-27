@@ -12,7 +12,7 @@
  * - Sort by rank, score, confidence, symbol
  */
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Search, ChevronUp, ChevronDown } from "lucide-react";
 import { useSSE } from "@/hooks/use-sse";
 import { cn } from "@/lib/utils";
@@ -32,6 +32,7 @@ import { RankingRow } from "./ranking-row";
 import { CandleCountdown } from "./candle-countdown";
 import { formatRelativeTime } from "@/lib/utils";
 import { useTradeNotifications } from "@/components/trades/trade-notification-provider";
+import { TablePagination } from "@/components/ui/table-pagination";
 
 type SortField = "rank" | "symbol" | "score" | "confidence" | "priceChange" | "volumeChange" | "priceChangeAbs" | "volumeChangeAbs" | "fundingRate";
 type SortDirection = "asc" | "desc";
@@ -65,6 +66,8 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState<SortField>("rank");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(50);
 
   // react-doctor: intentional — local mutation of server-fetched initial data
   const [rankingsData, setRankingsData] = useState<AllTimeframeRankings>(data);
@@ -145,6 +148,15 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
 
     return result;
   }, [snapshots, search, sortField, sortDirection]);
+
+  // Reset page when filters/sort/timeframe change
+  useEffect(() => { setPage(0); }, [search, sortField, sortDirection, timeframe]);
+
+  // Paginated slice
+  const paginatedRows = useMemo(() => {
+    if (pageSize >= filteredAndSorted.length) return filteredAndSorted;
+    return filteredAndSorted.slice(page * pageSize, (page + 1) * pageSize);
+  }, [filteredAndSorted, page, pageSize]);
 
   // Handle column header click for sorting
   const handleSort = (field: SortField) => {
@@ -342,12 +354,24 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAndSorted.map((snapshot) => (
+                {paginatedRows.map((snapshot) => (
                   <RankingRow key={snapshot.id} snapshot={snapshot} highlighted={highlightedSymbols.has(snapshot.symbol)} />
                 ))}
               </TableBody>
             </Table>
           </div>
+        )}
+
+        {/* Pagination */}
+        {filteredAndSorted.length > 0 && (
+          <TablePagination
+            page={page}
+            pageSize={pageSize}
+            totalItems={filteredAndSorted.length}
+            pageSizeOptions={[25, 50, 100]}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+          />
         )}
       </div>
     </div>
