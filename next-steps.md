@@ -1936,6 +1936,20 @@ Birdeye overage: Lite $23/1M CUs, Premium Plus $9.9/1M CUs, Business $6.9/1M CUs
 
 ---
 
+## 31. UX/UI Report — Day 4-7 Fixes (Conversion, Accessibility, Curation, Polish) — `COMPLETED`
+
+**What:** Implemented the remaining frontend fixes from the UX/UI team report — Day 4-7 items covering conversion infrastructure, accessibility, curation/narrative, and polish across ~20 files in `web/`.
+
+**Why:** Completes the UX/UI audit implementation. Day 4-7 items improve accessibility (WCAG keyboard navigation, skip link, ARIA), add conversion-supporting elements (social proof, footer), and polish page consistency (H1 sizing, subtitles, section separators).
+
+**Implementation:**
+- **Phase 1 — Conversion:** Social proof stats bar on homepage, Login → Sign In rename
+- **Phase 2 — Accessibility:** Skip-to-content link, scope="col" on table headers, keyboard-accessible table sorting (tabIndex + Enter/Space), ARIA labels on trade sidebar/charts, mobile nav close-on-Escape + backdrop overlay
+- **Phase 3 — Curation:** Agent type legend (collapsible details) on /agents, page subtitles for memecoins/settings/status/updates. Jargon tooltips already existed in highlight-chip.tsx.
+- **Phase 4 — Polish:** Upgraded all H1s to text-2xl font-bold tracking-tight, footer component with risk disclaimer + copyright, section separators on agents and analytics pages
+
+---
+
 ## Memecoins Section — UX Improvements — `COMPLETED`
 
 ### Always-Visible VIP/Delete Buttons + Confirmation — `COMPLETED`
