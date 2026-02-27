@@ -14,6 +14,8 @@ import type {
   MemecoinTokenMatch,
   MemecoinStats,
   TrendingToken,
+  TrackedToken,
+  TokenSnapshot,
   TokenMention,
   AccountCallHistoryItem,
   TweetSetupType,
@@ -406,6 +408,7 @@ export async function getAccountCallHistory(
 }
 
 /**
+<<<<<<< HEAD
  * Fetch recent token analyses.
  */
 export async function getTokenAnalyses(): Promise<TokenAnalysis[]> {
@@ -414,11 +417,22 @@ export async function getTokenAnalyses(): Promise<TokenAnalysis[]> {
     FROM token_analyses
     ORDER BY requested_at DESC
     LIMIT 20
+=======
+ * Fetch all active tracked tokens from token_tracker.
+ */
+export async function getTrackedTokens(): Promise<TrackedToken[]> {
+  const rows = await sql`
+    SELECT *
+    FROM token_tracker
+    WHERE is_active = true
+    ORDER BY added_at DESC
+>>>>>>> remotes/origin/master
   `;
 
   return rows.map((row) => ({
     id: Number(row.id),
     mintAddress: row.mint_address as string,
+<<<<<<< HEAD
     tokenSymbol: (row.token_symbol as string) || null,
     tokenName: (row.token_name as string) || null,
     marketCapUsd: row.market_cap_usd != null ? Number(row.market_cap_usd) : null,
@@ -428,10 +442,30 @@ export async function getTokenAnalyses(): Promise<TokenAnalysis[]> {
     errorMessage: (row.error_message as string) || null,
     requestedAt: (row.requested_at as Date).toISOString(),
     completedAt: row.completed_at ? (row.completed_at as Date).toISOString() : null,
+=======
+    symbol: (row.symbol as string) || null,
+    name: (row.name as string) || null,
+    source: row.source as "twitter" | "manual",
+    refreshIntervalMinutes: Number(row.refresh_interval_minutes),
+    isActive: row.is_active as boolean,
+    latestHolders: row.latest_holders != null ? Number(row.latest_holders) : null,
+    latestPriceUsd: row.latest_price_usd != null ? Number(row.latest_price_usd) : null,
+    latestVolume24hUsd:
+      row.latest_volume_24h_usd != null ? Number(row.latest_volume_24h_usd) : null,
+    latestMcapUsd:
+      row.latest_mcap_usd != null ? Number(row.latest_mcap_usd) : null,
+    latestLiquidityUsd:
+      row.latest_liquidity_usd != null ? Number(row.latest_liquidity_usd) : null,
+    lastRefreshedAt: row.last_refreshed_at
+      ? (row.last_refreshed_at as Date).toISOString()
+      : null,
+    addedAt: (row.added_at as Date).toISOString(),
+>>>>>>> remotes/origin/master
   }));
 }
 
 /**
+<<<<<<< HEAD
  * Fetch recent cross-reference checks.
  */
 export async function getCrossReferenceChecks(): Promise<CrossReferenceCheckSummary[]> {
@@ -452,4 +486,42 @@ export async function getCrossReferenceChecks(): Promise<CrossReferenceCheckSumm
     topMatchScore: row.top_match_score != null ? Number(row.top_match_score) : null,
     checkedAt: (row.checked_at as Date).toISOString(),
   }));
+=======
+ * Batch fetch snapshots for multiple tokens (for sparklines).
+ * Returns a Map from token_id to snapshots.
+ */
+export async function getBatchTokenSnapshots(
+  tokenIds: number[]
+): Promise<Map<number, TokenSnapshot[]>> {
+  if (tokenIds.length === 0) return new Map();
+
+  const rows = await sql`
+    SELECT id, token_id, holders, price_usd, volume_24h_usd, mcap_usd, snapshot_at
+    FROM token_tracker_snapshots
+    WHERE token_id = ANY(${tokenIds})
+      AND snapshot_at > NOW() - INTERVAL '7 days'
+    ORDER BY token_id, snapshot_at ASC
+  `;
+
+  const map = new Map<number, TokenSnapshot[]>();
+  for (const row of rows) {
+    const tokenId = Number(row.token_id);
+    const snapshot: TokenSnapshot = {
+      id: Number(row.id),
+      holders: row.holders != null ? Number(row.holders) : null,
+      priceUsd: row.price_usd != null ? Number(row.price_usd) : null,
+      volume24hUsd:
+        row.volume_24h_usd != null ? Number(row.volume_24h_usd) : null,
+      mcapUsd: row.mcap_usd != null ? Number(row.mcap_usd) : null,
+      snapshotAt: (row.snapshot_at as Date).toISOString(),
+    };
+
+    if (!map.has(tokenId)) {
+      map.set(tokenId, []);
+    }
+    map.get(tokenId)!.push(snapshot);
+  }
+
+  return map;
+>>>>>>> remotes/origin/master
 }

@@ -945,6 +945,7 @@ class MemecoinTweetSignal(Base):
     )
 
 
+<<<<<<< HEAD
 class TokenAnalysis(Base):
     """Tracks each token analysis job (async, resumable)."""
 
@@ -992,10 +993,39 @@ class AnalyzedWallet(Base):
     tags: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
     last_enriched_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
     created_at: Mapped[datetime] = mapped_column(
+=======
+# =============================================================================
+# Token Tracker Tables
+# =============================================================================
+
+
+class TokenTracker(Base):
+    """Watchlist of tokens being actively tracked with real-time market data."""
+
+    __tablename__ = "token_tracker"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    mint_address: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    symbol: Mapped[str | None] = mapped_column(String(20))
+    name: Mapped[str | None] = mapped_column(String(200))
+    source: Mapped[str] = mapped_column(String(10), nullable=False, server_default="manual")
+    refresh_interval_minutes: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default="15"
+    )
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="true")
+    latest_holders: Mapped[int | None] = mapped_column(Integer)
+    latest_price_usd: Mapped[Decimal | None] = mapped_column(Numeric(30, 18))
+    latest_volume_24h_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
+    latest_mcap_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
+    latest_liquidity_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
+    last_refreshed_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True))
+    added_at: Mapped[datetime] = mapped_column(
+>>>>>>> remotes/origin/master
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
 
     # Relationships
+<<<<<<< HEAD
     token_entries: Mapped[list["WalletTokenEntry"]] = relationship(back_populates="wallet")
 
     __table_args__ = (
@@ -1051,4 +1081,39 @@ class CrossReferenceCheck(Base):
 
     __table_args__ = (
         Index("idx_xref_checks_time", checked_at.desc()),
+=======
+    snapshots: Mapped[list["TokenTrackerSnapshot"]] = relationship(
+        back_populates="token", cascade="all, delete-orphan"
+    )
+
+    __table_args__ = (
+        Index("idx_token_tracker_mint", "mint_address"),
+        Index("idx_token_tracker_source", "source"),
+        Index("idx_token_tracker_active_refresh", "is_active", "last_refreshed_at"),
+    )
+
+
+class TokenTrackerSnapshot(Base):
+    """Time-series snapshots for charting (7-day retention)."""
+
+    __tablename__ = "token_tracker_snapshots"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    token_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("token_tracker.id", ondelete="CASCADE"), nullable=False
+    )
+    holders: Mapped[int | None] = mapped_column(Integer)
+    price_usd: Mapped[Decimal | None] = mapped_column(Numeric(30, 18))
+    volume_24h_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
+    mcap_usd: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
+    snapshot_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    # Relationships
+    token: Mapped["TokenTracker"] = relationship(back_populates="snapshots")
+
+    __table_args__ = (
+        Index("idx_token_snapshots_token_time", "token_id", snapshot_at.desc()),
+>>>>>>> remotes/origin/master
     )

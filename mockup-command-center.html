@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>Memecoins Command Center — v1</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: #0a0a0a;
+    color: #e4e4e7;
+    width: 1440px;
+    min-height: 900px;
+    overflow-x: hidden;
+  }
+  .mono { font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace; }
+
+  /* ── Nav Bar ── */
+  .navbar {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 24px;
+    background: #111113;
+    border-bottom: 1px solid #1e1e22;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 8px;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 15px;
+    color: #e4e4e7;
+    margin-right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-icon {
+    width: 22px;
+    height: 22px;
+    background: #3b82f6;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: white;
+  }
+  .nav-tabs { display: flex; gap: 2px; }
+  .nav-tab {
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #a1a1aa;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .nav-tab:hover { color: #e4e4e7; background: #18181b; }
+  .nav-tab.active {
+    color: #e4e4e7;
+    background: #1e1e22;
+    font-weight: 500;
+  }
+
+  /* ── Page Header ── */
+  .page-header {
+    padding: 20px 24px 0;
+  }
+  .page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #e4e4e7;
+  }
+  .page-subtitle {
+    font-size: 13px;
+    color: #52525b;
+    margin-top: 4px;
+  }
+
+  /* ── Stats Bar ── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 16px 24px;
+  }
+  .stat-card {
+    background: #111113;
+    border: 1px solid #1e1e22;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: #52525b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+  .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e4e4e7;
+    margin-top: 4px;
+  }
+  .stat-change {
+    font-size: 11px;
+    color: #52525b;
+    margin-top: 2px;
+  }
+  .stat-change.up { color: #22c55e; }
+
+  /* ── Two Column Layout ── */
+  .columns {
+    display: flex;
+    padding: 0 24px;
+    gap: 0;
+    height: calc(100vh - 48px - 60px - 88px);
+    min-height: 600px;
+  }
+  .col-left {
+    flex: 0 0 60%;
+    overflow-y: auto;
+    padding-right: 16px;
+    border-right: 1px solid #1e1e22;
+  }
+  .col-right {
+    flex: 0 0 40%;
+    overflow-y: auto;
+    padding-left: 16px;
+    height: 100%;
+  }
+  /* Custom scrollbar */
+  .col-right::-webkit-scrollbar, .col-left::-webkit-scrollbar {
+    width: 4px;
+  }
+  .col-right::-webkit-scrollbar-track, .col-left::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .col-right::-webkit-scrollbar-thumb, .col-left::-webkit-scrollbar-thumb {
+    background: #1e1e22;
+    border-radius: 4px;
+  }
+
+  /* ── Section Cards ── */
+  .section {
+    background: #111113;
+    border: 1px solid #1e1e22;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid #1e1e22;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e4e4e7;
+  }
+  .section-count {
+    font-size: 11px;
+    color: #52525b;
+    background: #18181b;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+  }
+
+  /* ── Add Token Bar ── */
+  .add-bar {
+    display: flex;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #1e1e22;
+    align-items: center;
+  }
+  .add-input {
+    flex: 1;
+    height: 32px;
+    background: #0a0a0a;
+    border: 1px solid #1e1e22;
+    border-radius: 6px;
+    padding: 0 10px;
+    font-size: 12px;
+    color: #a1a1aa;
+    font-family: 'SF Mono', 'Consolas', monospace;
+  }
+  .add-select {
+    height: 32px;
+    background: #0a0a0a;
+    border: 1px solid #1e1e22;
+    border-radius: 6px;
+    padding: 0 10px;
+    font-size: 12px;
+    color: #a1a1aa;
+    min-width: 80px;
+  }
+  .btn-add {
+    height: 32px;
+    padding: 0 14px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: #52525b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 1px solid #1e1e22;
+    white-space: nowrap;
+  }
+  td {
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #a1a1aa;
+    border-bottom: 1px solid #0f0f11;
+    vertical-align: middle;
+  }
+  tr:hover td { background: #0d0d0f; }
+  .token-name {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .token-symbol {
+    font-weight: 600;
+    color: #e4e4e7;
+    font-size: 12px;
+  }
+  .token-full {
+    font-size: 10px;
+    color: #52525b;
+  }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-twitter { background: #1d4ed820; color: #60a5fa; border: 1px solid #1d4ed830; }
+  .badge-manual { background: #27272a; color: #71717a; border: 1px solid #3f3f46; }
+  .badge-mentions { background: #3b82f620; color: #60a5fa; border: 1px solid #3b82f630; }
+  .badge-caller { background: #f9731620; color: #fb923c; border: 1px solid #f9731630; }
+  .badge-influencer { background: #a855f720; color: #c084fc; border: 1px solid #a855f730; }
+  .badge-degen { background: #ef444420; color: #f87171; border: 1px solid #ef444430; }
+  .badge-news { background: #eab30820; color: #fbbf24; border: 1px solid #eab30830; }
+  .badge-token { background: #3b82f615; color: #60a5fa; border: 1px solid #3b82f625; padding: 1px 6px; font-size: 10px; }
+
+  /* ── Mini Sparkline ── */
+  .sparkline {
+    display: inline-block;
+    width: 40px;
+    height: 16px;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+  .sparkline svg { width: 100%; height: 100%; }
+
+  /* ── Actions ── */
+  .action-link {
+    color: #3b82f6;
+    font-size: 11px;
+    text-decoration: none;
+    margin-right: 8px;
+  }
+  .action-delete {
+    color: #52525b;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .action-delete:hover { color: #ef4444; }
+
+  /* ── Tabs ── */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #1e1e22;
+  }
+  .tab {
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #52525b;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+  }
+  .tab.active {
+    color: #e4e4e7;
+    border-bottom-color: #3b82f6;
+  }
+
+  /* ── Empty State ── */
+  .empty-state {
+    padding: 32px;
+    text-align: center;
+    color: #52525b;
+    font-size: 13px;
+  }
+  .empty-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    opacity: 0.4;
+  }
+
+  /* ── Filter Pills ── */
+  .filter-pills {
+    display: flex;
+    gap: 6px;
+    padding: 10px 0;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    color: #a1a1aa;
+    background: #18181b;
+    border: 1px solid #1e1e22;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .pill.active {
+    background: #3b82f620;
+    color: #60a5fa;
+    border-color: #3b82f640;
+  }
+
+  /* ── Tweet Cards ── */
+  .tweet-card {
+    background: #111113;
+    border: 1px solid #1e1e22;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+  .tweet-card:hover { border-color: #2a2a2e; }
+  .tweet-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .tweet-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #18181b;
+    border: 1px solid #1e1e22;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #52525b;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .tweet-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+  }
+  .tweet-handle {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e4e4e7;
+  }
+  .tweet-vip {
+    color: #eab308;
+    font-size: 11px;
+  }
+  .tweet-time {
+    font-size: 11px;
+    color: #52525b;
+    margin-left: auto;
+  }
+  .tweet-text {
+    font-size: 12px;
+    color: #a1a1aa;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .tweet-tokens {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Pagination ── */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 14px;
+    border-top: 1px solid #1e1e22;
+  }
+  .page-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #52525b;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .page-btn.active {
+    background: #3b82f620;
+    color: #60a5fa;
+    border-color: #3b82f640;
+  }
+  .page-btn:hover:not(.active) { background: #18181b; color: #a1a1aa; }
+
+  /* ── Interval Dropdown ── */
+  .interval-badge {
+    font-size: 10px;
+    color: #52525b;
+    background: #18181b;
+    border: 1px solid #1e1e22;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* ── Right Column Header ── */
+  .feed-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .feed-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e4e4e7;
+  }
+
+  .holders-cell {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  /* ── Section btn ── */
+  .btn-sm {
+    height: 28px;
+    padding: 0 10px;
+    background: #18181b;
+    color: #a1a1aa;
+    border: 1px solid #1e1e22;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ NAV BAR ════════════════ -->
+<nav class="navbar">
+  <div class="logo">
+    <div class="logo-icon">A</div>
+    Alpha Board
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab">Rankings</div>
+    <div class="nav-tab">Agents</div>
+    <div class="nav-tab">Tweets</div>
+    <div class="nav-tab active">Memecoins</div>
+    <div class="nav-tab">Token Tracker</div>
+    <div class="nav-tab">Backtest</div>
+    <div class="nav-tab">Analytics</div>
+    <div class="nav-tab">Status</div>
+    <div class="nav-tab">Updates</div>
+    <div class="nav-tab">Settings</div>
+  </div>
+</nav>
+
+<!-- ════════════════ PAGE HEADER ════════════════ -->
+<div class="page-header">
+  <h1 class="page-title">Memecoins</h1>
+  <p class="page-subtitle">Wallet cross-referencing, live activity monitoring, and Twitter signal aggregation for memecoin alpha.</p>
+</div>
+
+<!-- ════════════════ STATS BAR ════════════════ -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-label">Wallets Tracked</div>
+    <div class="stat-value mono">0</div>
+    <div class="stat-change">No wallets configured</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Avg Hit Rate</div>
+    <div class="stat-value mono">0%</div>
+    <div class="stat-change">Needs wallet data</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Tweets Today</div>
+    <div class="stat-value mono">7</div>
+    <div class="stat-change up">+3 from yesterday</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Token Matches</div>
+    <div class="stat-value mono">3</div>
+    <div class="stat-change up">2 unique tokens</div>
+  </div>
+</div>
+
+<!-- ════════════════ TWO COLUMNS ════════════════ -->
+<div class="columns">
+
+  <!-- ──────── LEFT COLUMN (60%) ──────── -->
+  <div class="col-left">
+
+    <!-- Trending Tokens -->
+    <div class="section">
+      <div class="section-header">
+        <div style="display:flex;align-items:center;">
+          <span class="section-title">Trending Tokens</span>
+          <span class="section-count">5</span>
+        </div>
+      </div>
+      <div class="add-bar">
+        <input class="add-input" placeholder="Paste token mint address..." />
+        <select class="add-select">
+          <option>15m</option>
+          <option>30m</option>
+          <option selected>1h</option>
+          <option>4h</option>
+          <option>1d</option>
+        </select>
+        <button class="btn-add">+ Add Token</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Token</th>
+            <th>Mentions</th>
+            <th>Price</th>
+            <th>MCap</th>
+            <th>Holders</th>
+            <th>Vol 24h</th>
+            <th>Source</th>
+            <th>Interval</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono" style="color:#52525b;">1</td>
+            <td>
+              <div class="token-name">
+                <span class="token-symbol mono">$PIMPPIN</span>
+                <span class="token-full">pimppin on solana</span>
+              </div>
+            </td>
+            <td><span class="badge badge-mentions">2</span></td>
+            <td class="mono" style="color:#e4e4e7;">$0.00012</td>
+            <td class="mono">$45.2K</td>
+            <td>
+              <div class="holders-cell">
+                <span class="mono">1,284</span>
+                <span class="sparkline"><svg viewBox="0 0 40 16"><polyline points="0,12 6,10 12,8 18,11 24,6 30,4 36,7 40,3" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </div>
+            </td>
+            <td class="mono">$12.4K</td>
+            <td><span class="badge badge-twitter">Twitter</span></td>
+            <td><span class="interval-badge mono">1h</span></td>
+            <td>
+              <a class="action-link" href="#">View</a>
+              <span class="action-delete">✕</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#52525b;">2</td>
+            <td>
+              <div class="token-name">
+                <span class="token-symbol mono">$WOJAK</span>
+                <span class="token-full">wojak token</span>
+              </div>
+            </td>
+            <td><span class="badge badge-mentions">1</span></td>
+            <td class="mono" style="color:#e4e4e7;">$0.0034</td>
+            <td class="mono">$120K</td>
+            <td>
+              <div class="holders-cell">
+                <span class="mono">3,892</span>
+                <span class="sparkline"><svg viewBox="0 0 40 16"><polyline points="0,8 6,6 12,9 18,5 24,7 30,3 36,5 40,2" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </div>
+            </td>
+            <td class="mono">$34.1K</td>
+            <td><span class="badge badge-twitter">Twitter</span></td>
+            <td><span class="interval-badge mono">4h</span></td>
+            <td>
+              <a class="action-link" href="#">View</a>
+              <span class="action-delete">✕</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#52525b;">3</td>
+            <td>
+              <div class="token-name">
+                <span class="token-symbol mono">$MOODENG</span>
+                <span class="token-full">moo deng</span>
+              </div>
+            </td>
+            <td><span class="badge badge-mentions">4</span></td>
+            <td class="mono" style="color:#e4e4e7;">$0.089</td>
+            <td class="mono">$2.1M</td>
+            <td>
+              <div class="holders-cell">
+                <span class="mono">18,421</span>
+                <span class="sparkline"><svg viewBox="0 0 40 16"><polyline points="0,4 6,6 12,3 18,5 24,2 30,4 36,3 40,6" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </div>
+            </td>
+            <td class="mono">$890K</td>
+            <td><span class="badge badge-twitter">Twitter</span></td>
+            <td><span class="interval-badge mono">1h</span></td>
+            <td>
+              <a class="action-link" href="#">View</a>
+              <span class="action-delete">✕</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#52525b;">4</td>
+            <td>
+              <div class="token-name">
+                <span class="token-symbol mono">$FARTCOIN</span>
+                <span class="token-full">fartcoin</span>
+              </div>
+            </td>
+            <td><span class="badge badge-mentions">1</span></td>
+            <td class="mono" style="color:#e4e4e7;">$0.42</td>
+            <td class="mono">$410K</td>
+            <td>
+              <div class="holders-cell">
+                <span class="mono">5,201</span>
+                <span class="sparkline"><svg viewBox="0 0 40 16"><polyline points="0,10 6,8 12,11 18,7 24,9 30,5 36,6 40,4" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </div>
+            </td>
+            <td class="mono">$56.2K</td>
+            <td><span class="badge badge-manual">Manual</span></td>
+            <td><span class="interval-badge mono">30m</span></td>
+            <td>
+              <a class="action-link" href="#">View</a>
+              <span class="action-delete">✕</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="mono" style="color:#52525b;">5</td>
+            <td>
+              <div class="token-name">
+                <span class="token-symbol mono">$GOAT</span>
+                <span class="token-full">goatseus maximus</span>
+              </div>
+            </td>
+            <td><span class="badge badge-mentions">3</span></td>
+            <td class="mono" style="color:#e4e4e7;">$0.15</td>
+            <td class="mono">$156K</td>
+            <td>
+              <div class="holders-cell">
+                <span class="mono">9,103</span>
+                <span class="sparkline"><svg viewBox="0 0 40 16"><polyline points="0,6 6,8 12,5 18,9 24,4 30,6 36,3 40,5" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              </div>
+            </td>
+            <td class="mono">$201K</td>
+            <td><span class="badge badge-twitter">Twitter</span></td>
+            <td><span class="interval-badge mono">1d</span></td>
+            <td>
+              <a class="action-link" href="#">View</a>
+              <span class="action-delete">✕</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Watch Wallets & Activity -->
+    <div class="section">
+      <div class="tab-bar">
+        <div class="tab active">Wallets</div>
+        <div class="tab">Activity</div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-icon">&#128065;</div>
+        <div>No wallets tracked yet.</div>
+        <div style="color:#3f3f46; font-size:12px; margin-top:4px;">Add wallet addresses to monitor on-chain activity and cross-reference with Twitter signals.</div>
+      </div>
+    </div>
+
+    <!-- Tracked Accounts -->
+    <div class="section">
+      <div class="section-header">
+        <div style="display:flex;align-items:center;">
+          <span class="section-title">Tracked Accounts</span>
+          <span class="section-count">24</span>
+        </div>
+        <button class="btn-sm">+ Add Account</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Handle</th>
+            <th>Category</th>
+            <th>VIP</th>
+            <th>Tweets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:#e4e4e7; font-weight:500;">@saale</td>
+            <td><span class="badge badge-caller">Caller</span></td>
+            <td style="color:#eab308;">&#9733;</td>
+            <td class="mono">12</td>
+          </tr>
+          <tr>
+            <td style="color:#e4e4e7; font-weight:500;">@leatjeets</td>
+            <td><span class="badge badge-caller">Caller</span></td>
+            <td style="color:#eab308;">&#9733;</td>
+            <td class="mono">8</td>
+          </tr>
+          <tr>
+            <td style="color:#e4e4e7; font-weight:500;">@skrootimburg</td>
+            <td><span class="badge badge-degen">Degen</span></td>
+            <td style="color:#52525b;">—</td>
+            <td class="mono">3</td>
+          </tr>
+          <tr>
+            <td style="color:#e4e4e7; font-weight:500;">@cryptowizardd</td>
+            <td><span class="badge badge-influencer">Influencer</span></td>
+            <td style="color:#eab308;">&#9733;</td>
+            <td class="mono">19</td>
+          </tr>
+          <tr>
+            <td style="color:#e4e4e7; font-weight:500;">@solana_alpha</td>
+            <td><span class="badge badge-news">News</span></td>
+            <td style="color:#52525b;">—</td>
+            <td class="mono">45</td>
+          </tr>
+          <tr>
+            <td style="color:#e4e4e7; font-weight:500;">@degenhunter99</td>
+            <td><span class="badge badge-degen">Degen</span></td>
+            <td style="color:#52525b;">—</td>
+            <td class="mono">6</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <div class="page-btn">&#8249;</div>
+        <div class="page-btn active">1</div>
+        <div class="page-btn">2</div>
+        <div class="page-btn">3</div>
+        <div class="page-btn" style="color:#3f3f46;">...</div>
+        <div class="page-btn">10</div>
+        <div class="page-btn">&#8250;</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ──────── RIGHT COLUMN (40%) ──────── -->
+  <div class="col-right">
+
+    <div class="feed-header">
+      <span class="feed-title">Recent Tweets</span>
+      <span style="font-size:11px; color:#52525b;">7 today</span>
+    </div>
+
+    <div class="filter-pills">
+      <div class="pill active">All</div>
+      <div class="pill">Caller</div>
+      <div class="pill">Degen</div>
+      <div class="pill">Influencer</div>
+      <div class="pill">News</div>
+    </div>
+
+    <!-- Tweet 1 -->
+    <div class="tweet-card">
+      <div class="tweet-top">
+        <div class="tweet-avatar">S</div>
+        <div class="tweet-meta">
+          <span class="tweet-handle">@skrootimburg</span>
+          <span class="badge badge-degen" style="font-size:10px;">Degen</span>
+          <span class="tweet-time">23h ago</span>
+        </div>
+      </div>
+      <div class="tweet-text">This is the first pimppin on solana and its actually got a community behind it. chart looks like it wants to rip. not financial advice but im aping $PIMPPIN</div>
+      <div class="tweet-tokens">
+        <span class="badge badge-token">$PIMPPIN</span>
+      </div>
+    </div>
+
+    <!-- Tweet 2 -->
+    <div class="tweet-card">
+      <div class="tweet-top">
+        <div class="tweet-avatar">S</div>
+        <div class="tweet-meta">
+          <span class="tweet-handle">@saale</span>
+          <span class="tweet-vip">&#9733;</span>
+          <span class="badge badge-caller" style="font-size:10px;">Caller</span>
+          <span class="tweet-time">1d ago</span>
+        </div>
+      </div>
+      <div class="tweet-text">Need me a $PIMPPIN bag before this thing sends. Dev is active, community is growing, and the memes are actually good for once. Low cap gem alert.</div>
+      <div class="tweet-tokens">
+        <span class="badge badge-token">$PIMPPIN</span>
+      </div>
+    </div>
+
+    <!-- Tweet 3 -->
+    <div class="tweet-card">
+      <div class="tweet-top">
+        <div class="tweet-avatar">L</div>
+        <div class="tweet-meta">
+          <span class="tweet-handle">@leatjeets</span>
+          <span class="tweet-vip">&#9733;</span>
+          <span class="badge badge-caller" style="font-size:10px;">Caller</span>
+          <span class="tweet-time">2d ago</span>
+        </div>
+      </div>
+      <div class="tweet-text">$WOJAK looking like a solid play rn. Holders steadily climbing, no major sells from top wallets. This one has legs if market holds up.</div>
+      <div class="tweet-tokens">
+        <span class="badge badge-token">$WOJAK</span>
+      </div>
+    </div>
+
+    <!-- Tweet 4 -->
+    <div class="tweet-card">
+      <div class="tweet-top">
+        <div class="tweet-avatar">C</div>
+        <div class="tweet-meta">
+          <span class="tweet-handle">@cryptowizardd</span>
+          <span class="tweet-vip">&#9733;</span>
+          <span class="badge badge-influencer" style="font-size:10px;">Influencer</span>
+          <span class="tweet-time">2d ago</span>
+        </div>
+      </div>
+      <div class="tweet-text">The $MOODENG narrative is far from over. Every dip gets bought up instantly. Smart money is accumulating here quietly while everyone chases new launches.</div>
+      <div class="tweet-tokens">
+        <span class="badge badge-token">$MOODENG</span>
+      </div>
+    </div>
+
+    <!-- Tweet 5 -->
+    <div class="tweet-card">
+      <div class="tweet-top">
+        <div class="tweet-avatar">S</div>
+        <div class="tweet-meta">
+          <span class="tweet-handle">@solana_alpha</span>
+          <span class="badge badge-news" style="font-size:10px;">News</span>
+          <span class="tweet-time">3d ago</span>
+        </div>
+      </div>
+      <div class="tweet-text">Solana memecoin volume hit $2.4B in the last 24h. Top gainers: $GOAT (+340%), $MOODENG (+120%), $FARTCOIN (+89%). The rotation continues.</div>
+      <div class="tweet-tokens">
+        <span class="badge badge-token">$GOAT</span>
+        <span class="badge badge-token">$MOODENG</span>
+        <span class="badge badge-token">$FARTCOIN</span>
+      </div>
+    </div>
+
+    <!-- Tweet 6 -->
+    <div class="tweet-card">
+      <div class="tweet-top">
+        <div class="tweet-avatar">D</div>
+        <div class="tweet-meta">
+          <span class="tweet-handle">@degenhunter99</span>
+          <span class="badge badge-degen" style="font-size:10px;">Degen</span>
+          <span class="tweet-time">3d ago</span>
+        </div>
+      </div>
+      <div class="tweet-text">Threw 2 SOL at $GOAT and already 5x. This thing is not stopping. The AI narrative + meme combo is insane this cycle. LFG</div>
+      <div class="tweet-tokens">
+        <span class="badge badge-token">$GOAT</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

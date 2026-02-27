@@ -1000,6 +1000,7 @@ export interface TrendingToken {
 }
 
 // =============================================================================
+<<<<<<< HEAD
 // Token Analysis Types
 // =============================================================================
 
@@ -1085,3 +1086,61 @@ export interface CrossReferenceCheckSummary {
   topMatchScore: number | null;
   checkedAt: string;
 }
+=======
+// Token Tracker Types
+// =============================================================================
+
+export interface TrackedToken {
+  id: number;
+  mintAddress: string;
+  symbol: string | null;
+  name: string | null;
+  source: "twitter" | "manual";
+  refreshIntervalMinutes: number;
+  isActive: boolean;
+  latestHolders: number | null;
+  latestPriceUsd: number | null;
+  latestVolume24hUsd: number | null;
+  latestMcapUsd: number | null;
+  latestLiquidityUsd: number | null;
+  lastRefreshedAt: string | null;
+  addedAt: string;
+}
+
+export interface TokenSnapshot {
+  id: number;
+  holders: number | null;
+  priceUsd: number | null;
+  volume24hUsd: number | null;
+  mcapUsd: number | null;
+  snapshotAt: string;
+}
+
+export interface EnrichedToken {
+  rank: number;
+  tokenSymbol: string;
+  tokenName: string | null;
+  tokenMint: string;
+  mentionCount: number;
+  marketCapUsd: number | null;
+  priceUsd: number | null;
+  liquidityUsd: number | null;
+  birdeyeUrl: string;
+  // Tracker fields
+  trackerId: number | null;
+  source: "twitter" | "manual" | null;
+  refreshIntervalMinutes: number;
+  latestHolders: number | null;
+  latestVolume24hUsd: number | null;
+  lastRefreshedAt: string | null;
+  snapshots: TokenSnapshot[];
+}
+
+export const TRACKER_REFRESH_INTERVALS = [
+  { value: 5, label: "5m" },
+  { value: 15, label: "15m" },
+  { value: 30, label: "30m" },
+  { value: 60, label: "1h" },
+  { value: 1440, label: "1d" },
+] as const;
+>>>>>>> remotes/origin/master

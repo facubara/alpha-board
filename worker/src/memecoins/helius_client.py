@@ -147,6 +147,60 @@ class HeliusClient:
         result = await self._request("GET", url, params=params)
         return result if isinstance(result, list) else []
 
+    async def count_token_holders(self, mint: str) -> int | None:
+        """Count token holders via paginated getTokenAccounts.
+
+        Paginates with limit=1000 and cursor, caps at 50,000 to avoid
+        burning API credits. Caches result in Redis for 60s.
+
+        Returns holder count or None on failure.
+        """
+        cache_key = f"helius:holders_count:{mint}"
+        cached = await cache_get(cache_key)
+        if cached:
+            return int(cached)
+
+        total = 0
+        cursor = None
+        max_holders = 50_000
+        url = f"{RPC_URL}/?api-key={self.api_key}"
+
+        try:
+            async with self._semaphore:
+                async with httpx.AsyncClient(timeout=self.timeout) as client:
+                    while total < max_holders:
+                        params: dict = {"mint": mint, "limit": 1000}
+                        if cursor:
+                            params["cursor"] = cursor
+
+                        response = await client.post(
+                            url,
+                            json={
+                                "jsonrpc": "2.0",
+                                "id": "ab-holder-count",
+                                "method": "getTokenAccounts",
+                                "params": params,
+                            },
+                        )
+                        data = response.json()
+                        result = data.get("result", {})
+                        accounts = result.get("token_accounts", [])
+                        total += len(accounts)
+
+                        cursor = result.get("cursor")
+                        if not cursor or len(accounts) < 1000:
+                            break
+
+            try:
+                await cache_set(cache_key, str(total), 60)
+            except Exception:
+                pass
+
+            return total
+        except Exception as e:
+            logger.warning(f"Failed to count holders for {mint}: {e}")
+            return None
+
     async def get_token_holders(self, mint: str) -> list[dict]:
         """Get token holder list via DAS API."""
         url = f"{RPC_URL}/?api-key={self.api_key}"
