@@ -89,7 +89,7 @@ export function CumulativePnlChart({ data, className }: CumulativePnlChartProps)
           />
           <ReferenceLine y={0} stroke="var(--border-subtle)" strokeDasharray="4 4" />
           <Area
-            type="monotone"
+            type="linear"
             dataKey="value"
             stroke={color}
             strokeWidth={1.5}

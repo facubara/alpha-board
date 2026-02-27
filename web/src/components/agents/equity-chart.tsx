@@ -128,7 +128,7 @@ export function EquityChart({
             strokeDasharray="4 4"
           />
           <Line
-            type="monotone"
+            type="linear"
             dataKey="equity"
             stroke={color}
             strokeWidth={1.5}

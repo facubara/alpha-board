@@ -102,7 +102,7 @@ export function DailyCostChart({ data, className }: DailyCostChartProps) {
             formatter={(value) => [formatCost(Number(value)), "Cost"]}
           />
           <Area
-            type="monotone"
+            type="linear"
             dataKey="cost"
             stroke={color}
             strokeWidth={1.5}

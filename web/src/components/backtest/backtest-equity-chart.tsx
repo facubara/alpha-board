@@ -123,7 +123,7 @@ export function BacktestEquityChart({
             strokeDasharray="4 4"
           />
           <Area
-            type="monotone"
+            type="linear"
             dataKey="equity"
             stroke={color}
             strokeWidth={1.5}

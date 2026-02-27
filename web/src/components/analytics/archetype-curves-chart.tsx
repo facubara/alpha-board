@@ -144,7 +144,7 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
           {archetypes.map((arch) => (
             <Line
               key={arch}
-              type="monotone"
+              type="linear"
               dataKey={arch}
               stroke={ARCHETYPE_COLORS[arch] ?? "#888"}
               strokeWidth={1.5}

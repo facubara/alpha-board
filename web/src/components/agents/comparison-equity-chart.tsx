@@ -168,7 +168,7 @@ export function ComparisonEquityChart({
             return (
               <Line
                 key={key}
-                type="monotone"
+                type="linear"
                 dataKey={key}
                 stroke={colorMap[agentId] ?? "#888"}
                 strokeWidth={1.5}
