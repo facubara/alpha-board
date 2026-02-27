@@ -9,5 +9,5 @@
       ]
     }
   ],
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- web/"
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- ./"
 }
