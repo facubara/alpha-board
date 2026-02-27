@@ -7,16 +7,16 @@ export default function AgentDetailLoading() {
       {/* Header skeleton */}
       <div className="flex items-start justify-between">
         <div>
-          <div className="h-7 w-52 rounded bg-[var(--bg-muted)]" />
+          <div className="h-7 w-52 rounded bg-[var(--bg-muted)] skeleton" />
           <div className="mt-2 flex gap-2">
-            <div className="h-5 w-20 rounded bg-[var(--bg-muted)]" />
-            <div className="h-5 w-10 rounded bg-[var(--bg-muted)]" />
-            <div className="h-5 w-14 rounded bg-[var(--bg-muted)]" />
+            <div className="h-5 w-20 rounded bg-[var(--bg-muted)] skeleton" />
+            <div className="h-5 w-10 rounded bg-[var(--bg-muted)] skeleton" />
+            <div className="h-5 w-14 rounded bg-[var(--bg-muted)] skeleton" />
           </div>
         </div>
         <div className="flex gap-4">
-          <div className="h-10 w-20 rounded bg-[var(--bg-muted)]" />
-          <div className="h-10 w-20 rounded bg-[var(--bg-muted)]" />
+          <div className="h-10 w-20 rounded bg-[var(--bg-muted)] skeleton" />
+          <div className="h-10 w-20 rounded bg-[var(--bg-muted)] skeleton" />
         </div>
       </div>
 
@@ -26,7 +26,7 @@ export default function AgentDetailLoading() {
       {/* Tab bar skeleton */}
       <div className="flex gap-4 border-b border-[var(--border-default)] pb-2">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-5 w-20 rounded bg-[var(--bg-muted)]" />
+          <div key={i} className="h-5 w-20 rounded bg-[var(--bg-muted)] skeleton" />
         ))}
       </div>
 
