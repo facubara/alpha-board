@@ -1,5 +1,6 @@
 "use client";
 
+/** Shared pagination footer for data tables. */
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface TablePaginationProps {
