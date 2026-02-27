@@ -8,6 +8,7 @@ import {
   getAgentOpenPositions,
   getAgentTokenUsage,
 } from "@/lib/queries/agents";
+import { getAgentAnalysisHistory } from "@/lib/queries/processing";
 import { AgentDetail } from "@/components/agents/agent-detail";
 
 /**
@@ -51,7 +52,7 @@ export default async function AgentDetailPage({
   }
 
   // Fetch all data in parallel
-  const [agent, trades, decisions, promptHistory, positions, tokenUsage] =
+  const [agent, trades, decisions, promptHistory, positions, tokenUsage, analysisHistory] =
     await Promise.all([
       getAgentDetail(id),
       getAgentTrades(id),
@@ -59,6 +60,7 @@ export default async function AgentDetailPage({
       getAgentPromptHistory(id),
       getAgentOpenPositions(id),
       getAgentTokenUsage(id),
+      getAgentAnalysisHistory(id),
     ]);
 
   if (!agent) {
@@ -73,6 +75,7 @@ export default async function AgentDetailPage({
       promptHistory={promptHistory}
       positions={positions}
       tokenUsage={tokenUsage}
+      analysisHistory={analysisHistory}
     />
   );
 }

@@ -18,6 +18,7 @@ const NAV_ITEMS = [
   { href: "/memecoins", label: "Memecoins" },
   { href: "/backtest", label: "Backtest" },
   { href: "/analytics", label: "Analytics" },
+  { href: "/processing", label: "Processing" },
   { href: "/status", label: "Status" },
   { href: "/updates", label: "Updates" },
   { href: "/settings", label: "Settings" },

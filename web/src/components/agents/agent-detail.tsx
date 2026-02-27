@@ -24,6 +24,7 @@ import type {
   AgentPromptVersion,
   AgentPosition,
   AgentTokenUsageSummary,
+  AgentAnalysis,
 } from "@/lib/types";
 import { AgentOverview } from "./agent-overview";
 import { TradeHistory } from "./trade-history";
@@ -32,6 +33,7 @@ import { PromptEditor } from "./prompt-editor";
 import { PromptHistory } from "./prompt-history";
 import { ModelConfig } from "./model-config";
 import { AgentChart } from "./agent-chart";
+import { AnalysisHistory } from "./analysis-history";
 
 const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
@@ -42,6 +44,7 @@ interface AgentDetailProps {
   promptHistory: AgentPromptVersion[];
   positions: AgentPosition[];
   tokenUsage: AgentTokenUsageSummary[];
+  analysisHistory: AgentAnalysis[];
 }
 
 export function AgentDetail({
@@ -51,6 +54,7 @@ export function AgentDetail({
   promptHistory,
   positions,
   tokenUsage,
+  analysisHistory,
 }: AgentDetailProps) {
   const activePrompt = promptHistory.find((p) => p.isActive) ?? null;
 
@@ -211,6 +215,14 @@ export function AgentDetail({
           >
             Config
           </TabsTrigger>
+          {analysisHistory.length > 0 && (
+            <TabsTrigger
+              value="analysis"
+              className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary"
+            >
+              Analysis ({analysisHistory.length})
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="overview" className="pt-4">
@@ -245,6 +257,12 @@ export function AgentDetail({
         <TabsContent value="config" className="pt-4">
           <ModelConfig agent={agent} tokenUsage={tokenUsage} />
         </TabsContent>
+
+        {analysisHistory.length > 0 && (
+          <TabsContent value="analysis" className="pt-4">
+            <AnalysisHistory analyses={analysisHistory} />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

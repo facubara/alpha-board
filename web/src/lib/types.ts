@@ -1155,3 +1155,36 @@ export interface AnalyzedWalletResult {
   tokenEntries: WalletTokenEntry[];
   currentHoldings: WalletHolding[];
 }
+
+// --- Processing ---
+
+export interface ProcessingRun {
+  id: number;
+  taskType: string;
+  status: "running" | "paused" | "completed" | "failed";
+  totalItems: number;
+  processedItems: number;
+  errorCount: number;
+  lastError: string | null;
+  startedAt: string;
+  pausedAt: string | null;
+  completedAt: string | null;
+}
+
+export interface ProcessingTaskSummary {
+  taskType: string;
+  pendingCount: number;
+  lastRun: ProcessingRun | null;
+}
+
+export interface AgentAnalysis {
+  id: number;
+  agentId: number;
+  analysisType: string;
+  summary: string;
+  fullAnalysis: string;
+  recommendations: { action: string; priority: string; details: string }[];
+  metricsSnapshot: Record<string, unknown>;
+  processingRunId: number | null;
+  createdAt: string;
+}
