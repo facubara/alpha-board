@@ -65,8 +65,8 @@ def upgrade() -> None:
         ),
         sa.Column("summary", sa.Text, nullable=False),
         sa.Column("full_analysis", sa.Text, nullable=False),
-        sa.Column("recommendations", JSONB, nullable=False, server_default="'[]'"),
-        sa.Column("metrics_snapshot", JSONB, nullable=False, server_default="'{}'"),
+        sa.Column("recommendations", JSONB, nullable=False, server_default="[]"),
+        sa.Column("metrics_snapshot", JSONB, nullable=False, server_default="{}"),
         sa.Column(
             "processing_run_id",
             sa.Integer,
