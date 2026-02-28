@@ -37,6 +37,13 @@ const STATUS_STYLES: Record<string, string> = {
   failed: "text-bearish",
 };
 
+const BAR_COLORS: Record<string, string> = {
+  running: "bg-[var(--accent-teal)]",
+  paused: "bg-[var(--warning)]",
+  completed: "bg-bullish",
+  failed: "bg-bearish",
+};
+
 const STATUS_ICONS: Record<string, string> = {
   running: "\u25B6",
   paused: "\u23F8",
@@ -79,6 +86,23 @@ export function TaskCard({ task }: { task: ProcessingTaskSummary }) {
           <span className="text-muted">{timeAgo(task.lastRun.startedAt)}</span>
         </div>
       )}
+      {/* Progress bar */}
+      {task.lastRun && task.lastRun.totalItems > 0 && (
+        <div className="mt-2 flex items-center gap-2">
+          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--bg-muted)]">
+            <div
+              className={cn("h-full rounded-full transition-all", BAR_COLORS[task.lastRun.status])}
+              style={{
+                width: `${Math.round((task.lastRun.processedItems / task.lastRun.totalItems) * 100)}%`,
+              }}
+            />
+          </div>
+          <span className="text-[10px] font-medium text-muted">
+            {Math.round((task.lastRun.processedItems / task.lastRun.totalItems) * 100)}%
+          </span>
+        </div>
+      )}
+
       {!task.lastRun && (
         <p className="mt-3 text-xs text-muted">No runs yet</p>
       )}

@@ -18,6 +18,13 @@ const STATUS_STYLES: Record<string, string> = {
   failed: "bg-[var(--bearish-subtle)] text-bearish",
 };
 
+const BAR_COLORS: Record<string, string> = {
+  running: "bg-[var(--accent-teal)]",
+  paused: "bg-[var(--warning)]",
+  completed: "bg-bullish",
+  failed: "bg-bearish",
+};
+
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
@@ -66,8 +73,22 @@ export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
                   {run.status}
                 </span>
               </td>
-              <td className="px-4 py-2 text-right font-mono text-xs text-secondary">
-                {run.processedItems}/{run.totalItems}
+              <td className="px-4 py-2 text-right">
+                <div className="flex items-center justify-end gap-2">
+                  {run.totalItems > 0 && (
+                    <div className="h-1 w-16 overflow-hidden rounded-full bg-[var(--bg-muted)]">
+                      <div
+                        className={cn("h-full rounded-full", BAR_COLORS[run.status])}
+                        style={{
+                          width: `${Math.round((run.processedItems / run.totalItems) * 100)}%`,
+                        }}
+                      />
+                    </div>
+                  )}
+                  <span className="font-mono text-xs text-secondary">
+                    {run.processedItems}/{run.totalItems}
+                  </span>
+                </div>
               </td>
               <td
                 className={cn(
