@@ -1665,6 +1665,72 @@ async def trigger_tweet_analysis():
     return result
 
 
+@app.post("/memecoins/twitter/analyze")
+async def trigger_memecoin_tweet_analysis():
+    """Manually trigger sentiment analysis on all unanalyzed memecoin tweets."""
+    if not settings.anthropic_api_key:
+        raise HTTPException(status_code=400, detail="Anthropic API key not configured")
+
+    from src.memecoins.tweet_analyzer import MemecoinTweetAnalyzer
+
+    async with async_session() as session:
+        count_result = await session.execute(
+            text(
+                "SELECT COUNT(*) FROM memecoin_tweets t "
+                "LEFT JOIN memecoin_tweet_signals s ON s.tweet_id = t.id "
+                "WHERE s.id IS NULL"
+            )
+        )
+        total_items = count_result.scalar() or 0
+
+        run_result = await session.execute(
+            text(
+                "INSERT INTO processing_runs (task_type, status, total_items) "
+                "VALUES ('memecoin_sentiment', 'running', :total) RETURNING id"
+            ),
+            {"total": min(total_items, 150)},
+        )
+        run_id = run_result.scalar()
+        await session.commit()
+
+        async def on_batch_done(processed: int, errors: int) -> None:
+            await session.execute(
+                text(
+                    "UPDATE processing_runs SET processed_items = :p, error_count = :e "
+                    "WHERE id = :id"
+                ),
+                {"p": processed, "e": errors, "id": run_id},
+            )
+            await session.commit()
+
+        analyzer = MemecoinTweetAnalyzer()
+        try:
+            result = await analyzer.analyze_batch(session, on_batch_done=on_batch_done)
+            await session.execute(
+                text(
+                    "UPDATE processing_runs "
+                    "SET status = 'completed', processed_items = :p, error_count = :e, "
+                    "    completed_at = NOW() "
+                    "WHERE id = :id"
+                ),
+                {"p": result["analyzed"], "e": result["errors"], "id": run_id},
+            )
+        except Exception as e:
+            await session.execute(
+                text(
+                    "UPDATE processing_runs "
+                    "SET status = 'failed', last_error = :err, completed_at = NOW() "
+                    "WHERE id = :id"
+                ),
+                {"err": str(e)[:500], "id": run_id},
+            )
+            await session.commit()
+            raise
+        await session.commit()
+
+    return result
+
+
 async def run_pnl_reconciliation():
     """Scheduled job: reconcile PnL for all active agents."""
     from src.agents.portfolio import PortfolioManager
