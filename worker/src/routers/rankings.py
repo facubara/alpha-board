@@ -3,7 +3,7 @@
 import asyncio
 
 from fastapi import APIRouter, HTTPException
-from sqlalchemy import select, func
+from sqlalchemy import select, func, text
 
 from src.db import async_session
 from src.models.db import Snapshot, Symbol
@@ -142,26 +142,40 @@ async def get_rankings(timeframe: str):
 # ---------------------------------------------------------------------------
 VALID_COUNTS = {3, 5, 7, 10}
 
+TIMEFRAME_INTERVALS = {
+    "15m": "15 minutes",
+    "30m": "30 minutes",
+    "1h": "1 hour",
+    "4h": "4 hours",
+    "1d": "1 day",
+    "1w": "7 days",
+}
 
-def _parse_close(snap: Snapshot) -> dict:
-    """Extract slim payload from a Snapshot for previous-closes display."""
+
+def _parse_close_row(row) -> dict:
+    """Extract slim payload from a raw SQL row for previous-closes display."""
     price_change_pct = None
-    if snap.indicator_signals:
-        market = snap.indicator_signals.get("_market")
+    indicator_signals = row.indicator_signals
+    if indicator_signals:
+        market = indicator_signals.get("_market")
         if market:
             price_change_pct = market.get("price_change_pct")
 
     return {
-        "bullishScore": float(snap.bullish_score),
+        "bullishScore": float(row.bullish_score),
         "priceChangePct": price_change_pct,
-        "highlights": snap.highlights or [],
-        "computedAt": snap.computed_at.isoformat(),
+        "highlights": row.highlights or [],
+        "computedAt": row.computed_at.isoformat(),
     }
 
 
 @router.get("/{timeframe}/history/{symbol_id}")
 async def get_symbol_history(timeframe: str, symbol_id: int, count: int = 5):
-    """Return previous closes for a symbol in a timeframe (skips latest)."""
+    """Return previous closes for a symbol in a timeframe (skips latest).
+
+    Uses date_bin to bucket snapshots by timeframe interval, returning
+    only one snapshot per period (the latest within each bucket).
+    """
     _validate_timeframe(timeframe)
 
     if count not in VALID_COUNTS:
@@ -169,6 +183,8 @@ async def get_symbol_history(timeframe: str, symbol_id: int, count: int = 5):
             status_code=400,
             detail=f"Invalid count '{count}'. Must be one of: {sorted(VALID_COUNTS)}",
         )
+
+    interval = TIMEFRAME_INTERVALS[timeframe]
 
     async with async_session() as session:
         # Fetch symbol for response metadata
@@ -179,24 +195,41 @@ async def get_symbol_history(timeframe: str, symbol_id: int, count: int = 5):
         if not sym:
             raise HTTPException(status_code=404, detail="Symbol not found")
 
-        # Fetch previous snapshots (skip latest with OFFSET 1)
+        # Use date_bin to bucket snapshots by timeframe interval.
+        # ROW_NUMBER picks the latest snapshot per bucket.
+        # OFFSET 1 skips the current bucket (already shown in main row).
         result = await session.execute(
-            select(Snapshot)
-            .where(
-                Snapshot.symbol_id == symbol_id,
-                Snapshot.timeframe == timeframe,
-            )
-            .order_by(Snapshot.computed_at.desc())
-            .offset(1)
-            .limit(count)
+            text("""
+                SELECT bullish_score, indicator_signals, highlights, computed_at
+                FROM (
+                    SELECT bullish_score, indicator_signals, highlights, computed_at,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY date_bin(:interval ::interval, computed_at, '2000-01-01'::timestamptz)
+                            ORDER BY computed_at DESC
+                        ) AS rn,
+                        date_bin(:interval ::interval, computed_at, '2000-01-01'::timestamptz) AS bucket
+                    FROM snapshots
+                    WHERE symbol_id = :symbol_id AND timeframe = :timeframe
+                ) sub
+                WHERE rn = 1
+                ORDER BY bucket DESC
+                OFFSET 1
+                LIMIT :count
+            """),
+            {
+                "symbol_id": symbol_id,
+                "timeframe": timeframe,
+                "interval": interval,
+                "count": count,
+            },
         )
-        rows = result.scalars().all()
+        rows = result.fetchall()
 
     return {
         "symbolId": sym.id,
         "symbol": sym.symbol,
         "timeframe": timeframe,
-        "closes": [_parse_close(snap) for snap in rows],
+        "closes": [_parse_close_row(row) for row in rows],
     }
 
 
