@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(git add:*)",
@@ -95,10 +98,11 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api:*)",
       "Bash(cd /c/Users/facun/Escritorio/alpha-board/web && npx -y react-doctor@latest . --verbose --diff 2>&1)",
       "mcp__figma__generate_figma_design",
-      "Bash(start:*)"
+      "Bash(start:*)",
+      "Bash(uv run:*)",
+      "Bash(npm run:*)",
+      "Bash(uv venv:*)",
+      "Bash(uv pip:*)"
     ]
-  },
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   }
 }

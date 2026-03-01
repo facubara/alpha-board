@@ -152,10 +152,8 @@ async def get_recent_trades(limit: int = Query(default=50, ge=1, le=500)):
     Replicates the frontend getRecentTrades() query from web/src/lib/queries/trades.ts.
     """
     async with async_session() as session:
-        closed_result, open_result = await asyncio.gather(
-            session.execute(CLOSED_TRADES_SQL, {"limit": limit}),
-            session.execute(OPEN_POSITIONS_SQL),
-        )
+        closed_result = await session.execute(CLOSED_TRADES_SQL, {"limit": limit})
+        open_result = await session.execute(OPEN_POSITIONS_SQL)
 
         closed = [_map_closed_row(row) for row in closed_result]
         opened = [_map_open_row(row) for row in open_result]
