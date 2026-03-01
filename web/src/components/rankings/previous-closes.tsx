@@ -93,7 +93,7 @@ function CloseRow({ close }: { close: PreviousClose }) {
       {/* Timestamp */}
       <span className="shrink-0 font-mono text-muted">
         {formatUtcTime(close.computedAt)}{" "}
-        <span className="hidden sm:inline text-muted/60">
+        <span className="hidden sm:inline text-secondary">
           ({formatRelativeTime(close.computedAt)})
         </span>
       </span>
