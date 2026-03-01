@@ -32,6 +32,15 @@ function getScoreColor(score: number): string {
   return "text-muted";
 }
 
+function formatUtcTime(iso: string): string {
+  const d = new Date(iso);
+  const mon = d.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
+  const day = d.getUTCDate();
+  const h = d.getUTCHours().toString().padStart(2, "0");
+  const m = d.getUTCMinutes().toString().padStart(2, "0");
+  return `${mon} ${day} ${h}:${m} UTC`;
+}
+
 function formatRelativeTime(iso: string): string {
   const now = Date.now();
   const then = new Date(iso).getTime();
@@ -81,9 +90,12 @@ function CloseRow({ close }: { close: PreviousClose }) {
         <HighlightChips highlights={close.highlights} max={3} />
       </span>
 
-      {/* Relative time */}
+      {/* Timestamp */}
       <span className="shrink-0 font-mono text-muted">
-        {formatRelativeTime(close.computedAt)}
+        {formatUtcTime(close.computedAt)}{" "}
+        <span className="hidden sm:inline text-muted/60">
+          ({formatRelativeTime(close.computedAt)})
+        </span>
       </span>
     </div>
   );
