@@ -137,6 +137,72 @@ async def get_rankings(timeframe: str):
 # ---------------------------------------------------------------------------
 # GET /rankings/{timeframe}/latest-time — just the timestamp
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# GET /rankings/{timeframe}/history/{symbol_id} — previous closes for a symbol
+# ---------------------------------------------------------------------------
+VALID_COUNTS = {3, 5, 7, 10}
+
+
+def _parse_close(snap: Snapshot) -> dict:
+    """Extract slim payload from a Snapshot for previous-closes display."""
+    price_change_pct = None
+    if snap.indicator_signals:
+        market = snap.indicator_signals.get("_market")
+        if market:
+            price_change_pct = market.get("price_change_pct")
+
+    return {
+        "bullishScore": float(snap.bullish_score),
+        "priceChangePct": price_change_pct,
+        "highlights": snap.highlights or [],
+        "computedAt": snap.computed_at.isoformat(),
+    }
+
+
+@router.get("/{timeframe}/history/{symbol_id}")
+async def get_symbol_history(timeframe: str, symbol_id: int, count: int = 5):
+    """Return previous closes for a symbol in a timeframe (skips latest)."""
+    _validate_timeframe(timeframe)
+
+    if count not in VALID_COUNTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid count '{count}'. Must be one of: {sorted(VALID_COUNTS)}",
+        )
+
+    async with async_session() as session:
+        # Fetch symbol for response metadata
+        sym_result = await session.execute(
+            select(Symbol).where(Symbol.id == symbol_id)
+        )
+        sym = sym_result.scalar_one_or_none()
+        if not sym:
+            raise HTTPException(status_code=404, detail="Symbol not found")
+
+        # Fetch previous snapshots (skip latest with OFFSET 1)
+        result = await session.execute(
+            select(Snapshot)
+            .where(
+                Snapshot.symbol_id == symbol_id,
+                Snapshot.timeframe == timeframe,
+            )
+            .order_by(Snapshot.computed_at.desc())
+            .offset(1)
+            .limit(count)
+        )
+        rows = result.scalars().all()
+
+    return {
+        "symbolId": sym.id,
+        "symbol": sym.symbol,
+        "timeframe": timeframe,
+        "closes": [_parse_close(snap) for snap in rows],
+    }
+
+
+# ---------------------------------------------------------------------------
+# GET /rankings/{timeframe}/latest-time — just the timestamp
+# ---------------------------------------------------------------------------
 @router.get("/{timeframe}/latest-time")
 async def get_latest_time(timeframe: str):
     """Return the latest computed_at timestamp for a timeframe."""

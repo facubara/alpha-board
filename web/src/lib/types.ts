@@ -84,6 +84,27 @@ export interface RankingsData {
 export type AllTimeframeRankings = Record<Timeframe, RankingsData>;
 
 // =============================================================================
+// Previous Closes (history for expanded ranking row)
+// =============================================================================
+
+export interface PreviousClose {
+  bullishScore: number;
+  priceChangePct: number | null;
+  highlights: Highlight[];
+  computedAt: string;
+}
+
+export interface PreviousClosesData {
+  symbolId: number;
+  symbol: string;
+  timeframe: Timeframe;
+  closes: PreviousClose[];
+}
+
+export type CloseCount = 3 | 5 | 7 | 10;
+export const CLOSE_COUNTS: CloseCount[] = [3, 5, 7, 10];
+
+// =============================================================================
 // Computation Run
 // =============================================================================
 
