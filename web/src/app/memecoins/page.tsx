@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import {
   getWatchWallets,
   getRecentWalletActivity,
@@ -14,18 +15,15 @@ import { TrendingTokens } from "@/components/memecoins/trending-tokens";
 import { WalletTabs } from "@/components/memecoins/wallet-tabs";
 import { MemecoinAccountManager } from "@/components/memecoins/memecoin-account-manager";
 import { MemecoinTweetFeed } from "@/components/memecoins/memecoin-tweet-feed";
-
-/**
- * Memecoins Page (Server Component)
- *
- * Token analysis, cross-referencing, wallet leaderboard, live activity feed,
- * and memecoin-focused Twitter feed with token discovery.
- * ISR: Revalidates every 60 seconds.
- */
+import MemecoinsLoading from "./loading";
 
 export const revalidate = 60;
 
-export default async function MemecoinsPage() {
+/**
+ * Async section that fetches all memecoins data.
+ * Wrapped in Suspense so the page header renders instantly.
+ */
+async function MemecoinsContent() {
   const [wallets, walletActivity, twitterAccounts, tweets, stats, trendingTokens, trackedTokens] =
     await Promise.all([
       getWatchWallets(),
@@ -60,7 +58,6 @@ export default async function MemecoinsPage() {
       latestHolders: tracker?.latestHolders ?? null,
       latestVolume24hUsd: tracker?.latestVolume24hUsd ?? null,
       lastRefreshedAt: tracker?.lastRefreshedAt ?? null,
-      // Use tracker price/mcap if available (more recent)
       priceUsd: tracker?.latestPriceUsd ?? tt.priceUsd,
       marketCapUsd: tracker?.latestMcapUsd ?? tt.marketCapUsd,
       liquidityUsd: tracker?.latestLiquidityUsd ?? tt.liquidityUsd,
@@ -92,15 +89,7 @@ export default async function MemecoinsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-primary">Memecoins</h1>
-        <p className="mt-1 text-sm text-secondary">
-          Track smart wallets, analyze early buyers, and cross-reference memecoin signals
-        </p>
-      </div>
-
+    <>
       {/* Stats */}
       <StatsBar stats={stats} />
 
@@ -140,6 +129,86 @@ export default async function MemecoinsPage() {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+function MemecoinsContentSkeleton() {
+  return (
+    <>
+      {/* Stats bar */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div
+            key={i}
+            className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3"
+          >
+            <div className="h-3 w-20 rounded bg-[var(--bg-muted)] skeleton" />
+            <div className="mt-2 h-5 w-12 rounded bg-[var(--bg-muted)] skeleton" />
+          </div>
+        ))}
+      </div>
+
+      {/* Two-column skeleton */}
+      <div className="flex flex-col gap-6 md:flex-row">
+        <div className="space-y-6 md:w-3/5">
+          {/* Trending Tokens */}
+          <section className="space-y-4">
+            <div>
+              <div className="h-5 w-36 rounded bg-[var(--bg-muted)] skeleton" />
+              <div className="mt-1 h-3 w-64 rounded bg-[var(--bg-muted)] skeleton" />
+            </div>
+            <div className="overflow-x-auto rounded-md border border-[var(--border-default)]">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-3 border-t border-[var(--border-default)] px-3 py-2 first:border-t-0">
+                  <div className="h-3 w-6 rounded bg-[var(--bg-muted)] skeleton" />
+                  <div className="h-4 w-20 rounded bg-[var(--bg-muted)] skeleton" />
+                  <div className="h-3 w-16 rounded bg-[var(--bg-muted)] skeleton" />
+                  <div className="h-3 w-20 rounded bg-[var(--bg-muted)] skeleton" />
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Watch Wallets */}
+          <section className="space-y-4">
+            <div className="h-5 w-32 rounded bg-[var(--bg-muted)] skeleton" />
+            <div className="h-9 w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] skeleton" />
+          </section>
+        </div>
+
+        {/* Right column skeleton */}
+        <div className="md:w-2/5">
+          <div className="space-y-4 md:border-l md:border-[var(--border-default)] md:pl-6">
+            <div className="h-5 w-32 rounded bg-[var(--bg-muted)] skeleton" />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
+                <div className="h-4 w-28 rounded bg-[var(--bg-muted)] skeleton" />
+                <div className="mt-2 h-3 w-full rounded bg-[var(--bg-muted)] skeleton" />
+                <div className="mt-1 h-3 w-3/4 rounded bg-[var(--bg-muted)] skeleton" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default function MemecoinsPage() {
+  return (
+    <div className="space-y-6">
+      {/* Header renders instantly */}
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-primary">Memecoins</h1>
+        <p className="mt-1 text-sm text-secondary">
+          Track smart wallets, analyze early buyers, and cross-reference memecoin signals
+        </p>
+      </div>
+
+      <Suspense fallback={<MemecoinsContentSkeleton />}>
+        <MemecoinsContent />
+      </Suspense>
     </div>
   );
 }

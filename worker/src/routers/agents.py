@@ -289,9 +289,26 @@ async def get_symbol_activity(symbol: str):
         positions = pos_result.all()
         trades = trd_result.all()
 
+    fmt_positions = [_format_position_row(r) for r in positions]
+    fmt_trades = [_format_trade_row(r) for r in trades]
+
+    # Build summary expected by the frontend
+    agents_with_positions = len({p["agentId"] for p in fmt_positions})
+    agents_that_traded = len({t["agentId"] for t in fmt_trades})
+    total_pnl = sum(t.get("pnl", 0) for t in fmt_trades)
+    wins = sum(1 for t in fmt_trades if t.get("pnl", 0) > 0)
+    total_trades = len(fmt_trades)
+
     return {
-        "positions": [_format_position_row(r) for r in positions],
-        "trades": [_format_trade_row(r) for r in trades],
+        "positions": fmt_positions,
+        "trades": fmt_trades,
+        "summary": {
+            "agentsWithPositions": agents_with_positions,
+            "agentsThatTraded": agents_that_traded,
+            "totalTrades": total_trades,
+            "totalPnl": round(total_pnl, 2),
+            "winRate": round(wins / total_trades, 4) if total_trades > 0 else 0,
+        },
     }
 
 

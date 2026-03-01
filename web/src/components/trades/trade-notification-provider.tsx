@@ -75,11 +75,11 @@ function readStoredSidebarOpen(): boolean {
 }
 
 interface Props {
-  initialTrades: TradeNotification[];
+  initialTrades?: TradeNotification[];
   children: React.ReactNode;
 }
 
-export function TradeNotificationProvider({ initialTrades, children }: Props) {
+export function TradeNotificationProvider({ initialTrades = [], children }: Props) {
   // react-doctor: intentional — local mutation of server-fetched initial data
   const [trades, setTrades] = useState<TradeNotification[]>(initialTrades);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -90,6 +90,17 @@ export function TradeNotificationProvider({ initialTrades, children }: Props) {
   const highlightTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(
     new Map()
   );
+
+  // Fetch initial trades client-side (moved from server to unblock layout render)
+  const tradesUrl = WORKER_URL ? `${WORKER_URL}/trades/recent?limit=50` : null;
+  const { data: fetchedTrades } = useFetch<TradeNotification[]>(tradesUrl);
+  const hydratedRef = useRef(false);
+  useEffect(() => {
+    if (fetchedTrades && fetchedTrades.length > 0 && !hydratedRef.current) {
+      hydratedRef.current = true;
+      setTrades(fetchedTrades);
+    }
+  }, [fetchedTrades]);
 
   // Fetch exchange settings once on mount — derive exchangeEnabled from data
   const exchangeUrl = WORKER_URL ? `${WORKER_URL}/exchange/settings` : null;

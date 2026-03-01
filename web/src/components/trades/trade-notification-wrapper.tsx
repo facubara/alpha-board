@@ -1,18 +1,18 @@
-import { getRecentTrades } from "@/lib/queries/trades";
 import { TradeNotificationProvider } from "./trade-notification-provider";
 
 /**
- * Server component wrapper that fetches initial trades
- * and passes them to the client-side TradeNotificationProvider.
+ * Sync wrapper — no server-side data fetch.
+ * Initial trades are fetched client-side in the provider to avoid
+ * blocking the layout render (was adding ~1.4s to LCP).
+ * SSE handles real-time updates after mount.
  */
-export async function TradeNotificationWrapper({
+export function TradeNotificationWrapper({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const initialTrades = await getRecentTrades(50);
   return (
-    <TradeNotificationProvider initialTrades={initialTrades}>
+    <TradeNotificationProvider>
       {children}
     </TradeNotificationProvider>
   );

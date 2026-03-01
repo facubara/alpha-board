@@ -1077,34 +1077,35 @@ async def run_twitter_poll():
 
 @app.get("/twitter/accounts")
 async def list_twitter_accounts():
-    """List all tracked Twitter accounts."""
+    """List all tracked Twitter accounts with tweet counts (single query)."""
     async with async_session() as session:
-        result = await session.execute(
-            select(TwitterAccount).order_by(TwitterAccount.added_at.desc())
-        )
-        accounts = result.scalars().all()
-
-        account_list = []
-        for a in accounts:
-            # Count tweets per account
-            tweet_count_result = await session.execute(
-                select(func.count()).select_from(Tweet).where(
-                    Tweet.twitter_account_id == a.id
-                )
+        tweet_counts = (
+            select(
+                Tweet.twitter_account_id,
+                func.count().label("cnt"),
             )
-            tweet_count = tweet_count_result.scalar() or 0
+            .group_by(Tweet.twitter_account_id)
+            .subquery()
+        )
+        result = await session.execute(
+            select(TwitterAccount, func.coalesce(tweet_counts.c.cnt, 0))
+            .outerjoin(tweet_counts, TwitterAccount.id == tweet_counts.c.twitter_account_id)
+            .order_by(TwitterAccount.added_at.desc())
+        )
+        rows = result.all()
 
-            account_list.append({
+        return [
+            {
                 "id": a.id,
                 "handle": a.handle,
                 "displayName": a.display_name,
                 "category": a.category,
                 "isActive": a.is_active,
                 "addedAt": a.added_at.isoformat(),
-                "tweetCount": tweet_count,
-            })
-
-        return account_list
+                "tweetCount": count,
+            }
+            for a, count in rows
+        ]
 
 
 @app.post("/twitter/accounts")
@@ -2248,25 +2249,25 @@ MEMECOIN_TWITTER_CATEGORIES = ["caller", "influencer", "degen", "news"]
 
 @app.get("/memecoins/twitter/accounts")
 async def list_memecoin_twitter_accounts():
-    """List memecoin twitter accounts."""
+    """List memecoin twitter accounts with tweet counts (single query)."""
     async with async_session() as session:
-        result = await session.execute(
-            select(MemecoinTwitterAccount).order_by(
-                MemecoinTwitterAccount.added_at.desc()
+        tweet_counts = (
+            select(
+                MemecoinTweet.account_id,
+                func.count().label("cnt"),
             )
+            .group_by(MemecoinTweet.account_id)
+            .subquery()
         )
-        accounts = result.scalars().all()
+        result = await session.execute(
+            select(MemecoinTwitterAccount, func.coalesce(tweet_counts.c.cnt, 0))
+            .outerjoin(tweet_counts, MemecoinTwitterAccount.id == tweet_counts.c.account_id)
+            .order_by(MemecoinTwitterAccount.added_at.desc())
+        )
+        rows = result.all()
 
-        account_list = []
-        for a in accounts:
-            tweet_count_result = await session.execute(
-                select(func.count())
-                .select_from(MemecoinTweet)
-                .where(MemecoinTweet.account_id == a.id)
-            )
-            tweet_count = tweet_count_result.scalar() or 0
-
-            account_list.append({
+        return [
+            {
                 "id": a.id,
                 "handle": a.handle,
                 "displayName": a.display_name,
@@ -2274,10 +2275,10 @@ async def list_memecoin_twitter_accounts():
                 "isVip": a.is_vip,
                 "isActive": a.is_active,
                 "addedAt": a.added_at.isoformat(),
-                "tweetCount": tweet_count,
-            })
-
-        return account_list
+                "tweetCount": count,
+            }
+            for a, count in rows
+        ]
 
 
 @app.post("/memecoins/twitter/accounts")
@@ -2366,7 +2367,7 @@ async def toggle_memecoin_vip(account_id: int):
 
 @app.get("/memecoins/twitter/feed")
 async def memecoin_twitter_feed(limit: int = 50, offset: int = 0):
-    """Get recent memecoin tweets with token matches and signals."""
+    """Get recent memecoin tweets with token matches and signals (batch-loaded)."""
     limit = min(limit, 200)
     async with async_session() as session:
         result = await session.execute(
@@ -2385,15 +2386,21 @@ async def memecoin_twitter_feed(limit: int = 50, offset: int = 0):
         )
         rows = result.all()
 
-        feed = []
-        for tweet, account, signal in rows:
-            # Fetch token matches for this tweet
+        # Batch-load all token matches for these tweets in one query
+        tweet_ids = [tweet.id for tweet, _, _ in rows]
+        token_map: dict[int, list] = {}
+        if tweet_ids:
             token_result = await session.execute(
                 select(MemecoinTweetToken).where(
-                    MemecoinTweetToken.tweet_id == tweet.id
+                    MemecoinTweetToken.tweet_id.in_(tweet_ids)
                 )
             )
-            token_matches = token_result.scalars().all()
+            for tm in token_result.scalars().all():
+                token_map.setdefault(tm.tweet_id, []).append(tm)
+
+        feed = []
+        for tweet, account, signal in rows:
+            token_matches = token_map.get(tweet.id, [])
 
             item = {
                 "id": tweet.id,

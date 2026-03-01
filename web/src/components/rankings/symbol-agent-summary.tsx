@@ -88,7 +88,14 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
     );
   }
 
-  const { summary, positions, trades } = activity;
+  const { summary: rawSummary, positions, trades } = activity;
+  const summary = rawSummary ?? {
+    agentsWithPositions: 0,
+    agentsThatTraded: 0,
+    totalTrades: 0,
+    totalPnl: 0,
+    winRate: 0,
+  };
 
   return (
     <div className={cn("py-3", className)}>
