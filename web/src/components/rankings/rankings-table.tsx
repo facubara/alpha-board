@@ -8,7 +8,7 @@
  * - Dense table layout (40px rows)
  * - Timeframe switching is instant (client-side only)
  * - No loading states on timeframe switch
- * - Search filter by symbol name
+ * - Search filter by symbol name, highlights, indicator labels
  * - Sort by rank, score, confidence, symbol
  */
 
@@ -99,13 +99,15 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
   const filteredAndSorted = useMemo(() => {
     let result = [...snapshots];
 
-    // Filter by search term
+    // Filter by search term (matches symbol, base asset, highlights, indicator labels)
     if (search.trim()) {
       const term = search.toLowerCase();
       result = result.filter(
         (s) =>
           s.symbol.toLowerCase().includes(term) ||
-          s.baseAsset.toLowerCase().includes(term)
+          s.baseAsset.toLowerCase().includes(term) ||
+          s.highlights.some((h) => h.text.toLowerCase().includes(term)) ||
+          s.indicatorSignals.some((i) => i.label.toLowerCase().includes(term))
       );
     }
 
@@ -202,7 +204,7 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
             <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <Input
               type="text"
-              placeholder="Search symbols..."
+              placeholder="Search symbols, highlights..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="h-9 w-48 pl-8 font-mono text-sm"
