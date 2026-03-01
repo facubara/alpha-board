@@ -68,11 +68,9 @@ export function useTradeNotifications() {
   return ctx;
 }
 
-function readStoredSidebarOpen(): boolean {
-  if (typeof window === "undefined") return true;
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return stored !== null ? stored === "true" : true;
-}
+// Default to true during SSR and initial client render to avoid hydration mismatch.
+// Actual localStorage value is synced in a useEffect inside the provider.
+const SIDEBAR_DEFAULT = true;
 
 interface Props {
   initialTrades?: TradeNotification[];
@@ -83,13 +81,21 @@ export function TradeNotificationProvider({ initialTrades = [], children }: Prop
   // react-doctor: intentional — local mutation of server-fetched initial data
   const [trades, setTrades] = useState<TradeNotification[]>(initialTrades);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [sidebarOpen, setSidebarOpen] = useState(readStoredSidebarOpen);
+  const [sidebarOpen, setSidebarOpen] = useState(SIDEBAR_DEFAULT);
   const [highlightedSymbols, setHighlightedSymbols] = useState<Set<string>>(
     new Set()
   );
   const highlightTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(
     new Map()
   );
+
+  // Sync sidebar state from localStorage after mount to avoid hydration mismatch
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored !== null) {
+      setSidebarOpen(stored === "true");
+    }
+  }, []);
 
   // Fetch initial trades client-side (moved from server to unblock layout render)
   const tradesUrl = WORKER_URL ? `${WORKER_URL}/trades/recent?limit=50` : null;
