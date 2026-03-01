@@ -5,6 +5,7 @@ and trading signals. Results are persisted to tweet_signals table.
 """
 
 import logging
+from collections.abc import Awaitable, Callable
 from decimal import Decimal
 
 import anthropic
@@ -106,8 +107,16 @@ class TweetAnalyzer:
         )
         self.model = settings.tweet_analysis_model
 
-    async def analyze_batch(self, session: AsyncSession) -> dict:
+    async def analyze_batch(
+        self,
+        session: AsyncSession,
+        on_batch_done: Callable[[int, int], Awaitable[None]] | None = None,
+    ) -> dict:
         """Analyze all unanalyzed tweets in batches.
+
+        Args:
+            session: Database session.
+            on_batch_done: Optional async callback(processed, errors) called after each batch.
 
         Returns:
             Summary dict with analyzed count, errors, and cost.
@@ -124,7 +133,7 @@ class TweetAnalyzer:
         rows = list(result.all())
 
         if not rows:
-            return {"analyzed": 0, "errors": 0, "cost": 0.0}
+            return {"analyzed": 0, "errors": 0, "cost": 0.0, "total_items": 0}
 
         total_analyzed = 0
         total_errors = 0
@@ -141,12 +150,16 @@ class TweetAnalyzer:
                 logger.exception(f"Batch analysis failed: {e}")
                 total_errors += len(batch)
 
+            if on_batch_done:
+                await on_batch_done(total_analyzed, total_errors)
+
         await session.commit()
 
         summary = {
             "analyzed": total_analyzed,
             "errors": total_errors,
             "cost": round(total_cost, 4),
+            "total_items": len(rows),
         }
         logger.info(f"Tweet analysis: {summary}")
         return summary

@@ -1606,8 +1606,61 @@ async def trigger_tweet_analysis():
     from src.twitter.analyzer import TweetAnalyzer
 
     async with async_session() as session:
+        # Count unanalyzed tweets for the run record
+        count_result = await session.execute(
+            text(
+                "SELECT COUNT(*) FROM tweets t "
+                "LEFT JOIN tweet_signals s ON s.tweet_id = t.id "
+                "WHERE s.id IS NULL"
+            )
+        )
+        total_items = count_result.scalar() or 0
+
+        # Create processing run
+        run_result = await session.execute(
+            text(
+                "INSERT INTO processing_runs (task_type, status, total_items) "
+                "VALUES ('tweet_sentiment', 'running', :total) RETURNING id"
+            ),
+            {"total": min(total_items, 150)},
+        )
+        run_id = run_result.scalar()
+        await session.commit()
+
+        async def on_batch_done(processed: int, errors: int) -> None:
+            await session.execute(
+                text(
+                    "UPDATE processing_runs SET processed_items = :p, error_count = :e "
+                    "WHERE id = :id"
+                ),
+                {"p": processed, "e": errors, "id": run_id},
+            )
+            await session.commit()
+
         analyzer = TweetAnalyzer()
-        result = await analyzer.analyze_batch(session)
+        try:
+            result = await analyzer.analyze_batch(session, on_batch_done=on_batch_done)
+            await session.execute(
+                text(
+                    "UPDATE processing_runs "
+                    "SET status = 'completed', processed_items = :p, error_count = :e, "
+                    "    completed_at = NOW() "
+                    "WHERE id = :id"
+                ),
+                {"p": result["analyzed"], "e": result["errors"], "id": run_id},
+            )
+        except Exception as e:
+            await session.execute(
+                text(
+                    "UPDATE processing_runs "
+                    "SET status = 'failed', last_error = :err, completed_at = NOW() "
+                    "WHERE id = :id"
+                ),
+                {"err": str(e)[:500], "id": run_id},
+            )
+            await session.commit()
+            raise
+        await session.commit()
 
     return result
 
