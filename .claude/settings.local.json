@@ -108,7 +108,12 @@
       "Bash(node:*)",
       "Bash(worker/.venv/Scripts/python.exe:*)",
       "Bash(fly secrets:*)",
-      "Bash(tasklist:*)"
+      "Bash(tasklist:*)",
+      "Bash(test:*)",
+      "Bash(netstat:*)",
+      "Bash(rm:*)",
+      "Bash(claude mcp:*)",
+      "Bash(do:*)"
     ]
   }
 }

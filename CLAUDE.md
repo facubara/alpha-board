@@ -52,6 +52,35 @@ The file `next-steps.md` in the project root lists upcoming features. Each featu
 
 When a feature from `next-steps.md` is fully implemented and deployed, update its heading status from `PENDING` (or `IN PROGRESS`) to `COMPLETED`. Do this immediately after the work is done — do not ask, just update the file.
 
+## Changelog / Updates Page
+
+Every user-facing change (new feature, significant fix, UI overhaul) **must** get a changelog entry in `web/src/lib/data/changelog.ts`. Add it immediately after the work is deployed — do not ask, just add it.
+
+Entry format:
+```ts
+{ date: "YYYY-MM-DD", title: "Short Feature Name", description: "One-liner summarizing what changed and why it matters to users." }
+```
+
+Prepend new entries to the top of the array (newest first). Keep descriptions concise — one sentence, two max.
+
+## Rules — Always Do
+
+- **Summarize changes for the Updates page** — every deployed feature/fix gets a changelog entry (see above).
+- **Verify after deploy** — never assume a deploy worked. Use Playwright for web, WebFetch for API.
+- **Run migrations immediately** — if a migration was added, run `alembic upgrade head` on the worker right after deploy.
+- **Update `next-steps.md`** — mark features as `COMPLETED` the moment they're deployed.
+- **Commit messages use conventional commits** — `feat:`, `fix:`, `perf:`, `chore:`, etc.
+
+## Rules — Never Do
+
+- **Don't skip visual verification** — if UI changed, screenshot it with Playwright MCP. No exceptions.
+- **Don't leave migrations unapplied** — deploy + migrate is one atomic operation.
+- **Don't ask "should I deploy?"** — deployment is always expected after pushing changes.
+- **Don't introduce N+1 queries** — batch-fetch or join instead. If you add a DB query inside a loop, stop and refactor.
+- **Don't hardcode secrets or API keys** — always use environment variables.
+- **Don't add dependencies without justification** — prefer using what's already in the project. If a new package is truly needed, mention why.
+- **Don't install Playwright** — Playwright MCP is already available as a tool. Never run `npx playwright install`, `npm install playwright`, or any Playwright install command. Just use the MCP browser tools directly.
+
 ## Conventions
 
 - Commit messages follow conventional commits (`feat:`, `fix:`, `chore:`, etc.)
