@@ -3,8 +3,8 @@ import Link from "next/link";
 import { getAllTimeframeRankings } from "@/lib/queries/rankings";
 import { RankingsTable } from "@/components/rankings";
 
-// ISR configuration: revalidate every 60 seconds
-export const revalidate = 60;
+// ISR: revalidate every 15 minutes (matches shortest timeframe cadence)
+export const revalidate = 900;
 
 /**
  * Async server component that fetches rankings.
