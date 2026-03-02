@@ -455,16 +455,21 @@ async def run_timeframe_pipeline(timeframe: str):
 
 @app.get("/health")
 async def health():
-    """Health check with detailed status for monitoring."""
+    """Health check with detailed status for monitoring.
+
+    Always returns 200 so Fly proxy keeps routing traffic even when
+    the DB pool is temporarily exhausted during heavy pipeline bursts.
+    """
     uptime_seconds = int(time.monotonic() - start_time)
 
-    # Quick DB connectivity check
+    # Quick DB connectivity check (with 3s timeout to avoid pool starvation)
     db_status = "ok"
     try:
-        async with engine.connect() as conn:
-            await conn.execute(text("SELECT 1"))
+        async with asyncio.timeout(3):
+            async with engine.connect() as conn:
+                await conn.execute(text("SELECT 1"))
     except Exception:
-        db_status = "error"
+        db_status = "busy"
 
     # Cache connectivity check
     cache_status = "disabled"
@@ -481,51 +486,55 @@ async def health():
         except Exception:
             cache_status = "error"
 
-    # Agent stats
+    # Agent stats (skip if DB pool is busy)
     agent_stats = {}
-    try:
-        async with engine.connect() as conn:
-            row = await conn.execute(
-                text(
-                    "SELECT "
-                    "COUNT(*) FILTER (WHERE status = 'active') as active, "
-                    "COUNT(*) FILTER (WHERE status = 'paused') as paused "
-                    "FROM agents"
-                )
-            )
-            r = row.first()
-            if r:
-                agent_stats = {"active": r[0], "paused": r[1]}
+    if db_status == "ok":
+        try:
+            async with asyncio.timeout(3):
+                async with engine.connect() as conn:
+                    row = await conn.execute(
+                        text(
+                            "SELECT "
+                            "COUNT(*) FILTER (WHERE status = 'active') as active, "
+                            "COUNT(*) FILTER (WHERE status = 'paused') as paused "
+                            "FROM agents"
+                        )
+                    )
+                    r = row.first()
+                    if r:
+                        agent_stats = {"active": r[0], "paused": r[1]}
 
-            pos_row = await conn.execute(text("SELECT COUNT(*) FROM agent_positions"))
-            p = pos_row.scalar()
-            agent_stats["open_positions"] = p or 0
-    except Exception:
-        pass
+                    pos_row = await conn.execute(text("SELECT COUNT(*) FROM agent_positions"))
+                    p = pos_row.scalar()
+                    agent_stats["open_positions"] = p or 0
+        except Exception:
+            pass
 
-    # Twitter stats
+    # Twitter stats (skip if DB pool is busy)
     twitter_stats: dict = {
         "enabled": settings.twitter_polling_enabled,
         "accounts_tracked": 0,
         "last_poll": last_twitter_poll.isoformat() if last_twitter_poll else None,
         "tweets_24h": 0,
     }
-    try:
-        async with engine.connect() as conn:
-            acct_row = await conn.execute(
-                text("SELECT COUNT(*) FROM twitter_accounts WHERE is_active = true")
-            )
-            twitter_stats["accounts_tracked"] = acct_row.scalar() or 0
+    if db_status == "ok":
+        try:
+            async with asyncio.timeout(3):
+                async with engine.connect() as conn:
+                    acct_row = await conn.execute(
+                        text("SELECT COUNT(*) FROM twitter_accounts WHERE is_active = true")
+                    )
+                    twitter_stats["accounts_tracked"] = acct_row.scalar() or 0
 
-            tweets_row = await conn.execute(
-                text(
-                    "SELECT COUNT(*) FROM tweets "
-                    "WHERE created_at > NOW() - INTERVAL '24 hours'"
-                )
-            )
-            twitter_stats["tweets_24h"] = tweets_row.scalar() or 0
-    except Exception:
-        pass
+                    tweets_row = await conn.execute(
+                        text(
+                            "SELECT COUNT(*) FROM tweets "
+                            "WHERE created_at > NOW() - INTERVAL '24 hours'"
+                        )
+                    )
+                    twitter_stats["tweets_24h"] = tweets_row.scalar() or 0
+        except Exception:
+            pass
 
     return {
         "status": "ok" if db_status == "ok" else "degraded",

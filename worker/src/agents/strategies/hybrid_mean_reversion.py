@@ -63,7 +63,7 @@ class HybridMeanReversionStrategy(BaseRuleStrategy):
                     symbol=r.symbol,
                     position_size_pct=size,
                     stop_loss_pct=0.03,
-                    take_profit_pct=0.04,
+                    take_profit_pct=0.06,
                     confidence=0.6,
                 )
 
@@ -89,7 +89,7 @@ class HybridMeanReversionStrategy(BaseRuleStrategy):
                     symbol=r.symbol,
                     position_size_pct=size,
                     stop_loss_pct=0.03,
-                    take_profit_pct=0.04,
+                    take_profit_pct=0.06,
                     confidence=0.6,
                 )
 

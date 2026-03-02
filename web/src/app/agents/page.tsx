@@ -24,12 +24,18 @@ export default async function AgentsPage() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-primary">Agent Arena</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-primary">
+          Agent Arena
+          <span className="ml-2 inline-flex items-center rounded-full bg-[var(--bullish-subtle)] px-2 py-0.5 align-middle font-mono text-xs font-bold text-bullish">
+            v2
+          </span>
+        </h1>
         <p className="mt-1 text-sm text-secondary">
           {agents.length} AI trading agents competing in simulated markets
           {discarded.length > 0 && (
             <span className="text-muted"> · {discarded.length} discarded</span>
           )}
+          <span className="text-muted"> · Season 1 tuned</span>
         </p>
       </div>
 

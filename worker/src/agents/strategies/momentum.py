@@ -55,8 +55,8 @@ class MomentumStrategy(BaseRuleStrategy):
                     action=ActionType.OPEN_LONG,
                     symbol=r.symbol,
                     position_size_pct=size,
-                    stop_loss_pct=0.04,
-                    take_profit_pct=0.06,
+                    stop_loss_pct=0.03,
+                    take_profit_pct=0.08,
                     confidence=r.bullish_score,
                 )
 
@@ -77,8 +77,8 @@ class MomentumStrategy(BaseRuleStrategy):
                     action=ActionType.OPEN_SHORT,
                     symbol=r.symbol,
                     position_size_pct=size,
-                    stop_loss_pct=0.04,
-                    take_profit_pct=0.06,
+                    stop_loss_pct=0.03,
+                    take_profit_pct=0.08,
                     confidence=1.0 - r.bullish_score,
                 )
 

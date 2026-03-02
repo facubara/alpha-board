@@ -102,7 +102,13 @@
       "Bash(uv run:*)",
       "Bash(npm run:*)",
       "Bash(uv venv:*)",
-      "Bash(uv pip:*)"
+      "Bash(uv pip:*)",
+      "Bash(.venv/Scripts/python.exe:*)",
+      "Bash(cp:*)",
+      "Bash(node:*)",
+      "Bash(worker/.venv/Scripts/python.exe:*)",
+      "Bash(fly secrets:*)",
+      "Bash(tasklist:*)"
     ]
   }
 }

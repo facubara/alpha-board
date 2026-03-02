@@ -53,7 +53,7 @@ class HybridBreakoutStrategy(BaseRuleStrategy):
             if (
                 is_squeeze
                 and pct_b > 1.0  # price above upper BB
-                and obv_slope > 2.0  # volume spike
+                and obv_slope > 2.5  # volume spike (tightened in S1)
                 and adx < 25  # trend emerging, not mature
                 and 0.55 <= r.bullish_score <= 0.75
                 and self._regime_allows_direction(context, "long")
@@ -79,7 +79,7 @@ class HybridBreakoutStrategy(BaseRuleStrategy):
             if (
                 is_squeeze
                 and pct_b < 0.0  # price below lower BB
-                and obv_slope < -2.0  # volume spike down
+                and obv_slope < -2.5  # volume spike down (tightened in S1)
                 and adx < 25
                 and plus_di is not None
                 and minus_di is not None
