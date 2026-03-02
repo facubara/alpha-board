@@ -9,8 +9,9 @@ Tables:
 6. agent_prompts — Prompt version history
 7. agent_portfolios — Current portfolio state
 8. agent_positions — Open positions
-9. agent_trades — Completed trades
-10. agent_decisions — Decision log (partitioned by month)
+9. agent_trades — Completed trades (with season tag)
+10. agent_season_snapshots — End-of-season portfolio archive
+11. agent_decisions — Decision log (partitioned by month)
 11. agent_memory — Memory bank
 12. agent_token_usage — Token usage tracking
 13. service_health_checks — Raw health check results
@@ -327,6 +328,7 @@ class AgentTrade(Base):
     close_decision_id: Mapped[int | None] = mapped_column(
         BigInteger, ForeignKey("agent_decisions.id")
     )
+    season: Mapped[int] = mapped_column(Integer, nullable=False, server_default="2")
 
     # Relationships
     agent: Mapped["Agent"] = relationship(back_populates="trades")
@@ -334,6 +336,36 @@ class AgentTrade(Base):
     memory: Mapped["AgentMemory"] = relationship(back_populates="trade", uselist=False)
 
     __table_args__ = (Index("idx_agent_trades_agent_time", "agent_id", closed_at.desc()),)
+
+
+class AgentSeasonSnapshot(Base):
+    """End-of-season portfolio archive. One row per agent per season."""
+
+    __tablename__ = "agent_season_snapshots"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    season: Mapped[int] = mapped_column(Integer, nullable=False)
+    agent_id: Mapped[int] = mapped_column(Integer, ForeignKey("agents.id"), nullable=False)
+    agent_name: Mapped[str] = mapped_column(String(50), nullable=False)
+    cash_balance: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    total_equity: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    total_realized_pnl: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    total_fees_paid: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    peak_equity: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    trough_equity: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False)
+    trade_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    win_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    win_rate: Mapped[Decimal] = mapped_column(Numeric(5, 2), nullable=False, default=Decimal("0.00"))
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    # Relationships
+    agent: Mapped["Agent"] = relationship()
+
+    __table_args__ = (
+        UniqueConstraint("season", "agent_id", name="uq_season_snapshots_season_agent"),
+    )
 
 
 class AgentDecision(Base):

@@ -81,6 +81,29 @@ Prepend new entries to the top of the array (newest first). Keep descriptions co
 - **Don't add dependencies without justification** — prefer using what's already in the project. If a new package is truly needed, mention why.
 - **Don't install Playwright** — Playwright MCP is already available as a tool. Never run `npx playwright install`, `npm install playwright`, or any Playwright install command. Just use the MCP browser tools directly.
 
+## Season Transitions
+
+When a season ends, follow this process:
+
+1. **Generate review docs** under `docs/season-N/`:
+   - `_index.md` scorecard — fleet summary table with per-agent verdicts (KEEP / TUNE / DISCARD)
+   - Individual agent `.md` files — performance metrics, strengths/weaknesses, trade analysis, verdict + rationale
+   - See `docs/season-1/` as the format reference
+
+2. **Apply verdicts** via Alembic migration:
+   - DISCARD agents → `status='discarded'` with reason
+   - TUNE agents → parameter changes (prompt tweaks, threshold adjustments)
+
+3. **Archive + reset** via Alembic migration:
+   - Snapshot end-of-season portfolios into `agent_season_snapshots` table
+   - Tag all existing trades with the ending season number (`season` column on `agent_trades`)
+   - Force-close open positions as `exit_reason='season_reset'`
+   - Reset all active agent portfolios to $10k equity, zero PnL
+
+4. **Add a changelog entry** to `web/src/lib/data/changelog.ts` summarizing the season transition
+
+5. **Deploy + migrate** — deploy worker, run `alembic upgrade head`, push web changes
+
 ## Conventions
 
 - Commit messages follow conventional commits (`feat:`, `fix:`, `chore:`, etc.)

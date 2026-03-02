@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-03-02",
+    title: "Season 1 Review & Season 2 Reset",
+    description:
+      "Completed Season 1 agent review: 10 agents kept, 11 tuned, 5 discarded. All active agents reset to $10k equity for clean Season 2 comparison.",
+  },
+  {
     date: "2026-02-22",
     title: "Trending Tokens",
     description:
