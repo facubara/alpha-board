@@ -5,6 +5,7 @@
  * All timeframes are fetched in parallel for instant switching.
  */
 
+import { cached } from "@/lib/cache";
 import { workerGet } from "@/lib/worker-client";
 import type {
   AllTimeframeRankings,
@@ -18,14 +19,18 @@ import type {
 export async function getTimeframeRankings(
   timeframe: Timeframe
 ): Promise<RankingsData> {
-  return workerGet<RankingsData>(`/rankings/${timeframe}`);
+  return cached(`rankings:${timeframe}`, 60, () =>
+    workerGet<RankingsData>(`/rankings/${timeframe}`)
+  );
 }
 
 /**
  * Fetch rankings for all 6 timeframes in parallel.
  */
 export async function getAllTimeframeRankings(): Promise<AllTimeframeRankings> {
-  return workerGet<AllTimeframeRankings>("/rankings");
+  return cached("rankings:all", 60, () =>
+    workerGet<AllTimeframeRankings>("/rankings")
+  );
 }
 
 /**

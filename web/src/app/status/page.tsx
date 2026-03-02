@@ -9,7 +9,7 @@ import { getStatusData } from "@/lib/queries/status";
 import { getLlmSettings } from "@/lib/queries/settings";
 import { StatusPage } from "@/components/status/status-page";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function StatusRoute() {
   let data: Awaited<ReturnType<typeof getStatusData>> | null;

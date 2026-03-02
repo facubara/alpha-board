@@ -5,6 +5,7 @@
  * from the worker API.
  */
 
+import { cached } from "@/lib/cache";
 import { workerGet } from "@/lib/worker-client";
 import type {
   WatchWallet,
@@ -23,7 +24,9 @@ import type {
  * Fetch watch wallets sorted by score.
  */
 export async function getWatchWallets(): Promise<WatchWallet[]> {
-  return workerGet<WatchWallet[]>("/memecoins/wallets");
+  return cached("memecoins:wallets", 60, () =>
+    workerGet<WatchWallet[]>("/memecoins/wallets")
+  );
 }
 
 /**
@@ -32,7 +35,9 @@ export async function getWatchWallets(): Promise<WatchWallet[]> {
 export async function getRecentWalletActivity(
   limit: number = 50
 ): Promise<WalletActivity[]> {
-  return workerGet<WalletActivity[]>(`/memecoins/activity?limit=${limit}`);
+  return cached(`memecoins:activity:${limit}`, 60, () =>
+    workerGet<WalletActivity[]>(`/memecoins/activity?limit=${limit}`)
+  );
 }
 
 /**
@@ -41,7 +46,9 @@ export async function getRecentWalletActivity(
 export async function getMemecoinTwitterAccounts(): Promise<
   MemecoinTwitterAccount[]
 > {
-  return workerGet<MemecoinTwitterAccount[]>("/memecoins/twitter/accounts");
+  return cached("memecoins:twitter:accounts", 60, () =>
+    workerGet<MemecoinTwitterAccount[]>("/memecoins/twitter/accounts")
+  );
 }
 
 /**
@@ -50,14 +57,18 @@ export async function getMemecoinTwitterAccounts(): Promise<
 export async function getRecentMemecoinTweets(
   limit: number = 50
 ): Promise<MemecoinTweetData[]> {
-  return workerGet<MemecoinTweetData[]>(`/memecoins/twitter/feed?limit=${limit}`);
+  return cached(`memecoins:twitter:feed:${limit}`, 60, () =>
+    workerGet<MemecoinTweetData[]>(`/memecoins/twitter/feed?limit=${limit}`)
+  );
 }
 
 /**
  * Get memecoin dashboard stats.
  */
 export async function getMemecoinStats(): Promise<MemecoinStats> {
-  return workerGet<MemecoinStats>("/memecoins/stats");
+  return cached("memecoins:stats", 60, () =>
+    workerGet<MemecoinStats>("/memecoins/stats")
+  );
 }
 
 /**
@@ -66,7 +77,9 @@ export async function getMemecoinStats(): Promise<MemecoinStats> {
 export async function getTrendingTokens(
   hours: number = 24
 ): Promise<TrendingToken[]> {
-  return workerGet<TrendingToken[]>(`/memecoins/trending?hours=${hours}`);
+  return cached(`memecoins:trending:${hours}`, 60, () =>
+    workerGet<TrendingToken[]>(`/memecoins/trending?hours=${hours}`)
+  );
 }
 
 /**
@@ -96,7 +109,9 @@ export async function getAccountCallHistory(
  * Fetch all active tracked tokens from token_tracker.
  */
 export async function getTrackedTokens(): Promise<TrackedToken[]> {
-  return workerGet<TrackedToken[]>("/memecoins/tracker");
+  return cached("memecoins:tracker", 60, () =>
+    workerGet<TrackedToken[]>("/memecoins/tracker")
+  );
 }
 
 /**

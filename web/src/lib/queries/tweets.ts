@@ -4,6 +4,7 @@
  * Fetches tweet data and account info from the worker API.
  */
 
+import { cached } from "@/lib/cache";
 import { workerGet } from "@/lib/worker-client";
 import type { TwitterAccount, TweetData } from "@/lib/types";
 
@@ -11,14 +12,18 @@ import type { TwitterAccount, TweetData } from "@/lib/types";
  * Fetch all tracked Twitter accounts with tweet counts.
  */
 export async function getTwitterAccounts(): Promise<TwitterAccount[]> {
-  return workerGet<TwitterAccount[]>("/twitter/accounts");
+  return cached("tweets:accounts", 60, () =>
+    workerGet<TwitterAccount[]>("/twitter/accounts")
+  );
 }
 
 /**
  * Fetch recent tweets with account info and signal data.
  */
 export async function getRecentTweets(limit: number = 50): Promise<TweetData[]> {
-  return workerGet<TweetData[]>(`/twitter/feed?limit=${limit}`);
+  return cached(`tweets:feed:${limit}`, 60, () =>
+    workerGet<TweetData[]>(`/twitter/feed?limit=${limit}`)
+  );
 }
 
 /**
@@ -34,5 +39,7 @@ export async function getTweetStats(): Promise<{
     setupBreakdown: Record<string, number>;
   };
 }> {
-  return workerGet("/twitter/stats");
+  return cached("tweets:stats", 60, () =>
+    workerGet("/twitter/stats")
+  );
 }
