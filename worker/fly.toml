@@ -12,6 +12,7 @@ primary_region = 'ams'
 [env]
   AGENTS_ENABLED = 'true'
   BINANCE_BASE_URL = 'https://api.binance.com'
+  CORS_ORIGINS = 'https://alpha-board.com,https://www.alpha-board.com'
   EVOLUTION_ENABLED = 'true'
   LOG_LEVEL = 'INFO'
   PYTHON_ENV = 'production'
