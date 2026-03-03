@@ -324,6 +324,7 @@ async def run_timeframe_pipeline(timeframe: str):
             # Invalidate rankings caches (worker-side and web-side) so next request gets fresh data
             await cache_delete(f"rankings_resp:{timeframe}")
             await cache_delete(f"rankings:{timeframe}")
+            await cache_delete("rankings:all")
 
             # Pre-warm the rankings cache so the first web request hits warm Redis
             try:
