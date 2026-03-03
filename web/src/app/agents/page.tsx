@@ -1,15 +1,24 @@
 import { AgentLeaderboard } from "@/components/agents";
 import { DiscardedAgents } from "@/components/agents/discarded-agents";
 import { FleetLessons } from "@/components/agents/fleet-lessons";
+import { getAgentLeaderboard } from "@/lib/queries/agents";
+import { getDiscardedAgents } from "@/lib/queries/agents";
+import { getFleetLessons } from "@/lib/queries/lessons";
 
 /**
  * Agents Leaderboard Page
  *
- * Static shell renders instantly — controls, filters, table header all appear
- * before data loads. Agent rows fetch client-side from the worker API.
+ * Server-fetches all data so the page renders with content on first load.
+ * Components still revalidate client-side via useFetch for live updates.
  */
 
-export default function AgentsPage() {
+export default async function AgentsPage() {
+  const [agents, discarded, lessons] = await Promise.all([
+    getAgentLeaderboard().catch(() => undefined),
+    getDiscardedAgents().catch(() => undefined),
+    getFleetLessons().catch(() => undefined),
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Page header */}
@@ -42,17 +51,17 @@ export default function AgentsPage() {
         </p>
       </details>
 
-      {/* Leaderboard — controls render instantly, rows fetch client-side */}
-      <AgentLeaderboard />
+      {/* Leaderboard — server data hydrates instantly, client revalidates */}
+      <AgentLeaderboard agents={agents} />
 
-      {/* Fleet lessons — fetches own data client-side */}
+      {/* Fleet lessons */}
       <div className="border-t border-[var(--border-default)] pt-6">
-        <FleetLessons />
+        <FleetLessons lessons={lessons} />
       </div>
 
-      {/* Discarded agents — fetches own data client-side */}
+      {/* Discarded agents */}
       <div className="border-t border-[var(--border-default)] pt-6">
-        <DiscardedAgents />
+        <DiscardedAgents agents={discarded} />
       </div>
     </div>
   );
