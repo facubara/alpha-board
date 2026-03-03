@@ -22,10 +22,10 @@ def upgrade() -> None:
     # 1. Delete all related data for 1w agents (order matters for FK constraints)
     # Positions are ephemeral (deleted on close, no status column), so just delete them.
     for table in [
+        "agent_memory",       # must come before agent_trades (FK: memory.trade_id -> trades.id)
         "agent_positions",
         "agent_trades",
         "agent_decisions",
-        "agent_memory",
         "agent_token_usage",
         "agent_prompts",
         "agent_portfolios",
