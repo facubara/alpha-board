@@ -1,25 +1,15 @@
-import { getAgentLeaderboard, getDiscardedAgents } from "@/lib/queries/agents";
-import { getFleetLessons } from "@/lib/queries/lessons";
 import { AgentLeaderboard } from "@/components/agents";
 import { DiscardedAgents } from "@/components/agents/discarded-agents";
 import { FleetLessons } from "@/components/agents/fleet-lessons";
 
 /**
- * Agents Leaderboard Page (Server Component)
+ * Agents Leaderboard Page
  *
- * Fetches all agents with performance metrics.
- * ISR: Revalidates every 60 seconds to stay current with agent decisions.
+ * Static shell renders instantly — controls, filters, table header all appear
+ * before data loads. Agent rows fetch client-side from the worker API.
  */
 
-export const revalidate = 60;
-
-export default async function AgentsPage() {
-  const [agents, discarded, fleetLessons] = await Promise.all([
-    getAgentLeaderboard(),
-    getDiscardedAgents().catch(() => []),
-    getFleetLessons().catch(() => []),
-  ]);
-
+export default function AgentsPage() {
   return (
     <div className="space-y-6">
       {/* Page header */}
@@ -31,10 +21,7 @@ export default async function AgentsPage() {
           </span>
         </h1>
         <p className="mt-1 text-sm text-secondary">
-          {agents.length} AI trading agents competing in simulated markets
-          {discarded.length > 0 && (
-            <span className="text-muted"> · {discarded.length} discarded</span>
-          )}
+          AI trading agents competing in simulated markets
           <span className="text-muted"> · Season 1 tuned</span>
         </p>
       </div>
@@ -55,22 +42,18 @@ export default async function AgentsPage() {
         </p>
       </details>
 
-      {/* Leaderboard */}
-      <AgentLeaderboard agents={agents} />
+      {/* Leaderboard — controls render instantly, rows fetch client-side */}
+      <AgentLeaderboard />
 
-      {/* Fleet lessons section */}
-      {fleetLessons.length > 0 && (
-        <div className="border-t border-[var(--border-default)] pt-6">
-          <FleetLessons lessons={fleetLessons} />
-        </div>
-      )}
+      {/* Fleet lessons — fetches own data client-side */}
+      <div className="border-t border-[var(--border-default)] pt-6">
+        <FleetLessons />
+      </div>
 
-      {/* Discarded agents section */}
-      {discarded.length > 0 && (
-        <div className="border-t border-[var(--border-default)] pt-6">
-          <DiscardedAgents agents={discarded} />
-        </div>
-      )}
+      {/* Discarded agents — fetches own data client-side */}
+      <div className="border-t border-[var(--border-default)] pt-6">
+        <DiscardedAgents />
+      </div>
     </div>
   );
 }

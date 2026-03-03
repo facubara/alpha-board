@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { ChevronDown, ChevronRight, Search, RotateCcw, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
+
+const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 import {
   Table,
   TableBody,
@@ -22,14 +24,35 @@ const SOURCE_BADGE: Record<AgentSource, string> = {
 };
 
 interface DiscardedAgentsProps {
-  agents: AgentLeaderboardRow[];
+  agents?: AgentLeaderboardRow[];
 }
 
-export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
+export function DiscardedAgents({ agents: initialAgents }: DiscardedAgentsProps) {
   const [expanded, setExpanded] = useState(false);
   const [search, setSearch] = useState("");
   // react-doctor: intentional — local mutation of server-fetched initial data
-  const [items, setItems] = useState(agents);
+  const [items, setItems] = useState(initialAgents ?? []);
+  const [loaded, setLoaded] = useState(!!initialAgents);
+
+  useEffect(() => {
+    if (initialAgents) return;
+    let cancelled = false;
+    fetch(`${WORKER_URL}/agents/discarded`)
+      .then((res) => {
+        if (!res.ok) throw new Error("fetch failed");
+        return res.json();
+      })
+      .then((data: AgentLeaderboardRow[]) => {
+        if (!cancelled) {
+          setItems(data);
+          setLoaded(true);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoaded(true);
+      });
+    return () => { cancelled = true; };
+  }, [initialAgents]);
   const [actionLoading, setActionLoading] = useState<Record<number, string>>({});
 
   const filtered = useMemo(() => {
@@ -103,7 +126,7 @@ export function DiscardedAgents({ agents }: DiscardedAgentsProps) {
     [requireAuth]
   );
 
-  if (items.length === 0) return null;
+  if (!loaded || items.length === 0) return null;
 
   return (
     <div className="space-y-2">

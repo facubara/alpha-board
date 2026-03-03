@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ChevronDown, ChevronRight, X, Zap, AlertTriangle, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
 import type { FleetLesson, FleetLessonCategory } from "@/lib/types";
+
+const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
 const CATEGORY_CONFIG: Record<
   FleetLessonCategory,
@@ -28,12 +30,33 @@ const CATEGORY_CONFIG: Record<
 };
 
 interface FleetLessonsProps {
-  lessons: FleetLesson[];
+  lessons?: FleetLesson[];
 }
 
 export function FleetLessons({ lessons: initialLessons }: FleetLessonsProps) {
   const [expanded, setExpanded] = useState(false);
-  const [items, setItems] = useState(initialLessons);
+  const [items, setItems] = useState(initialLessons ?? []);
+  const [loaded, setLoaded] = useState(!!initialLessons);
+
+  useEffect(() => {
+    if (initialLessons) return;
+    let cancelled = false;
+    fetch(`${WORKER_URL}/lessons`)
+      .then((res) => {
+        if (!res.ok) throw new Error("fetch failed");
+        return res.json();
+      })
+      .then((data: FleetLesson[]) => {
+        if (!cancelled) {
+          setItems(data);
+          setLoaded(true);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoaded(true);
+      });
+    return () => { cancelled = true; };
+  }, [initialLessons]);
   const [removing, setRemoving] = useState<Set<number>>(new Set());
   const [filter, setFilter] = useState<FleetLessonCategory | "all">("all");
   const { requireAuth } = useAuth();
@@ -64,7 +87,7 @@ export function FleetLessons({ lessons: initialLessons }: FleetLessonsProps) {
     [requireAuth]
   );
 
-  if (items.length === 0) return null;
+  if (!loaded || items.length === 0) return null;
 
   const filtered = filter === "all" ? items : items.filter((l) => l.category === filter);
 

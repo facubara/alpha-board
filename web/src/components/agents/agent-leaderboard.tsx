@@ -55,7 +55,7 @@ function SortIndicator({ field, sortField, sortDirection }: { field: SortField; 
 }
 
 interface AgentLeaderboardProps {
-  agents: AgentLeaderboardRow[];
+  agents?: AgentLeaderboardRow[];
   className?: string;
 }
 
@@ -109,8 +109,34 @@ function filterReducer(state: FilterState, action: FilterAction): FilterState {
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
-export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
+export function AgentLeaderboard({ agents: initialAgents, className }: AgentLeaderboardProps) {
   const router = useRouter();
+
+  // ─── Client-side data fetch when no initial data provided ───
+  const [fetchedAgents, setFetchedAgents] = useState<AgentLeaderboardRow[] | null>(null);
+  const [loading, setLoading] = useState(!initialAgents);
+
+  useEffect(() => {
+    if (initialAgents) return;
+    let cancelled = false;
+    fetch(`${WORKER_URL}/agents/leaderboard`)
+      .then((res) => {
+        if (!res.ok) throw new Error("fetch failed");
+        return res.json();
+      })
+      .then((data: AgentLeaderboardRow[]) => {
+        if (!cancelled) {
+          setFetchedAgents(data);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [initialAgents]);
+
+  const agents = initialAgents ?? fetchedAgents ?? [];
 
   // Compare mode state
   const [compareMode, setCompareMode] = useState(false);
@@ -351,7 +377,40 @@ export function AgentLeaderboard({ agents, className }: AgentLeaderboardProps) {
       )}
 
       {/* Table */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
+                <TableHead className="text-xs font-medium text-secondary">Agent</TableHead>
+                <TableHead className="hidden w-16 text-xs font-medium text-secondary sm:table-cell">TF</TableHead>
+                <TableHead className="w-24 text-right text-xs font-medium text-secondary">Realized</TableHead>
+                <TableHead className="hidden w-20 text-right text-xs font-medium text-secondary sm:table-cell">uPnL</TableHead>
+                <TableHead className="hidden w-20 text-right text-xs font-medium text-secondary md:table-cell">Win%</TableHead>
+                <TableHead className="hidden w-16 text-right text-xs font-medium text-secondary md:table-cell">Trades</TableHead>
+                <TableHead className="hidden w-16 text-right text-xs font-medium text-secondary lg:table-cell">Open</TableHead>
+                <TableHead className="hidden w-20 text-right text-xs font-medium text-secondary lg:table-cell">Cost</TableHead>
+                <TableHead className="w-10" />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Array.from({ length: 12 }).map((_, i) => (
+                <TableRow key={i} className="h-12 border-b border-[var(--border-subtle)]">
+                  <td className="px-4 py-2"><div className="h-4 w-40 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
+                  <td className="hidden px-4 py-2 sm:table-cell"><div className="h-4 w-8 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
+                  <td className="px-4 py-2 text-right"><div className="ml-auto h-4 w-16 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
+                  <td className="hidden px-4 py-2 text-right sm:table-cell"><div className="ml-auto h-4 w-14 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
+                  <td className="hidden px-4 py-2 text-right md:table-cell"><div className="ml-auto h-4 w-10 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
+                  <td className="hidden px-4 py-2 text-right md:table-cell"><div className="ml-auto h-4 w-8 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
+                  <td className="hidden px-4 py-2 text-right lg:table-cell"><div className="ml-auto h-4 w-8 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
+                  <td className="hidden px-4 py-2 text-right lg:table-cell"><div className="ml-auto h-4 w-12 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
+                  <td className="px-4 py-2" />
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="flex h-64 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
           <p className="text-secondary">No agents match the current filters</p>
         </div>
