@@ -9,7 +9,7 @@ export const changelog: ChangelogEntry[] = [
     date: "2026-03-03",
     title: "Rankings Page Load Speed",
     description:
-      "Added Redis cache-through on the worker rankings API — cold page loads dropped from ~46s to ~4s by eliminating redundant Postgres queries on every request.",
+      "Cold page loads dropped from ~46s to ~6s: Redis cache-through on the worker, slim API mode (73% smaller payloads), and lazy-loading non-default timeframes.",
   },
   {
     date: "2026-03-02",
