@@ -13,7 +13,7 @@ export const revalidate = 900;
 const DEFAULT_TIMEFRAME = "1h";
 
 async function RankingsSection() {
-  const defaultData = await getTimeframeRankings(DEFAULT_TIMEFRAME);
+  const defaultData = await getTimeframeRankings(DEFAULT_TIMEFRAME, { slim: true });
   return <RankingsTable initialTimeframe={DEFAULT_TIMEFRAME} initialData={defaultData} />;
 }
 

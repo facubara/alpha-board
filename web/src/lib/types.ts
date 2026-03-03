@@ -61,7 +61,8 @@ export interface RankingSnapshot {
   confidence: number; // 0 to 100
   rank: number;
   highlights: Highlight[];
-  indicatorSignals: IndicatorSignal[];
+  indicatorSignals?: IndicatorSignal[];
+  indicatorCount?: number; // present in slim responses (replaces indicatorSignals)
   priceChangePct: number | null;
   volumeChangePct: number | null;
   priceChangeAbs: number | null;

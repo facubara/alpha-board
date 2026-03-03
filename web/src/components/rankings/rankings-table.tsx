@@ -139,7 +139,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
           s.symbol.toLowerCase().includes(term) ||
           s.baseAsset.toLowerCase().includes(term) ||
           s.highlights.some((h) => h.text.toLowerCase().includes(term)) ||
-          s.indicatorSignals.some((i) => i.label.toLowerCase().includes(term))
+          s.indicatorSignals?.some((i) => i.label.toLowerCase().includes(term))
       );
     }
 

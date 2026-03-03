@@ -122,7 +122,7 @@ export function RankingRow({ snapshot, highlighted, className }: RankingRowProps
 
         {/* Score bar + value (hidden on mobile) */}
         <TableCell className="hidden w-44 sm:table-cell">
-          <ScoreBar score={snapshot.bullishScore} indicatorCount={snapshot.indicatorSignals.length} />
+          <ScoreBar score={snapshot.bullishScore} indicatorCount={snapshot.indicatorCount ?? snapshot.indicatorSignals?.length ?? 0} />
         </TableCell>
 
         {/* Confidence */}
@@ -218,7 +218,9 @@ export function RankingRow({ snapshot, highlighted, className }: RankingRowProps
                 <HighlightChips highlights={snapshot.highlights} max={4} />
               </div>
             )}
-            <IndicatorBreakdown signals={snapshot.indicatorSignals} />
+            {snapshot.indicatorSignals && (
+              <IndicatorBreakdown signals={snapshot.indicatorSignals} />
+            )}
             <div className="border-t border-[var(--border-subtle)]">
               <PreviousCloses
                 symbolId={snapshot.symbolId}

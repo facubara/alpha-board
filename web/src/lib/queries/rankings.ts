@@ -27,12 +27,16 @@ const ALL_TIMEFRAMES: Timeframe[] = ["15m", "30m", "1h", "4h", "1d", "1w"];
 
 /**
  * Fetch the latest ranking snapshots for a single timeframe.
+ * Pass slim=true to strip indicatorSignals (73% smaller payload).
  */
 export async function getTimeframeRankings(
-  timeframe: Timeframe
+  timeframe: Timeframe,
+  { slim = false }: { slim?: boolean } = {}
 ): Promise<RankingsData> {
-  return cached(`rankings:${timeframe}`, TIMEFRAME_CACHE_TTL[timeframe], () =>
-    workerGet<RankingsData>(`/rankings/${timeframe}`)
+  const suffix = slim ? "?slim=1" : "";
+  const cacheKey = slim ? `rankings:slim:${timeframe}` : `rankings:${timeframe}`;
+  return cached(cacheKey, TIMEFRAME_CACHE_TTL[timeframe], () =>
+    workerGet<RankingsData>(`/rankings/${timeframe}${suffix}`)
   );
 }
 
