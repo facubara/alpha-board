@@ -7,6 +7,12 @@ export type ChangelogEntry = {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-03-03",
+    title: "Agents Page Instant Shell",
+    description:
+      "Agents page now renders controls, filters, and table header instantly — only the rows wait for data. Same treatment as rankings: client-side fetch with skeleton placeholders.",
+  },
+  {
+    date: "2026-03-03",
     title: "Rankings Page Load Speed",
     description:
       "Cold page loads dropped from ~46s to ~6s: Redis cache-through on the worker, slim API mode (73% smaller payloads), and lazy-loading non-default timeframes.",
