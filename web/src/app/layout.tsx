@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { HeaderAuth } from "@/components/auth/header-auth";
-import { ConsensusBannerWrapper } from "@/components/consensus-banner-wrapper";
 import { LogoSwitcher } from "@/components/logo-switcher";
 import { NavLinks } from "@/components/nav-links";
 import { TradeNotificationWrapper, SidebarToggleButton, TradeSidebar, TradeToast } from "@/components/trades";
@@ -66,11 +64,6 @@ export default function RootLayout({
               </div>
             </div>
           </header>
-
-          {/* Consensus ticker banner — Suspense so it doesn't block shell */}
-          <Suspense>
-            <ConsensusBannerWrapper />
-          </Suspense>
 
           {/* Main content */}
           <main id="main-content" className="mx-auto max-w-[1200px] px-4 py-6 sm:px-8">

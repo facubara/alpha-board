@@ -626,25 +626,6 @@ export interface TweetData {
 }
 
 // =============================================================================
-// Consensus Types
-// =============================================================================
-
-export interface ConsensusItem {
-  symbol: string;
-  direction: "long" | "short";
-  consensusPct: number; // 50-100
-  longCount: number;
-  shortCount: number;
-  totalAgents: number;
-}
-
-export interface ConsensusData {
-  technical: ConsensusItem[];
-  tweet: ConsensusItem[];
-  mixed: ConsensusItem[];
-}
-
-// =============================================================================
 // Trade Notification (live sidebar)
 // =============================================================================
 
