@@ -1,60 +1,5 @@
-import { Suspense } from "react";
 import Link from "next/link";
-import { getTimeframeRankings } from "@/lib/queries/rankings";
 import { RankingsTable } from "@/components/rankings";
-
-// ISR: revalidate every 15 minutes (matches shortest timeframe cadence)
-export const revalidate = 900;
-
-/**
- * Async server component that fetches rankings.
- * Wrapped in Suspense so the page shell streams immediately.
- */
-const DEFAULT_TIMEFRAME = "1h";
-
-async function RankingsSection() {
-  const defaultData = await getTimeframeRankings(DEFAULT_TIMEFRAME, { slim: true });
-  return <RankingsTable initialTimeframe={DEFAULT_TIMEFRAME} initialData={defaultData} />;
-}
-
-/**
- * Rankings table skeleton — shown while data streams in.
- */
-function RankingsSkeleton() {
-  return (
-    <div className="space-y-4">
-      {/* Timeframe selector skeleton */}
-      <div className="flex gap-2">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-9 w-14 rounded-md bg-[var(--bg-muted)] skeleton" />
-        ))}
-      </div>
-
-      {/* Table skeleton */}
-      <div className="overflow-hidden rounded-lg border border-[var(--border-default)]">
-        {/* Header */}
-        <div className="flex h-10 items-center gap-4 bg-[var(--bg-surface)] px-4">
-          <div className="h-3 w-8 rounded bg-[var(--bg-muted)] skeleton" />
-          <div className="h-3 w-20 rounded bg-[var(--bg-muted)] skeleton" />
-          <div className="h-3 w-24 rounded bg-[var(--bg-muted)] skeleton" />
-          <div className="h-3 w-12 rounded bg-[var(--bg-muted)] skeleton" />
-        </div>
-        {/* Rows */}
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div
-            key={i}
-            className="flex h-10 items-center gap-4 border-t border-[var(--border-subtle)] px-4"
-          >
-            <div className="h-3 w-6 rounded bg-[var(--bg-muted)] skeleton" />
-            <div className="h-3 w-24 rounded bg-[var(--bg-muted)] skeleton" />
-            <div className="h-1.5 w-24 rounded-full bg-[var(--bg-muted)] skeleton" />
-            <div className="h-3 w-10 rounded bg-[var(--bg-muted)] skeleton" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function RankingsPage() {
   return (
@@ -96,10 +41,8 @@ export default function RankingsPage() {
         </p>
       </div>
 
-      {/* Rankings table — streams in via Suspense */}
-      <Suspense fallback={<RankingsSkeleton />}>
-        <RankingsSection />
-      </Suspense>
+      {/* Rankings table — controls render instantly, rows fetch client-side */}
+      <RankingsTable />
     </div>
   );
 }

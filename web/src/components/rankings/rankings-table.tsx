@@ -74,7 +74,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
-  const [loadingTf, setLoadingTf] = useState(false);
+  const [loadingTf, setLoadingTf] = useState(!data && !initialData);
   const fetchedRef = useRef<Set<string>>(new Set());
 
   // Build initial state from either full data or single-timeframe data
@@ -268,10 +268,26 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
         aria-labelledby={`tab-${timeframe}`}
       >
         {loadingTf && snapshots.length === 0 ? (
-          <div className="flex h-64 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-            <p className="text-secondary animate-pulse">
-              Loading {timeframe} rankings…
-            </p>
+          <div className="overflow-hidden rounded-lg border border-[var(--border-default)]">
+            {/* Skeleton header */}
+            <div className="flex h-10 items-center gap-4 bg-[var(--bg-surface)] px-4">
+              <div className="h-3 w-8 rounded bg-[var(--bg-muted)] skeleton" />
+              <div className="h-3 w-20 rounded bg-[var(--bg-muted)] skeleton" />
+              <div className="h-3 w-24 rounded bg-[var(--bg-muted)] skeleton" />
+              <div className="h-3 w-12 rounded bg-[var(--bg-muted)] skeleton" />
+            </div>
+            {/* Skeleton rows */}
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex h-10 items-center gap-4 border-t border-[var(--border-subtle)] px-4"
+              >
+                <div className="h-3 w-6 rounded bg-[var(--bg-muted)] skeleton" />
+                <div className="h-3 w-24 rounded bg-[var(--bg-muted)] skeleton" />
+                <div className="h-1.5 w-24 rounded-full bg-[var(--bg-muted)] skeleton" />
+                <div className="h-3 w-10 rounded bg-[var(--bg-muted)] skeleton" />
+              </div>
+            ))}
           </div>
         ) : snapshots.length === 0 ? (
           <div className="flex h-64 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
