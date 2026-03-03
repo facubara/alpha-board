@@ -19,19 +19,8 @@ depends_on = None
 def upgrade() -> None:
     conn = op.get_bind()
 
-    # 1. Force-close any open positions for 1w agents
-    conn.execute(
-        __import__("sqlalchemy").text("""
-            UPDATE agent_positions
-            SET status = 'closed',
-                exit_reason = 'timeframe_removed',
-                closed_at = NOW()
-            WHERE agent_id IN (SELECT id FROM agents WHERE timeframe = '1w')
-              AND status = 'open'
-        """)
-    )
-
-    # 2. Delete all related data for 1w agents (order matters for FK constraints)
+    # 1. Delete all related data for 1w agents (order matters for FK constraints)
+    # Positions are ephemeral (deleted on close, no status column), so just delete them.
     for table in [
         "agent_positions",
         "agent_trades",
