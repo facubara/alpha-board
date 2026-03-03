@@ -6,6 +6,12 @@ export type ChangelogEntry = {
 
 export const changelog: ChangelogEntry[] = [
   {
+    date: "2026-03-03",
+    title: "Rankings Page Load Speed",
+    description:
+      "Added Redis cache-through on the worker rankings API — cold page loads dropped from ~46s to ~4s by eliminating redundant Postgres queries on every request.",
+  },
+  {
     date: "2026-03-02",
     title: "Season 1 Review & Season 2 Reset",
     description:
