@@ -37,14 +37,18 @@ export async function getTimeframeRankings(
 }
 
 /**
- * Fetch rankings for all 6 timeframes in a single bulk call.
- * Uses the worker's GET /rankings endpoint (returns all timeframes at once)
- * to avoid 6 separate HTTP round-trips on cold cache.
+ * Fetch rankings for all 6 timeframes in parallel.
+ * Each timeframe is cached independently with its own TTL.
+ * Note: prefer getTimeframeRankings() for single-timeframe use
+ * to avoid loading all 1.35MB of data at once.
  */
 export async function getAllTimeframeRankings(): Promise<AllTimeframeRankings> {
-  return cached<AllTimeframeRankings>("rankings:all", 900, () =>
-    workerGet<AllTimeframeRankings>("/rankings")
+  const results = await Promise.all(
+    ALL_TIMEFRAMES.map((tf) => getTimeframeRankings(tf))
   );
+  return Object.fromEntries(
+    ALL_TIMEFRAMES.map((tf, i) => [tf, results[i]])
+  ) as AllTimeframeRankings;
 }
 
 /**

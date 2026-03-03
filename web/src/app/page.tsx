@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getAllTimeframeRankings } from "@/lib/queries/rankings";
+import { getTimeframeRankings } from "@/lib/queries/rankings";
 import { RankingsTable } from "@/components/rankings";
 
 // ISR: revalidate every 15 minutes (matches shortest timeframe cadence)
@@ -10,9 +10,11 @@ export const revalidate = 900;
  * Async server component that fetches rankings.
  * Wrapped in Suspense so the page shell streams immediately.
  */
+const DEFAULT_TIMEFRAME = "1h";
+
 async function RankingsSection() {
-  const rankings = await getAllTimeframeRankings();
-  return <RankingsTable data={rankings} />;
+  const defaultData = await getTimeframeRankings(DEFAULT_TIMEFRAME);
+  return <RankingsTable initialTimeframe={DEFAULT_TIMEFRAME} initialData={defaultData} />;
 }
 
 /**

@@ -12,7 +12,7 @@
  * - Sort by rank, score, confidence, symbol
  */
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Search, ChevronUp, ChevronDown } from "lucide-react";
 import { useSSE } from "@/hooks/use-sse";
 import { cn } from "@/lib/utils";
@@ -47,7 +47,12 @@ function SortIndicator({ field, sortField, sortDirection }: { field: SortField; 
 }
 
 interface RankingsTableProps {
-  data: AllTimeframeRankings;
+  /** Full pre-loaded data (legacy) or single-timeframe initial data */
+  data?: AllTimeframeRankings;
+  /** Default timeframe to show (used with initialData) */
+  initialTimeframe?: Timeframe;
+  /** Single-timeframe data for fast initial load */
+  initialData?: RankingsData;
   className?: string;
 }
 
@@ -60,17 +65,44 @@ interface RankingSSEEvent {
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
-export function RankingsTable({ data, className }: RankingsTableProps) {
-  const { timeframe, setTimeframe } = useTimeframe("1h");
+export function RankingsTable({ data, initialTimeframe, initialData, className }: RankingsTableProps) {
+  const defaultTf = initialTimeframe ?? "1h";
+  const { timeframe, setTimeframe } = useTimeframe(defaultTf);
   const { highlightedSymbols } = useTradeNotifications();
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState<SortField>("rank");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
+  const [loadingTf, setLoadingTf] = useState(false);
+  const fetchedRef = useRef<Set<string>>(new Set());
+
+  // Build initial state from either full data or single-timeframe data
+  const buildInitialData = (): Partial<AllTimeframeRankings> => {
+    if (data) return data;
+    if (initialData && initialTimeframe) return { [initialTimeframe]: initialData };
+    return {};
+  };
 
   // react-doctor: intentional — local mutation of server-fetched initial data
-  const [rankingsData, setRankingsData] = useState<AllTimeframeRankings>(data);
+  const [rankingsData, setRankingsData] = useState<Partial<AllTimeframeRankings>>(buildInitialData);
+
+  // Lazy-load timeframe data when user switches to a tab we don't have yet
+  useEffect(() => {
+    if (rankingsData[timeframe] || fetchedRef.current.has(timeframe)) return;
+    fetchedRef.current.add(timeframe);
+    setLoadingTf(true);
+
+    fetch(`${WORKER_URL}/rankings/${timeframe}`)
+      .then((res) => res.json())
+      .then((result: RankingsData) => {
+        setRankingsData((prev) => ({ ...prev, [timeframe]: result }));
+      })
+      .catch(() => {
+        fetchedRef.current.delete(timeframe);
+      })
+      .finally(() => setLoadingTf(false));
+  }, [timeframe, rankingsData]);
 
   const handleSSEMessage = useCallback((event: RankingSSEEvent) => {
     if (event.type === "ranking_update" && event.timeframe && event.rankings) {
@@ -235,7 +267,13 @@ export function RankingsTable({ data, className }: RankingsTableProps) {
         id={`rankings-panel-${timeframe}`}
         aria-labelledby={`tab-${timeframe}`}
       >
-        {snapshots.length === 0 ? (
+        {loadingTf && snapshots.length === 0 ? (
+          <div className="flex h-64 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
+            <p className="text-secondary animate-pulse">
+              Loading {timeframe} rankings…
+            </p>
+          </div>
+        ) : snapshots.length === 0 ? (
           <div className="flex h-64 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
             <p className="text-secondary">
               No rankings data available for {timeframe}
