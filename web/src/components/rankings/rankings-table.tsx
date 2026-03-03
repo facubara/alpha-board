@@ -93,7 +93,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
     fetchedRef.current.add(timeframe);
     setLoadingTf(true);
 
-    fetch(`${WORKER_URL}/rankings/${timeframe}`)
+    fetch(`${WORKER_URL}/rankings/${timeframe}?slim=1`)
       .then((res) => res.json())
       .then((result: RankingsData) => {
         setRankingsData((prev) => ({ ...prev, [timeframe]: result }));
