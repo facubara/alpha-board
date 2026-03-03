@@ -236,7 +236,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
             <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <Input
               type="text"
-              placeholder="Search symbols, highlights..."
+              placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="h-9 w-48 pl-8 font-mono text-sm"

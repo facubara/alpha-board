@@ -11,7 +11,7 @@ export function SidebarToggleButton() {
       onClick={toggleSidebar}
       className={`relative flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors ${
         sidebarOpen
-          ? "text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+          ? "text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]"
           : "bg-[var(--accent)]/15 text-[var(--accent)] hover:bg-[var(--accent)]/25"
       }`}
       aria-label={sidebarOpen ? "Close trade feed" : "Open trade feed"}
