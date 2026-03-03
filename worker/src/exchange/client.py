@@ -27,7 +27,6 @@ KLINES_TTL: dict[str, int] = {
     "1h": 600,
     "4h": 1800,
     "1d": 7200,
-    "1w": 14400,
 }
 
 FUTURES_BASE_URL = "https://fapi.binance.com"
@@ -318,7 +317,7 @@ class BinanceClient:
 
         Args:
             symbol: Trading pair symbol, e.g., "BTCUSDT"
-            interval: Candle interval: 15m, 30m, 1h, 4h, 1d, 1w
+            interval: Candle interval: 15m, 30m, 1h, 4h, 1d
             limit: Number of candles to fetch (max 1000)
 
         Returns:

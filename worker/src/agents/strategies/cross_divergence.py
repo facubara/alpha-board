@@ -39,7 +39,7 @@ class CrossDivergenceStrategy(BaseRuleStrategy):
             if self._has_position(context, symbol):
                 continue
 
-            lt_scores = [scores.get(tf) for tf in ("1d", "1w") if tf in scores]
+            lt_scores = [scores.get(tf) for tf in ("4h", "1d") if tf in scores]
             st_scores = [scores.get(tf) for tf in ("15m", "1h") if tf in scores]
 
             if not lt_scores or not st_scores:
@@ -84,7 +84,7 @@ class CrossDivergenceStrategy(BaseRuleStrategy):
             if not scores:
                 continue
 
-            lt_scores = [scores.get(tf) for tf in ("1d", "1w") if tf in scores]
+            lt_scores = [scores.get(tf) for tf in ("4h", "1d") if tf in scores]
             st_scores = [scores.get(tf) for tf in ("15m", "1h") if tf in scores]
             if not lt_scores or not st_scores:
                 continue

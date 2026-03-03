@@ -20,10 +20,9 @@ const TIMEFRAME_CACHE_TTL: Record<Timeframe, number> = {
   "1h": 3600,
   "4h": 14400,
   "1d": 86400,
-  "1w": 604800,
 };
 
-const ALL_TIMEFRAMES: Timeframe[] = ["15m", "30m", "1h", "4h", "1d", "1w"];
+const ALL_TIMEFRAMES: Timeframe[] = ["15m", "30m", "1h", "4h", "1d"];
 
 /**
  * Fetch the latest ranking snapshots for a single timeframe.

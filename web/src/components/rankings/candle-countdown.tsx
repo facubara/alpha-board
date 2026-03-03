@@ -13,27 +13,10 @@ const INTERVAL_MS: Record<Timeframe, number> = {
   "1h": 60 * 60 * 1000,
   "4h": 4 * 60 * 60 * 1000,
   "1d": 24 * 60 * 60 * 1000,
-  "1w": 7 * 24 * 60 * 60 * 1000,
 };
 
 function getNextCandleClose(timeframe: Timeframe): number {
   const now = Date.now();
-
-  if (timeframe === "1w") {
-    // Binance weekly candles close Monday 00:00 UTC
-    const d = new Date(now);
-    d.setUTCHours(0, 0, 0, 0);
-    // Monday = 1; advance to next Monday
-    const day = d.getUTCDay();
-    const daysUntilMonday = day === 0 ? 1 : day === 1 && now <= d.getTime() ? 0 : 8 - day;
-    d.setUTCDate(d.getUTCDate() + daysUntilMonday);
-    // If we're exactly on the boundary, jump to next week
-    if (d.getTime() <= now) {
-      d.setUTCDate(d.getUTCDate() + 7);
-    }
-    return d.getTime();
-  }
-
   const interval = INTERVAL_MS[timeframe];
   return Math.ceil(now / interval) * interval;
 }

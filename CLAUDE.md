@@ -107,5 +107,5 @@ When a season ends, follow this process:
 ## Conventions
 
 - Commit messages follow conventional commits (`feat:`, `fix:`, `chore:`, etc.)
-- Worker timeframes: 15m, 30m, 1h, 4h, 1d, 1w
+- Worker timeframes: 15m, 30m, 1h, 4h, 1d
 - Agent engines: `rule` (deterministic Python) and `llm` (Claude API)

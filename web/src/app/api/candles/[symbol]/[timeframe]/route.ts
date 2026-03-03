@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { computeIndicators } from "@/lib/indicators";
 import type { CandleData, Timeframe, ChartDataResponse } from "@/lib/types";
 
-const VALID_TIMEFRAMES = new Set(["15m", "30m", "1h", "4h", "1d", "1w"]);
+const VALID_TIMEFRAMES = new Set(["15m", "30m", "1h", "4h", "1d"]);
 const SYMBOL_RE = /^[A-Z0-9]{2,20}$/;
 
 /**
@@ -42,7 +42,6 @@ export async function GET(
     : timeframe === "1h" ? "1h"
     : timeframe === "4h" ? "4h"
     : timeframe === "1d" ? "1d"
-    : timeframe === "1w" ? "1w"
     : "1h";
 
   // Use data-api.binance.vision (public data endpoint, no geo-restrictions)

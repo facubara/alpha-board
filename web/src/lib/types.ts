@@ -8,9 +8,9 @@
 // Timeframe
 // =============================================================================
 
-export type Timeframe = "15m" | "30m" | "1h" | "4h" | "1d" | "1w";
+export type Timeframe = "15m" | "30m" | "1h" | "4h" | "1d";
 
-export const TIMEFRAMES: Timeframe[] = ["15m", "30m", "1h", "4h", "1d", "1w"];
+export const TIMEFRAMES: Timeframe[] = ["15m", "30m", "1h", "4h", "1d"];
 
 export const TIMEFRAME_LABELS: Record<Timeframe, string> = {
   "15m": "15m",
@@ -18,7 +18,6 @@ export const TIMEFRAME_LABELS: Record<Timeframe, string> = {
   "1h": "1h",
   "4h": "4h",
   "1d": "1d",
-  "1w": "1w",
 };
 
 // =============================================================================
@@ -203,7 +202,6 @@ export const AGENT_TIMEFRAMES: AgentTimeframe[] = [
   "1h",
   "4h",
   "1d",
-  "1w",
   "cross",
 ];
 
@@ -213,7 +211,6 @@ export const AGENT_TIMEFRAME_LABELS: Record<AgentTimeframe, string> = {
   "1h": "1h",
   "4h": "4h",
   "1d": "1d",
-  "1w": "1w",
   cross: "Cross-TF",
 };
 

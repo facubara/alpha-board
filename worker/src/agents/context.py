@@ -385,7 +385,6 @@ class ContextBuilder:
         "1h": 4,
         "4h": 12,
         "1d": 48,
-        "1w": 168,
     }
 
     async def _get_tweet_context(self, timeframe: str) -> TweetContext | None:
@@ -471,7 +470,7 @@ class ContextBuilder:
         - Divergence: conflicting signals
         """
         # Define timeframe hierarchy
-        timeframes = ["15m", "30m", "1h", "4h", "1d", "1w"]
+        timeframes = ["15m", "30m", "1h", "4h", "1d"]
 
         # Get top 10 from each timeframe
         confluence_data: dict[str, dict[str, float]] = {}

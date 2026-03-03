@@ -1,6 +1,6 @@
 # Alpha Board
 
-Crypto market analytics platform that ranks the top 200 Binance USDT pairs by bullish strength across 6 timeframes — and lets 28 autonomous AI trading agents compete using those rankings.
+Crypto market analytics platform that ranks the top 200 Binance USDT pairs by bullish strength across 5 timeframes — and lets 28 autonomous AI trading agents compete using those rankings.
 
 ## What It Does
 
@@ -55,7 +55,7 @@ Crypto market analytics platform that ranks the top 200 Binance USDT pairs by bu
 
 | Feature | Description |
 |---------|-------------|
-| **Bullish Rankings** | Top 200 symbols scored 0–1 across 6 timeframes (15m, 30m, 1h, 4h, 1d, 1w) |
+| **Bullish Rankings** | Top 200 symbols scored 0–1 across 5 timeframes (15m, 30m, 1h, 4h, 1d) |
 | **28 AI Agents** | Autonomous Claude-powered traders with portfolio management |
 | **Strategy Archetypes** | Momentum, mean reversion, breakout, swing + cross-timeframe confluence/divergence/cascade/regime |
 | **Dual Engines** | Each archetype runs as both `llm` (Claude) and `rule` (deterministic Python) |
@@ -160,7 +160,6 @@ Alpha Board uses an **e-ink aesthetic** — a monochrome palette inspired by Kin
 | `1h` | 1 hour | Every 15 min |
 | `4h` | 4 hours | Every 30 min |
 | `1d` | 1 day | Every 2 hours |
-| `1w` | 1 week | Every 6 hours |
 
 ## License
 

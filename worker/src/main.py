@@ -502,7 +502,7 @@ async def trigger(timeframe: str):
     """Manually trigger a pipeline run for a specific timeframe.
 
     Args:
-        timeframe: The timeframe to process (15m, 30m, 1h, 4h, 1d, 1w).
+        timeframe: The timeframe to process (15m, 30m, 1h, 4h, 1d).
 
     Returns:
         Pipeline run result.
@@ -771,7 +771,7 @@ async def create_backtest(request: BacktestRequest):
             detail=f"Unknown strategy. Must be one of: {list(STRATEGY_REGISTRY.keys())}",
         )
 
-    valid_timeframes = ["15m", "30m", "1h", "4h", "1d", "1w"]
+    valid_timeframes = ["15m", "30m", "1h", "4h", "1d"]
     if request.timeframe not in valid_timeframes:
         raise HTTPException(
             status_code=400,
@@ -989,7 +989,7 @@ async def run_twitter_poll():
         try:
             current_prices = await _fetch_live_prices()
             if current_prices:
-                for tf in ["15m", "30m", "1h", "4h", "1d", "1w"]:
+                for tf in ["15m", "30m", "1h", "4h", "1d"]:
                     try:
                         async with async_session() as session:
                             orchestrator = AgentOrchestrator(session)
@@ -1505,7 +1505,7 @@ async def trigger_twitter():
         try:
             current_prices = await _fetch_live_prices()
             if current_prices:
-                for tf in ["15m", "30m", "1h", "4h", "1d", "1w"]:
+                for tf in ["15m", "30m", "1h", "4h", "1d"]:
                     try:
                         async with async_session() as session:
                             orchestrator = AgentOrchestrator(session)

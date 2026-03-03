@@ -32,7 +32,6 @@ TIMEFRAME_CONFIG = {
     "1h": {"interval": "1h", "candles": 200, "cadence_minutes": 15},
     "4h": {"interval": "4h", "candles": 200, "cadence_minutes": 60},
     "1d": {"interval": "1d", "candles": 200, "cadence_minutes": 240},
-    "1w": {"interval": "1w", "candles": 200, "cadence_minutes": 1440},
 }
 
 # Advisory lock ID for pipeline runs (arbitrary unique number)
@@ -216,7 +215,7 @@ class PipelineRunner:
         """Execute the full ranking pipeline for a timeframe.
 
         Args:
-            timeframe: Timeframe to process (15m, 30m, 1h, 4h, 1d, 1w).
+            timeframe: Timeframe to process (15m, 30m, 1h, 4h, 1d).
 
         Returns:
             Dict with run results.

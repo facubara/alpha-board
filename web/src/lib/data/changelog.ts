@@ -7,6 +7,12 @@ export type ChangelogEntry = {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-03-03",
+    title: "Remove 1w Timeframe",
+    description:
+      "Removed the weekly (1w) timeframe entirely — agents, data, and UI. It took too long to produce meaningful results. 5 timeframes remain: 15m, 30m, 1h, 4h, 1d.",
+  },
+  {
+    date: "2026-03-03",
     title: "Agents Page Instant Shell",
     description:
       "Agents page now renders controls, filters, and table header instantly — only the rows wait for data. Same treatment as rankings: client-side fetch with skeleton placeholders.",

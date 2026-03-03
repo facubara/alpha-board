@@ -54,7 +54,6 @@ const CADENCE_THRESHOLDS: Record<string, { yellow: number; gray: number }> = {
   "1h": { yellow: 30, gray: 60 },
   "4h": { yellow: 120, gray: 240 },
   "1d": { yellow: 480, gray: 960 },
-  "1w": { yellow: 2880, gray: 5760 },
   cross: { yellow: 30, gray: 60 },
 };
 

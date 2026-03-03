@@ -12,7 +12,7 @@ from src.models.db import Snapshot, Symbol
 
 router = APIRouter(prefix="/rankings", tags=["rankings"])
 
-VALID_TIMEFRAMES = ["15m", "30m", "1h", "4h", "1d", "1w"]
+VALID_TIMEFRAMES = ["15m", "30m", "1h", "4h", "1d"]
 
 # Generous TTLs — data only changes after pipeline runs, which invalidate explicitly
 RANKINGS_CACHE_TTL = {
@@ -21,7 +21,6 @@ RANKINGS_CACHE_TTL = {
     "1h":  4800,    # 80 min
     "4h":  18000,   # 5 hours
     "1d":  90000,   # 25 hours
-    "1w":  650000,  # ~7.5 days
 }
 
 
@@ -206,7 +205,6 @@ TIMEFRAME_INTERVALS = {
     "1h": "1 hour",
     "4h": "4 hours",
     "1d": "1 day",
-    "1w": "7 days",
 }
 
 

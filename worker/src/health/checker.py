@@ -37,7 +37,6 @@ SERVICE_NAMES: dict[str, str] = {
     "pipeline_1h": "Pipeline 1h",
     "pipeline_4h": "Pipeline 4h",
     "pipeline_1d": "Pipeline 1d",
-    "pipeline_1w": "Pipeline 1w",
 }
 
 

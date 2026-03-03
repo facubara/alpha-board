@@ -183,7 +183,7 @@ class AgentExecutor:
         if context.cross_timeframe_regime:
             regime = context.cross_timeframe_regime
             regime_lines = []
-            for tf in ["15m", "30m", "1h", "4h", "1d", "1w"]:
+            for tf in ["15m", "30m", "1h", "4h", "1d"]:
                 label = regime.regimes.get(tf)
                 if label:
                     regime_lines.append(

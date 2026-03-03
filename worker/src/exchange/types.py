@@ -113,7 +113,6 @@ INTERVALS = {
     "1h": "1h",
     "4h": "4h",
     "1d": "1d",
-    "1w": "1w",
 }
 
 # Minimum candles needed for longest indicator (200-period EMA)

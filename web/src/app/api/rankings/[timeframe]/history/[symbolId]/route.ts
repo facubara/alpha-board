@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { workerGet } from "@/lib/worker-client";
 import type { PreviousClosesData, Timeframe } from "@/lib/types";
 
-const VALID_TIMEFRAMES = new Set<Timeframe>(["15m", "30m", "1h", "4h", "1d", "1w"]);
+const VALID_TIMEFRAMES = new Set<Timeframe>(["15m", "30m", "1h", "4h", "1d"]);
 const VALID_COUNTS = new Set([3, 5, 7, 10]);
 
 /**
