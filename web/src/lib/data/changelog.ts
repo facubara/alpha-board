@@ -7,6 +7,12 @@ export type ChangelogEntry = {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-03-03",
+    title: "No Skeleton Flash on Re-navigation",
+    description:
+      "Navigating away from Agents and back now shows data instantly — no skeleton placeholders. A module-level cache in useFetch serves stale data while revalidating, and the Agents page now server-fetches all data for instant first paint.",
+  },
+  {
+    date: "2026-03-03",
     title: "Remove 1w Timeframe",
     description:
       "Removed the weekly (1w) timeframe entirely — agents, data, and UI. It took too long to produce meaningful results. 5 timeframes remain: 15m, 30m, 1h, 4h, 1d.",
