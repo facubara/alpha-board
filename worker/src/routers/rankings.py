@@ -1,16 +1,28 @@
 """Rankings router — serves latest ranking snapshots per timeframe."""
 
 import asyncio
+import json
 
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import select, func, text
 
+from src.cache import cache_get, cache_set
 from src.db import async_session
 from src.models.db import Snapshot, Symbol
 
 router = APIRouter(prefix="/rankings", tags=["rankings"])
 
 VALID_TIMEFRAMES = ["15m", "30m", "1h", "4h", "1d", "1w"]
+
+# Generous TTLs — data only changes after pipeline runs, which invalidate explicitly
+RANKINGS_CACHE_TTL = {
+    "15m": 1200,    # 20 min
+    "30m": 2400,    # 40 min
+    "1h":  4800,    # 80 min
+    "4h":  18000,   # 5 hours
+    "1d":  90000,   # 25 hours
+    "1w":  650000,  # ~7.5 days
+}
 
 
 def _validate_timeframe(timeframe: str) -> None:
@@ -77,7 +89,15 @@ def _parse_snapshot(snap: Snapshot, sym: Symbol) -> dict:
 
 
 async def _get_rankings_for_timeframe(timeframe: str) -> dict:
-    """Fetch latest rankings for a single timeframe."""
+    """Fetch latest rankings for a single timeframe (with Redis cache-through)."""
+    cache_key = f"rankings_resp:{timeframe}"
+
+    # Check Redis cache first
+    cached = await cache_get(cache_key)
+    if cached is not None:
+        return json.loads(cached)
+
+    # Cache miss — query Postgres
     async with async_session() as session:
         subquery = (
             select(func.max(Snapshot.computed_at))
@@ -105,11 +125,17 @@ async def _get_rankings_for_timeframe(timeframe: str) -> dict:
     computed_at = rows[0][0].computed_at.isoformat()
     snapshots = [_parse_snapshot(snap, sym) for snap, sym in rows]
 
-    return {
+    data = {
         "timeframe": timeframe,
         "snapshots": snapshots,
         "computedAt": computed_at,
     }
+
+    # Cache the result
+    ttl = RANKINGS_CACHE_TTL.get(timeframe, 1200)
+    await cache_set(cache_key, json.dumps(data, default=str), ttl)
+
+    return data
 
 
 # ---------------------------------------------------------------------------

@@ -321,6 +321,17 @@ async def run_timeframe_pipeline(timeframe: str):
             # Invalidate klines cache for this timeframe so next run gets fresh data
             await cache_delete(f"klines:*:{timeframe}")
 
+            # Invalidate rankings caches (worker-side and web-side) so next request gets fresh data
+            await cache_delete(f"rankings_resp:{timeframe}")
+            await cache_delete(f"rankings:{timeframe}")
+
+            # Pre-warm the rankings cache so the first web request hits warm Redis
+            try:
+                from src.routers.rankings import _get_rankings_for_timeframe
+                await _get_rankings_for_timeframe(timeframe)
+            except Exception as e:
+                logger.warning(f"Rankings cache pre-warm failed for {timeframe}: {e}")
+
             # Compute and persist regime for this timeframe
             try:
                 async with async_session() as session:
