@@ -1,6 +1,7 @@
 "use client";
 
 import type { TimeframeSeason } from "@/lib/types";
+import { DottedProgress } from "@/components/terminal";
 
 const DURATION_LABELS: Record<string, string> = {
   "15m": "1 week seasons",
@@ -32,13 +33,6 @@ interface Props {
 }
 
 export function TimeframeSeasonCard({ season, isSelected, onClick }: Props) {
-  const progressColor =
-    season.progressPct > 90
-      ? "bg-terminal-amber-muted"
-      : season.progressPct > 70
-        ? "bg-yellow-500"
-        : "bg-terminal-amber-muted";
-
   const pnlColor =
     season.topAgent && season.topAgent.pnl !== null
       ? season.topAgent.pnl >= 0
@@ -70,11 +64,8 @@ export function TimeframeSeasonCard({ season, isSelected, onClick }: Props) {
       </div>
 
       {/* Progress bar */}
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-void">
-        <div
-          className={`h-full rounded-full transition-all ${progressColor}`}
-          style={{ width: `${season.progressPct}%` }}
-        />
+      <div className="mt-3">
+        <DottedProgress progress={season.progressPct} activeColor="bg-terminal-amber" />
       </div>
 
       <div className="mt-2 flex items-center justify-between text-xs">

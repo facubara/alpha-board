@@ -12,7 +12,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import { Pause, Play } from "lucide-react";
+// Pause/Play icons replaced with terminal-style text buttons
 
 const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 import Link from "next/link";
@@ -147,46 +147,55 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
         </TableCell>
       )}
 
-      {/* Agent name + archetype + engine + health dot */}
-      <TableCell className="max-w-[240px]">
+      {/* Agent identity: avatar + name + tags */}
+      <TableCell className="max-w-[300px]">
         <Link
           href={`/agents/${agent.id}`}
-          className="group block"
+          className="group flex items-center gap-3"
         >
-          <span className="flex items-center gap-1.5">
-            <span
-              className={cn("inline-block h-2 w-2 shrink-0 rounded-full", health.color)}
-              title={health.label}
+          <div className="relative shrink-0">
+            <DottedAvatar
+              agentId={String(agent.id)}
+              gridSize={6}
+              status={health.color === "bg-data-profit" ? "executing" : health.color === "bg-terminal-amber" ? "processing" : "idle"}
             />
             <span
-              className={cn(
-                "inline-flex shrink-0 items-center rounded-none px-1 py-0.5 font-mono text-xs font-bold leading-none",
-                agent.engine === "rule"
-                  ? "bg-terminal-amber-muted text-data-profit"
-                  : "bg-void-muted text-text-secondary"
-              )}
-            >
-              {agent.engine === "rule" ? "RULE" : "LLM"}
-            </span>
-            <span
-              className={cn(
-                "inline-flex shrink-0 items-center rounded-none px-1 py-0.5 font-mono text-xs font-bold leading-none",
-                agent.source === "tweet"
-                  ? "bg-void-muted text-text-secondary"
-                  : agent.source === "hybrid"
-                    ? "bg-void-muted text-text-secondary"
-                    : "bg-void-muted text-text-tertiary"
-              )}
-            >
-              {agent.source === "tweet" ? "TW" : agent.source === "hybrid" ? "HYB" : "TECH"}
-            </span>
-            <span className="truncate text-sm font-semibold text-text-primary transition-colors-fast group-hover:text-terminal-amber">
+              className={cn("absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-void-surface", health.color)}
+              title={health.label}
+            />
+          </div>
+          <div className="min-w-0">
+            <span className="block truncate text-sm font-semibold text-text-primary transition-colors-fast group-hover:text-terminal-amber">
               {agent.displayName}
             </span>
-          </span>
-          <span className="mt-0.5 block text-xs text-text-tertiary">
-            {STRATEGY_ARCHETYPE_LABELS[agent.strategyArchetype]}
-          </span>
+            <span className="mt-0.5 flex items-center gap-1">
+              <span
+                className={cn(
+                  "inline-flex shrink-0 items-center rounded-none px-1 py-0.5 font-mono text-[10px] font-bold leading-none",
+                  agent.engine === "rule"
+                    ? "bg-terminal-amber-muted text-data-profit"
+                    : "bg-void-muted text-text-secondary"
+                )}
+              >
+                {agent.engine === "rule" ? "RULE" : "LLM"}
+              </span>
+              <span
+                className={cn(
+                  "inline-flex shrink-0 items-center rounded-none px-1 py-0.5 font-mono text-[10px] font-bold leading-none",
+                  agent.source === "tweet"
+                    ? "bg-void-muted text-text-secondary"
+                    : agent.source === "hybrid"
+                      ? "bg-void-muted text-text-secondary"
+                      : "bg-void-muted text-text-tertiary"
+                )}
+              >
+                {agent.source === "tweet" ? "TW" : agent.source === "hybrid" ? "HYB" : "TECH"}
+              </span>
+              <span className="truncate text-xs text-text-tertiary">
+                {STRATEGY_ARCHETYPE_LABELS[agent.strategyArchetype]}
+              </span>
+            </span>
+          </div>
         </Link>
       </TableCell>
 
@@ -242,23 +251,27 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
       </TableCell>
 
       {/* Status toggle */}
-      <TableCell className="w-10">
+      <TableCell className="w-24">
         <button
           onClick={handleToggle}
           disabled={toggling}
           className={cn(
-            "flex h-7 w-7 items-center justify-center rounded-none transition-colors-fast",
-            "hover:bg-void-muted"
+            "rounded-none border px-3 py-1 font-mono text-xs transition-colors-fast",
+            toggling
+              ? "border-void-border text-text-tertiary"
+              : isPaused
+                ? "border-void-border text-text-secondary hover:text-data-profit hover:border-data-profit"
+                : "border-void-border text-text-secondary hover:text-terminal-amber hover:border-terminal-amber"
           )}
-          title={toggling ? "Updating..." : isPaused ? "Resume agent" : "Pause agent"}
-          aria-label={toggling ? "Updating..." : isPaused ? "Resume agent" : "Pause agent"}
+          title={toggling ? "Updating..." : isPaused ? "Deploy agent" : "Pause agent"}
+          aria-label={toggling ? "Updating..." : isPaused ? "Deploy agent" : "Pause agent"}
         >
           {toggling ? (
-            <span className="font-mono text-sm text-text-secondary">{SPINNER_FRAMES[spinnerFrame]}</span>
+            <span>{SPINNER_FRAMES[spinnerFrame]}</span>
           ) : isPaused ? (
-            <Play className="h-3.5 w-3.5 text-text-secondary" />
+            "[ DEPLOY ]"
           ) : (
-            <Pause className="h-3.5 w-3.5 text-text-secondary" />
+            "[ PAUSE ]"
           )}
         </button>
       </TableCell>

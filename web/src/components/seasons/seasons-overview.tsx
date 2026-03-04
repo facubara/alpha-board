@@ -23,7 +23,7 @@ export function SeasonsOverview({ seasons }: Props) {
   return (
     <div className="space-y-6">
       {/* Season cards grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {seasons.map((season) => (
           <TimeframeSeasonCard
             key={season.timeframe}

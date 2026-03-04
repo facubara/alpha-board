@@ -28,7 +28,7 @@ export default async function DashboardPage() {
       <PageHeader title="Terminal" badge="v1" subtitle=">_ TERMINAL: INITIALIZED" />
 
       {/* Fleet Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-none border border-void-border bg-void-surface px-4 py-4">
           <div className="text-xs uppercase tracking-widest text-text-tertiary font-mono">Active Agents</div>
           <div className="mt-2 text-3xl font-mono font-semibold text-text-primary">{activeAgents}</div>
@@ -69,9 +69,9 @@ export default async function DashboardPage() {
                   <th className="px-3 py-2">Symbol</th>
                   <th className="px-3 py-2">Direction</th>
                   <th className="px-3 py-2">Agent</th>
-                  <th className="px-3 py-2">PnL</th>
-                  <th className="px-3 py-2">Type</th>
-                  <th className="px-3 py-2">Time</th>
+                  <th className="px-3 py-2 text-right">PnL</th>
+                  <th className="px-3 py-2 text-right">Type</th>
+                  <th className="px-3 py-2 text-right">Time</th>
                 </tr>
               </thead>
               <tbody>
@@ -84,11 +84,11 @@ export default async function DashboardPage() {
                         {trade.direction.toUpperCase()}
                       </td>
                       <td className="px-3 py-2 text-text-secondary">{trade.agentName}</td>
-                      <td className={`px-3 py-2 ${pnlColor}`}>
+                      <td className={`px-3 py-2 text-right ${pnlColor}`}>
                         {trade.pnl != null ? `${trade.pnl >= 0 ? "+" : ""}$${trade.pnl.toFixed(2)}` : "—"}
                       </td>
-                      <td className="px-3 py-2 text-text-secondary">{trade.type === "trade_opened" ? "OPEN" : "CLOSED"}</td>
-                      <td className="px-3 py-2 text-text-tertiary">{trade.timestamp ? formatTimeAgo(trade.timestamp) : "—"}</td>
+                      <td className="px-3 py-2 text-right text-text-secondary">{trade.type === "trade_opened" ? "OPEN" : "CLOSED"}</td>
+                      <td className="px-3 py-2 text-right text-text-tertiary">{trade.timestamp ? formatTimeAgo(trade.timestamp) : "—"}</td>
                     </tr>
                   );
                 })}

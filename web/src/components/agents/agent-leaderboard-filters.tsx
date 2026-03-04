@@ -32,14 +32,29 @@ function FilterButton({
     <button
       onClick={onClick}
       className={cn(
-        "rounded-none px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+        "rounded-none px-2 py-1 font-mono text-xs font-medium transition-colors-fast",
         active
-          ? "border border-void-border bg-void-surface text-text-primary"
-          : "text-text-secondary hover:bg-void-muted hover:text-text-primary"
+          ? "text-terminal-amber border-b-2 border-terminal-amber"
+          : "text-text-tertiary hover:text-text-primary"
       )}
     >
       {children}
     </button>
+  );
+}
+
+function FilterGroup({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <span className="mr-1 font-mono text-[10px] uppercase tracking-widest text-text-tertiary">{label}:</span>
+      {children}
+    </div>
   );
 }
 
@@ -75,138 +90,141 @@ export function AgentLeaderboardFilters({
   onPauseAllLlm,
 }: AgentLeaderboardFiltersProps) {
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      {/* Timeframe filter */}
-      <div className="flex items-center gap-1">
-        <FilterButton
-          active={timeframeFilter === "all"}
-          onClick={() => onTimeframeChange("all")}
-        >
-          All
-        </FilterButton>
-        {AGENT_TIMEFRAMES.map((tf) => (
+    <div className="rounded-none border border-void-border bg-void-surface p-3 space-y-3">
+      {/* Filter rows */}
+      <div className="flex flex-wrap items-center gap-4">
+        {/* Timeframe filter */}
+        <FilterGroup label="Timeframe">
           <FilterButton
-            key={tf}
-            active={timeframeFilter === tf}
-            onClick={() => onTimeframeChange(tf)}
+            active={timeframeFilter === "all"}
+            onClick={() => onTimeframeChange("all")}
           >
-            {AGENT_TIMEFRAME_LABELS[tf]}
+            All
           </FilterButton>
-        ))}
+          {AGENT_TIMEFRAMES.map((tf) => (
+            <FilterButton
+              key={tf}
+              active={timeframeFilter === tf}
+              onClick={() => onTimeframeChange(tf)}
+            >
+              {AGENT_TIMEFRAME_LABELS[tf]}
+            </FilterButton>
+          ))}
+        </FilterGroup>
+
+        <div className="hidden h-5 w-px bg-void-border sm:block" />
+
+        {/* Strategy filter */}
+        <FilterGroup label="Strategy">
+          <FilterButton
+            active={archetypeFilter === "all"}
+            onClick={() => onArchetypeChange("all")}
+          >
+            All
+          </FilterButton>
+          {STRATEGY_ARCHETYPES.map((arch) => (
+            <FilterButton
+              key={arch}
+              active={archetypeFilter === arch}
+              onClick={() => onArchetypeChange(arch)}
+            >
+              {STRATEGY_ARCHETYPE_LABELS[arch]}
+            </FilterButton>
+          ))}
+        </FilterGroup>
       </div>
 
-      <div className="hidden h-5 w-px bg-void-border sm:block" />
-
-      {/* Archetype filter */}
-      <div className="flex items-center gap-1">
-        <FilterButton
-          active={archetypeFilter === "all"}
-          onClick={() => onArchetypeChange("all")}
-        >
-          All
-        </FilterButton>
-        {STRATEGY_ARCHETYPES.map((arch) => (
+      <div className="flex flex-wrap items-center gap-4">
+        {/* Engine filter */}
+        <FilterGroup label="Engine">
           <FilterButton
-            key={arch}
-            active={archetypeFilter === arch}
-            onClick={() => onArchetypeChange(arch)}
+            active={engineFilter === "all"}
+            onClick={() => onEngineChange("all")}
           >
-            {STRATEGY_ARCHETYPE_LABELS[arch]}
+            All
           </FilterButton>
-        ))}
-      </div>
+          {AGENT_ENGINES.map((eng) => (
+            <FilterButton
+              key={eng}
+              active={engineFilter === eng}
+              onClick={() => onEngineChange(eng)}
+            >
+              {AGENT_ENGINE_LABELS[eng]}
+            </FilterButton>
+          ))}
+        </FilterGroup>
 
-      <div className="hidden h-5 w-px bg-void-border sm:block" />
+        <div className="hidden h-5 w-px bg-void-border sm:block" />
 
-      {/* Engine filter */}
-      <div className="flex items-center gap-1">
-        <FilterButton
-          active={engineFilter === "all"}
-          onClick={() => onEngineChange("all")}
-        >
-          All
-        </FilterButton>
-        {AGENT_ENGINES.map((eng) => (
+        {/* Source filter */}
+        <FilterGroup label="Source">
           <FilterButton
-            key={eng}
-            active={engineFilter === eng}
-            onClick={() => onEngineChange(eng)}
+            active={sourceFilter === "all"}
+            onClick={() => onSourceChange("all")}
           >
-            {AGENT_ENGINE_LABELS[eng]}
+            All
           </FilterButton>
-        ))}
-      </div>
+          {AGENT_SOURCES.map((src) => (
+            <FilterButton
+              key={src}
+              active={sourceFilter === src}
+              onClick={() => onSourceChange(src)}
+            >
+              {AGENT_SOURCE_LABELS[src]}
+            </FilterButton>
+          ))}
+        </FilterGroup>
 
-      <div className="hidden h-5 w-px bg-void-border sm:block" />
+        <div className="hidden h-5 w-px bg-void-border sm:block" />
 
-      {/* Source filter */}
-      <div className="flex items-center gap-1">
-        <FilterButton
-          active={sourceFilter === "all"}
-          onClick={() => onSourceChange("all")}
-        >
-          All
-        </FilterButton>
-        {AGENT_SOURCES.map((src) => (
-          <FilterButton
-            key={src}
-            active={sourceFilter === src}
-            onClick={() => onSourceChange(src)}
-          >
-            {AGENT_SOURCE_LABELS[src]}
-          </FilterButton>
-        ))}
-      </div>
+        {/* Symbol search */}
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
+          <input
+            type="text"
+            value={symbolSearch}
+            onChange={(e) => onSymbolSearchChange(e.target.value)}
+            placeholder="Search symbol..."
+            className="h-7 w-44 rounded-none border border-void-border bg-void pl-8 pr-8 font-mono text-xs text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none"
+          />
+          {symbolSearch && (
+            <button
+              onClick={() => onSymbolSearchChange("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
 
-      <div className="hidden h-5 w-px bg-void-border sm:block" />
+        {/* Spacer */}
+        <div className="flex-1" />
 
-      {/* Symbol search */}
-      <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
-        <input
-          type="text"
-          value={symbolSearch}
-          onChange={(e) => onSymbolSearchChange(e.target.value)}
-          placeholder="Search by symbol..."
-          className="h-9 w-56 rounded-none border border-void-border bg-void pl-8 pr-8 font-mono text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none"
-        />
-        {symbolSearch && (
+        {/* Compare + Pause All LLM */}
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => onSymbolSearchChange("")}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary"
+            onClick={onToggleCompare}
+            className={cn(
+              "flex items-center gap-1.5 rounded-none border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+              compareMode
+                ? "border-terminal-amber text-terminal-amber"
+                : "border-void-border text-text-secondary hover:text-terminal-amber hover:border-terminal-amber"
+            )}
           >
-            <X className="h-3.5 w-3.5" />
+            <GitCompareArrows className="h-3.5 w-3.5" />
+            Compare
           </button>
-        )}
-      </div>
-
-      {/* Spacer */}
-      <div className="flex-1" />
-
-      {/* Compare + Pause All LLM */}
-      <div className="flex items-center gap-2">
-        <button
-          onClick={onToggleCompare}
-          className={cn(
-            "flex items-center gap-1.5 rounded-none border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
-            compareMode
-              ? "border-void-border bg-void-surface text-text-primary"
-              : "border-void-border text-text-secondary hover:bg-void-muted hover:text-text-primary"
-          )}
-        >
-          <GitCompareArrows className="h-3.5 w-3.5" />
-          Compare
-        </button>
-        <button
-          onClick={onPauseAllLlm}
-          className={cn(
-            "flex items-center gap-1.5 rounded-none border border-void-border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
-            "text-data-loss hover:bg-terminal-amber-muted"
-          )}
-        >
-          <PauseCircle className="h-3.5 w-3.5" />
-          Pause All LLM
-        </button>
+          <button
+            onClick={onPauseAllLlm}
+            className={cn(
+              "flex items-center gap-1.5 rounded-none border border-void-border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+              "text-data-loss hover:bg-terminal-amber-muted"
+            )}
+          >
+            <PauseCircle className="h-3.5 w-3.5" />
+            Pause All LLM
+          </button>
+        </div>
       </div>
     </div>
   );

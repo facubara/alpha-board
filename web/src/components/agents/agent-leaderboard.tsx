@@ -391,7 +391,7 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
                 <TableHead className="hidden w-16 text-right text-xs font-medium text-text-secondary md:table-cell">Trades</TableHead>
                 <TableHead className="hidden w-16 text-right text-xs font-medium text-text-secondary lg:table-cell">Open</TableHead>
                 <TableHead className="hidden w-20 text-right text-xs font-medium text-text-secondary lg:table-cell">Cost</TableHead>
-                <TableHead className="w-10" />
+                <TableHead className="w-24" />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -421,7 +421,7 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
             <TableHeader>
               <TableRow className="border-b border-void-border bg-void-surface hover:bg-void-surface">
                 {compareMode && (
-                  <TableHead className="w-10" />
+                  <TableHead className="w-24" />
                 )}
                 <TableHead
                   className="cursor-pointer select-none text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
@@ -473,7 +473,7 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
                   Cost
                   <SortIndicator field="tokenCost" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
-                <TableHead className="w-10" />
+                <TableHead className="w-24" />
               </TableRow>
             </TableHeader>
             <TableBody>

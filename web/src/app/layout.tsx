@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-dot-matrix font-sans text-text-primary antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col bg-dot-matrix font-sans text-text-primary antialiased`}
       >
         <a
           href="#main-content"
@@ -45,7 +45,7 @@ export default function RootLayout({
         <TooltipProvider>
           {/* Header */}
           <header className="sticky top-0 z-50 h-14 border-b border-void-border bg-void">
-            <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between px-4 sm:px-8">
+            <div className="mx-auto flex h-full max-w-[1800px] items-center justify-between px-4 sm:px-6 lg:px-8">
               {/* Logo */}
               <TerminalLogo />
 
@@ -59,7 +59,7 @@ export default function RootLayout({
           </header>
 
           {/* Main content */}
-          <main id="main-content" className="mx-auto max-w-[1400px] px-4 py-6 sm:px-8">
+          <main id="main-content" className="w-full max-w-[1800px] mx-auto flex-1 px-4 sm:px-6 lg:px-8 py-8">
             {children}
           </main>
 
