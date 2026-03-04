@@ -7,6 +7,12 @@ export type ChangelogEntry = {
 export const changelog: ChangelogEntry[] = [
   {
     date: "2026-03-03",
+    title: "Per-Timeframe Variable Seasons",
+    description:
+      "Each timeframe now runs its own season lifecycle — 15m resets weekly, 1d every 6 months. Automatic transitions snapshot portfolios, close positions, and reset to $10k. New /seasons page shows progress bars and history.",
+  },
+  {
+    date: "2026-03-03",
     title: "No Skeleton Flash on Re-navigation",
     description:
       "Navigating away from Agents and back now shows data instantly — no skeleton placeholders. A module-level cache in useFetch serves stale data while revalidating, and the Agents page now server-fetches all data for instant first paint.",

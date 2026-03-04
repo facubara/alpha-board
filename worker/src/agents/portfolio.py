@@ -22,6 +22,7 @@ from src.models.db import (
     AgentPosition,
     AgentTrade,
     Symbol,
+    TimeframeSeason,
 )
 from src.agents.schemas import (
     ActionType,
@@ -362,6 +363,22 @@ class PortfolioManager:
             (datetime.now(timezone.utc) - position.opened_at).total_seconds() / 60
         )
 
+        # Look up per-timeframe season number
+        season_num = 2  # fallback default
+        agent_result = await self.session.execute(
+            select(Agent.timeframe).where(Agent.id == agent_id)
+        )
+        agent_tf = agent_result.scalar_one_or_none()
+        if agent_tf and agent_tf != "cross":
+            season_result = await self.session.execute(
+                select(TimeframeSeason.current_season).where(
+                    TimeframeSeason.timeframe == agent_tf
+                )
+            )
+            season_val = season_result.scalar_one_or_none()
+            if season_val is not None:
+                season_num = season_val
+
         # Create trade record
         trade = AgentTrade(
             agent_id=agent_id,
@@ -377,6 +394,7 @@ class PortfolioManager:
             closed_at=datetime.now(timezone.utc),
             duration_minutes=duration_minutes,
             decision_id=decision_id,
+            season=season_num,
         )
         self.session.add(trade)
 

@@ -363,8 +363,28 @@ class AgentSeasonSnapshot(Base):
     # Relationships
     agent: Mapped["Agent"] = relationship()
 
+    timeframe: Mapped[str] = mapped_column(String(4), nullable=False)
+
     __table_args__ = (
-        UniqueConstraint("season", "agent_id", name="uq_season_snapshots_season_agent"),
+        UniqueConstraint("timeframe", "season", "agent_id", name="uq_season_snapshots_tf_season_agent"),
+    )
+
+
+class TimeframeSeason(Base):
+    """Per-timeframe season tracking. One row per timeframe."""
+
+    __tablename__ = "timeframe_seasons"
+
+    timeframe: Mapped[str] = mapped_column(String(4), primary_key=True)
+    current_season: Mapped[int] = mapped_column(Integer, nullable=False, server_default="1")
+    season_start: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    season_end: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, server_default="active")
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
 
 

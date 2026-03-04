@@ -36,11 +36,12 @@ from src.models.db import (
     Agent, AgentPortfolio, AgentPosition, AgentTrade, AgentTokenUsage,
     BacktestRun, BacktestTrade, MemecoinToken, MemecoinTweet,
     MemecoinTweetSignal, MemecoinTweetToken, MemecoinTwitterAccount,
-    Snapshot, Symbol, Tweet, TweetSignal, TwitterAccount,
+    Snapshot, Symbol, TimeframeSeason, Tweet, TweetSignal, TwitterAccount,
     TokenTracker, TokenTrackerSnapshot,
     WatchWallet, WatchWalletActivity,
 )
 from src.notifications.digest import send_daily_digest_job
+from src.seasons.checker import check_and_advance_seasons
 from src.health.routes import router as status_router
 from src.notifications.routes import router as notifications_router
 from src.pipeline import TIMEFRAME_CONFIG, PipelineRunner, compute_and_persist_regime
@@ -51,6 +52,7 @@ from src.routers.lessons import router as lessons_router
 from src.routers.memecoins import router as memecoins_stats_router
 from src.routers.processing import router as processing_router
 from src.routers.rankings import router as rankings_router
+from src.routers.seasons import router as seasons_router
 from src.routers.settings import router as settings_router
 from src.routers.trades import router as trades_router
 from src.routers.tweets import router as tweets_stats_router
@@ -80,6 +82,7 @@ app.include_router(memecoins_stats_router)
 app.include_router(notifications_router)
 app.include_router(processing_router)
 app.include_router(rankings_router)
+app.include_router(seasons_router)
 app.include_router(settings_router)
 app.include_router(trades_router)
 app.include_router(tweets_stats_router)
@@ -2682,6 +2685,16 @@ async def on_startup():
         id="daily_digest",
         name="Daily digest notification",
         replace_existing=True,
+    )
+
+    # Season checker — auto-advance per-timeframe seasons (every 5 minutes)
+    scheduler.add_job(
+        check_and_advance_seasons,
+        trigger=IntervalTrigger(minutes=5),
+        id="season_checker",
+        name="Season checker (per-timeframe)",
+        replace_existing=True,
+        max_instances=1,
     )
 
     # Periodic agent leaderboard broadcast for live updates

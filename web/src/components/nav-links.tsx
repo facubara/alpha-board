@@ -14,6 +14,7 @@ import { Menu, X } from "lucide-react";
 const NAV_ITEMS = [
   { href: "/", label: "Rankings" },
   { href: "/agents", label: "Agents" },
+  { href: "/seasons", label: "Seasons" },
   { href: "/tweets", label: "Tweets" },
   { href: "/memecoins", label: "Memecoins" },
   { href: "/backtest", label: "Backtest" },

@@ -1156,6 +1156,53 @@ export interface AnalyzedWalletResult {
   currentHoldings: WalletHolding[];
 }
 
+// =============================================================================
+// Seasons
+// =============================================================================
+
+export interface TimeframeSeason {
+  timeframe: Timeframe;
+  currentSeason: number;
+  seasonStart: string;
+  seasonEnd: string;
+  status: "active" | "transitioning";
+  progressPct: number;
+  daysRemaining: number;
+  tradeCount: number;
+  agentCount: number;
+  topAgent: {
+    id: number;
+    displayName: string;
+    pnl: number | null;
+  } | null;
+}
+
+export interface SeasonHistoryAgent {
+  agentId: number;
+  agentName: string;
+  displayName: string;
+  totalEquity: number;
+  totalRealizedPnl: number;
+  tradeCount: number;
+  winRate: number;
+  peakEquity: number;
+  troughEquity: number;
+  totalFeesPaid: number;
+  cashBalance: number;
+}
+
+export interface SeasonHistoryEntry {
+  season: number;
+  createdAt: string;
+  agents: SeasonHistoryAgent[];
+}
+
+export interface TimeframeSeasonHistory {
+  timeframe: Timeframe;
+  currentSeason: number;
+  history: SeasonHistoryEntry[];
+}
+
 // --- Processing ---
 
 export interface ProcessingRun {

@@ -31,7 +31,7 @@ export default async function AgentsPage() {
         </h1>
         <p className="mt-1 text-sm text-secondary">
           AI trading agents competing in simulated markets
-          <span className="text-muted"> · Season 1 tuned</span>
+          <span className="text-muted"> · 5 seasons active</span>
         </p>
       </div>
 
