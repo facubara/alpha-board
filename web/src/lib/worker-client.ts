@@ -19,29 +19,38 @@ export class WorkerError extends Error {
 
 async function workerFetch<T>(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit & { timeoutMs?: number } = {}
 ): Promise<T> {
-  const res = await fetch(`${WORKER_URL}${path}`, {
-    ...options,
-    next: { revalidate: 0 },
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
+  const { timeoutMs = 15_000, ...fetchOptions } = options;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
-  if (!res.ok) {
-    let detail = res.statusText;
-    try {
-      const body = await res.json();
-      detail = body.detail || body.message || JSON.stringify(body);
-    } catch {
-      // keep statusText
+  try {
+    const res = await fetch(`${WORKER_URL}${path}`, {
+      ...fetchOptions,
+      signal: controller.signal,
+      next: { revalidate: 0 },
+      headers: {
+        "Content-Type": "application/json",
+        ...fetchOptions.headers,
+      },
+    });
+
+    if (!res.ok) {
+      let detail = res.statusText;
+      try {
+        const body = await res.json();
+        detail = body.detail || body.message || JSON.stringify(body);
+      } catch {
+        // keep statusText
+      }
+      throw new WorkerError(res.status, detail);
     }
-    throw new WorkerError(res.status, detail);
-  }
 
-  return res.json() as Promise<T>;
+    return res.json() as Promise<T>;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export function workerGet<T>(path: string): Promise<T> {

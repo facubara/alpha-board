@@ -6,7 +6,7 @@
  * Clickable rows open a modal showing which accounts mentioned the token.
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useTransition } from "react";
 import { ExternalLink, Star, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { EnrichedToken, TokenMention, MemecoinCategory } from "@/lib/types";
@@ -26,6 +26,8 @@ interface TrendingTokensProps {
 
 export function TrendingTokens({ tokens }: TrendingTokensProps) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [localTokens, setLocalTokens] = useState(tokens);
   const [selectedToken, setSelectedToken] = useState<EnrichedToken | null>(null);
   const [mentions, setMentions] = useState<TokenMention[]>([]);
   const [loadingMentions, setLoadingMentions] = useState(false);
@@ -35,6 +37,11 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
   const [intervalInput, setIntervalInput] = useState(15);
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState("");
+
+  // Sync with server data when props change
+  useEffect(() => {
+    setLocalTokens(tokens);
+  }, [tokens]);
 
   const closeModal = useCallback(() => setSelectedToken(null), []);
 
@@ -82,7 +89,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
         setAddError(data.error || data.detail || "Failed to add token");
       } else {
         setMintInput("");
-        router.refresh();
+        startTransition(() => router.refresh());
       }
     } catch {
       setAddError("Network error");
@@ -91,15 +98,20 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
   }
 
   async function handleDelete(mint: string) {
+    // Optimistic removal from local state
+    setLocalTokens((prev) => prev.filter((t) => t.tokenMint !== mint));
     try {
       const res = await fetch(`/api/memecoins/tracker/${encodeURIComponent(mint)}`, {
         method: "DELETE",
       });
       if (res.ok) {
-        router.refresh();
+        startTransition(() => router.refresh());
+      } else {
+        // Revert on failure
+        setLocalTokens(tokens);
       }
     } catch {
-      // Silently fail
+      setLocalTokens(tokens);
     }
   }
 
@@ -154,7 +166,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
       </form>
 
       {/* Token Table */}
-      {tokens.length === 0 ? (
+      {localTokens.length === 0 ? (
         <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-8 text-center text-sm text-muted">
           No tokens tracked yet. Add a mint address above or wait for Twitter discovery.
         </div>
@@ -176,7 +188,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
               </tr>
             </thead>
             <tbody>
-              {tokens.map((token, i) => (
+              {localTokens.map((token, i) => (
                 <tr
                   key={token.tokenMint}
                   onClick={() => handleTokenClick(token)}
@@ -258,7 +270,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>
-                      {token.source === "manual" && (
+                      {token.trackerId != null && (
                         <button
                           onClick={() => handleDelete(token.tokenMint)}
                           className="text-muted hover:text-bearish transition-colors-fast"

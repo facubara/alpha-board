@@ -17,23 +17,30 @@ import { MemecoinAccountManager } from "@/components/memecoins/memecoin-account-
 import { MemecoinTweetFeed } from "@/components/memecoins/memecoin-tweet-feed";
 import MemecoinsLoading from "./loading";
 
-export const revalidate = 60;
+export const revalidate = 30;
 
 /**
  * Async section that fetches all memecoins data.
  * Wrapped in Suspense so the page header renders instantly.
  */
 async function MemecoinsContent() {
-  const [wallets, walletActivity, twitterAccounts, tweets, stats, trendingTokens, trackedTokens] =
-    await Promise.all([
-      getWatchWallets(),
-      getRecentWalletActivity(50),
-      getMemecoinTwitterAccounts(),
-      getRecentMemecoinTweets(50),
-      getMemecoinStats(),
-      getTrendingTokens(24),
-      getTrackedTokens(),
-    ]);
+  const results = await Promise.allSettled([
+    getWatchWallets(),
+    getRecentWalletActivity(50),
+    getMemecoinTwitterAccounts(),
+    getRecentMemecoinTweets(50),
+    getMemecoinStats(),
+    getTrendingTokens(24),
+    getTrackedTokens(),
+  ]);
+
+  const wallets = results[0].status === "fulfilled" ? results[0].value : [];
+  const walletActivity = results[1].status === "fulfilled" ? results[1].value : [];
+  const twitterAccounts = results[2].status === "fulfilled" ? results[2].value : [];
+  const tweets = results[3].status === "fulfilled" ? results[3].value : [];
+  const stats = results[4].status === "fulfilled" ? results[4].value : { walletsTracked: 0, avgHitRate: 0, tweetsToday: 0, tokenMatchesToday: 0 };
+  const trendingTokens = results[5].status === "fulfilled" ? results[5].value : [];
+  const trackedTokens = results[6].status === "fulfilled" ? results[6].value : [];
 
   // Fetch snapshots for tracked tokens
   const trackerIds = trackedTokens.map((t) => t.id);
