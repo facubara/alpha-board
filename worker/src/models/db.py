@@ -363,7 +363,7 @@ class AgentSeasonSnapshot(Base):
     # Relationships
     agent: Mapped["Agent"] = relationship()
 
-    timeframe: Mapped[str] = mapped_column(String(4), nullable=False)
+    timeframe: Mapped[str] = mapped_column(String(10), nullable=False)
 
     __table_args__ = (
         UniqueConstraint("timeframe", "season", "agent_id", name="uq_season_snapshots_tf_season_agent"),

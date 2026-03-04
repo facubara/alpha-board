@@ -55,9 +55,10 @@ def upgrade() -> None:
     )
 
     # Step 3: Add timeframe column to agent_season_snapshots (nullable first)
+    # Use String(10) to match agents.timeframe which can be 'cross' (5 chars)
     op.add_column(
         "agent_season_snapshots",
-        sa.Column("timeframe", sa.String(4), nullable=True),
+        sa.Column("timeframe", sa.String(10), nullable=True),
     )
 
     # Step 4: Backfill timeframe from agents table
