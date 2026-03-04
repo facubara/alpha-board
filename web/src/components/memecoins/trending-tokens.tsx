@@ -201,11 +201,6 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                     <span className="font-mono text-xs font-semibold text-primary">
                       ${token.tokenSymbol}
                     </span>
-                    {token.tokenName && (
-                      <span className="ml-2 text-xs text-muted">
-                        {token.tokenName}
-                      </span>
-                    )}
                   </td>
                   <td className="px-3 py-2 text-right">
                     {token.mentionCount > 0 ? (
