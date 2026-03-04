@@ -113,7 +113,8 @@
       "Bash(netstat:*)",
       "Bash(rm:*)",
       "Bash(claude mcp:*)",
-      "Bash(do:*)"
+      "Bash(do:*)",
+      "Bash(echo exit: $?:*)"
     ]
   }
 }

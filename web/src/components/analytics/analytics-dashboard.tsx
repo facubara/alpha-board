@@ -56,7 +56,7 @@ interface AnalyticsDashboardProps {
 }
 
 const tabTriggerClass =
-  "rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary";
+  "rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary";
 
 function pfLabel(grossWins: number, grossLosses: number): string {
   return `PF ${formatProfitFactor(grossWins, grossLosses)}`;
@@ -77,13 +77,13 @@ function FilterButtons<T extends string>({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-1">
-      <span className="mr-1 text-xs text-muted">{label}:</span>
+      <span className="mr-1 text-xs text-text-tertiary">{label}:</span>
       <button
         onClick={() => onSelect("all")}
-        className={`rounded px-2.5 py-1 text-xs font-medium transition-colors ${
+        className={`rounded-none px-2.5 py-1 text-xs font-medium transition-colors ${
           selected === "all"
-            ? "bg-[var(--text-primary)] text-[var(--bg-base)] ring-1 ring-[var(--text-primary)] ring-offset-1 ring-offset-[var(--bg-base)]"
-            : "bg-[var(--bg-muted)] text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
+            ? "bg-text-primary text-void ring-1 ring-text-primary ring-offset-1 ring-offset-void"
+            : "bg-void-muted text-text-secondary hover:bg-void-muted hover:text-text-primary"
         }`}
       >
         All
@@ -92,10 +92,10 @@ function FilterButtons<T extends string>({
         <button
           key={opt}
           onClick={() => onSelect(opt)}
-          className={`rounded px-2.5 py-1 text-xs font-medium transition-colors ${
+          className={`rounded-none px-2.5 py-1 text-xs font-medium transition-colors ${
             selected === opt
-              ? "bg-[var(--text-primary)] text-[var(--bg-base)] ring-1 ring-[var(--text-primary)] ring-offset-1 ring-offset-[var(--bg-base)]"
-              : "bg-[var(--bg-muted)] text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
+              ? "bg-text-primary text-void ring-1 ring-text-primary ring-offset-1 ring-offset-void"
+              : "bg-void-muted text-text-secondary hover:bg-void-muted hover:text-text-primary"
           }`}
         >
           {labels[opt]}
@@ -133,7 +133,7 @@ export function AnalyticsDashboard({
 
   return (
     <Tabs defaultValue="overview">
-      <TabsList className="border-b border-[var(--border-default)] bg-transparent p-0">
+      <TabsList className="border-b border-void-border bg-transparent p-0">
         <TabsTrigger value="overview" className={tabTriggerClass}>
           Overview
         </TabsTrigger>
@@ -153,7 +153,7 @@ export function AnalyticsDashboard({
         <SummaryCards summary={summary} />
 
         <div>
-          <h3 className="mb-2 text-sm font-medium text-secondary">
+          <h3 className="mb-2 text-sm font-medium text-text-secondary">
             Cumulative PnL (90 days)
           </h3>
           <CumulativePnlChart data={dailyPnl} />
@@ -161,7 +161,7 @@ export function AnalyticsDashboard({
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div>
-            <h3 className="mb-2 text-sm font-medium text-secondary">
+            <h3 className="mb-2 text-sm font-medium text-text-secondary">
               Avg PnL by Archetype
             </h3>
             <HorizontalBarChart
@@ -173,7 +173,7 @@ export function AnalyticsDashboard({
             />
           </div>
           <div>
-            <h3 className="mb-2 text-sm font-medium text-secondary">
+            <h3 className="mb-2 text-sm font-medium text-text-secondary">
               Avg PnL by Timeframe
             </h3>
             <HorizontalBarChart
@@ -187,7 +187,7 @@ export function AnalyticsDashboard({
         </div>
 
         <div>
-          <h3 className="mb-2 text-sm font-medium text-secondary">
+          <h3 className="mb-2 text-sm font-medium text-text-secondary">
             Avg PnL by Source Type
           </h3>
           <HorizontalBarChart
@@ -220,7 +220,7 @@ export function AnalyticsDashboard({
         </div>
 
         <div>
-          <h3 className="mb-2 text-sm font-medium text-secondary">
+          <h3 className="mb-2 text-sm font-medium text-text-secondary">
             Cumulative PnL by Archetype
           </h3>
           <ArchetypeCurvesChart data={dailyArchetypePnl} />
@@ -228,7 +228,7 @@ export function AnalyticsDashboard({
 
         {directionStats.length > 0 && (
           <div>
-            <h3 className="mb-2 text-sm font-medium text-secondary">
+            <h3 className="mb-2 text-sm font-medium text-text-secondary">
               Long vs Short
             </h3>
             <HorizontalBarChart
@@ -242,7 +242,7 @@ export function AnalyticsDashboard({
         )}
 
         <div>
-          <h3 className="mb-2 text-sm font-medium text-secondary">
+          <h3 className="mb-2 text-sm font-medium text-text-secondary">
             Agents in Drawdown ({filteredDrawdowns.length})
           </h3>
           <DrawdownTable data={filteredDrawdowns} />
@@ -252,7 +252,7 @@ export function AnalyticsDashboard({
       {/* Symbols Tab */}
       <TabsContent value="symbols" className="space-y-6 pt-4">
         <div>
-          <h3 className="mb-2 text-sm font-medium text-secondary">
+          <h3 className="mb-2 text-sm font-medium text-text-secondary">
             Top Symbols by Trade Count
           </h3>
           <SymbolTable data={symbolStats} />
@@ -261,9 +261,9 @@ export function AnalyticsDashboard({
 
       {/* Costs Tab */}
       <TabsContent value="costs" className="space-y-6 pt-4">
-        <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
-          <span className="text-xs text-muted">Total Token Cost</span>
-          <span className="ml-3 font-mono text-lg font-semibold text-primary">
+        <div className="rounded-none border border-void-border bg-void-surface px-4 py-3">
+          <span className="text-xs text-text-tertiary">Total Token Cost</span>
+          <span className="ml-3 font-mono text-lg font-semibold text-text-primary">
             ${summary.totalTokenCost.toFixed(2)}
           </span>
         </div>

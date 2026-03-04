@@ -24,53 +24,53 @@ interface DrawdownTableProps {
 export function DrawdownTable({ data }: DrawdownTableProps) {
   if (data.length === 0) {
     return (
-      <div className="flex h-20 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-        <p className="text-xs text-muted">No agents in drawdown</p>
+      <div className="flex h-20 items-center justify-center rounded-none border border-void-border bg-void-surface">
+        <p className="text-xs text-text-tertiary">No agents in drawdown</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
+    <div className="overflow-x-auto rounded-none border border-void-border">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
-            <TableHead className="text-xs font-medium text-secondary">Agent</TableHead>
-            <TableHead className="text-xs font-medium text-secondary">Archetype</TableHead>
-            <TableHead className="text-xs font-medium text-secondary">TF</TableHead>
-            <TableHead className="text-right text-xs font-medium text-secondary">Peak</TableHead>
-            <TableHead className="text-right text-xs font-medium text-secondary">Current</TableHead>
-            <TableHead className="text-right text-xs font-medium text-secondary">Drawdown</TableHead>
+          <TableRow className="border-b border-void-border bg-void-surface hover:bg-void-surface">
+            <TableHead className="text-xs font-medium text-text-secondary">Agent</TableHead>
+            <TableHead className="text-xs font-medium text-text-secondary">Archetype</TableHead>
+            <TableHead className="text-xs font-medium text-text-secondary">TF</TableHead>
+            <TableHead className="text-right text-xs font-medium text-text-secondary">Peak</TableHead>
+            <TableHead className="text-right text-xs font-medium text-text-secondary">Current</TableHead>
+            <TableHead className="text-right text-xs font-medium text-text-secondary">Drawdown</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((d) => (
-            <TableRow key={d.id} className="h-10 hover:bg-[var(--bg-elevated)]">
+            <TableRow key={d.id} className="h-10 hover:bg-void-muted">
               <TableCell>
                 <Link
                   href={`/agents/${d.id}`}
-                  className="font-mono text-sm font-semibold text-primary hover:underline"
+                  className="font-mono text-sm font-semibold text-text-primary hover:underline"
                 >
                   {d.displayName}
                 </Link>
               </TableCell>
               <TableCell>
-                <span className="rounded bg-[var(--bg-muted)] px-2 py-0.5 text-xs font-medium text-secondary">
+                <span className="rounded bg-void-muted px-2 py-0.5 text-xs font-medium text-text-secondary">
                   {STRATEGY_ARCHETYPE_LABELS[d.archetype]}
                 </span>
               </TableCell>
-              <TableCell className="font-mono text-xs text-muted">
+              <TableCell className="font-mono text-xs text-text-tertiary">
                 {AGENT_TIMEFRAME_LABELS[d.timeframe]}
               </TableCell>
-              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+              <TableCell className="text-right font-mono text-sm tabular-nums text-text-secondary">
                 ${d.peakEquity.toFixed(2)}
               </TableCell>
-              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+              <TableCell className="text-right font-mono text-sm tabular-nums text-text-secondary">
                 ${d.totalEquity.toFixed(2)}
               </TableCell>
               <TableCell
                 className={cn(
-                  "text-right font-mono text-sm font-semibold tabular-nums text-bearish"
+                  "text-right font-mono text-sm font-semibold tabular-nums text-data-loss"
                 )}
               >
                 {d.drawdownPct.toFixed(2)}%

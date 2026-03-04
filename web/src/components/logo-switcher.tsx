@@ -1,17 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
+import { TerminalLogo } from "@/components/terminal";
 
 export function LogoSwitcher() {
-  return (
-    <Link href="/" aria-label="Home">
-      <Image
-        src="/logos/ascii-logo.png"
-        alt="Alpha Board"
-        width={76}
-        height={38}
-        className="h-[38px] w-auto rounded-sm"
-        priority
-      />
-    </Link>
-  );
+  return <TerminalLogo />;
 }

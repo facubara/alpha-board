@@ -10,7 +10,7 @@ export default function NotFound() {
       <p className="text-sm text-secondary">Page not found</p>
       <Link
         href="/"
-        className="rounded-md border border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-2 text-sm font-medium text-primary transition-colors-fast hover:bg-[var(--bg-elevated)]"
+        className="rounded-none border border-void-border bg-void-surface px-4 py-2 text-sm font-medium text-primary transition-colors-fast hover:bg-void-muted"
       >
         Back to Rankings
       </Link>

@@ -22,12 +22,12 @@ import {
 } from "@/components/ui/table";
 
 const CATEGORY_BADGE_COLORS: Record<TwitterAccountCategory, string> = {
-  analyst: "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)] border-[var(--accent-blue)]/20",
-  founder: "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)] border-[var(--accent-purple)]/20",
-  news: "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)] border-[var(--accent-yellow)]/20",
-  degen: "bg-[var(--bearish-subtle)] text-bearish border-[var(--bearish)]/20",
-  insider: "bg-[var(--bullish-subtle)] text-bullish border-[var(--bullish)]/20",
-  protocol: "bg-[var(--accent-cyan)]/10 text-[var(--accent-cyan)] border-[var(--accent-cyan)]/20",
+  analyst: "bg-void-muted text-text-secondary border-void-border",
+  founder: "bg-void-muted text-text-secondary border-void-border",
+  news: "bg-void-muted text-text-secondary border-void-border",
+  degen: "bg-void-muted text-data-loss border-void-border",
+  insider: "bg-void-muted text-data-profit border-void-border",
+  protocol: "bg-void-muted text-text-secondary border-void-border",
 };
 
 type SortField = "handle" | "category" | "followers" | "tweets" | "bio";
@@ -255,14 +255,14 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
       <div className="flex items-center justify-between">
         <button
           onClick={() => dispatch({ type: "SET_EXPANDED", value: !state.expanded })}
-          className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-secondary transition-colors"
+          className="flex items-center gap-1.5 text-sm font-medium text-text-primary hover:text-text-secondary transition-colors"
         >
           {state.expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           Tracked Accounts ({state.accounts.length})
         </button>
         <button
           onClick={() => { dispatch({ type: "SET_SHOW_FORM", value: !state.showForm }); if (!state.expanded) dispatch({ type: "SET_EXPANDED", value: true }); }}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
+          className="flex items-center gap-1 rounded-none px-2 py-1 text-xs text-text-secondary transition-colors-fast hover:bg-void-muted hover:text-text-primary"
         >
           <Plus className="h-3 w-3" />
           Add Account
@@ -272,39 +272,39 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
       {/* Search */}
       {state.expanded && state.accounts.length > 0 && (
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
           <input
             type="text"
             placeholder="Search accounts..."
             value={state.search}
             onChange={(e) => dispatch({ type: "SET_SEARCH", value: e.target.value })}
-            className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] py-1.5 pl-8 pr-3 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none sm:w-64"
+            className="w-full rounded-none border border-void-border bg-void py-1.5 pl-8 pr-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none sm:w-64"
           />
         </div>
       )}
 
       {/* Add form */}
       {state.showForm && (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 space-y-2">
+        <div className="rounded-none border border-void-border bg-void-surface p-3 space-y-2">
           <div className="flex gap-2">
             <input
               type="text"
               placeholder="@handle"
               value={state.handle}
               onChange={(e) => dispatch({ type: "SET_HANDLE", value: e.target.value })}
-              className="flex-1 rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none"
+              className="flex-1 rounded-none border border-void-border bg-void px-2 py-1 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none"
             />
             <input
               type="text"
               placeholder="Display Name (optional)"
               value={state.displayName}
               onChange={(e) => dispatch({ type: "SET_DISPLAY_NAME", value: e.target.value })}
-              className="flex-1 rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none"
+              className="flex-1 rounded-none border border-void-border bg-void px-2 py-1 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none"
             />
             <select
               value={state.category}
               onChange={(e) => dispatch({ type: "SET_CATEGORY", value: e.target.value as TwitterAccountCategory })}
-              className="rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary focus:border-[var(--primary)] focus:outline-none"
+              className="rounded border border-void-border bg-void px-2 py-1 text-sm text-text-primary focus:border-void-border focus:outline-none"
             >
               {TWITTER_CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -315,63 +315,63 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
             <button
               onClick={handleAdd}
               disabled={!state.handle.trim()}
-              className="rounded bg-[var(--primary)] px-3 py-1 text-sm font-medium text-white disabled:opacity-50"
+              className="rounded bg-terminal-amber px-3 py-1 text-sm font-medium text-void disabled:opacity-50"
             >
               Add
             </button>
           </div>
-          {state.error && <p className="text-xs text-bearish">{state.error}</p>}
+          {state.error && <p className="text-xs text-data-loss">{state.error}</p>}
         </div>
       )}
 
       {/* Account table (collapsible) */}
       {state.expanded && (
         state.accounts.length === 0 ? (
-          <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-6 text-center text-sm text-muted">
+          <div className="rounded-none border border-void-border bg-void-surface px-4 py-6 text-center text-sm text-text-tertiary">
             No accounts tracked yet. Add accounts to start ingesting tweets.
           </div>
         ) : (
-          <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)]">
+          <div className="rounded-none border border-void-border bg-void-surface">
             <Table>
               <TableHeader>
-                <TableRow className="border-[var(--border-default)]">
+                <TableRow className="border-void-border">
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "handle" })}
                   >
                     Handle <SortIcon field="handle" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "category" })}
                   >
                     Category <SortIcon field="category" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary text-right"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "followers" })}
                   >
                     Followers <SortIcon field="followers" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary text-right"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "tweets" })}
                   >
                     Tweets <SortIcon field="tweets" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "bio" })}
                   >
                     Bio <SortIcon field="bio" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
-                  <TableHead className="text-xs text-muted w-10" />
+                  <TableHead className="text-xs text-text-tertiary w-10" />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginated.map((account) => (
-                  <TableRow key={account.id} className="group border-[var(--border-subtle)]">
-                    <TableCell className="text-sm text-primary font-medium">
+                  <TableRow key={account.id} className="group border-void-border">
+                    <TableCell className="text-sm text-text-primary font-medium">
                       @{account.handle}
                     </TableCell>
                     <TableCell>
@@ -383,19 +383,19 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
                         {TWITTER_CATEGORY_LABELS[account.category]}
                       </span>
                     </TableCell>
-                    <TableCell className="text-right text-xs text-secondary font-mono">
+                    <TableCell className="text-right text-xs text-text-secondary font-mono">
                       {formatFollowers(account.followersCount)}
                     </TableCell>
-                    <TableCell className="text-right text-xs text-secondary">
+                    <TableCell className="text-right text-xs text-text-secondary">
                       {account.tweetCount ?? 0}
                     </TableCell>
-                    <TableCell className="text-xs text-muted max-w-[200px] truncate" title={account.bio ?? ""}>
+                    <TableCell className="text-xs text-text-tertiary max-w-[200px] truncate" title={account.bio ?? ""}>
                       {account.bio ? (account.bio.length > 60 ? account.bio.slice(0, 60) + "..." : account.bio) : "—"}
                     </TableCell>
                     <TableCell>
                       <button
                         onClick={() => handleDelete(account.id)}
-                        className="text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-bearish"
+                        className="text-text-tertiary opacity-0 transition-opacity group-hover:opacity-100 hover:text-data-loss"
                         title="Remove account"
                       >
                         <Trash2 className="h-3 w-3" />
@@ -406,20 +406,20 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
               </TableBody>
             </Table>
             {/* Pagination */}
-            <div className="flex items-center justify-between border-t border-[var(--border-default)] px-3 py-2">
-              <div className="flex items-center gap-1.5 text-xs text-muted">
+            <div className="flex items-center justify-between border-t border-void-border px-3 py-2">
+              <div className="flex items-center gap-1.5 text-xs text-text-tertiary">
                 <span>Show</span>
                 {[10, 25, 50].map((size) => (
                   <button
                     key={size}
                     onClick={() => dispatch({ type: "SET_PAGE_SIZE", value: size })}
-                    className={`rounded px-1.5 py-0.5 ${state.pageSize === size ? "bg-[var(--bg-elevated)] text-primary font-medium" : "hover:text-primary"}`}
+                    className={`rounded px-1.5 py-0.5 ${state.pageSize === size ? "bg-void-muted text-text-primary font-medium" : "hover:text-text-primary"}`}
                   >
                     {size}
                   </button>
                 ))}
               </div>
-              <div className="flex items-center gap-2 text-xs text-muted">
+              <div className="flex items-center gap-2 text-xs text-text-tertiary">
                 <span>
                   {state.page * state.pageSize + 1}–{Math.min((state.page + 1) * state.pageSize, sorted.length)} of {sorted.length}
                   {state.search.trim() && ` (${state.accounts.length} total)`}
@@ -427,14 +427,14 @@ export function AccountManager({ initialAccounts }: AccountManagerProps) {
                 <button
                   onClick={() => dispatch({ type: "SET_PAGE", value: Math.max(0, state.page - 1) })}
                   disabled={state.page === 0}
-                  className="rounded p-0.5 hover:text-primary disabled:opacity-30"
+                  className="rounded p-0.5 hover:text-text-primary disabled:opacity-30"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => dispatch({ type: "SET_PAGE", value: Math.min(totalPages - 1, state.page + 1) })}
                   disabled={state.page >= totalPages - 1}
-                  className="rounded p-0.5 hover:text-primary disabled:opacity-30"
+                  className="rounded p-0.5 hover:text-text-primary disabled:opacity-30"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>

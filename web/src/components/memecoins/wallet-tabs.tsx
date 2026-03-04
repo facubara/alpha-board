@@ -6,7 +6,7 @@ import { WalletLeaderboard } from "./wallet-leaderboard";
 import { WalletActivityFeed } from "./wallet-activity-feed";
 
 const triggerClass =
-  "rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-secondary data-[state=active]:border-[var(--text-primary)] data-[state=active]:text-primary";
+  "rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary";
 
 export function WalletTabs({
   wallets,
@@ -17,7 +17,7 @@ export function WalletTabs({
 }) {
   return (
     <Tabs defaultValue="wallets">
-      <TabsList className="border-b border-[var(--border-default)] bg-transparent p-0">
+      <TabsList className="border-b border-void-border bg-transparent p-0">
         <TabsTrigger value="wallets" className={triggerClass}>
           Wallets
         </TabsTrigger>

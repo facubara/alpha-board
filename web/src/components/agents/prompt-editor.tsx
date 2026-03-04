@@ -53,25 +53,25 @@ export function PromptEditor({ agentId, activePrompt }: PromptEditorProps) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-medium text-secondary">Active Prompt</h3>
+          <h3 className="text-sm font-medium text-text-secondary">Active Prompt</h3>
           {activePrompt && (
-            <span className="font-mono text-xs text-muted">
+            <span className="font-mono text-xs text-text-tertiary">
               v{activePrompt.version} · {activePrompt.source}
             </span>
           )}
         </div>
         <div className="flex items-center gap-2">
           {saved && (
-            <span className="text-xs text-bullish">Saved</span>
+            <span className="text-xs text-data-profit">Saved</span>
           )}
           <button
             onClick={handleSave}
             disabled={!isDirty || saving}
             className={cn(
-              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors-fast",
+              "rounded-none px-3 py-1.5 text-sm font-medium transition-colors-fast",
               isDirty
-                ? "bg-[var(--bg-surface)] text-primary hover:bg-[var(--bg-elevated)]"
-                : "cursor-not-allowed text-muted",
+                ? "bg-void-surface text-text-primary hover:bg-void-muted"
+                : "cursor-not-allowed text-text-tertiary",
               saving && "opacity-50"
             )}
           >

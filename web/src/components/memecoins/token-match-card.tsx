@@ -13,25 +13,25 @@ interface TokenMatchCardProps {
 
 export function TokenMatchCard({ match }: TokenMatchCardProps) {
   return (
-    <div className="inline-flex items-center gap-2 rounded border border-[var(--border-default)] bg-[var(--bg-elevated)] px-2.5 py-1.5">
-      <span className="font-mono text-xs font-semibold text-primary">
+    <div className="inline-flex items-center gap-2 rounded-none border border-void-border bg-void-muted px-2.5 py-1.5">
+      <span className="font-mono text-xs font-semibold text-text-primary">
         ${match.tokenSymbol}
       </span>
 
       {match.priceUsd != null && (
-        <span className="text-xs text-secondary">
+        <span className="text-xs text-text-secondary">
           ${formatPrice(match.priceUsd)}
         </span>
       )}
 
       {match.marketCapUsd != null && (
-        <span className="text-xs text-muted">
+        <span className="text-xs text-text-tertiary">
           MC: {formatMcap(match.marketCapUsd)}
         </span>
       )}
 
       {match.liquidityUsd != null && (
-        <span className="text-xs text-muted">
+        <span className="text-xs text-text-tertiary">
           Liq: {formatMcap(match.liquidityUsd)}
         </span>
       )}
@@ -39,8 +39,8 @@ export function TokenMatchCard({ match }: TokenMatchCardProps) {
       <span
         className={`rounded px-1 py-0.5 text-[9px] font-medium ${
           match.source === "llm"
-            ? "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)]"
-            : "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]"
+            ? "bg-void-muted text-text-secondary"
+            : "bg-void-muted text-text-secondary"
         }`}
       >
         {match.source === "llm" ? "LLM" : "KEYWORD"}
@@ -51,7 +51,7 @@ export function TokenMatchCard({ match }: TokenMatchCardProps) {
           href={match.dexscreenerUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-[var(--accent-blue)] hover:text-[var(--accent-blue)]"
+          className="text-xs text-text-secondary hover:text-text-primary"
         >
           DEX
         </a>

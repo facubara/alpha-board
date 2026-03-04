@@ -31,17 +31,17 @@ function timeAgo(dateStr: string): string {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  running: "text-[var(--accent-teal)]",
-  paused: "text-[var(--warning)]",
-  completed: "text-bullish",
-  failed: "text-bearish",
+  running: "text-text-secondary",
+  paused: "text-terminal-amber",
+  completed: "text-data-profit",
+  failed: "text-data-loss",
 };
 
 const BAR_COLORS: Record<string, string> = {
-  running: "bg-[var(--accent-teal)]",
-  paused: "bg-[var(--warning)]",
-  completed: "bg-bullish",
-  failed: "bg-bearish",
+  running: "bg-text-secondary",
+  paused: "bg-terminal-amber",
+  completed: "bg-terminal-amber-muted",
+  failed: "bg-terminal-amber-muted",
 };
 
 const STATUS_ICONS: Record<string, string> = {
@@ -55,15 +55,15 @@ export function TaskCard({ task }: { task: ProcessingTaskSummary }) {
   const [showCommand, setShowCommand] = useState(false);
 
   return (
-    <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4">
-      <h3 className="text-sm font-medium text-secondary">
+    <div className="rounded-none border border-void-border bg-void-surface p-4">
+      <h3 className="text-sm font-medium text-text-secondary">
         {TASK_LABELS[task.taskType] || task.taskType}
       </h3>
 
-      <p className="mt-2 font-mono text-2xl font-bold text-primary">
+      <p className="mt-2 font-mono text-2xl font-bold text-text-primary">
         {task.pendingCount}
       </p>
-      <p className="text-xs text-muted">pending</p>
+      <p className="text-xs text-text-tertiary">pending</p>
 
       {/* Last run info */}
       {task.lastRun && (
@@ -72,24 +72,24 @@ export function TaskCard({ task }: { task: ProcessingTaskSummary }) {
             {STATUS_ICONS[task.lastRun.status]} {task.lastRun.status}
           </span>
           {task.lastRun.status === "completed" || task.lastRun.status === "failed" ? (
-            <span className="text-muted">
+            <span className="text-text-tertiary">
               {task.lastRun.processedItems}/{task.lastRun.totalItems}
               {task.lastRun.errorCount > 0 && (
-                <span className="text-bearish"> ({task.lastRun.errorCount} err)</span>
+                <span className="text-data-loss"> ({task.lastRun.errorCount} err)</span>
               )}
             </span>
           ) : (
-            <span className="text-muted">
+            <span className="text-text-tertiary">
               {task.lastRun.processedItems}/{task.lastRun.totalItems}
             </span>
           )}
-          <span className="text-muted">{timeAgo(task.lastRun.startedAt)}</span>
+          <span className="text-text-tertiary">{timeAgo(task.lastRun.startedAt)}</span>
         </div>
       )}
       {/* Progress bar */}
       {task.lastRun && task.lastRun.totalItems > 0 && (
         <div className="mt-2 flex items-center gap-2">
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--bg-muted)]">
+          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-void-muted">
             <div
               className={cn("h-full rounded-full transition-all", BAR_COLORS[task.lastRun.status])}
               style={{
@@ -97,14 +97,14 @@ export function TaskCard({ task }: { task: ProcessingTaskSummary }) {
               }}
             />
           </div>
-          <span className="text-[10px] font-medium text-muted">
+          <span className="text-[10px] font-medium text-text-tertiary">
             {Math.round((task.lastRun.processedItems / task.lastRun.totalItems) * 100)}%
           </span>
         </div>
       )}
 
       {!task.lastRun && (
-        <p className="mt-3 text-xs text-muted">No runs yet</p>
+        <p className="mt-3 text-xs text-text-tertiary">No runs yet</p>
       )}
 
       {/* Run button */}
@@ -112,10 +112,10 @@ export function TaskCard({ task }: { task: ProcessingTaskSummary }) {
         onClick={() => setShowCommand((v) => !v)}
         disabled={task.pendingCount === 0}
         className={cn(
-          "mt-4 w-full rounded-md px-3 py-1.5 text-sm font-medium transition-colors-fast",
+          "mt-4 w-full rounded-none px-3 py-1.5 text-sm font-medium transition-colors-fast",
           task.pendingCount > 0
-            ? "bg-[var(--bg-elevated)] text-primary hover:bg-[var(--bg-muted)]"
-            : "cursor-not-allowed bg-[var(--bg-muted)] text-muted"
+            ? "bg-void-muted text-text-primary hover:bg-void-muted"
+            : "cursor-not-allowed bg-void-muted text-text-tertiary"
         )}
       >
         Run
@@ -123,9 +123,9 @@ export function TaskCard({ task }: { task: ProcessingTaskSummary }) {
 
       {/* Command instructions */}
       {showCommand && task.pendingCount > 0 && (
-        <div className="mt-3 rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] p-3 text-xs">
-          <p className="text-muted">Tell Claude Code:</p>
-          <p className="mt-1 font-medium text-primary">
+        <div className="mt-3 rounded-none border border-void-border bg-void p-3 text-xs">
+          <p className="text-text-tertiary">Tell Claude Code:</p>
+          <p className="mt-1 font-medium text-text-primary">
             &ldquo;{TASK_COMMANDS[task.taskType]}&rdquo;
           </p>
         </div>

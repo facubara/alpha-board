@@ -47,7 +47,7 @@ export function ComparisonView({ data }: ComparisonViewProps) {
   const handleRemove = (id: number) => {
     const next = activeIds.filter((aid) => aid !== id);
     if (next.length < 2) {
-      router.push("/agents");
+      router.push("/agents/marketplace");
       return;
     }
     setActiveIds(next);
@@ -70,10 +70,10 @@ export function ComparisonView({ data }: ComparisonViewProps) {
             <button
               key={agent.id}
               onClick={() => handleRemove(agent.id)}
-              className={`flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-xs font-medium transition-colors-fast ${
+              className={`flex items-center gap-2 rounded-none border px-3 py-1.5 font-mono text-xs font-medium transition-colors-fast ${
                 isActive
-                  ? "border-[var(--border-strong)] bg-[var(--bg-surface)] text-primary"
-                  : "border-[var(--border-subtle)] text-muted opacity-50"
+                  ? "border-void-border bg-void-surface text-text-primary"
+                  : "border-void-border text-text-tertiary opacity-50"
               }`}
             >
               <span
@@ -81,7 +81,7 @@ export function ComparisonView({ data }: ComparisonViewProps) {
                 style={{ backgroundColor: color }}
               />
               {agent.displayName}
-              {isActive && <X className="h-3 w-3 text-secondary" />}
+              {isActive && <X className="h-3 w-3 text-text-secondary" />}
             </button>
           );
         })}
@@ -92,7 +92,7 @@ export function ComparisonView({ data }: ComparisonViewProps) {
 
       {/* Equity curves */}
       <div>
-        <h2 className="mb-2 text-sm font-semibold text-primary">
+        <h2 className="mb-2 text-sm font-semibold text-text-primary">
           Equity Curves
         </h2>
         <ComparisonEquityChart
@@ -104,7 +104,7 @@ export function ComparisonView({ data }: ComparisonViewProps) {
 
       {/* PnL bars */}
       <div>
-        <h2 className="mb-2 text-sm font-semibold text-primary">
+        <h2 className="mb-2 text-sm font-semibold text-text-primary">
           Total PnL
         </h2>
         <HorizontalBarChart
@@ -117,7 +117,7 @@ export function ComparisonView({ data }: ComparisonViewProps) {
 
       {/* Trade timeline */}
       <div>
-        <h2 className="mb-2 text-sm font-semibold text-primary">
+        <h2 className="mb-2 text-sm font-semibold text-text-primary">
           Trade Timeline
         </h2>
         <ComparisonTrades

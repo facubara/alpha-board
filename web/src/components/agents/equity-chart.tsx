@@ -69,9 +69,9 @@ export function EquityChart({
   if (chartData.length < 2) {
     return (
       <div
-        className={`flex h-40 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+        className={`flex h-40 items-center justify-center rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
       >
-        <p className="text-xs text-muted">No trades yet</p>
+        <p className="text-xs text-text-tertiary">No trades yet</p>
       </div>
     );
   }
@@ -81,7 +81,7 @@ export function EquityChart({
 
   return (
     <div
-      className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+      className={`overflow-hidden rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
     >
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={chartData} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
@@ -124,7 +124,7 @@ export function EquityChart({
           />
           <ReferenceLine
             y={initialBalance}
-            stroke="var(--border-subtle)"
+            stroke="#27272A"
             strokeDasharray="4 4"
           />
           <Line

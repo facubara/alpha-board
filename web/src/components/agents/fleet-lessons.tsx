@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { ChevronDown, ChevronRight, X, Zap, AlertTriangle, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
+import { TerminalPanel } from "@/components/terminal";
 import type { FleetLesson, FleetLessonCategory } from "@/lib/types";
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
@@ -15,17 +16,17 @@ const CATEGORY_CONFIG: Record<
   strength: {
     label: "Strength",
     icon: Zap,
-    colorClass: "bg-[var(--bullish-subtle)] text-bullish",
+    colorClass: "bg-terminal-amber-muted text-data-profit",
   },
   mistake: {
     label: "Mistake",
     icon: AlertTriangle,
-    colorClass: "bg-[var(--bearish-subtle)] text-bearish",
+    colorClass: "bg-terminal-amber-muted text-data-loss",
   },
   pattern: {
     label: "Pattern",
     icon: Eye,
-    colorClass: "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]",
+    colorClass: "bg-void-muted text-text-secondary",
   },
 };
 
@@ -102,7 +103,7 @@ export function FleetLessons({ lessons: initialLessons }: FleetLessonsProps) {
     <div className="space-y-2">
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="flex items-center gap-1.5 text-sm font-medium text-secondary transition-colors-fast hover:text-primary"
+        className="flex items-center gap-1.5 text-sm font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
       >
         {expanded ? (
           <ChevronDown className="h-4 w-4" />
@@ -121,10 +122,10 @@ export function FleetLessons({ lessons: initialLessons }: FleetLessonsProps) {
                 key={cat}
                 onClick={() => setFilter(cat)}
                 className={cn(
-                  "rounded-md px-2 py-1 text-xs font-medium transition-colors-fast",
+                  "rounded-none px-2 py-1 text-xs font-medium transition-colors-fast",
                   filter === cat
-                    ? "bg-[var(--bg-elevated)] text-primary"
-                    : "text-muted hover:text-secondary"
+                    ? "bg-void-muted text-text-primary"
+                    : "text-text-tertiary hover:text-text-secondary"
                 )}
               >
                 {cat === "all" ? "All" : CATEGORY_CONFIG[cat].label} ({counts[cat]})
@@ -133,60 +134,62 @@ export function FleetLessons({ lessons: initialLessons }: FleetLessonsProps) {
           </div>
 
           {/* Lessons list */}
-          <div className="divide-y divide-[var(--border-subtle)] rounded-lg border border-[var(--border-default)]">
-            {filtered.map((lesson) => {
-              const config = CATEGORY_CONFIG[lesson.category];
-              const Icon = config.icon;
-              return (
-                <div
-                  key={lesson.id}
-                  className="flex items-start gap-3 px-3 py-2.5 hover:bg-[var(--bg-elevated)]"
-                >
-                  {/* Category badge */}
-                  <span
-                    className={cn(
-                      "mt-0.5 flex shrink-0 items-center gap-1 rounded px-1.5 py-0.5 text-xs font-semibold leading-none",
-                      config.colorClass
-                    )}
+          <TerminalPanel>
+            <div className="divide-y divide-void-border">
+              {filtered.map((lesson) => {
+                const config = CATEGORY_CONFIG[lesson.category];
+                const Icon = config.icon;
+                return (
+                  <div
+                    key={lesson.id}
+                    className="flex items-start gap-3 px-3 py-2.5 hover:bg-void-muted"
                   >
-                    <Icon className="h-3 w-3" />
-                    {config.label.toUpperCase()}
-                  </span>
+                    {/* Category badge */}
+                    <span
+                      className={cn(
+                        "mt-0.5 flex shrink-0 items-center gap-1 rounded-none px-1.5 py-0.5 text-xs font-semibold leading-none",
+                        config.colorClass
+                      )}
+                    >
+                      <Icon className="h-3 w-3" />
+                      {config.label.toUpperCase()}
+                    </span>
 
-                  {/* Lesson content */}
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-primary">{lesson.lesson}</p>
-                    <p className="mt-0.5 text-xs text-muted">
-                      from{" "}
-                      <span className="font-medium text-secondary">
-                        {lesson.agentName}
-                      </span>
-                      <span className="mx-1">·</span>
-                      <span className="font-mono">{lesson.archetype}</span>
-                      <span className="mx-1">·</span>
-                      {new Date(lesson.createdAt).toLocaleDateString()}
-                    </p>
+                    {/* Lesson content */}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm text-text-primary">{lesson.lesson}</p>
+                      <p className="mt-0.5 text-xs text-text-tertiary">
+                        from{" "}
+                        <span className="font-medium text-text-secondary">
+                          {lesson.agentName}
+                        </span>
+                        <span className="mx-1">·</span>
+                        <span className="font-mono">{lesson.archetype}</span>
+                        <span className="mx-1">·</span>
+                        {new Date(lesson.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    {/* Remove button */}
+                    <button
+                      onClick={() => handleRemove(lesson.id)}
+                      disabled={removing.has(lesson.id)}
+                      className="mt-0.5 shrink-0 rounded-none p-1 text-text-tertiary transition-colors-fast hover:bg-void-muted hover:text-data-loss disabled:opacity-50"
+                      title="Remove lesson"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
                   </div>
+                );
+              })}
 
-                  {/* Remove button */}
-                  <button
-                    onClick={() => handleRemove(lesson.id)}
-                    disabled={removing.has(lesson.id)}
-                    className="mt-0.5 shrink-0 rounded p-1 text-muted transition-colors-fast hover:bg-[var(--bg-muted)] hover:text-bearish disabled:opacity-50"
-                    title="Remove lesson"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
+              {filtered.length === 0 && (
+                <div className="px-3 py-4 text-center text-xs text-text-tertiary">
+                  No {filter} lessons yet
                 </div>
-              );
-            })}
-
-            {filtered.length === 0 && (
-              <div className="px-3 py-4 text-center text-xs text-muted">
-                No {filter} lessons yet
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          </TerminalPanel>
         </div>
       )}
     </div>

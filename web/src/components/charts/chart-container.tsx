@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { TIMEFRAMES, type Timeframe, type TradeMarker } from "@/lib/types";
 import { useChartData } from "@/hooks/use-chart-data";
 import { CandlestickChart } from "./candlestick-chart";
-import { RefreshCw } from "lucide-react";
+import { TextLoader } from "@/components/terminal";
 
 interface ChartContainerProps {
   symbol: string;
@@ -38,10 +38,10 @@ export function ChartContainer({
               key={tf}
               onClick={() => setTimeframe(tf)}
               className={cn(
-                "rounded px-2.5 py-1 font-mono text-xs font-medium transition-colors",
+                "rounded-none border border-transparent px-2.5 py-1 font-mono text-xs font-medium transition-colors",
                 tf === timeframe
-                  ? "bg-[var(--bg-elevated)] text-primary"
-                  : "text-muted hover:text-secondary"
+                  ? "border-terminal-amber text-terminal-amber bg-terminal-amber-muted"
+                  : "text-text-tertiary hover:text-text-secondary hover:border-void-border"
               )}
             >
               {tf}
@@ -52,7 +52,7 @@ export function ChartContainer({
 
       {/* Chart area */}
       <div
-        className="overflow-hidden rounded-lg border border-[var(--border-default)] bg-[#0B0E11]"
+        className="overflow-hidden rounded-none border border-void-border bg-void-surface"
         style={{ minHeight: height }}
       >
         {loading && (
@@ -60,10 +60,7 @@ export function ChartContainer({
             className="flex items-center justify-center"
             style={{ height }}
           >
-            <div className="flex items-center gap-2 text-sm text-muted">
-              <RefreshCw className="h-4 w-4 animate-spin" />
-              Loading chart...
-            </div>
+            <TextLoader text="Loading chart..." />
           </div>
         )}
 
@@ -72,10 +69,10 @@ export function ChartContainer({
             className="flex flex-col items-center justify-center gap-3"
             style={{ height }}
           >
-            <p className="text-sm text-muted">{error}</p>
+            <p className="text-sm text-text-tertiary font-mono">{error}</p>
             <button
               onClick={refetch}
-              className="rounded bg-[var(--bg-elevated)] px-3 py-1.5 text-xs font-medium text-secondary transition-colors hover:text-primary"
+              className="rounded-none border border-void-border bg-void-muted px-3 py-1.5 text-xs font-mono text-text-secondary transition-colors hover:text-text-primary hover:border-terminal-amber"
             >
               Retry
             </button>

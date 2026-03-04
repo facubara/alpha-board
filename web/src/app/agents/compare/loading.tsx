@@ -6,14 +6,14 @@ export default function CompareLoading() {
     <div className="space-y-6">
       {/* Header skeleton */}
       <div>
-        <div className="h-7 w-48 rounded bg-[var(--bg-muted)] skeleton" />
-        <div className="mt-2 h-4 w-64 rounded bg-[var(--bg-muted)] skeleton" />
+        <div className="h-7 w-48 rounded-none bg-void-muted skeleton" />
+        <div className="mt-2 h-4 w-64 rounded-none bg-void-muted skeleton" />
       </div>
 
       {/* Agent chips skeleton */}
       <div className="flex gap-2">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-8 w-36 rounded-full bg-[var(--bg-muted)] skeleton" />
+          <div key={i} className="h-8 w-36 rounded-full bg-void-muted skeleton" />
         ))}
       </div>
 
@@ -22,28 +22,28 @@ export default function CompareLoading() {
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
-            className="h-24 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3"
+            className="h-24 rounded-none border border-void-border bg-void-surface p-3"
           >
-            <div className="h-3 w-16 rounded bg-[var(--bg-muted)] skeleton" />
-            <div className="mt-3 h-5 w-20 rounded bg-[var(--bg-muted)] skeleton" />
+            <div className="h-3 w-16 rounded-none bg-void-muted skeleton" />
+            <div className="mt-3 h-5 w-20 rounded-none bg-void-muted skeleton" />
           </div>
         ))}
       </div>
 
       {/* Chart skeleton */}
-      <div className="h-48 rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]" />
+      <div className="h-48 rounded-none border border-void-border bg-void-surface" />
 
       {/* Table skeleton */}
-      <div className="overflow-hidden rounded-lg border border-[var(--border-default)]">
+      <div className="overflow-hidden rounded-none border border-void-border">
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="flex h-10 items-center gap-6 border-t border-[var(--border-subtle)] px-4 first:border-t-0"
+            className="flex h-10 items-center gap-6 border-t border-void-border px-4 first:border-t-0"
           >
-            <div className="h-3 w-24 rounded bg-[var(--bg-muted)] skeleton" />
-            <div className="h-3 w-16 rounded bg-[var(--bg-muted)] skeleton" />
-            <div className="h-3 w-16 rounded bg-[var(--bg-muted)] skeleton" />
-            <div className="h-3 w-12 rounded bg-[var(--bg-muted)] skeleton" />
+            <div className="h-3 w-24 rounded-none bg-void-muted skeleton" />
+            <div className="h-3 w-16 rounded-none bg-void-muted skeleton" />
+            <div className="h-3 w-16 rounded-none bg-void-muted skeleton" />
+            <div className="h-3 w-12 rounded-none bg-void-muted skeleton" />
           </div>
         ))}
       </div>

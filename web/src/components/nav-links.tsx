@@ -10,19 +10,14 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import { useAuth } from "@/components/auth/auth-provider";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Rankings" },
+  { href: "/dashboard", label: "Terminal" },
   { href: "/agents", label: "Agents" },
-  { href: "/seasons", label: "Seasons" },
-  { href: "/tweets", label: "Tweets" },
-  { href: "/memecoins", label: "Memecoins" },
-  { href: "/backtest", label: "Backtest" },
-  { href: "/analytics", label: "Analytics" },
-  { href: "/processing", label: "Processing" },
-  { href: "/status", label: "Status" },
-  { href: "/updates", label: "Updates" },
-  { href: "/settings", label: "Settings" },
+  { href: "/radar", label: "Radar" },
+  { href: "/lab", label: "Laboratory" },
+  { href: "/system", label: "System" },
 ] as const;
 
 function isActive(pathname: string, href: string): boolean {
@@ -32,9 +27,13 @@ function isActive(pathname: string, href: string): boolean {
 
 export function NavLinks() {
   const pathname = usePathname();
+  const { isAuthenticated } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
+
+  // Hide nav on landing page for unauthenticated users
+  const isMarketingView = pathname === "/" && !isAuthenticated;
 
   // Close mobile nav on Escape key
   useEffect(() => {
@@ -46,6 +45,9 @@ export function NavLinks() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [mobileOpen, closeMobile]);
 
+  // On marketing view, don't render any navigation links
+  if (isMarketingView) return null;
+
   return (
     <>
       {/* Desktop nav */}
@@ -56,10 +58,10 @@ export function NavLinks() {
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-md px-3 py-2 text-sm font-medium transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary ${
+              className={`rounded-none border border-transparent font-mono text-xs px-2.5 py-1 transition-colors ${
                 active
-                  ? "bg-[var(--bg-elevated)] text-primary"
-                  : "text-secondary"
+                  ? "border-terminal-amber text-terminal-amber bg-terminal-amber-muted"
+                  : "text-text-secondary hover:text-text-primary hover:border-void-border"
               }`}
             >
               {item.label}
@@ -71,7 +73,7 @@ export function NavLinks() {
       {/* Mobile hamburger */}
       <button
         onClick={() => setMobileOpen((o) => !o)}
-        className="rounded-md p-2 text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary sm:hidden"
+        className="rounded-none p-2 text-text-secondary transition-colors hover:bg-void-muted hover:text-text-primary sm:hidden"
         aria-label="Toggle navigation menu"
       >
         {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -84,7 +86,7 @@ export function NavLinks() {
           className="fixed inset-0 z-40 sm:hidden"
           onClick={closeMobile}
         />
-        <div className="absolute left-0 right-0 top-14 z-50 border-b border-[var(--border-default)] bg-[var(--bg-base)] px-4 py-2 sm:hidden">
+        <div className="absolute left-0 right-0 top-14 z-50 border-b border-void-border bg-void px-4 py-2 sm:hidden">
           <nav className="flex flex-col gap-1">
             {NAV_ITEMS.map((item) => {
               const active = isActive(pathname, item.href);
@@ -93,10 +95,10 @@ export function NavLinks() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`rounded-md px-3 py-2 text-sm font-medium transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary ${
+                  className={`rounded-none border border-transparent font-mono text-xs px-2.5 py-1 transition-colors ${
                     active
-                      ? "bg-[var(--bg-elevated)] text-primary"
-                      : "text-secondary"
+                      ? "border-terminal-amber text-terminal-amber bg-terminal-amber-muted"
+                      : "text-text-secondary hover:text-text-primary hover:border-void-border"
                   }`}
                 >
                   {item.label}

@@ -141,20 +141,20 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
       : 0;
 
   const statusColor: Record<AnalysisStatus, string> = {
-    pending: "text-[var(--accent-yellow)]",
-    running: "text-[var(--accent-blue)]",
-    paused: "text-[var(--accent-orange)]",
-    completed: "text-bullish",
-    failed: "text-bearish",
+    pending: "text-terminal-amber",
+    running: "text-text-secondary",
+    paused: "text-terminal-amber",
+    completed: "text-data-profit",
+    failed: "text-data-loss",
   };
 
   return (
     <div className="space-y-4">
       {/* Input form */}
-      <div className="rounded-lg border border-primary/10 bg-card p-4">
+      <div className="rounded-none border border-primary/10 bg-card p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <div className="flex-1">
-            <label className="mb-1 block text-xs text-secondary">
+            <label className="mb-1 block text-xs text-text-secondary">
               Token CA (Solana mint address)
             </label>
             <input
@@ -162,11 +162,11 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
               value={mintAddress}
               onChange={(e) => setMintAddress(e.target.value)}
               placeholder="Paste Solana token address..."
-              className="w-full rounded-md border border-primary/10 bg-background px-3 py-2 text-sm text-primary placeholder:text-muted focus:border-accent focus:outline-none"
+              className="w-full rounded-none border border-primary/10 bg-background px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
             />
           </div>
           <div className="w-24">
-            <label className="mb-1 block text-xs text-secondary">Buyers</label>
+            <label className="mb-1 block text-xs text-text-secondary">Buyers</label>
             <input
               type="number"
               value={numBuyers}
@@ -175,13 +175,13 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
               }
               min={1}
               max={500}
-              className="w-full rounded-md border border-primary/10 bg-background px-3 py-2 text-sm text-primary focus:border-accent focus:outline-none"
+              className="w-full rounded-none border border-primary/10 bg-background px-3 py-2 text-sm text-text-primary focus:border-accent focus:outline-none"
             />
           </div>
           <button
             onClick={startAnalysis}
             disabled={loading || !mintAddress.trim()}
-            className="flex items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent/90 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-none bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent/90 disabled:opacity-50"
           >
             {loading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -191,24 +191,24 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
             Analyze
           </button>
         </div>
-        {error && <p className="mt-2 text-xs text-bearish">{error}</p>}
+        {error && <p className="mt-2 text-xs text-data-loss">{error}</p>}
       </div>
 
       {/* Active analysis progress */}
       {activeAnalysis && (
-        <div className="rounded-lg border border-primary/10 bg-card p-4">
+        <div className="rounded-none border border-primary/10 bg-card p-4">
           <div className="mb-3 flex items-center justify-between">
             <div>
-              <span className="text-sm font-medium text-primary">
+              <span className="text-sm font-medium text-text-primary">
                 {activeAnalysis.tokenSymbol || activeAnalysis.mintAddress.slice(0, 8) + "..."}
               </span>
               {activeAnalysis.tokenName && (
-                <span className="ml-2 text-xs text-secondary">
+                <span className="ml-2 text-xs text-text-secondary">
                   {activeAnalysis.tokenName}
                 </span>
               )}
               {activeAnalysis.marketCapUsd && (
-                <span className="ml-2 text-xs text-muted">
+                <span className="ml-2 text-xs text-text-tertiary">
                   MCap: ${activeAnalysis.marketCapUsd >= 1_000_000
                     ? `${(activeAnalysis.marketCapUsd / 1_000_000).toFixed(1)}M`
                     : `${(activeAnalysis.marketCapUsd / 1_000).toFixed(0)}K`}
@@ -222,7 +222,7 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
               {(activeAnalysis.status === "paused" || activeAnalysis.status === "failed") && (
                 <button
                   onClick={() => resumeAnalysis(activeAnalysis.id)}
-                  className="rounded p-1 text-secondary hover:text-primary"
+                  className="rounded p-1 text-text-secondary hover:text-text-primary"
                   title="Resume"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
@@ -239,7 +239,7 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
                 style={{ width: `${progressPct}%` }}
               />
             </div>
-            <div className="mt-1 flex justify-between text-xs text-muted">
+            <div className="mt-1 flex justify-between text-xs text-text-tertiary">
               <span>
                 {activeAnalysis.foundBuyers} / {activeAnalysis.requestedBuyers} wallets
               </span>
@@ -248,7 +248,7 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
           </div>
 
           {activeAnalysis.errorMessage && (
-            <p className="mt-1 text-xs text-bearish">{activeAnalysis.errorMessage}</p>
+            <p className="mt-1 text-xs text-data-loss">{activeAnalysis.errorMessage}</p>
           )}
 
           {/* Results table */}
@@ -256,7 +256,7 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-primary/10 text-left text-muted">
+                  <tr className="border-b border-primary/10 text-left text-text-tertiary">
                     <th className="pb-2 pr-3">#</th>
                     <th className="pb-2 pr-3">Wallet</th>
                     <th className="pb-2 pr-3 text-right">SOL</th>
@@ -290,26 +290,26 @@ export function TokenAnalyzer({ initialAnalyses }: TokenAnalyzerProps) {
 
       {/* Recent analyses list */}
       {analyses.length > 0 && (
-        <div className="rounded-lg border border-primary/10 bg-card p-4">
-          <h3 className="mb-3 text-sm font-medium text-primary">Recent Analyses</h3>
+        <div className="rounded-none border border-primary/10 bg-card p-4">
+          <h3 className="mb-3 text-sm font-medium text-text-primary">Recent Analyses</h3>
           <div className="space-y-2">
             {analyses.map((a) => (
               <button
                 key={a.id}
                 onClick={() => loadAnalysis(a.id)}
-                className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-xs transition-colors hover:bg-primary/5 ${
+                className={`flex w-full items-center justify-between rounded-none px-3 py-2 text-left text-xs transition-colors hover:bg-primary/5 ${
                   activeAnalysis?.id === a.id ? "bg-primary/5" : ""
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="font-medium text-primary">
+                  <span className="font-medium text-text-primary">
                     {a.tokenSymbol || a.mintAddress.slice(0, 8) + "..."}
                   </span>
                   <span className={statusColor[a.status]}>
                     {a.status}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 text-muted">
+                <div className="flex items-center gap-3 text-text-tertiary">
                   <span>
                     {a.foundBuyers}/{a.requestedBuyers}
                   </span>
@@ -341,36 +341,36 @@ function WalletRow({
         className="cursor-pointer border-b border-primary/5 hover:bg-primary/5"
         onClick={onToggle}
       >
-        <td className="py-2 pr-3 text-muted">{wallet.entryRank}</td>
+        <td className="py-2 pr-3 text-text-tertiary">{wallet.entryRank}</td>
         <td className="py-2 pr-3">
           <div className="flex items-center gap-1.5">
             {expanded ? (
-              <ChevronDown className="h-3 w-3 text-muted" />
+              <ChevronDown className="h-3 w-3 text-text-tertiary" />
             ) : (
-              <ChevronRight className="h-3 w-3 text-muted" />
+              <ChevronRight className="h-3 w-3 text-text-tertiary" />
             )}
-            <code className="font-mono text-primary">{addrShort}</code>
+            <code className="font-mono text-text-primary">{addrShort}</code>
             <a
               href={`https://solscan.io/account/${wallet.address}`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="text-muted hover:text-accent"
+              className="text-text-tertiary hover:text-accent"
             >
               <ExternalLink className="h-3 w-3" />
             </a>
           </div>
         </td>
-        <td className="py-2 pr-3 text-right font-mono text-primary">
+        <td className="py-2 pr-3 text-right font-mono text-text-primary">
           {wallet.solBalance != null ? wallet.solBalance.toFixed(2) : "-"}
         </td>
-        <td className="py-2 pr-3 text-right font-mono text-primary">
+        <td className="py-2 pr-3 text-right font-mono text-text-primary">
           {wallet.usdcBalance != null ? wallet.usdcBalance.toFixed(0) : "-"}
         </td>
-        <td className="py-2 pr-3 text-right text-secondary">
+        <td className="py-2 pr-3 text-right text-text-secondary">
           {wallet.totalTxCount?.toLocaleString() ?? "-"}
         </td>
-        <td className="py-2 pr-3 text-right text-secondary">
+        <td className="py-2 pr-3 text-right text-text-secondary">
           {wallet.tokensTraded ?? "-"}
         </td>
         <td className="py-2 pr-3">
@@ -385,12 +385,12 @@ function WalletRow({
             ))}
           </div>
         </td>
-        <td className="py-2 pr-3 text-secondary">
+        <td className="py-2 pr-3 text-text-secondary">
           {wallet.tokenEntries.length > 0 ? wallet.tokenEntries.length : "-"}
         </td>
         <td className="py-2">
           {wallet.amountSol != null && (
-            <span className="text-muted">{wallet.amountSol.toFixed(2)} SOL</span>
+            <span className="text-text-tertiary">{wallet.amountSol.toFixed(2)} SOL</span>
           )}
         </td>
       </tr>
@@ -401,14 +401,14 @@ function WalletRow({
               {/* Holdings */}
               {wallet.currentHoldings.length > 0 && (
                 <div>
-                  <p className="mb-1 text-xs font-medium uppercase text-muted">
+                  <p className="mb-1 text-xs font-medium uppercase text-text-tertiary">
                     Current Holdings
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {wallet.currentHoldings.slice(0, 10).map((h) => (
                       <span
                         key={h.mint}
-                        className="rounded border border-primary/10 px-2 py-0.5 text-xs text-secondary"
+                        className="rounded border border-primary/10 px-2 py-0.5 text-xs text-text-secondary"
                       >
                         {h.symbol || h.mint.slice(0, 6)}:{" "}
                         {h.value_usd ? `$${h.value_usd.toFixed(0)}` : h.amount.toFixed(0)}
@@ -421,7 +421,7 @@ function WalletRow({
               {/* Past token entries */}
               {wallet.tokenEntries.length > 0 && (
                 <div>
-                  <p className="mb-1 text-xs font-medium uppercase text-muted">
+                  <p className="mb-1 text-xs font-medium uppercase text-text-tertiary">
                     Past Early Entries
                   </p>
                   <div className="space-y-1">
@@ -430,17 +430,17 @@ function WalletRow({
                         key={e.mintAddress}
                         className="flex items-center gap-3 text-[11px]"
                       >
-                        <span className="font-medium text-primary">
+                        <span className="font-medium text-text-primary">
                           {e.tokenSymbol || e.mintAddress.slice(0, 8)}
                         </span>
-                        <span className="text-muted">Rank #{e.entryRank}</span>
+                        <span className="text-text-tertiary">Rank #{e.entryRank}</span>
                         {e.amountSol && (
-                          <span className="text-secondary">
+                          <span className="text-text-secondary">
                             {e.amountSol.toFixed(2)} SOL
                           </span>
                         )}
                         {e.tokenPeakMcap && (
-                          <span className="text-bullish">
+                          <span className="text-data-profit">
                             Peak: $
                             {e.tokenPeakMcap >= 1_000_000
                               ? `${(e.tokenPeakMcap / 1_000_000).toFixed(1)}M`
@@ -454,7 +454,7 @@ function WalletRow({
               )}
 
               {/* Full address */}
-              <div className="text-xs text-muted">
+              <div className="text-xs text-text-tertiary">
                 <code>{wallet.address}</code>
               </div>
             </div>

@@ -4,6 +4,7 @@
  * Server component with ISR 60s. Fetches settings + costs in parallel.
  */
 
+import { PageHeader } from "@/components/terminal";
 import { getLlmSettings, getLlmCosts } from "@/lib/queries/settings";
 import { SettingsPage } from "@/components/settings/settings-page";
 import { ExchangeSettingsSection } from "@/components/settings/exchange-settings";
@@ -19,18 +20,12 @@ export default async function SettingsRoute() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-primary">Settings</h1>
-        <p className="mt-1 text-sm text-muted">
-          Configure exchange connections, notifications, and LLM models
-        </p>
-      </div>
+      <PageHeader title="Settings" subtitle="Configure exchange connections, notifications, and LLM models" />
 
       {sections.length > 0 ? (
         <SettingsPage sections={sections} costs={costs} />
       ) : (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-8 text-center text-sm text-muted">
+        <div className="rounded-none border border-void-border bg-void-surface px-4 py-8 text-center text-sm text-text-tertiary">
           No LLM settings found. The migration may not have run yet.
         </div>
       )}

@@ -14,7 +14,7 @@ export function SeasonsOverview({ seasons }: Props) {
 
   if (!seasons || seasons.length === 0) {
     return (
-      <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-8 text-center text-sm text-muted">
+      <div className="rounded-none border border-void-border bg-void-surface p-8 text-center text-sm text-text-tertiary">
         No season data available.
       </div>
     );
@@ -41,7 +41,7 @@ export function SeasonsOverview({ seasons }: Props) {
       {/* History panel */}
       {selectedTf && (
         <div>
-          <h3 className="mb-3 text-sm font-medium text-primary">
+          <h3 className="mb-3 text-sm font-medium text-text-primary">
             {selectedTf.toUpperCase()} Season History
           </h3>
           <SeasonHistoryPanel timeframe={selectedTf} />

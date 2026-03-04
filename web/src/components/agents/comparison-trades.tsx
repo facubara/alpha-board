@@ -76,8 +76,8 @@ export function ComparisonTrades({
 
   if (allTrades.length === 0) {
     return (
-      <div className="flex h-32 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-        <p className="text-xs text-muted">No closed trades yet</p>
+      <div className="flex h-32 items-center justify-center rounded-none border border-void-border bg-void-surface">
+        <p className="text-xs text-text-tertiary">No closed trades yet</p>
       </div>
     );
   }
@@ -91,10 +91,10 @@ export function ComparisonTrades({
             key={agent.id}
             onClick={() => toggleFilter(agent.id)}
             className={cn(
-              "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+              "flex items-center gap-1.5 rounded-none px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
               filterIds.has(agent.id)
-                ? "border border-[var(--border-strong)] bg-[var(--bg-surface)] text-primary"
-                : "text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
+                ? "border border-void-border bg-void-surface text-text-primary"
+                : "text-text-secondary hover:bg-void-muted hover:text-text-primary"
             )}
           >
             <span
@@ -110,26 +110,26 @@ export function ComparisonTrades({
       </div>
 
       {/* Trade table */}
-      <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
+      <div className="overflow-x-auto rounded-none border border-void-border">
         <Table>
           <TableHeader>
-            <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
-              <TableHead className="text-xs font-medium text-secondary">
+            <TableRow className="border-b border-void-border bg-void-surface hover:bg-void-surface">
+              <TableHead className="text-xs font-medium text-text-secondary">
                 Agent
               </TableHead>
-              <TableHead className="text-xs font-medium text-secondary">
+              <TableHead className="text-xs font-medium text-text-secondary">
                 Symbol
               </TableHead>
-              <TableHead className="hidden text-xs font-medium text-secondary sm:table-cell">
+              <TableHead className="hidden text-xs font-medium text-text-secondary sm:table-cell">
                 Direction
               </TableHead>
-              <TableHead className="text-right text-xs font-medium text-secondary">
+              <TableHead className="text-right text-xs font-medium text-text-secondary">
                 PnL
               </TableHead>
-              <TableHead className="hidden text-right text-xs font-medium text-secondary md:table-cell">
+              <TableHead className="hidden text-right text-xs font-medium text-text-secondary md:table-cell">
                 Entry / Exit
               </TableHead>
-              <TableHead className="hidden text-right text-xs font-medium text-secondary lg:table-cell">
+              <TableHead className="hidden text-right text-xs font-medium text-text-secondary lg:table-cell">
                 Duration
               </TableHead>
             </TableRow>
@@ -138,7 +138,7 @@ export function ComparisonTrades({
             {allTrades.map((trade) => (
               <TableRow
                 key={`${trade.agentId}-${trade.id}`}
-                className="h-10 transition-colors-fast hover:bg-[var(--bg-elevated)]"
+                className="h-10 transition-colors-fast hover:bg-void-muted"
               >
                 <TableCell className="max-w-[140px]">
                   <span className="flex items-center gap-1.5">
@@ -146,12 +146,12 @@ export function ComparisonTrades({
                       className="inline-block h-2 w-2 shrink-0 rounded-full"
                       style={{ backgroundColor: colorMap[trade.agentId] }}
                     />
-                    <span className="truncate text-xs text-primary">
+                    <span className="truncate text-xs text-text-primary">
                       {trade._agentName}
                     </span>
                   </span>
                 </TableCell>
-                <TableCell className="font-mono text-xs text-secondary">
+                <TableCell className="font-mono text-xs text-text-secondary">
                   {trade.symbol}
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">
@@ -159,8 +159,8 @@ export function ComparisonTrades({
                     className={cn(
                       "font-mono text-xs",
                       trade.direction === "long"
-                        ? "text-bullish"
-                        : "text-bearish"
+                        ? "text-data-profit"
+                        : "text-data-loss"
                     )}
                   >
                     {trade.direction.toUpperCase()}
@@ -169,18 +169,18 @@ export function ComparisonTrades({
                 <TableCell
                   className={cn(
                     "text-right font-mono text-xs font-semibold tabular-nums",
-                    trade.pnl > 0 && "text-bullish",
-                    trade.pnl < 0 && "text-bearish",
-                    trade.pnl === 0 && "text-secondary"
+                    trade.pnl > 0 && "text-data-profit",
+                    trade.pnl < 0 && "text-data-loss",
+                    trade.pnl === 0 && "text-text-secondary"
                   )}
                 >
                   {trade.pnl >= 0 ? "+" : ""}
                   {trade.pnl.toFixed(2)}
                 </TableCell>
-                <TableCell className="hidden text-right font-mono text-xs tabular-nums text-secondary md:table-cell">
+                <TableCell className="hidden text-right font-mono text-xs tabular-nums text-text-secondary md:table-cell">
                   {trade.entryPrice.toFixed(2)} → {trade.exitPrice.toFixed(2)}
                 </TableCell>
-                <TableCell className="hidden text-right font-mono text-xs tabular-nums text-muted lg:table-cell">
+                <TableCell className="hidden text-right font-mono text-xs tabular-nums text-text-tertiary lg:table-cell">
                   {formatDuration(trade.durationMinutes)}
                 </TableCell>
               </TableRow>
@@ -189,7 +189,7 @@ export function ComparisonTrades({
         </Table>
       </div>
 
-      <p className="text-xs text-muted">
+      <p className="text-xs text-text-tertiary">
         Showing {allTrades.length} most recent trades
       </p>
     </div>

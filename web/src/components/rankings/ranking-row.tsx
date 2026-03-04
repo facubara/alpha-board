@@ -58,9 +58,9 @@ function formatVolumeAbs(value: number): string {
  * Get score text color based on value.
  */
 function getScoreColor(score: number): string {
-  if (score < 0.4) return "text-bearish";
-  if (score > 0.6) return "text-bullish";
-  return "text-muted";
+  if (score < 0.4) return "text-data-loss";
+  if (score > 0.6) return "text-data-profit";
+  return "text-text-tertiary";
 }
 
 export function RankingRow({ snapshot, highlighted, className }: RankingRowProps) {
@@ -71,8 +71,8 @@ export function RankingRow({ snapshot, highlighted, className }: RankingRowProps
       {/* Main row */}
       <TableRow
         className={cn(
-          "group/row h-10 cursor-pointer transition-colors-fast hover:bg-[var(--bg-elevated)] sm:h-10",
-          isExpanded && "bg-[var(--bg-surface)]",
+          "group/row h-10 cursor-pointer transition-colors-fast hover:bg-void-muted sm:h-10",
+          isExpanded && "bg-void-surface",
           highlighted && "animate-trade-highlight",
           className
         )}
@@ -80,18 +80,18 @@ export function RankingRow({ snapshot, highlighted, className }: RankingRowProps
         aria-expanded={isExpanded}
       >
         {/* Rank */}
-        <TableCell className="w-12 pr-2 text-right font-mono text-sm font-semibold tabular-nums text-primary">
+        <TableCell className="w-12 pr-2 text-right font-mono text-sm font-semibold tabular-nums text-text-primary">
           {snapshot.rank}
         </TableCell>
 
         {/* Symbol */}
-        <TableCell className="w-28 font-mono text-sm font-semibold text-primary">
+        <TableCell className="w-28 font-mono text-sm font-semibold text-text-primary">
           <span className="flex items-center gap-1.5">
             {snapshot.symbol}
             <Link
               href={`/symbols/${snapshot.symbol}`}
               onClick={(e) => e.stopPropagation()}
-              className="text-secondary transition-colors hover:text-primary"
+              className="text-text-secondary transition-colors hover:text-text-primary"
               title={`Chart for ${snapshot.symbol}`}
             >
               <TrendingUp className="h-3.5 w-3.5" />
@@ -126,38 +126,38 @@ export function RankingRow({ snapshot, highlighted, className }: RankingRowProps
         </TableCell>
 
         {/* Confidence */}
-        <TableCell className="w-20 text-right font-mono text-sm tabular-nums text-secondary">
+        <TableCell className="w-20 text-right font-mono text-sm tabular-nums text-text-secondary">
           {snapshot.confidence}%
         </TableCell>
 
         {/* Price % (hidden on mobile) */}
         <TableCell className="hidden w-20 text-right font-mono text-sm tabular-nums md:table-cell">
           {snapshot.priceChangePct != null ? (
-            <span className={snapshot.priceChangePct >= 0 ? "text-bullish" : "text-bearish"}>
+            <span className={snapshot.priceChangePct >= 0 ? "text-data-profit" : "text-data-loss"}>
               {snapshot.priceChangePct >= 0 ? "+" : ""}
               {snapshot.priceChangePct.toFixed(2)}%
             </span>
           ) : (
-            <span className="text-muted">—</span>
+            <span className="text-text-tertiary">—</span>
           )}
         </TableCell>
 
         {/* Price Δ absolute (hidden until lg) */}
         <TableCell className="hidden w-24 text-right font-mono text-sm tabular-nums lg:table-cell">
           {snapshot.priceChangeAbs != null ? (
-            <span className={snapshot.priceChangeAbs >= 0 ? "text-bullish" : "text-bearish"}>
+            <span className={snapshot.priceChangeAbs >= 0 ? "text-data-profit" : "text-data-loss"}>
               {snapshot.priceChangeAbs >= 0 ? "+" : ""}
               {formatPriceAbs(snapshot.priceChangeAbs)}
             </span>
           ) : (
-            <span className="text-muted">—</span>
+            <span className="text-text-tertiary">—</span>
           )}
         </TableCell>
 
         {/* Vol % (hidden on mobile) */}
         <TableCell className="hidden w-20 text-right font-mono text-sm tabular-nums md:table-cell">
           {snapshot.volumeChangePct != null ? (
-            <span className={snapshot.volumeChangePct >= 0 ? "text-bullish" : "text-bearish"}>
+            <span className={snapshot.volumeChangePct >= 0 ? "text-data-profit" : "text-data-loss"}>
               {snapshot.volumeChangePct >= 0 ? "+" : ""}
               {Math.abs(snapshot.volumeChangePct) >= 1000
                 ? `${(snapshot.volumeChangePct / 1000).toFixed(1)}k`
@@ -165,30 +165,30 @@ export function RankingRow({ snapshot, highlighted, className }: RankingRowProps
               %
             </span>
           ) : (
-            <span className="text-muted">—</span>
+            <span className="text-text-tertiary">—</span>
           )}
         </TableCell>
 
         {/* Vol Δ absolute (hidden until lg) */}
         <TableCell className="hidden w-24 text-right font-mono text-sm tabular-nums lg:table-cell">
           {snapshot.volumeChangeAbs != null ? (
-            <span className={snapshot.volumeChangeAbs >= 0 ? "text-bullish" : "text-bearish"}>
+            <span className={snapshot.volumeChangeAbs >= 0 ? "text-data-profit" : "text-data-loss"}>
               {snapshot.volumeChangeAbs >= 0 ? "+" : ""}
               {formatVolumeAbs(snapshot.volumeChangeAbs)}
             </span>
           ) : (
-            <span className="text-muted">—</span>
+            <span className="text-text-tertiary">—</span>
           )}
         </TableCell>
 
         {/* Funding (hidden on tablet) */}
         <TableCell className="hidden w-20 text-right font-mono text-sm tabular-nums lg:table-cell">
           {snapshot.fundingRate != null ? (
-            <span className={snapshot.fundingRate < 0 ? "text-[var(--accent-teal)]" : "text-[var(--accent-orange)]"}>
+            <span className={snapshot.fundingRate < 0 ? "text-data-profit" : "text-data-loss"}>
               {(snapshot.fundingRate * 100).toFixed(4)}%
             </span>
           ) : (
-            <span className="text-muted">—</span>
+            <span className="text-text-tertiary">—</span>
           )}
         </TableCell>
 
@@ -201,7 +201,7 @@ export function RankingRow({ snapshot, highlighted, className }: RankingRowProps
         <TableCell className="w-10">
           <ChevronRight
             className={cn(
-              "h-4 w-4 text-muted transition-transform duration-150",
+              "h-4 w-4 text-text-tertiary transition-transform duration-150",
               isExpanded && "rotate-90"
             )}
           />
@@ -210,25 +210,25 @@ export function RankingRow({ snapshot, highlighted, className }: RankingRowProps
 
       {/* Expanded indicator breakdown */}
       {isExpanded && (
-        <TableRow className="bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
+        <TableRow className="bg-void-surface hover:bg-void-surface">
           <TableCell colSpan={11} className="px-4 py-0">
             {/* Mobile: show highlights in expanded view */}
             {snapshot.highlights.length > 0 && (
-              <div className="border-b border-[var(--border-subtle)] py-2 xl:hidden">
+              <div className="border-b border-void-border py-2 xl:hidden">
                 <HighlightChips highlights={snapshot.highlights} max={4} />
               </div>
             )}
             {snapshot.indicatorSignals && (
               <IndicatorBreakdown signals={snapshot.indicatorSignals} />
             )}
-            <div className="border-t border-[var(--border-subtle)]">
+            <div className="border-t border-void-border">
               <PreviousCloses
                 symbolId={snapshot.symbolId}
                 symbol={snapshot.symbol}
                 timeframe={snapshot.timeframe}
               />
             </div>
-            <div className="border-t border-[var(--border-subtle)]">
+            <div className="border-t border-void-border">
               <SymbolAgentSummary symbol={snapshot.symbol} />
             </div>
           </TableCell>

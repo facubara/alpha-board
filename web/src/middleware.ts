@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AUTH_COOKIE_NAME } from "@/lib/auth";
+import { AUTH_COOKIE_NAME, AUTH_STATUS_COOKIE } from "@/lib/auth";
 
 export const config = {
-  matcher: ["/api/agents/:path*", "/api/twitter/:path*", "/api/backtest/:path*", "/api/settings/:path*"],
+  matcher: ["/", "/api/agents/:path*", "/api/twitter/:path*", "/api/backtest/:path*", "/api/settings/:path*"],
 };
 
 export async function middleware(request: NextRequest) {
+  // Redirect authenticated users from landing page to dashboard
+  if (request.nextUrl.pathname === "/") {
+    const hasAuth = request.cookies.get(AUTH_STATUS_COOKIE)?.value === "1"
+      || !!request.cookies.get(AUTH_COOKIE_NAME)?.value;
+    if (hasAuth) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+    return NextResponse.next();
+  }
+
   if (request.method !== "POST" && request.method !== "DELETE") {
     return NextResponse.next();
   }

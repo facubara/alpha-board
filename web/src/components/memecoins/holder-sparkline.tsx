@@ -21,7 +21,7 @@ export function HolderSparkline({
     .filter((v): v is number => v != null);
 
   if (values.length < 2) {
-    return <span className="text-xs text-muted">—</span>;
+    return <span className="text-xs text-text-tertiary">—</span>;
   }
 
   const min = Math.min(...values);

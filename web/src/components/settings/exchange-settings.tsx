@@ -205,7 +205,7 @@ export function ExchangeSettingsSection() {
 
   if (loading) {
     return (
-      <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 text-sm text-muted">
+      <div className="rounded-none border border-void-border bg-void-surface p-4 text-sm text-text-tertiary">
         Loading exchange settings...
       </div>
     );
@@ -214,25 +214,25 @@ export function ExchangeSettingsSection() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-lg font-semibold text-primary">
+        <h2 className="text-lg font-semibold text-text-primary">
           Binance Copy Trade
         </h2>
-        <p className="mt-1 text-sm text-muted">
+        <p className="mt-1 text-sm text-text-tertiary">
           Connect your Binance API keys to execute trades directly from agent
           signals. Keys are encrypted at rest and never sent to the browser.
         </p>
       </div>
 
-      <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 space-y-4">
+      <div className="rounded-none border border-void-border bg-void-surface p-4 space-y-4">
         {/* Status */}
         {settings?.configured && (
           <div className="flex items-center gap-2 text-sm">
             <span
               className={`h-2 w-2 rounded-full ${
-                settings.enabled ? "bg-[var(--status-connected)]" : "bg-[var(--accent-yellow)]"
+                settings.enabled ? "bg-[#10B981]" : "bg-terminal-amber"
               }`}
             />
-            <span className="text-[var(--text-secondary)]">
+            <span className="text-text-secondary">
               {settings.enabled ? "Active" : "Disabled"} — Key:{" "}
               <code className="text-xs">{settings.maskedApiKey}</code>
             </span>
@@ -242,7 +242,7 @@ export function ExchangeSettingsSection() {
         {/* API Key inputs */}
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label htmlFor="exchange-api-key" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-api-key" className="mb-1 block text-xs font-medium text-text-secondary">
               API Key
             </label>
             <input
@@ -255,11 +255,11 @@ export function ExchangeSettingsSection() {
                   ? "Enter new key to update"
                   : "Binance API Key"
               }
-              className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-1.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]"
+              className="w-full rounded-none border border-void-border bg-void px-3 py-1.5 text-sm text-text-primary placeholder:text-text-tertiary"
             />
           </div>
           <div>
-            <label htmlFor="exchange-api-secret" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-api-secret" className="mb-1 block text-xs font-medium text-text-secondary">
               API Secret
             </label>
             <input
@@ -272,7 +272,7 @@ export function ExchangeSettingsSection() {
                   ? "Enter new secret to update"
                   : "Binance API Secret"
               }
-              className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-1.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]"
+              className="w-full rounded-none border border-void-border bg-void px-3 py-1.5 text-sm text-text-primary placeholder:text-text-tertiary"
             />
           </div>
         </div>
@@ -280,7 +280,7 @@ export function ExchangeSettingsSection() {
         {/* Preferences */}
         <div className="grid gap-3 sm:grid-cols-3">
           <div>
-            <label htmlFor="exchange-trading-mode" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-trading-mode" className="mb-1 block text-xs font-medium text-text-secondary">
               Trading Mode
             </label>
             <select
@@ -289,7 +289,7 @@ export function ExchangeSettingsSection() {
               onChange={(e) =>
                 dispatch({ type: "SET_TRADING_MODE", value: e.target.value as "spot" | "futures" | "both" })
               }
-              className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-1.5 text-sm text-[var(--text-primary)]"
+              className="w-full rounded-none border border-void-border bg-void px-3 py-1.5 text-sm text-text-primary"
             >
               <option value="spot">Spot</option>
               <option value="futures">Futures</option>
@@ -297,7 +297,7 @@ export function ExchangeSettingsSection() {
             </select>
           </div>
           <div>
-            <label htmlFor="exchange-max-position" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-max-position" className="mb-1 block text-xs font-medium text-text-secondary">
               Max Position (USD)
             </label>
             <input
@@ -306,11 +306,11 @@ export function ExchangeSettingsSection() {
               min={1}
               value={state.maxPositionUsd}
               onChange={(e) => dispatch({ type: "SET_FIELD", field: "maxPositionUsd", value: e.target.value })}
-              className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-1.5 text-sm text-[var(--text-primary)]"
+              className="w-full rounded-none border border-void-border bg-void px-3 py-1.5 text-sm text-text-primary"
             />
           </div>
           <div>
-            <label htmlFor="exchange-default-leverage" className="mb-1 block text-xs font-medium text-[var(--text-secondary)]">
+            <label htmlFor="exchange-default-leverage" className="mb-1 block text-xs font-medium text-text-secondary">
               Default Leverage
             </label>
             <input
@@ -320,13 +320,13 @@ export function ExchangeSettingsSection() {
               max={125}
               value={state.defaultLeverage}
               onChange={(e) => dispatch({ type: "SET_FIELD", field: "defaultLeverage", value: e.target.value })}
-              className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-1.5 text-sm text-[var(--text-primary)]"
+              className="w-full rounded-none border border-void-border bg-void px-3 py-1.5 text-sm text-text-primary"
             />
           </div>
         </div>
 
         {/* Enable toggle */}
-        <label className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
+        <label className="flex items-center gap-2 text-sm text-text-secondary">
           <input
             type="checkbox"
             checked={state.enabled}
@@ -341,7 +341,7 @@ export function ExchangeSettingsSection() {
           <button
             onClick={handleSave}
             disabled={state.saving || (!state.apiKey && !settings?.configured)}
-            className="rounded bg-[var(--accent)] px-4 py-1.5 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
+            className="rounded bg-terminal-amber px-4 py-1.5 text-sm font-medium text-void hover:opacity-90 disabled:opacity-50"
           >
             {state.saving ? "Saving..." : "Save"}
           </button>
@@ -350,13 +350,13 @@ export function ExchangeSettingsSection() {
               <button
                 onClick={handleTest}
                 disabled={state.testing}
-                className="rounded border border-[var(--border-default)] px-4 py-1.5 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] disabled:opacity-50"
+                className="rounded border border-void-border px-4 py-1.5 text-sm font-medium text-text-secondary hover:bg-void-muted disabled:opacity-50"
               >
                 {state.testing ? "Testing..." : "Test Connection"}
               </button>
               <button
                 onClick={handleDelete}
-                className="rounded border border-[var(--bearish)]/30 px-4 py-1.5 text-sm font-medium text-bearish hover:bg-[var(--bearish-subtle)]"
+                className="rounded border border-data-loss/30 px-4 py-1.5 text-sm font-medium text-data-loss hover:bg-terminal-amber-muted"
               >
                 Delete Keys
               </button>
@@ -369,8 +369,8 @@ export function ExchangeSettingsSection() {
           <div
             className={`rounded px-3 py-2 text-sm ${
               state.testResult.success
-                ? "bg-[var(--bullish-subtle)] text-bullish"
-                : "bg-[var(--bearish-subtle)] text-bearish"
+                ? "bg-terminal-amber-muted text-data-profit"
+                : "bg-terminal-amber-muted text-data-loss"
             }`}
           >
             {state.testResult.message}
@@ -378,8 +378,8 @@ export function ExchangeSettingsSection() {
         )}
 
         {/* Safety instructions */}
-        <div className="rounded bg-[var(--bg-elevated)] px-3 py-2.5 text-xs text-[var(--text-tertiary)] space-y-1">
-          <p className="font-medium text-[var(--text-secondary)]">
+        <div className="rounded bg-void-muted px-3 py-2.5 text-xs text-text-tertiary space-y-1">
+          <p className="font-medium text-text-secondary">
             Safety setup:
           </p>
           <ul className="list-disc pl-4 space-y-0.5">

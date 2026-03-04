@@ -72,7 +72,7 @@ export function IncidentList({ activeIncidents, recentIncidents }: IncidentListP
       {/* Active incidents */}
       {activeIncidents.length > 0 && (
         <div>
-          <h2 className="mb-2 text-sm font-semibold text-primary">
+          <h2 className="mb-2 text-sm font-semibold text-text-primary">
             Active Incidents
           </h2>
           <div className="space-y-2">
@@ -86,13 +86,13 @@ export function IncidentList({ activeIncidents, recentIncidents }: IncidentListP
       {/* Past incidents */}
       {sortedDates.length > 0 && (
         <div>
-          <h2 className="mb-2 text-sm font-semibold text-primary">
+          <h2 className="mb-2 text-sm font-semibold text-text-primary">
             Past Incidents
           </h2>
           <div className="space-y-4">
             {sortedDates.map((dateKey) => (
               <div key={dateKey}>
-                <div className="mb-1.5 text-xs font-medium text-muted">
+                <div className="mb-1.5 text-xs font-medium text-text-tertiary">
                   {formatDate(dateKey)}
                 </div>
                 <div className="space-y-2">
@@ -107,7 +107,7 @@ export function IncidentList({ activeIncidents, recentIncidents }: IncidentListP
       )}
 
       {activeIncidents.length === 0 && sortedDates.length === 0 && (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-6 text-center text-sm text-muted">
+        <div className="rounded-none border border-void-border bg-void-surface px-4 py-6 text-center text-sm text-text-tertiary">
           No incidents in the past 14 days.
         </div>
       )}
@@ -122,24 +122,24 @@ function IncidentCard({ incident }: { incident: ServiceIncident }) {
     : STATUS_BADGE.operational;
 
   return (
-    <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2.5">
+    <div className="rounded-none border border-void-border bg-void-surface px-3 py-2.5">
       <div className="flex items-center gap-2">
         <span
-          className={`inline-flex rounded border px-1.5 py-0.5 text-xs font-medium ${badge.className}`}
+          className={`inline-flex rounded-none border px-1.5 py-0.5 text-xs font-medium ${badge.className}`}
         >
           {badge.label}
         </span>
-        <span className="text-sm font-medium text-primary">
+        <span className="text-sm font-medium text-text-primary">
           {incident.serviceName}
         </span>
-        <span className="ml-auto text-xs text-muted">
+        <span className="ml-auto text-xs text-text-tertiary">
           {formatTime(incident.startedAt)}
           {" · "}
           {formatDuration(incident.durationMinutes)}
         </span>
       </div>
       {incident.errorSummary && (
-        <p className="mt-1 text-xs text-muted">{incident.errorSummary}</p>
+        <p className="mt-1 text-xs text-text-tertiary">{incident.errorSummary}</p>
       )}
     </div>
   );

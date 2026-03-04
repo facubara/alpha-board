@@ -49,9 +49,9 @@ export function DailyCostChart({ data, className }: DailyCostChartProps) {
   if (data.length < 2) {
     return (
       <div
-        className={`flex h-48 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+        className={`flex h-48 items-center justify-center rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
       >
-        <p className="text-xs text-muted">Not enough cost data</p>
+        <p className="text-xs text-text-tertiary">Not enough cost data</p>
       </div>
     );
   }
@@ -61,11 +61,11 @@ export function DailyCostChart({ data, className }: DailyCostChartProps) {
 
   return (
     <div
-      className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+      className={`overflow-hidden rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
     >
       <div className="flex items-center justify-between px-3 pt-2">
-        <p className="text-xs text-muted">Daily Token Cost (90d)</p>
-        <p className="font-mono text-xs text-secondary">
+        <p className="text-xs text-text-tertiary">Daily Token Cost (90d)</p>
+        <p className="font-mono text-xs text-text-secondary">
           Total: ${totalCost.toFixed(2)}
         </p>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Lock, LogOut } from "lucide-react";
+import Link from "next/link";
 import { useAuth } from "./auth-provider";
 
 export function HeaderAuth() {
@@ -8,23 +8,29 @@ export function HeaderAuth() {
 
   if (isAuthenticated) {
     return (
-      <button
-        onClick={() => logout()}
-        className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
-      >
-        <LogOut className="h-3.5 w-3.5" />
-        Sign Out
-      </button>
+      <div className="flex items-center gap-1">
+        <Link
+          href="/settings"
+          className="rounded-none px-3 py-2 font-mono text-sm text-text-secondary transition-colors-fast hover:bg-void-muted hover:text-text-primary"
+        >
+          [ Settings ]
+        </Link>
+        <button
+          onClick={() => logout()}
+          className="rounded-none px-3 py-2 font-mono text-sm text-text-secondary transition-colors-fast hover:bg-void-muted hover:text-text-primary"
+        >
+          [ DISCONNECT ]
+        </button>
+      </div>
     );
   }
 
   return (
     <button
       onClick={() => requireAuth(() => {})}
-      className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
+      className="rounded-none px-3 py-2 font-mono text-sm text-text-secondary transition-colors-fast hover:bg-void-muted hover:text-text-primary"
     >
-      <Lock className="h-3.5 w-3.5" />
-      Sign In
+      [ INITIALIZE TERMINAL ]
     </button>
   );
 }

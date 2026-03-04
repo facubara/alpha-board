@@ -55,22 +55,22 @@ export function CandlestickChart({
       width: containerRef.current.clientWidth,
       height,
       layout: {
-        background: { type: ColorType.Solid, color: "#0B0E11" },
-        textColor: "#888888",
+        background: { type: ColorType.Solid, color: "#121212" },
+        textColor: "#A1A1AA",
         fontSize: 12,
       },
       grid: {
-        vertLines: { color: "#1C1C1C" },
-        horzLines: { color: "#1C1C1C" },
+        vertLines: { color: "#27272A" },
+        horzLines: { color: "#27272A" },
       },
       crosshair: {
         mode: CrosshairMode.Normal,
       },
       rightPriceScale: {
-        borderColor: "#1C1C1C",
+        borderColor: "#27272A",
       },
       timeScale: {
-        borderColor: "#1C1C1C",
+        borderColor: "#27272A",
         timeVisible: true,
         secondsVisible: false,
       },
@@ -80,12 +80,12 @@ export function CandlestickChart({
 
     // Candlestick series (v5 API)
     const candleSeries = chart.addSeries(CandlestickSeries, {
-      upColor: "#22C55E",
-      downColor: "#EF4444",
-      borderUpColor: "#22C55E",
-      borderDownColor: "#EF4444",
-      wickUpColor: "#22C55E",
-      wickDownColor: "#EF4444",
+      upColor: "#10B981",
+      downColor: "#F43F5E",
+      borderUpColor: "#10B981",
+      borderDownColor: "#F43F5E",
+      wickUpColor: "#10B981",
+      wickDownColor: "#F43F5E",
     });
 
     const candleData = data.candles.map((c) => ({
@@ -128,7 +128,7 @@ export function CandlestickChart({
         data.candles.map((c) => ({
           time: toUnixSeconds(c.openTime) as import("lightweight-charts").UTCTimestamp,
           value: c.volume,
-          color: c.close >= c.open ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)",
+          color: c.close >= c.open ? "rgba(16,185,129,0.3)" : "rgba(244,63,94,0.3)",
         }))
       );
     }
@@ -137,7 +137,7 @@ export function CandlestickChart({
     if (showEMA) {
       const emaConfigs = [
         { values: data.indicators.ema20, color: "#3B82F6" },
-        { values: data.indicators.ema50, color: "#F59E0B" },
+        { values: data.indicators.ema50, color: "#FFB000" },
         { values: data.indicators.ema200, color: "#8B5CF6" },
       ];
 
@@ -188,7 +188,7 @@ export function CandlestickChart({
 
         if (lineData.length > 0) {
           const series = chart.addSeries(LineSeries, {
-            color: "#6B6B6B",
+            color: "#52525B",
             lineWidth: 1,
             lineStyle: LineStyle.Dashed,
             priceLineVisible: false,

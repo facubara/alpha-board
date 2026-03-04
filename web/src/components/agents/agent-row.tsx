@@ -4,11 +4,11 @@
  * AgentRow Component
  *
  * Table row for a single agent on the leaderboard.
- * Per DESIGN_SYSTEM.md:
+ * Terminal aesthetic:
  * - Row height: 40px
- * - Hover: bg-elevated
+ * - Hover: bg-void-muted
  * - Monospace for numbers
- * - Semantic colors for PnL (green/red)
+ * - Semantic colors for PnL (data-profit/data-loss)
  */
 
 import { useState, useEffect, useRef } from "react";
@@ -19,6 +19,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/auth/auth-provider";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { DottedAvatar } from "@/components/terminal";
 import type { AgentLeaderboardRow, AgentTimeframe } from "@/lib/types";
 import {
   STRATEGY_ARCHETYPE_LABELS,
@@ -62,7 +63,7 @@ function getHealthStatus(
   timeframe: AgentTimeframe
 ): { color: string; label: string } {
   if (!lastCycleAt) {
-    return { color: "bg-[var(--text-muted)]", label: "Never processed" };
+    return { color: "bg-text-tertiary", label: "Never processed" };
   }
 
   const ageMs = Date.now() - new Date(lastCycleAt).getTime();
@@ -70,12 +71,12 @@ function getHealthStatus(
   const thresholds = CADENCE_THRESHOLDS[timeframe] ?? { yellow: 30, gray: 60 };
 
   if (ageMinutes <= thresholds.yellow) {
-    return { color: "bg-[var(--bullish-strong)]", label: `Active ${Math.round(ageMinutes)}m ago` };
+    return { color: "bg-data-profit", label: `Active ${Math.round(ageMinutes)}m ago` };
   }
   if (ageMinutes <= thresholds.gray) {
-    return { color: "bg-[var(--accent-yellow)]", label: `Stale ${Math.round(ageMinutes)}m ago` };
+    return { color: "bg-terminal-amber", label: `Stale ${Math.round(ageMinutes)}m ago` };
   }
-  return { color: "bg-[var(--text-muted)]", label: `Inactive ${Math.round(ageMinutes)}m ago` };
+  return { color: "bg-text-tertiary", label: `Inactive ${Math.round(ageMinutes)}m ago` };
 }
 
 export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }: AgentRowProps) {
@@ -127,7 +128,7 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
   return (
     <TableRow
       className={cn(
-        "h-10 transition-colors-fast hover:bg-[var(--bg-elevated)]",
+        "h-10 transition-colors-fast hover:bg-void-muted",
         isPaused && "opacity-50"
       )}
     >
@@ -141,7 +142,7 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
               e.stopPropagation();
               onSelect?.(agent.id);
             }}
-            className="h-3.5 w-3.5 cursor-pointer rounded accent-[var(--bullish)]"
+            className="h-3.5 w-3.5 cursor-pointer rounded-none accent-terminal-amber"
           />
         </TableCell>
       )}
@@ -159,38 +160,38 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
             />
             <span
               className={cn(
-                "inline-flex shrink-0 items-center rounded px-1 py-0.5 font-mono text-xs font-bold leading-none",
+                "inline-flex shrink-0 items-center rounded-none px-1 py-0.5 font-mono text-xs font-bold leading-none",
                 agent.engine === "rule"
-                  ? "bg-[var(--bullish-subtle)] text-bullish"
-                  : "bg-[var(--bg-muted)] text-secondary"
+                  ? "bg-terminal-amber-muted text-data-profit"
+                  : "bg-void-muted text-text-secondary"
               )}
             >
               {agent.engine === "rule" ? "RULE" : "LLM"}
             </span>
             <span
               className={cn(
-                "inline-flex shrink-0 items-center rounded px-1 py-0.5 font-mono text-xs font-bold leading-none",
+                "inline-flex shrink-0 items-center rounded-none px-1 py-0.5 font-mono text-xs font-bold leading-none",
                 agent.source === "tweet"
-                  ? "bg-[var(--accent-teal)]/10 text-[var(--accent-teal)]"
+                  ? "bg-void-muted text-text-secondary"
                   : agent.source === "hybrid"
-                    ? "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)]"
-                    : "bg-[var(--bg-muted)] text-muted"
+                    ? "bg-void-muted text-text-secondary"
+                    : "bg-void-muted text-text-tertiary"
               )}
             >
               {agent.source === "tweet" ? "TW" : agent.source === "hybrid" ? "HYB" : "TECH"}
             </span>
-            <span className="truncate text-sm font-semibold text-primary transition-colors-fast group-hover:text-[var(--bullish-strong)]">
+            <span className="truncate text-sm font-semibold text-text-primary transition-colors-fast group-hover:text-terminal-amber">
               {agent.displayName}
             </span>
           </span>
-          <span className="mt-0.5 block text-xs text-muted">
+          <span className="mt-0.5 block text-xs text-text-tertiary">
             {STRATEGY_ARCHETYPE_LABELS[agent.strategyArchetype]}
           </span>
         </Link>
       </TableCell>
 
       {/* Timeframe */}
-      <TableCell className="hidden font-mono text-sm text-secondary sm:table-cell">
+      <TableCell className="hidden font-mono text-sm text-text-secondary sm:table-cell">
         {AGENT_TIMEFRAME_LABELS[agent.timeframe]}
       </TableCell>
 
@@ -198,9 +199,9 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
       <TableCell
         className={cn(
           "text-right font-mono text-sm font-semibold tabular-nums",
-          agent.totalRealizedPnl > 0 && "text-bullish",
-          agent.totalRealizedPnl < 0 && "text-bearish",
-          agent.totalRealizedPnl === 0 && "text-secondary"
+          agent.totalRealizedPnl > 0 && "text-data-profit",
+          agent.totalRealizedPnl < 0 && "text-data-loss",
+          agent.totalRealizedPnl === 0 && "text-text-secondary"
         )}
         title={`Total: ${formatPnl(agent.totalPnl)}`}
       >
@@ -211,32 +212,32 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
       <TableCell
         className={cn(
           "hidden text-right font-mono text-sm tabular-nums sm:table-cell",
-          !hasUpnl && "text-muted",
-          hasUpnl && upnlValue > 0 && "text-bullish",
-          hasUpnl && upnlValue < 0 && "text-bearish",
-          hasUpnl && upnlValue === 0 && "text-secondary"
+          !hasUpnl && "text-text-tertiary",
+          hasUpnl && upnlValue > 0 && "text-data-profit",
+          hasUpnl && upnlValue < 0 && "text-data-loss",
+          hasUpnl && upnlValue === 0 && "text-text-secondary"
         )}
       >
         {hasUpnl ? formatPnl(upnlValue) : SPINNER_FRAMES[0]}
       </TableCell>
 
       {/* Win Rate */}
-      <TableCell className="hidden text-right font-mono text-sm tabular-nums text-secondary md:table-cell">
+      <TableCell className="hidden text-right font-mono text-sm tabular-nums text-text-secondary md:table-cell">
         {agent.tradeCount > 0 ? formatPercent(agent.winRate) : "—"}
       </TableCell>
 
       {/* Trades */}
-      <TableCell className="hidden text-right font-mono text-sm tabular-nums text-secondary md:table-cell">
+      <TableCell className="hidden text-right font-mono text-sm tabular-nums text-text-secondary md:table-cell">
         {agent.tradeCount}
       </TableCell>
 
       {/* Open Positions */}
-      <TableCell className="hidden text-right font-mono text-sm tabular-nums text-secondary lg:table-cell">
+      <TableCell className="hidden text-right font-mono text-sm tabular-nums text-text-secondary lg:table-cell">
         {agent.openPositions}
       </TableCell>
 
       {/* Token Cost */}
-      <TableCell className="hidden text-right font-mono text-sm tabular-nums text-muted lg:table-cell">
+      <TableCell className="hidden text-right font-mono text-sm tabular-nums text-text-tertiary lg:table-cell">
         {agent.engine === "rule" ? "—" : formatUsd(agent.totalTokenCost)}
       </TableCell>
 
@@ -246,18 +247,18 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
           onClick={handleToggle}
           disabled={toggling}
           className={cn(
-            "flex h-7 w-7 items-center justify-center rounded-md transition-colors-fast",
-            "hover:bg-[var(--bg-muted)]"
+            "flex h-7 w-7 items-center justify-center rounded-none transition-colors-fast",
+            "hover:bg-void-muted"
           )}
           title={toggling ? "Updating..." : isPaused ? "Resume agent" : "Pause agent"}
           aria-label={toggling ? "Updating..." : isPaused ? "Resume agent" : "Pause agent"}
         >
           {toggling ? (
-            <span className="font-mono text-sm text-secondary">{SPINNER_FRAMES[spinnerFrame]}</span>
+            <span className="font-mono text-sm text-text-secondary">{SPINNER_FRAMES[spinnerFrame]}</span>
           ) : isPaused ? (
-            <Play className="h-3.5 w-3.5 text-secondary" />
+            <Play className="h-3.5 w-3.5 text-text-secondary" />
           ) : (
-            <Pause className="h-3.5 w-3.5 text-secondary" />
+            <Pause className="h-3.5 w-3.5 text-text-secondary" />
           )}
         </button>
       </TableCell>

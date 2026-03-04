@@ -39,10 +39,10 @@ export function StatusBanner({ overall }: StatusBannerProps) {
 
   return (
     <div
-      className={`flex items-center gap-3 rounded-md border px-4 py-3 ${config.bg} ${config.border}`}
+      className={`flex items-center gap-3 rounded-none border px-4 py-3 ${config.bg} ${config.border}`}
     >
       <span className={`h-3 w-3 shrink-0 rounded-full ${config.dot}`} />
-      <span className="text-sm font-medium text-primary">{config.label}</span>
+      <span className="text-sm font-medium text-text-primary">{config.label}</span>
     </div>
   );
 }

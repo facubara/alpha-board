@@ -145,15 +145,15 @@ export function FollowingImport() {
     progress?.status === "completed" || progress?.status === "failed";
 
   return (
-    <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-4 space-y-3">
-      <h3 className="text-sm font-medium text-primary">
+    <div className="rounded-none border border-void-border bg-void-surface p-4 space-y-3">
+      <h3 className="text-sm font-medium text-text-primary">
         Twitter Following Import
       </h3>
 
       {/* File picker (only show if not started) */}
       {!importId && (
         <div className="space-y-2">
-          <p className="text-xs text-muted">
+          <p className="text-xs text-text-tertiary">
             Upload your <code>following.js</code> from a Twitter data export.
             Accounts will be looked up via the X API and auto-classified
             into Analyst (Twitter feed) or Degen (Memecoins feed).
@@ -162,18 +162,18 @@ export function FollowingImport() {
             type="file"
             accept=".js"
             onChange={handleFileChange}
-            className="block w-full text-sm text-muted file:mr-3 file:rounded file:border-0 file:bg-[var(--bg-elevated)] file:px-3 file:py-1.5 file:text-sm file:text-primary file:cursor-pointer hover:file:bg-[var(--bg-base)]"
+            className="block w-full text-sm text-text-tertiary file:mr-3 file:rounded file:border-0 file:bg-void-muted file:px-3 file:py-1.5 file:text-sm file:text-text-primary file:cursor-pointer hover:file:bg-void"
           />
-          {parseError && <p className="text-xs text-bearish">{parseError}</p>}
+          {parseError && <p className="text-xs text-data-loss">{parseError}</p>}
           {accountIds.length > 0 && (
             <div className="flex items-center justify-between">
-              <p className="text-xs text-bullish">
+              <p className="text-xs text-data-profit">
                 {accountIds.length} accounts found in file
               </p>
               <button
                 onClick={handleStart}
                 disabled={starting}
-                className="flex items-center gap-1.5 rounded bg-[var(--primary)] px-3 py-1 text-sm font-medium text-white disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-none bg-terminal-amber px-3 py-1 text-sm font-medium text-void disabled:opacity-50"
               >
                 {starting ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
@@ -191,14 +191,14 @@ export function FollowingImport() {
       {progress && (
         <div className="space-y-2">
           {/* Progress bar */}
-          <div className="h-2 w-full rounded-full bg-[var(--bg-base)] overflow-hidden">
+          <div className="h-2 w-full rounded-full bg-void overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-300 ${
                 progress.status === "failed"
-                  ? "bg-[var(--bearish)]"
+                  ? "bg-data-loss"
                   : progress.status === "completed"
-                    ? "bg-[var(--bullish)]"
-                    : "bg-[var(--primary)]"
+                    ? "bg-data-profit"
+                    : "bg-terminal-amber"
               }`}
               style={{ width: `${pct}%` }}
             />
@@ -206,7 +206,7 @@ export function FollowingImport() {
 
           {/* Status line */}
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted">
+            <span className="text-text-tertiary">
               {progress.status === "running" && (
                 <>
                   Batch {progress.currentBatch}/{progress.totalBatches}
@@ -216,13 +216,13 @@ export function FollowingImport() {
               )}
               {progress.status === "pending" && "Starting..."}
               {progress.status === "completed" && (
-                <span className="flex items-center gap-1 text-bullish">
+                <span className="flex items-center gap-1 text-data-profit">
                   <CheckCircle2 className="h-3 w-3" />
                   Import complete
                 </span>
               )}
               {progress.status === "failed" && (
-                <span className="flex items-center gap-1 text-bearish">
+                <span className="flex items-center gap-1 text-data-loss">
                   <XCircle className="h-3 w-3" />
                   Import failed
                   {progress.errorMessage && `: ${progress.errorMessage}`}
@@ -230,7 +230,7 @@ export function FollowingImport() {
               )}
             </span>
             {progress.rateLimitWait && (
-              <span className="text-[var(--accent-yellow)]">
+              <span className="text-terminal-amber">
                 Rate limit — waiting {progress.rateLimitWait}s...
               </span>
             )}
@@ -239,29 +239,29 @@ export function FollowingImport() {
           {/* Stats */}
           {(progress.status === "running" || isFinished) && (
             <div className="grid grid-cols-4 gap-2 text-xs">
-              <div className="rounded bg-[var(--bg-base)] p-2 text-center">
-                <div className="text-bullish font-medium">
+              <div className="rounded bg-void p-2 text-center">
+                <div className="text-data-profit font-medium">
                   {progress.inserted}
                 </div>
-                <div className="text-muted">Inserted</div>
+                <div className="text-text-tertiary">Inserted</div>
               </div>
-              <div className="rounded bg-[var(--bg-base)] p-2 text-center">
-                <div className="text-[var(--accent-blue)] font-medium">
+              <div className="rounded bg-void p-2 text-center">
+                <div className="text-text-secondary font-medium">
                   {progress.skippedExisting}
                 </div>
-                <div className="text-muted">Already exist</div>
+                <div className="text-text-tertiary">Already exist</div>
               </div>
-              <div className="rounded bg-[var(--bg-base)] p-2 text-center">
-                <div className="text-[var(--accent-yellow)] font-medium">
+              <div className="rounded bg-void p-2 text-center">
+                <div className="text-terminal-amber font-medium">
                   {progress.skippedDiscard}
                 </div>
-                <div className="text-muted">Discarded</div>
+                <div className="text-text-tertiary">Discarded</div>
               </div>
-              <div className="rounded bg-[var(--bg-base)] p-2 text-center">
-                <div className="text-bearish font-medium">
+              <div className="rounded bg-void p-2 text-center">
+                <div className="text-data-loss font-medium">
                   {progress.errors}
                 </div>
-                <div className="text-muted">Errors</div>
+                <div className="text-text-tertiary">Errors</div>
               </div>
             </div>
           )}

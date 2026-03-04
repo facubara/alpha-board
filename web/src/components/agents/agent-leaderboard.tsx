@@ -18,6 +18,7 @@ import { useAgentPositions } from "@/hooks/use-agent-positions";
 import { useDebouncedFetch } from "@/hooks/use-debounced-fetch";
 import { PauseModal } from "./pause-modal";
 import { AgentLeaderboardFilters } from "./agent-leaderboard-filters";
+import { TerminalPanel } from "@/components/terminal";
 import {
   Table,
   TableBody,
@@ -328,38 +329,38 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
 
       {/* Results count */}
       {(filters.timeframe !== "all" || filters.archetype !== "all" || filters.engine !== "all" || filters.source !== "all" || symbolAgentIds !== null) && (
-        <p className="text-xs text-secondary">
+        <p className="text-xs text-text-secondary">
           {filtered.length} of {agentsData.length} agents
         </p>
       )}
 
       {/* Symbol search summary */}
       {filters.symbolSearch.trim() && symbolActivity && !symbolLoading && (
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2 text-xs text-secondary">
-          <span className="font-mono font-semibold text-primary">{filters.symbolSearch.trim().toUpperCase()}</span>
-          <span className="text-muted">:</span>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-none border border-void-border bg-void-surface px-3 py-2 text-xs text-text-secondary">
+          <span className="font-mono font-semibold text-text-primary">{filters.symbolSearch.trim().toUpperCase()}</span>
+          <span className="text-text-tertiary">:</span>
           {symbolActivity.summary.agentsWithPositions > 0 && (
             <span>
-              <span className="font-medium text-primary">{symbolActivity.summary.agentsWithPositions}</span>{" "}
+              <span className="font-medium text-text-primary">{symbolActivity.summary.agentsWithPositions}</span>{" "}
               with open positions
             </span>
           )}
           {symbolActivity.summary.agentsWithPositions > 0 && symbolActivity.summary.agentsThatTraded > 0 && (
-            <span className="text-muted">&middot;</span>
+            <span className="text-text-tertiary">&middot;</span>
           )}
           {symbolActivity.summary.agentsThatTraded > 0 && (
             <span>
-              <span className="font-medium text-primary">{symbolActivity.summary.agentsThatTraded}</span>{" "}
+              <span className="font-medium text-text-primary">{symbolActivity.summary.agentsThatTraded}</span>{" "}
               traded
             </span>
           )}
           {symbolActivity.summary.totalTrades > 0 && (
             <>
-              <span className="text-muted">&middot;</span>
+              <span className="text-text-tertiary">&middot;</span>
               <span
                 className={cn(
                   "font-mono font-medium tabular-nums",
-                  symbolActivity.summary.totalPnl >= 0 ? "text-bullish" : "text-bearish"
+                  symbolActivity.summary.totalPnl >= 0 ? "text-data-profit" : "text-data-loss"
                 )}
               >
                 {symbolActivity.summary.totalPnl >= 0 ? "+" : ""}${symbolActivity.summary.totalPnl.toFixed(2)}
@@ -373,37 +374,37 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
         </div>
       )}
       {filters.symbolSearch.trim() && symbolLoading && (
-        <div className="h-4 w-48 animate-pulse rounded bg-[var(--bg-muted)]" />
+        <div className="h-4 w-48 animate-pulse rounded-none bg-void-muted" />
       )}
 
       {/* Table */}
       {loading ? (
-        <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
+        <div className="overflow-x-auto rounded-none border border-void-border">
           <Table>
             <TableHeader>
-              <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
-                <TableHead className="text-xs font-medium text-secondary">Agent</TableHead>
-                <TableHead className="hidden w-16 text-xs font-medium text-secondary sm:table-cell">TF</TableHead>
-                <TableHead className="w-24 text-right text-xs font-medium text-secondary">Realized</TableHead>
-                <TableHead className="hidden w-20 text-right text-xs font-medium text-secondary sm:table-cell">uPnL</TableHead>
-                <TableHead className="hidden w-20 text-right text-xs font-medium text-secondary md:table-cell">Win%</TableHead>
-                <TableHead className="hidden w-16 text-right text-xs font-medium text-secondary md:table-cell">Trades</TableHead>
-                <TableHead className="hidden w-16 text-right text-xs font-medium text-secondary lg:table-cell">Open</TableHead>
-                <TableHead className="hidden w-20 text-right text-xs font-medium text-secondary lg:table-cell">Cost</TableHead>
+              <TableRow className="border-b border-void-border bg-void-surface hover:bg-void-surface">
+                <TableHead className="text-xs font-medium text-text-secondary">Agent</TableHead>
+                <TableHead className="hidden w-16 text-xs font-medium text-text-secondary sm:table-cell">TF</TableHead>
+                <TableHead className="w-24 text-right text-xs font-medium text-text-secondary">Realized</TableHead>
+                <TableHead className="hidden w-20 text-right text-xs font-medium text-text-secondary sm:table-cell">uPnL</TableHead>
+                <TableHead className="hidden w-20 text-right text-xs font-medium text-text-secondary md:table-cell">Win%</TableHead>
+                <TableHead className="hidden w-16 text-right text-xs font-medium text-text-secondary md:table-cell">Trades</TableHead>
+                <TableHead className="hidden w-16 text-right text-xs font-medium text-text-secondary lg:table-cell">Open</TableHead>
+                <TableHead className="hidden w-20 text-right text-xs font-medium text-text-secondary lg:table-cell">Cost</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
             <TableBody>
               {Array.from({ length: 12 }).map((_, i) => (
-                <TableRow key={i} className="h-12 border-b border-[var(--border-subtle)]">
-                  <td className="px-4 py-2"><div className="h-4 w-40 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
-                  <td className="hidden px-4 py-2 sm:table-cell"><div className="h-4 w-8 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
-                  <td className="px-4 py-2 text-right"><div className="ml-auto h-4 w-16 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
-                  <td className="hidden px-4 py-2 text-right sm:table-cell"><div className="ml-auto h-4 w-14 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
-                  <td className="hidden px-4 py-2 text-right md:table-cell"><div className="ml-auto h-4 w-10 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
-                  <td className="hidden px-4 py-2 text-right md:table-cell"><div className="ml-auto h-4 w-8 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
-                  <td className="hidden px-4 py-2 text-right lg:table-cell"><div className="ml-auto h-4 w-8 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
-                  <td className="hidden px-4 py-2 text-right lg:table-cell"><div className="ml-auto h-4 w-12 animate-pulse rounded bg-[var(--bg-muted)]" /></td>
+                <TableRow key={i} className="h-12 border-b border-void-border">
+                  <td className="px-4 py-2"><div className="h-4 w-40 animate-pulse rounded-none bg-void-muted" /></td>
+                  <td className="hidden px-4 py-2 sm:table-cell"><div className="h-4 w-8 animate-pulse rounded-none bg-void-muted" /></td>
+                  <td className="px-4 py-2 text-right"><div className="ml-auto h-4 w-16 animate-pulse rounded-none bg-void-muted" /></td>
+                  <td className="hidden px-4 py-2 text-right sm:table-cell"><div className="ml-auto h-4 w-14 animate-pulse rounded-none bg-void-muted" /></td>
+                  <td className="hidden px-4 py-2 text-right md:table-cell"><div className="ml-auto h-4 w-10 animate-pulse rounded-none bg-void-muted" /></td>
+                  <td className="hidden px-4 py-2 text-right md:table-cell"><div className="ml-auto h-4 w-8 animate-pulse rounded-none bg-void-muted" /></td>
+                  <td className="hidden px-4 py-2 text-right lg:table-cell"><div className="ml-auto h-4 w-8 animate-pulse rounded-none bg-void-muted" /></td>
+                  <td className="hidden px-4 py-2 text-right lg:table-cell"><div className="ml-auto h-4 w-12 animate-pulse rounded-none bg-void-muted" /></td>
                   <td className="px-4 py-2" />
                 </TableRow>
               ))}
@@ -411,62 +412,62 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
           </Table>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex h-64 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-          <p className="text-secondary">No agents match the current filters</p>
+        <div className="flex h-64 items-center justify-center rounded-none border border-void-border bg-void-surface">
+          <p className="text-text-secondary">No agents match the current filters</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
+        <div className="overflow-x-auto rounded-none border border-void-border">
           <Table>
             <TableHeader>
-              <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
+              <TableRow className="border-b border-void-border bg-void-surface hover:bg-void-surface">
                 {compareMode && (
                   <TableHead className="w-10" />
                 )}
                 <TableHead
-                  className="cursor-pointer select-none text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                  className="cursor-pointer select-none text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
                   onClick={() => handleSort("name")}
                 >
                   Agent
                   <SortIndicator field="name" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
-                <TableHead className="hidden w-16 text-xs font-medium text-secondary sm:table-cell">
+                <TableHead className="hidden w-16 text-xs font-medium text-text-secondary sm:table-cell">
                   TF
                 </TableHead>
                 <TableHead
-                  className="w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                  className="w-24 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
                   onClick={() => handleSort("pnl")}
                 >
                   Realized
                   <SortIndicator field="pnl" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead
-                  className="hidden w-20 select-none text-right text-xs font-medium text-secondary sm:table-cell"
+                  className="hidden w-20 select-none text-right text-xs font-medium text-text-secondary sm:table-cell"
                 >
                   uPnL
                 </TableHead>
                 <TableHead
-                  className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
+                  className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary md:table-cell"
                   onClick={() => handleSort("winRate")}
                 >
                   Win%
                   <SortIndicator field="winRate" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead
-                  className="hidden w-16 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
+                  className="hidden w-16 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary md:table-cell"
                   onClick={() => handleSort("trades")}
                 >
                   Trades
                   <SortIndicator field="trades" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead
-                  className="hidden w-16 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                  className="hidden w-16 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary lg:table-cell"
                   onClick={() => handleSort("openPositions")}
                 >
                   Open
                   <SortIndicator field="openPositions" sortField={filters.sortField} sortDirection={filters.sortDirection} />
                 </TableHead>
                 <TableHead
-                  className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                  className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary lg:table-cell"
                   onClick={() => handleSort("tokenCost")}
                 >
                   Cost
@@ -508,7 +509,7 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
         <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2">
           <button
             onClick={handleGoCompare}
-            className="flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface)] px-5 py-2.5 font-mono text-sm font-semibold text-primary shadow-lg transition-colors-fast hover:bg-[var(--bg-elevated)]"
+            className="flex items-center gap-2 rounded-none border border-void-border bg-void-surface px-5 py-2.5 font-mono text-sm font-semibold text-text-primary transition-colors-fast hover:bg-void-muted"
           >
             <GitCompareArrows className="h-4 w-4" />
             Compare ({selectedIds.size})

@@ -132,7 +132,7 @@ export function DiscardedAgents({ agents: initialAgents }: DiscardedAgentsProps)
     <div className="space-y-2">
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="flex items-center gap-1.5 text-sm font-medium text-secondary transition-colors-fast hover:text-primary"
+        className="flex items-center gap-1.5 text-sm font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
       >
         {expanded ? (
           <ChevronDown className="h-4 w-4" />
@@ -144,38 +144,38 @@ export function DiscardedAgents({ agents: initialAgents }: DiscardedAgentsProps)
 
       {expanded && items.length > 0 && (
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
           <input
             type="text"
             placeholder="Search agents..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] py-1.5 pl-8 pr-3 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none sm:w-64"
+            className="w-full rounded-none border border-void-border bg-void py-1.5 pl-8 pr-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none sm:w-64"
           />
         </div>
       )}
 
       {expanded && (
-        <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
+        <div className="overflow-x-auto rounded-none border border-void-border">
           <Table>
             <TableHeader>
-              <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
-                <TableHead className="text-xs font-medium text-secondary">
+              <TableRow className="border-b border-void-border bg-void-surface hover:bg-void-surface">
+                <TableHead className="text-xs font-medium text-text-secondary">
                   Agent
                 </TableHead>
-                <TableHead className="hidden text-xs font-medium text-secondary sm:table-cell">
+                <TableHead className="hidden text-xs font-medium text-text-secondary sm:table-cell">
                   TF
                 </TableHead>
-                <TableHead className="text-right text-xs font-medium text-secondary">
+                <TableHead className="text-right text-xs font-medium text-text-secondary">
                   Realized
                 </TableHead>
-                <TableHead className="hidden text-xs font-medium text-secondary md:table-cell">
+                <TableHead className="hidden text-xs font-medium text-text-secondary md:table-cell">
                   Reason
                 </TableHead>
-                <TableHead className="hidden text-xs font-medium text-secondary lg:table-cell">
+                <TableHead className="hidden text-xs font-medium text-text-secondary lg:table-cell">
                   Discarded
                 </TableHead>
-                <TableHead className="w-24 text-right text-xs font-medium text-secondary">
+                <TableHead className="w-24 text-right text-xs font-medium text-text-secondary">
                   Actions
                 </TableHead>
               </TableRow>
@@ -183,53 +183,53 @@ export function DiscardedAgents({ agents: initialAgents }: DiscardedAgentsProps)
             <TableBody>
               {filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="py-6 text-center text-sm text-muted">
+                  <TableCell colSpan={6} className="py-6 text-center text-sm text-text-tertiary">
                     No agents match &ldquo;{search}&rdquo;
                   </TableCell>
                 </TableRow>
               ) : filtered.map((agent) => (
                 <TableRow
                   key={agent.id}
-                  className="h-10 border-b border-[var(--border-subtle)] hover:bg-[var(--bg-elevated)]"
+                  className="h-10 border-b border-void-border hover:bg-void-muted"
                 >
                   <TableCell className="py-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-sm text-primary">
+                      <span className="font-mono text-sm text-text-primary">
                         {agent.displayName}
                       </span>
                       <span
                         className={cn(
-                          "rounded px-1 py-0.5 font-mono text-xs font-semibold leading-none",
-                          agent.source === "technical" && "bg-[var(--bg-muted)] text-secondary",
-                          agent.source === "tweet" && "bg-[var(--accent-teal)]/10 text-[var(--accent-teal)]",
-                          agent.source === "hybrid" && "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)]"
+                          "rounded-none px-1 py-0.5 font-mono text-xs font-semibold leading-none",
+                          agent.source === "technical" && "bg-void-muted text-text-secondary",
+                          agent.source === "tweet" && "bg-void-muted text-text-secondary",
+                          agent.source === "hybrid" && "bg-void-muted text-text-secondary"
                         )}
                       >
                         {SOURCE_BADGE[agent.source]}
                       </span>
                       {agent.engine === "rule" && (
-                        <span className="rounded bg-[var(--bg-muted)] px-1 py-0.5 font-mono text-xs font-semibold leading-none text-muted">
+                        <span className="rounded-none bg-void-muted px-1 py-0.5 font-mono text-xs font-semibold leading-none text-text-tertiary">
                           RULE
                         </span>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="hidden py-0 font-mono text-xs text-secondary sm:table-cell">
+                  <TableCell className="hidden py-0 font-mono text-xs text-text-secondary sm:table-cell">
                     {agent.timeframe}
                   </TableCell>
                   <TableCell
                     className={cn(
                       "py-0 text-right font-mono text-sm",
-                      agent.totalRealizedPnl >= 0 ? "text-bullish" : "text-bearish"
+                      agent.totalRealizedPnl >= 0 ? "text-data-profit" : "text-data-loss"
                     )}
                   >
                     {agent.totalRealizedPnl >= 0 ? "+" : ""}$
                     {agent.totalRealizedPnl.toFixed(2)}
                   </TableCell>
-                  <TableCell className="hidden max-w-xs truncate py-0 text-xs text-muted md:table-cell">
+                  <TableCell className="hidden max-w-xs truncate py-0 text-xs text-text-tertiary md:table-cell">
                     {agent.discardReason || "—"}
                   </TableCell>
-                  <TableCell className="hidden py-0 font-mono text-xs text-muted lg:table-cell">
+                  <TableCell className="hidden py-0 font-mono text-xs text-text-tertiary lg:table-cell">
                     {agent.discardedAt
                       ? new Date(agent.discardedAt).toLocaleDateString()
                       : "—"}
@@ -239,7 +239,7 @@ export function DiscardedAgents({ agents: initialAgents }: DiscardedAgentsProps)
                       <button
                         onClick={() => handleReactivate(agent.id)}
                         disabled={!!actionLoading[agent.id]}
-                        className="rounded p-1 text-secondary transition-colors-fast hover:bg-[var(--bg-muted)] hover:text-bullish disabled:opacity-50"
+                        className="rounded-none p-1 text-text-secondary transition-colors-fast hover:bg-void-muted hover:text-data-profit disabled:opacity-50"
                         title="Re-activate"
                       >
                         <RotateCcw className="h-3.5 w-3.5" />
@@ -249,7 +249,7 @@ export function DiscardedAgents({ agents: initialAgents }: DiscardedAgentsProps)
                           handleDelete(agent.id, agent.displayName)
                         }
                         disabled={!!actionLoading[agent.id]}
-                        className="rounded p-1 text-secondary transition-colors-fast hover:bg-[var(--bg-muted)] hover:text-bearish disabled:opacity-50"
+                        className="rounded-none p-1 text-text-secondary transition-colors-fast hover:bg-void-muted hover:text-data-loss disabled:opacity-50"
                         title="Delete permanently"
                       >
                         <Trash2 className="h-3.5 w-3.5" />

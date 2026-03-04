@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { BacktestRun } from "@/lib/types";
 import { useAuth } from "@/components/auth/auth-provider";
-import { cancelBacktest } from "@/app/backtest/actions";
+import { cancelBacktest } from "@/app/lab/backtest/actions";
 
 interface BacktestListProps {
   runs: BacktestRun[];
@@ -13,15 +13,15 @@ interface BacktestListProps {
 
 const STATUS_STYLES: Record<string, string> = {
   pending:
-    "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)] border-[var(--accent-yellow)]/20",
+    "bg-void-muted text-terminal-amber border-terminal-amber/20",
   running:
-    "bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)] border-[var(--accent-blue)]/20",
+    "bg-void-muted text-text-secondary border-void-border",
   completed:
-    "bg-[var(--bullish-strong)]/10 text-[var(--bullish-strong)] border-[var(--bullish-strong)]/20",
+    "bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20",
   failed:
-    "bg-[var(--bearish-strong)]/10 text-[var(--bearish-strong)] border-[var(--bearish-strong)]/20",
+    "bg-[#F43F5E]/10 text-[#F43F5E] border-[#F43F5E]/20",
   cancelled:
-    "bg-[var(--accent-zinc-subtle)] text-muted border-[var(--text-muted)]/20",
+    "bg-void-muted text-text-tertiary border-text-tertiary/20",
 };
 
 function StatusBadge({ status }: { status: string }) {
@@ -64,8 +64,8 @@ export function BacktestList({ runs }: BacktestListProps) {
 
   if (runs.length === 0) {
     return (
-      <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-8 text-center">
-        <p className="text-sm text-muted">
+      <div className="rounded-none border border-void-border bg-void-surface p-8 text-center">
+        <p className="text-sm text-text-tertiary">
           No backtests yet. Launch one above to get started.
         </p>
       </div>
@@ -73,10 +73,10 @@ export function BacktestList({ runs }: BacktestListProps) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
+    <div className="overflow-x-auto rounded-none border border-void-border bg-void-surface">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-[var(--border-default)] text-left text-xs text-muted">
+          <tr className="border-b border-void-border text-left text-xs text-text-tertiary">
             <th className="px-3 py-2 font-medium">#</th>
             <th className="px-3 py-2 font-medium">Strategy</th>
             <th className="px-3 py-2 font-medium">Symbol</th>
@@ -101,34 +101,34 @@ export function BacktestList({ runs }: BacktestListProps) {
             return (
               <tr
                 key={run.id}
-                className="border-b border-[var(--border-subtle)] transition-colors-fast hover:bg-[var(--bg-elevated)]"
+                className="border-b border-void-border transition-colors-fast hover:bg-void-muted"
               >
-                <td className="px-3 py-2 font-mono text-muted">
+                <td className="px-3 py-2 font-mono text-text-tertiary">
                   <Link
-                    href={`/backtest/${run.id}`}
-                    className="hover:text-primary"
+                    href={`/lab/backtest/${run.id}`}
+                    className="hover:text-text-primary"
                   >
                     {run.id}
                   </Link>
                 </td>
                 <td className="px-3 py-2">
                   <Link
-                    href={`/backtest/${run.id}`}
-                    className="font-medium text-primary hover:underline"
+                    href={`/lab/backtest/${run.id}`}
+                    className="font-medium text-text-primary hover:underline"
                   >
                     {run.strategyArchetype}
                   </Link>
                 </td>
                 <td className="px-3 py-2 font-mono">{run.symbol}</td>
                 <td className="px-3 py-2">{run.timeframe}</td>
-                <td className="px-3 py-2 text-muted">
+                <td className="px-3 py-2 text-text-tertiary">
                   {formatDate(run.startDate)} – {formatDate(run.endDate)}
                 </td>
                 <td
                   className={`px-3 py-2 text-right font-mono ${
                     run.totalPnl != null && run.totalPnl >= 0
-                      ? "text-[var(--bullish-strong)]"
-                      : "text-[var(--bearish-strong)]"
+                      ? "text-[#10B981]"
+                      : "text-[#F43F5E]"
                   }`}
                 >
                   {formatPnl(run.totalPnl)}
@@ -139,7 +139,7 @@ export function BacktestList({ runs }: BacktestListProps) {
                 <td className="px-3 py-2 text-right font-mono">
                   {winRate}%
                 </td>
-                <td className="px-3 py-2 text-right font-mono text-muted">
+                <td className="px-3 py-2 text-right font-mono text-text-tertiary">
                   {run.maxDrawdownPct != null
                     ? `${run.maxDrawdownPct.toFixed(1)}%`
                     : "-"}
@@ -152,7 +152,7 @@ export function BacktestList({ runs }: BacktestListProps) {
                     <button
                       onClick={() => handleCancel(run.id)}
                       disabled={cancellingId === run.id}
-                      className="rounded p-1 text-muted transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-[var(--bearish-strong)] disabled:opacity-50"
+                      className="rounded-none p-1 text-text-tertiary transition-colors-fast hover:bg-void-muted hover:text-[#F43F5E] disabled:opacity-50"
                       title="Cancel backtest"
                     >
                       {cancellingId === run.id ? (

@@ -69,10 +69,10 @@ export function ReasoningLog({ decisions }: ReasoningLogProps) {
               key={action}
               onClick={() => setActionFilter(action)}
               className={cn(
-                "rounded-md px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+                "rounded-none px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
                 actionFilter === action
-                  ? "border border-[var(--border-strong)] bg-[var(--bg-surface)] text-primary"
-                  : "text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
+                  ? "border border-void-border bg-void-surface text-text-primary"
+                  : "text-text-secondary hover:bg-void-muted hover:text-text-primary"
               )}
             >
               {action === "all" ? "All" : ACTION_LABELS[action] || action}
@@ -82,7 +82,7 @@ export function ReasoningLog({ decisions }: ReasoningLogProps) {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+          <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary" />
           <Input
             type="text"
             placeholder="Search reasoning..."
@@ -95,15 +95,15 @@ export function ReasoningLog({ decisions }: ReasoningLogProps) {
 
       {/* Count */}
       {(search.trim() || actionFilter !== "all") && (
-        <p className="text-xs text-secondary">
+        <p className="text-xs text-text-secondary">
           {filtered.length} of {decisions.length} decisions
         </p>
       )}
 
       {/* Decision list */}
       {filtered.length === 0 ? (
-        <div className="flex h-40 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-          <p className="text-sm text-muted">No decisions match</p>
+        <div className="flex h-40 items-center justify-center rounded-none border border-void-border bg-void-surface">
+          <p className="text-sm text-text-tertiary">No decisions match</p>
         </div>
       ) : (
         <div className="space-y-1">
@@ -142,8 +142,8 @@ function DecisionCard({
   return (
     <div
       className={cn(
-        "rounded-lg border border-[var(--border-default)] transition-colors-fast",
-        isExpanded ? "bg-[var(--bg-surface)]" : "hover:bg-[var(--bg-elevated)]"
+        "rounded-none border border-void-border transition-colors-fast",
+        isExpanded ? "bg-void-surface" : "hover:bg-void-muted"
       )}
     >
       {/* Header */}
@@ -154,12 +154,12 @@ function DecisionCard({
         {/* Action badge */}
         <span
           className={cn(
-            "shrink-0 rounded px-1.5 py-0.5 text-xs font-medium",
-            decision.action === "open_long" && "bg-[var(--bullish-subtle)] text-bullish",
-            decision.action === "open_short" && "bg-[var(--bearish-subtle)] text-bearish",
-            isClose && "bg-[var(--bg-muted)] text-primary",
-            decision.action === "hold" && "bg-[var(--bg-muted)] text-muted",
-            !isTradeAction && !isClose && decision.action !== "hold" && "bg-[var(--bg-muted)] text-secondary"
+            "shrink-0 rounded-none px-1.5 py-0.5 text-xs font-medium",
+            decision.action === "open_long" && "bg-terminal-amber-muted text-data-profit",
+            decision.action === "open_short" && "bg-terminal-amber-muted text-data-loss",
+            isClose && "bg-void-muted text-text-primary",
+            decision.action === "hold" && "bg-void-muted text-text-tertiary",
+            !isTradeAction && !isClose && decision.action !== "hold" && "bg-void-muted text-text-secondary"
           )}
         >
           {actionLabel}
@@ -167,25 +167,25 @@ function DecisionCard({
 
         {/* Symbol */}
         {decision.symbol && (
-          <span className="shrink-0 font-mono text-sm font-semibold text-primary">
+          <span className="shrink-0 font-mono text-sm font-semibold text-text-primary">
             {decision.symbol}
           </span>
         )}
 
         {/* Summary */}
-        <span className="min-w-0 flex-1 truncate text-sm text-secondary">
+        <span className="min-w-0 flex-1 truncate text-sm text-text-secondary">
           {decision.reasoningSummary}
         </span>
 
         {/* Timestamp */}
-        <span className="hidden shrink-0 font-mono text-xs text-muted sm:block" title={`Local: ${formatTimestamp(decision.decidedAt).local}`}>
+        <span className="hidden shrink-0 font-mono text-xs text-text-tertiary sm:block" title={`Local: ${formatTimestamp(decision.decidedAt).local}`}>
           {formatTimestamp(decision.decidedAt).utc}
         </span>
 
         {/* Chevron */}
         <ChevronRight
           className={cn(
-            "h-3.5 w-3.5 shrink-0 text-muted transition-transform duration-150",
+            "h-3.5 w-3.5 shrink-0 text-text-tertiary transition-transform duration-150",
             isExpanded && "rotate-90"
           )}
         />
@@ -193,17 +193,17 @@ function DecisionCard({
 
       {/* Expanded content */}
       {isExpanded && (
-        <div className="border-t border-[var(--border-subtle)] px-3 py-3">
+        <div className="border-t border-void-border px-3 py-3">
           {/* Meta */}
-          <div className="mb-3 flex flex-wrap gap-3 text-xs text-muted">
-            <span>Model: <span className="font-mono text-secondary">{decision.modelUsed}</span></span>
-            <span>Tokens: <span className="font-mono text-secondary">{(decision.inputTokens + decision.outputTokens).toLocaleString()}</span></span>
-            <span>Cost: <span className="font-mono text-secondary">${decision.estimatedCostUsd.toFixed(4)}</span></span>
+          <div className="mb-3 flex flex-wrap gap-3 text-xs text-text-tertiary">
+            <span>Model: <span className="font-mono text-text-secondary">{decision.modelUsed}</span></span>
+            <span>Tokens: <span className="font-mono text-text-secondary">{(decision.inputTokens + decision.outputTokens).toLocaleString()}</span></span>
+            <span>Cost: <span className="font-mono text-text-secondary">${decision.estimatedCostUsd.toFixed(4)}</span></span>
             <span>Prompt v{decision.promptVersion}</span>
           </div>
           {/* Full reasoning */}
-          <div className="max-h-96 overflow-y-auto rounded border border-[var(--border-subtle)] bg-[var(--bg-base)] p-3">
-            <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-secondary">
+          <div className="max-h-96 overflow-y-auto rounded-none border border-void-border bg-void p-3">
+            <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-text-secondary">
               {decision.reasoningFull}
             </pre>
           </div>

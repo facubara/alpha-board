@@ -73,15 +73,15 @@ export function UptimeHeatmap({ daily }: UptimeHeatmapProps) {
       {/* Tooltip */}
       {tooltip && (
         <div
-          className="pointer-events-none fixed z-50 rounded border border-[var(--border-default)] bg-[var(--bg-elevated)] px-2.5 py-1.5 text-xs shadow-lg"
+          className="pointer-events-none fixed z-50 rounded-none border border-void-border bg-void-muted px-2.5 py-1.5 text-xs"
           style={{
             left: tooltip.x,
             top: tooltip.y - 8,
             transform: "translate(-50%, -100%)",
           }}
         >
-          <div className="font-medium text-primary">{tooltip.data.date}</div>
-          <div className="text-secondary">
+          <div className="font-medium text-text-primary">{tooltip.data.date}</div>
+          <div className="text-text-secondary">
             Uptime: {tooltip.data.uptime_pct.toFixed(2)}%
           </div>
           {tooltip.data.incidents > 0 && (

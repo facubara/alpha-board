@@ -19,9 +19,9 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3">
-      <p className="text-xs text-muted">{label}</p>
-      <p className={`mt-0.5 font-mono text-lg font-semibold ${color ?? "text-primary"}`}>
+    <div className="rounded-none border border-void-border bg-void-surface p-3">
+      <p className="text-xs text-text-tertiary">{label}</p>
+      <p className={`mt-0.5 font-mono text-lg font-semibold ${color ?? "text-text-primary"}`}>
         {value}
       </p>
     </div>
@@ -44,18 +44,18 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
 
   const pnlColor =
     run.totalPnl != null && run.totalPnl >= 0
-      ? "text-[var(--bullish-strong)]"
-      : "text-[var(--bearish-strong)]";
+      ? "text-[#10B981]"
+      : "text-[#F43F5E]";
 
   return (
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-primary">
+          <h1 className="text-lg font-semibold text-text-primary">
             Backtest #{run.id} — {run.strategyArchetype}
           </h1>
-          <p className="text-sm text-muted">
+          <p className="text-sm text-text-tertiary">
             {run.symbol} {run.timeframe} &middot;{" "}
             {new Date(run.startDate).toLocaleDateString()} –{" "}
             {new Date(run.endDate).toLocaleDateString()}
@@ -64,10 +64,10 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
         <span
           className={`rounded-full border px-3 py-1 text-xs font-medium ${
             run.status === "completed"
-              ? "border-[var(--bullish-strong)]/20 bg-[var(--bullish-strong)]/10 text-[var(--bullish-strong)]"
+              ? "border-[#10B981]/20 bg-[#10B981]/10 text-[#10B981]"
               : run.status === "failed"
-                ? "border-[var(--bearish-strong)]/20 bg-[var(--bearish-strong)]/10 text-[var(--bearish-strong)]"
-                : "border-[var(--accent-blue)]/20 bg-[var(--accent-blue-subtle)] text-[var(--accent-blue)]"
+                ? "border-[#F43F5E]/20 bg-[#F43F5E]/10 text-[#F43F5E]"
+                : "border-void-border bg-void-muted text-text-secondary"
           }`}
         >
           {run.status}
@@ -75,8 +75,8 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
       </div>
 
       {run.status === "failed" && run.errorMessage && (
-        <div className="rounded-lg border border-[var(--bearish-strong)]/20 bg-[var(--bearish-strong)]/5 p-3">
-          <p className="text-xs text-[var(--bearish-strong)]">
+        <div className="rounded-none border border-[#F43F5E]/20 bg-[#F43F5E]/5 p-3">
+          <p className="text-xs text-[#F43F5E]">
             {run.errorMessage}
           </p>
         </div>
@@ -110,7 +110,7 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
               ? `${run.maxDrawdownPct.toFixed(2)}%`
               : "-"
           }
-          color="text-[var(--bearish-strong)]"
+          color="text-[#F43F5E]"
         />
         <StatCard
           label="Sharpe Ratio"
@@ -119,23 +119,23 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-[var(--border-default)]">
+      <div className="flex gap-1 border-b border-void-border">
         <button
           onClick={() => setTab("overview")}
-          className={`rounded-t-md px-4 py-2 text-sm font-medium transition-colors-fast ${
+          className={`rounded-t-none px-4 py-2 text-sm font-medium transition-colors-fast ${
             tab === "overview"
-              ? "border-b-2 border-[var(--accent)] text-primary"
-              : "text-muted hover:text-secondary"
+              ? "border-b-2 border-text-primary text-text-primary"
+              : "text-text-tertiary hover:text-text-secondary"
           }`}
         >
           Overview
         </button>
         <button
           onClick={() => setTab("trades")}
-          className={`rounded-t-md px-4 py-2 text-sm font-medium transition-colors-fast ${
+          className={`rounded-t-none px-4 py-2 text-sm font-medium transition-colors-fast ${
             tab === "trades"
-              ? "border-b-2 border-[var(--accent)] text-primary"
-              : "text-muted hover:text-secondary"
+              ? "border-b-2 border-text-primary text-text-primary"
+              : "text-text-tertiary hover:text-text-secondary"
           }`}
         >
           Trades ({trades.length})
@@ -151,8 +151,8 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
               initialBalance={run.initialBalance}
             />
           ) : (
-            <div className="flex h-48 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-              <p className="text-sm text-muted">
+            <div className="flex h-48 items-center justify-center rounded-none border border-void-border bg-void-surface">
+              <p className="text-sm text-text-tertiary">
                 {run.status === "completed"
                   ? "No equity curve data"
                   : "Backtest in progress..."}
@@ -163,15 +163,15 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
       )}
 
       {tab === "trades" && (
-        <div className="overflow-x-auto rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
+        <div className="overflow-x-auto rounded-none border border-void-border bg-void-surface">
           {trades.length === 0 ? (
             <div className="p-8 text-center">
-              <p className="text-sm text-muted">No trades recorded</p>
+              <p className="text-sm text-text-tertiary">No trades recorded</p>
             </div>
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[var(--border-default)] text-left text-xs text-muted">
+                <tr className="border-b border-void-border text-left text-xs text-text-tertiary">
                   <th className="px-3 py-2 font-medium">#</th>
                   <th className="px-3 py-2 font-medium">Direction</th>
                   <th className="px-3 py-2 font-medium text-right">
@@ -192,17 +192,17 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
                 {trades.map((t, i) => (
                   <tr
                     key={t.id}
-                    className="border-b border-[var(--border-subtle)]"
+                    className="border-b border-void-border"
                   >
-                    <td className="px-3 py-2 font-mono text-muted">
+                    <td className="px-3 py-2 font-mono text-text-tertiary">
                       {i + 1}
                     </td>
                     <td className="px-3 py-2">
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                           t.direction === "long"
-                            ? "bg-[var(--bullish-strong)]/10 text-[var(--bullish-strong)]"
-                            : "bg-[var(--bearish-strong)]/10 text-[var(--bearish-strong)]"
+                            ? "bg-[#10B981]/10 text-[#10B981]"
+                            : "bg-[#F43F5E]/10 text-[#F43F5E]"
                         }`}
                       >
                         {t.direction}
@@ -224,22 +224,22 @@ export function BacktestDetail({ run, trades }: BacktestDetailProps) {
                     <td
                       className={`px-3 py-2 text-right font-mono ${
                         t.pnl >= 0
-                          ? "text-[var(--bullish-strong)]"
-                          : "text-[var(--bearish-strong)]"
+                          ? "text-[#10B981]"
+                          : "text-[#F43F5E]"
                       }`}
                     >
                       {t.pnl >= 0 ? "+" : ""}${t.pnl.toFixed(2)}
                     </td>
-                    <td className="px-3 py-2 text-right font-mono text-muted">
+                    <td className="px-3 py-2 text-right font-mono text-text-tertiary">
                       ${t.fees.toFixed(2)}
                     </td>
-                    <td className="px-3 py-2 text-xs text-muted">
+                    <td className="px-3 py-2 text-xs text-text-tertiary">
                       {t.exitReason.replace("_", " ")}
                     </td>
-                    <td className="px-3 py-2 text-xs text-muted">
+                    <td className="px-3 py-2 text-xs text-text-tertiary">
                       {formatDuration(t.durationMinutes)}
                     </td>
-                    <td className="px-3 py-2 text-xs text-muted">
+                    <td className="px-3 py-2 text-xs text-text-tertiary">
                       {new Date(t.entryAt).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",

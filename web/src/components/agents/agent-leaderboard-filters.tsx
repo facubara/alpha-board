@@ -32,10 +32,10 @@ function FilterButton({
     <button
       onClick={onClick}
       className={cn(
-        "rounded-md px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+        "rounded-none px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
         active
-          ? "border border-[var(--border-strong)] bg-[var(--bg-surface)] text-primary"
-          : "text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
+          ? "border border-void-border bg-void-surface text-text-primary"
+          : "text-text-secondary hover:bg-void-muted hover:text-text-primary"
       )}
     >
       {children}
@@ -95,7 +95,7 @@ export function AgentLeaderboardFilters({
         ))}
       </div>
 
-      <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
+      <div className="hidden h-5 w-px bg-void-border sm:block" />
 
       {/* Archetype filter */}
       <div className="flex items-center gap-1">
@@ -116,7 +116,7 @@ export function AgentLeaderboardFilters({
         ))}
       </div>
 
-      <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
+      <div className="hidden h-5 w-px bg-void-border sm:block" />
 
       {/* Engine filter */}
       <div className="flex items-center gap-1">
@@ -137,7 +137,7 @@ export function AgentLeaderboardFilters({
         ))}
       </div>
 
-      <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
+      <div className="hidden h-5 w-px bg-void-border sm:block" />
 
       {/* Source filter */}
       <div className="flex items-center gap-1">
@@ -158,22 +158,22 @@ export function AgentLeaderboardFilters({
         ))}
       </div>
 
-      <div className="hidden h-5 w-px bg-[var(--border-default)] sm:block" />
+      <div className="hidden h-5 w-px bg-void-border sm:block" />
 
       {/* Symbol search */}
       <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
         <input
           type="text"
           value={symbolSearch}
           onChange={(e) => onSymbolSearchChange(e.target.value)}
           placeholder="Search by symbol..."
-          className="h-9 w-56 rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] pl-8 pr-8 font-mono text-sm text-primary placeholder:text-muted focus:border-[var(--border-strong)] focus:outline-none"
+          className="h-9 w-56 rounded-none border border-void-border bg-void pl-8 pr-8 font-mono text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none"
         />
         {symbolSearch && (
           <button
             onClick={() => onSymbolSearchChange("")}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-primary"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -188,10 +188,10 @@ export function AgentLeaderboardFilters({
         <button
           onClick={onToggleCompare}
           className={cn(
-            "flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+            "flex items-center gap-1.5 rounded-none border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
             compareMode
-              ? "border-[var(--border-strong)] bg-[var(--bg-surface)] text-primary"
-              : "border-[var(--border-default)] text-secondary hover:bg-[var(--bg-elevated)] hover:text-primary"
+              ? "border-void-border bg-void-surface text-text-primary"
+              : "border-void-border text-text-secondary hover:bg-void-muted hover:text-text-primary"
           )}
         >
           <GitCompareArrows className="h-3.5 w-3.5" />
@@ -200,8 +200,8 @@ export function AgentLeaderboardFilters({
         <button
           onClick={onPauseAllLlm}
           className={cn(
-            "flex items-center gap-1.5 rounded-md border border-[var(--border-default)] px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
-            "text-bearish hover:bg-[var(--bearish-subtle)]"
+            "flex items-center gap-1.5 rounded-none border border-void-border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
+            "text-data-loss hover:bg-terminal-amber-muted"
           )}
         >
           <PauseCircle className="h-3.5 w-3.5" />

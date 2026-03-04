@@ -107,9 +107,9 @@ export function ComparisonEquityChart({
   if (totalPoints < 2) {
     return (
       <div
-        className={`flex h-48 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+        className={`flex h-48 items-center justify-center rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
       >
-        <p className="text-xs text-muted">Not enough trades to compare</p>
+        <p className="text-xs text-text-tertiary">Not enough trades to compare</p>
       </div>
     );
   }
@@ -122,7 +122,7 @@ export function ComparisonEquityChart({
 
   return (
     <div
-      className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+      className={`overflow-hidden rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
     >
       <ResponsiveContainer width="100%" height={240}>
         <LineChart data={chartData} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
@@ -162,7 +162,7 @@ export function ComparisonEquityChart({
               agentNameMap[String(name)] ?? name,
             ]}
           />
-          <ReferenceLine y={10000} stroke="var(--border-subtle)" strokeDasharray="4 4" />
+          <ReferenceLine y={10000} stroke="#27272A" strokeDasharray="4 4" />
           {agentKeys.map((key) => {
             const agentId = parseInt(key.replace("agent_", ""));
             return (
@@ -186,10 +186,10 @@ export function ComparisonEquityChart({
         {agents.map((agent) => (
           <div key={agent.id} className="flex items-center gap-1.5">
             <div
-              className="h-[3px] w-[10px] rounded-sm"
+              className="h-[3px] w-[10px] rounded-none"
               style={{ backgroundColor: colorMap[agent.id] ?? "#888" }}
             />
-            <span className="text-xs text-secondary">
+            <span className="text-xs text-text-secondary">
               {agent.displayName} (${(finalEquities[agent.id] ?? agent.initialBalance).toFixed(0)})
             </span>
           </div>

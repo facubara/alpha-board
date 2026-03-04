@@ -46,8 +46,8 @@ export function AgentChart({ trades, timeframe }: AgentChartProps) {
 
   if (!symbol) {
     return (
-      <div className="flex h-64 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-        <p className="text-sm text-muted">No trades yet — chart unavailable.</p>
+      <div className="flex h-64 items-center justify-center rounded-none border border-void-border bg-void-surface">
+        <p className="text-sm text-text-tertiary">No trades yet — chart unavailable.</p>
       </div>
     );
   }
@@ -61,13 +61,13 @@ export function AgentChart({ trades, timeframe }: AgentChartProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-secondary">
-          <span className="font-mono font-semibold text-primary">{symbol}</span>
+        <p className="text-sm text-text-secondary">
+          <span className="font-mono font-semibold text-text-primary">{symbol}</span>
           {" "}— {trades.filter((t) => t.symbol === symbol).length} trades
         </p>
         <Link
           href={`/symbols/${symbol}`}
-          className="flex items-center gap-1 text-xs text-secondary transition-colors hover:text-primary"
+          className="flex items-center gap-1 text-xs text-text-secondary transition-colors hover:text-text-primary"
         >
           Full Chart
           <ArrowUpRight className="h-3 w-3" />

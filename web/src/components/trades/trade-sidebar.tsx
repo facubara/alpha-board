@@ -34,30 +34,30 @@ export function TradeSidebar() {
       {/* Sidebar panel */}
       <aside
         aria-label="Trade feed"
-        className={`fixed bottom-0 right-0 top-14 z-40 w-full border-l border-[var(--border-default)] bg-[var(--bg-base)] transition-transform duration-200 ease-in-out sm:w-96 ${
+        className={`fixed bottom-0 right-0 top-14 z-40 w-full border-l border-void-border bg-void rounded-none transition-transform duration-200 ease-in-out sm:w-96 ${
           sidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Header */}
-        <div className="flex h-10 items-center justify-between border-b border-[var(--border-default)] px-3">
+        <div className="flex h-10 items-center justify-between border-b border-void-border px-3">
           <div className="flex items-center gap-2">
-            <h2 className="text-sm font-medium text-[var(--text-primary)]">
+            <h2 className="text-sm font-medium text-text-primary font-mono">
               Trade Feed
             </h2>
-            <span className="text-xs text-[var(--text-muted)]">
+            <span className="text-xs text-text-tertiary font-mono">
               {trades.length} trades
             </span>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={markAllRead}
-              className="rounded px-1.5 py-0.5 text-xs text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-secondary)]"
+              className="rounded-none px-1.5 py-0.5 text-xs text-text-tertiary font-mono transition-colors hover:bg-void-muted hover:text-text-secondary"
             >
               Mark read
             </button>
             <button
               onClick={toggleSidebar}
-              className="rounded p-1 text-[var(--text-tertiary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-secondary)]"
+              className="rounded-none p-1 text-text-tertiary transition-colors hover:bg-void-muted hover:text-text-secondary"
               aria-label="Close trade feed"
             >
               <X className="h-3.5 w-3.5" />
@@ -68,7 +68,7 @@ export function TradeSidebar() {
         {/* Trade list */}
         <div className="h-[calc(100%-2.5rem)] overflow-y-auto">
           {trades.length === 0 ? (
-            <div className="flex h-32 items-center justify-center text-sm text-[var(--text-muted)]">
+            <div className="flex h-32 items-center justify-center text-sm text-text-tertiary font-mono">
               No trades yet
             </div>
           ) : (
@@ -83,7 +83,7 @@ export function TradeSidebar() {
               {hasMore && (
                 <button
                   onClick={() => setVisibleCount((c) => c + TRADES_PER_PAGE)}
-                  className="w-full border-t border-[var(--border-default)] py-2.5 text-xs font-medium text-secondary transition-colors hover:bg-[var(--bg-elevated)] hover:text-primary"
+                  className="w-full border-t border-void-border py-2.5 text-xs font-mono text-text-secondary transition-colors hover:bg-void-muted hover:text-text-primary"
                 >
                   Show more ({trades.length - visibleCount} remaining)
                 </button>

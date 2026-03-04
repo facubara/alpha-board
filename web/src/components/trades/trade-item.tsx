@@ -49,8 +49,8 @@ export function TradeItem({
 
   return (
     <div
-      className={`border-b border-[var(--border-default)] px-3 py-2.5 transition-colors ${
-        !trade.isRead ? "bg-[var(--bg-elevated)]" : ""
+      className={`border-b border-void-border px-3 py-2.5 transition-colors ${
+        !trade.isRead ? "bg-void-muted" : ""
       }`}
     >
       {/* Main row */}
@@ -60,10 +60,10 @@ export function TradeItem({
       >
         {/* Action + Direction pill */}
         <span
-          className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase leading-none ${
+          className={`mt-0.5 shrink-0 rounded-none px-1.5 py-0.5 text-xs font-mono font-medium uppercase leading-none ${
             isLong
-              ? "bg-[var(--bullish-subtle)] text-bullish"
-              : "bg-[var(--bearish-subtle)] text-bearish"
+              ? "bg-terminal-amber-muted text-data-profit"
+              : "bg-terminal-amber-muted text-data-loss"
           }`}
         >
           {isOpen ? "Open" : "Close"} {trade.direction}
@@ -72,25 +72,25 @@ export function TradeItem({
         {/* Content */}
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-1">
-            <span className="truncate text-sm font-medium text-[var(--text-primary)]">
+            <span className="truncate text-sm font-medium text-text-primary font-mono">
               {trade.symbol.replace("USDT", "")}
             </span>
-            <span className="shrink-0 text-xs text-[var(--text-tertiary)]">
+            <span className="shrink-0 text-xs text-text-tertiary font-mono">
               {age}
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)]">
+          <div className="flex items-center gap-1.5 text-xs text-text-secondary font-mono">
             <span className="truncate">{trade.agentName}</span>
             {trade.leaderboardRank && (
-              <span className="shrink-0 text-xs text-[var(--text-tertiary)]">
+              <span className="shrink-0 text-xs text-text-tertiary">
                 #{trade.leaderboardRank}
               </span>
             )}
             <Link
               href={`/agents/${trade.agentId}`}
               onClick={(e) => e.stopPropagation()}
-              className="shrink-0 rounded p-0.5 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+              className="shrink-0 rounded-none p-0.5 text-text-tertiary hover:text-text-secondary"
             >
               <ArrowUpRight className="h-3 w-3" />
             </Link>
@@ -98,7 +98,7 @@ export function TradeItem({
               <>
                 <span
                   className={`shrink-0 font-mono font-medium ${
-                    isProfitable ? "text-bullish" : "text-bearish"
+                    isProfitable ? "text-data-profit" : "text-data-loss"
                   }`}
                 >
                   {trade.pnl !== null
@@ -108,7 +108,7 @@ export function TradeItem({
                 {trade.pnlPct !== null && (
                   <span
                     className={`shrink-0 text-xs ${
-                      isProfitable ? "text-bullish" : "text-bearish"
+                      isProfitable ? "text-data-profit" : "text-data-loss"
                     }`}
                   >
                     ({trade.pnlPct >= 0 ? "+" : ""}
@@ -122,7 +122,7 @@ export function TradeItem({
 
         {/* Expand icon */}
         {trade.reasoningSummary && (
-          <span className="mt-1 shrink-0 text-[var(--text-tertiary)]">
+          <span className="mt-1 shrink-0 text-text-tertiary">
             {expanded ? (
               <ChevronDown className="h-3 w-3" />
             ) : (
@@ -136,7 +136,7 @@ export function TradeItem({
       {expanded && (
         <div className="mt-2 space-y-1.5">
           {/* Price details */}
-          <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-[var(--text-secondary)]">
+          <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-text-secondary font-mono">
             <span>
               Entry: <span className="font-mono">{formatPrice(trade.entryPrice)}</span>
             </span>
@@ -178,7 +178,7 @@ export function TradeItem({
 
           {/* Reasoning */}
           {trade.reasoningSummary && (
-            <div className="rounded bg-[var(--bg-surface)] px-2.5 py-2 text-xs leading-relaxed text-[var(--text-secondary)]">
+            <div className="rounded-none bg-void-surface border border-void-border px-2.5 py-2 text-xs leading-relaxed text-text-secondary font-mono">
               {trade.reasoningSummary}
             </div>
           )}

@@ -59,9 +59,9 @@ export function BacktestEquityChart({
   if (equityCurve.length < 2) {
     return (
       <div
-        className={`flex h-48 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+        className={`flex h-48 items-center justify-center rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
       >
-        <p className="text-xs text-muted">Insufficient data for chart</p>
+        <p className="text-xs text-text-tertiary">Insufficient data for chart</p>
       </div>
     );
   }
@@ -73,7 +73,7 @@ export function BacktestEquityChart({
 
   return (
     <div
-      className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+      className={`overflow-hidden rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
     >
       <ResponsiveContainer width="100%" height={220}>
         <AreaChart data={chartData} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
@@ -119,7 +119,7 @@ export function BacktestEquityChart({
           />
           <ReferenceLine
             y={initialBalance}
-            stroke="var(--border-subtle)"
+            stroke="#27272A"
             strokeDasharray="4 4"
           />
           <Area

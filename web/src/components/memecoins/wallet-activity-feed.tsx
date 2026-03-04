@@ -67,16 +67,16 @@ export function WalletActivityFeed({ initialActivity }: WalletActivityFeedProps)
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
-        <h3 className="text-sm font-medium text-primary">Live Activity</h3>
+        <h3 className="text-sm font-medium text-text-primary">Live Activity</h3>
         <span
           className={`inline-block h-2 w-2 rounded-full ${
-            isConnected ? "bg-[var(--status-connected)]" : "bg-[var(--status-disconnected)]"
+            isConnected ? "bg-[#10B981]" : "bg-[#52525B]"
           }`}
         />
       </div>
 
       {activity.length === 0 ? (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-6 text-center text-sm text-muted">
+        <div className="rounded-none border border-void-border bg-void-surface px-4 py-6 text-center text-sm text-text-tertiary">
           No wallet activity recorded yet.
         </div>
       ) : (
@@ -84,33 +84,33 @@ export function WalletActivityFeed({ initialActivity }: WalletActivityFeedProps)
           {activity.map((item) => (
             <div
               key={item.txSignature}
-              className="flex items-center gap-2 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2 text-xs"
+              className="flex items-center gap-2 rounded-none border border-void-border bg-void-surface px-3 py-2 text-xs"
             >
-              <span className="font-mono text-secondary">
+              <span className="font-mono text-text-secondary">
                 {truncateAddr(item.walletAddress)}
               </span>
               <span
                 className={`font-semibold ${
-                  item.direction === "buy" ? "text-bullish" : "text-bearish"
+                  item.direction === "buy" ? "text-data-profit" : "text-data-loss"
                 }`}
               >
                 {item.direction === "buy" ? "bought" : "sold"}
               </span>
               {item.amountSol != null && (
-                <span className="text-secondary">
+                <span className="text-text-secondary">
                   {item.amountSol.toFixed(2)} SOL
                 </span>
               )}
-              <span className="text-muted">of</span>
-              <span className="font-mono font-medium text-primary">
+              <span className="text-text-tertiary">of</span>
+              <span className="font-mono font-medium text-text-primary">
                 ${item.tokenSymbol || "???"}
               </span>
-              <span className="ml-auto text-muted">{getTimeAgo(item.blockTime)}</span>
+              <span className="ml-auto text-text-tertiary">{getTimeAgo(item.blockTime)}</span>
               <a
                 href={`https://solscan.io/tx/${item.txSignature}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[var(--accent-blue)] hover:text-[var(--accent-blue)]"
+                className="text-text-secondary hover:text-text-primary"
                 onClick={(e) => e.stopPropagation()}
               >
                 tx

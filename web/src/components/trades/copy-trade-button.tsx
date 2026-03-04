@@ -68,10 +68,10 @@ export function CopyTradeButton({ trade, exchangeEnabled }: Props) {
   if (result) {
     return (
       <div
-        className={`mt-1.5 rounded px-2.5 py-1.5 text-xs ${
+        className={`mt-1.5 rounded-none px-2.5 py-1.5 text-xs ${
           result.ok
-            ? "bg-[var(--bullish-subtle)] text-bullish"
-            : "bg-[var(--bearish-subtle)] text-bearish"
+            ? "bg-terminal-amber-muted text-data-profit"
+            : "bg-terminal-amber-muted text-data-loss"
         }`}
       >
         {result.message}
@@ -81,8 +81,8 @@ export function CopyTradeButton({ trade, exchangeEnabled }: Props) {
 
   if (confirming) {
     return (
-      <div className="mt-1.5 rounded border border-[var(--border-default)] bg-[var(--bg-elevated)] px-2.5 py-2 space-y-1.5">
-        <div className="text-xs text-[var(--text-secondary)]">
+      <div className="mt-1.5 rounded-none border border-void-border bg-void-muted px-2.5 py-2 space-y-1.5">
+        <div className="text-xs text-text-secondary">
           <span className="font-medium">Execute on Binance?</span>
           <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] font-mono">
             <span>
@@ -97,14 +97,14 @@ export function CopyTradeButton({ trade, exchangeEnabled }: Props) {
           <button
             onClick={handleExecute}
             disabled={executing}
-            className="rounded bg-[var(--bullish-muted)] px-3 py-1 text-[11px] font-medium text-white hover:bg-[var(--bullish-strong)] disabled:opacity-50"
+            className="rounded-none bg-terminal-amber-muted px-3 py-1 text-[11px] font-medium text-white hover:bg-[#10B981] disabled:opacity-50"
           >
             {executing ? "Sending..." : "Confirm"}
           </button>
           <button
             onClick={() => setConfirming(false)}
             disabled={executing}
-            className="rounded border border-[var(--border-default)] px-3 py-1 text-[11px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+            className="rounded-none border border-void-border px-3 py-1 text-[11px] text-text-tertiary hover:text-text-secondary"
           >
             Cancel
           </button>
@@ -116,7 +116,7 @@ export function CopyTradeButton({ trade, exchangeEnabled }: Props) {
   return (
     <button
       onClick={() => setConfirming(true)}
-      className="mt-1.5 flex items-center gap-1.5 rounded border border-[var(--border-default)] bg-[var(--bg-elevated)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
+      className="mt-1.5 flex items-center gap-1.5 rounded-none border border-void-border bg-void-muted px-2.5 py-1 text-[11px] font-medium text-text-secondary hover:border-terminal-amber hover:text-terminal-amber transition-colors"
     >
       <svg
         viewBox="0 0 24 24"

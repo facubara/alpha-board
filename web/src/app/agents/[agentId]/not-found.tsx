@@ -9,8 +9,8 @@ export default function AgentNotFound() {
       <h2 className="font-mono text-2xl font-semibold text-primary">404</h2>
       <p className="text-sm text-secondary">Agent not found</p>
       <Link
-        href="/agents"
-        className="rounded-md border border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-2 text-sm font-medium text-primary transition-colors-fast hover:bg-[var(--bg-elevated)]"
+        href="/agents/marketplace"
+        className="rounded-none border border-void-border bg-void-surface px-4 py-2 text-sm font-medium text-primary transition-colors-fast hover:bg-void-muted"
       >
         Back to Agent Arena
       </Link>

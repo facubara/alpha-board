@@ -1,12 +1,8 @@
 /**
  * ScoreBar Component
  *
- * Visual bar for bullish score (0–1).
- * Per DESIGN_SYSTEM.md:
- * - Width: 100px, Height: 6px
- * - Track: bg-muted (#262626)
- * - Fill: semantic color based on score
- * - Border radius: 3px (full round)
+ * Visual bar for bullish score (0-1).
+ * Terminal aesthetic: sharp edges, amber fill, no rounded corners.
  */
 
 import { cn } from "@/lib/utils";
@@ -25,24 +21,23 @@ interface ScoreBarProps {
 
 /**
  * Get fill color class based on score.
- * Per DESIGN_SYSTEM.md:
- * - 0.0-0.4 → bearish-strong (red)
- * - 0.4-0.6 → text-muted (gray)
- * - 0.6-1.0 → bullish-strong (green)
+ * - 0.0-0.4 -> loss (red)
+ * - 0.4-0.6 -> amber (neutral)
+ * - 0.6-1.0 -> profit (green)
  */
 function getScoreColor(score: number): string {
-  if (score < 0.4) return "bg-[var(--bearish-strong)]";
-  if (score > 0.6) return "bg-[var(--bullish-strong)]";
-  return "bg-[var(--text-muted)]";
+  if (score < 0.4) return "bg-data-loss";
+  if (score > 0.6) return "bg-data-profit";
+  return "bg-terminal-amber";
 }
 
 /**
  * Get text color class for the numeric value.
  */
 function getTextColor(score: number): string {
-  if (score < 0.4) return "text-bearish";
-  if (score > 0.6) return "text-bullish";
-  return "text-muted";
+  if (score < 0.4) return "text-data-loss";
+  if (score > 0.6) return "text-data-profit";
+  return "text-text-tertiary";
 }
 
 function getScoreLabel(score: number): string {
@@ -70,7 +65,7 @@ export function ScoreBar({
       <div className={cn("flex items-center gap-2", className)}>
         {/* Track + Fill */}
         <div
-          className="relative h-1.5 w-[100px] overflow-hidden rounded-full bg-[var(--bg-muted)]"
+          className="relative h-1.5 w-[100px] overflow-hidden rounded-none bg-void-muted"
           role="progressbar"
           aria-valuenow={Math.round(clampedScore * 100)}
           aria-valuemin={0}
@@ -80,7 +75,7 @@ export function ScoreBar({
           {/* Fill */}
           <div
             className={cn(
-              "absolute inset-y-0 left-0 rounded-full transition-colors-fast",
+              "absolute inset-y-0 left-0 rounded-none transition-colors-fast",
               getScoreColor(clampedScore)
             )}
             style={{ width: `${percentage}%` }}

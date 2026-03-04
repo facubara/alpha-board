@@ -44,7 +44,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <h1 className="font-mono text-2xl font-bold tracking-tight text-primary">
+        <h1 className="font-mono text-2xl font-bold tracking-tight text-text-primary">
           {upperSymbol}
         </h1>
         <a
@@ -63,22 +63,22 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
       <ChartContainer symbol={upperSymbol} height={600} />
 
       {/* Indicator legend */}
-      <div className="flex flex-wrap gap-4 text-xs text-muted">
+      <div className="flex flex-wrap gap-4 text-xs text-text-tertiary">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-0.5 w-4 rounded bg-[#3B82F6]" />
+          <span className="inline-block h-0.5 w-4 rounded-none bg-[#3B82F6]" />
           EMA 20
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-0.5 w-4 rounded bg-[#F59E0B]" />
+          <span className="inline-block h-0.5 w-4 rounded-none bg-[#F59E0B]" />
           EMA 50
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-0.5 w-4 rounded bg-[#8B5CF6]" />
+          <span className="inline-block h-0.5 w-4 rounded-none bg-[#8B5CF6]" />
           EMA 200
         </span>
         <span className="flex items-center gap-1.5">
           <span
-            className="inline-block h-0.5 w-4 rounded"
+            className="inline-block h-0.5 w-4 rounded-none"
             style={{
               backgroundImage: "repeating-linear-gradient(to right, #6B6B6B 0, #6B6B6B 3px, transparent 3px, transparent 6px)",
             }}
@@ -88,45 +88,45 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
       </div>
 
       {/* Agent Activity */}
-      <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4">
-        <h2 className="mb-3 text-sm font-semibold text-primary">Agent Activity</h2>
+      <div className="rounded-none border border-void-border bg-void-surface p-4">
+        <h2 className="mb-3 text-sm font-semibold text-text-primary">Agent Activity</h2>
 
         {!hasActivity ? (
-          <p className="text-xs text-muted">No agent activity for this symbol</p>
+          <p className="text-xs text-text-tertiary">No agent activity for this symbol</p>
         ) : (
           <div className="space-y-4">
             {/* Summary */}
-            <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs text-secondary">
+            <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs text-text-secondary">
               {summary.agentsWithPositions > 0 && (
                 <span>
-                  <span className="font-medium text-primary">{summary.agentsWithPositions}</span>{" "}
+                  <span className="font-medium text-text-primary">{summary.agentsWithPositions}</span>{" "}
                   agent{summary.agentsWithPositions !== 1 ? "s" : ""} holding positions
                 </span>
               )}
               {summary.agentsWithPositions > 0 && summary.agentsThatTraded > 0 && (
-                <span className="text-muted">·</span>
+                <span className="text-text-tertiary">·</span>
               )}
               {summary.agentsThatTraded > 0 && (
                 <span>
-                  <span className="font-medium text-primary">{summary.agentsThatTraded}</span>{" "}
+                  <span className="font-medium text-text-primary">{summary.agentsThatTraded}</span>{" "}
                   agent{summary.agentsThatTraded !== 1 ? "s" : ""} traded
                 </span>
               )}
               {summary.totalTrades > 0 && (
                 <>
-                  <span className="text-muted">·</span>
+                  <span className="text-text-tertiary">·</span>
                   <span
                     className={cn(
                       "font-mono font-medium tabular-nums",
-                      summary.totalPnl >= 0 ? "text-bullish" : "text-bearish"
+                      summary.totalPnl >= 0 ? "text-data-profit" : "text-data-loss"
                     )}
                   >
                     {formatPnl(summary.totalPnl)}
                   </span>
                   <span>total PnL</span>
-                  <span className="text-muted">·</span>
+                  <span className="text-text-tertiary">·</span>
                   <span>
-                    <span className="font-medium text-primary">{(summary.winRate * 100).toFixed(0)}%</span> win rate
+                    <span className="font-medium text-text-primary">{(summary.winRate * 100).toFixed(0)}%</span> win rate
                   </span>
                 </>
               )}
@@ -135,7 +135,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
             {/* Open Positions */}
             {positions.length > 0 && (
               <div>
-                <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
+                <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-text-tertiary">
                   Open Positions ({positions.length})
                 </h3>
                 <div className="space-y-1">
@@ -146,7 +146,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
                     >
                       <Link
                         href={`/agents/${pos.agentId}`}
-                        className="min-w-[140px] truncate font-medium text-primary hover:underline"
+                        className="min-w-[140px] truncate font-medium text-text-primary hover:underline"
                       >
                         {pos.agentDisplayName}
                       </Link>
@@ -155,22 +155,22 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
                         className={cn(
                           "text-xs uppercase",
                           pos.direction === "long"
-                            ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
-                            : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"
+                            ? "bg-terminal-amber-muted text-[#10B981] hover:bg-terminal-amber-muted"
+                            : "bg-terminal-amber-muted text-[#F43F5E] hover:bg-terminal-amber-muted"
                         )}
                       >
                         {pos.direction}
                       </Badge>
-                      <span className="font-mono tabular-nums text-secondary">
+                      <span className="font-mono tabular-nums text-text-secondary">
                         {formatPrice(pos.entryPrice)}
                       </span>
-                      <span className="font-mono tabular-nums text-secondary">
+                      <span className="font-mono tabular-nums text-text-secondary">
                         {pos.positionSize.toFixed(4)}
                       </span>
                       <span
                         className={cn(
                           "font-mono font-medium tabular-nums",
-                          pos.unrealizedPnl >= 0 ? "text-bullish" : "text-bearish"
+                          pos.unrealizedPnl >= 0 ? "text-data-profit" : "text-data-loss"
                         )}
                       >
                         {formatPnl(pos.unrealizedPnl)}
@@ -184,7 +184,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
             {/* Recent Trades */}
             {trades.length > 0 && (
               <div>
-                <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
+                <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-text-tertiary">
                   Recent Trades ({trades.length})
                 </h3>
                 <div className="space-y-1">
@@ -195,7 +195,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
                     >
                       <Link
                         href={`/agents/${trade.agentId}`}
-                        className="min-w-[140px] truncate font-medium text-primary hover:underline"
+                        className="min-w-[140px] truncate font-medium text-text-primary hover:underline"
                       >
                         {trade.agentDisplayName}
                       </Link>
@@ -204,8 +204,8 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
                         className={cn(
                           "text-xs uppercase",
                           trade.direction === "long"
-                            ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
-                            : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"
+                            ? "bg-terminal-amber-muted text-[#10B981] hover:bg-terminal-amber-muted"
+                            : "bg-terminal-amber-muted text-[#F43F5E] hover:bg-terminal-amber-muted"
                         )}
                       >
                         {trade.direction}
@@ -213,12 +213,12 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
                       <span
                         className={cn(
                           "font-mono font-medium tabular-nums",
-                          trade.pnl >= 0 ? "text-bullish" : "text-bearish"
+                          trade.pnl >= 0 ? "text-data-profit" : "text-data-loss"
                         )}
                       >
                         {formatPnl(trade.pnl)}
                       </span>
-                      <span className="text-muted">
+                      <span className="text-text-tertiary">
                         {formatDate(trade.closedAt)}
                       </span>
                     </div>

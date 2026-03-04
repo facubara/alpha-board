@@ -36,24 +36,24 @@ export function UpdatesList({ entries }: { entries: ChangelogEntry[] }) {
     <div className="space-y-8">
       {groups.map((group) => (
         <section key={group.label}>
-          <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-muted">
+          <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-text-tertiary">
             {group.label}
           </h2>
           <div className="space-y-3">
             {group.entries.map((entry) => (
               <div
                 key={entry.date + entry.title}
-                className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3"
+                className="rounded-none border border-void-border bg-void-surface px-4 py-3"
               >
                 <div className="flex items-baseline gap-3">
-                  <span className="shrink-0 font-mono text-xs text-muted">
+                  <span className="shrink-0 font-mono text-xs text-text-tertiary">
                     {formatDate(entry.date)}
                   </span>
-                  <span className="text-sm font-medium text-primary">
+                  <span className="text-sm font-medium text-text-primary">
                     {entry.title}
                   </span>
                 </div>
-                <p className="mt-1 text-sm leading-relaxed text-muted">
+                <p className="mt-1 text-sm leading-relaxed text-text-tertiary">
                   {entry.description}
                 </p>
               </div>

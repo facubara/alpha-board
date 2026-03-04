@@ -43,7 +43,7 @@ export function StatusPage({ data, llmSections }: StatusPageProps) {
         })}
 
         {data.services.length === 0 && (
-          <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-8 text-center text-sm text-muted">
+          <div className="rounded-none border border-void-border bg-void-surface px-4 py-8 text-center text-sm text-text-tertiary">
             No health checks recorded yet. Data will appear after the first check cycle (~2 minutes).
           </div>
         )}

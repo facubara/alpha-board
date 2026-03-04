@@ -67,14 +67,14 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
   if (loading) {
     return (
       <div className={cn("py-3", className)}>
-        <div className="h-4 w-64 animate-pulse rounded bg-[var(--bg-muted)]" />
+        <div className="h-4 w-64 animate-pulse rounded-none bg-void-muted" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className={cn("py-3 text-xs text-muted", className)}>
+      <div className={cn("py-3 text-xs text-text-tertiary", className)}>
         Failed to load agent activity
       </div>
     );
@@ -82,7 +82,7 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
 
   if (!activity || (activity.positions.length === 0 && activity.trades.length === 0)) {
     return (
-      <div className={cn("py-3 text-xs text-muted", className)}>
+      <div className={cn("py-3 text-xs text-text-tertiary", className)}>
         No agent activity for this symbol
       </div>
     );
@@ -102,45 +102,45 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
       {/* Summary bar */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-1 text-left text-xs text-secondary hover:text-primary"
+        className="flex w-full items-center gap-1 text-left text-xs text-text-secondary hover:text-text-primary"
       >
         <ChevronDown
           className={cn(
-            "h-3.5 w-3.5 shrink-0 text-muted transition-transform duration-150",
+            "h-3.5 w-3.5 shrink-0 text-text-tertiary transition-transform duration-150",
             !expanded && "-rotate-90"
           )}
         />
         <span className="flex flex-wrap gap-x-2 gap-y-0.5">
           {summary.agentsWithPositions > 0 && (
             <span>
-              <span className="font-medium text-primary">{summary.agentsWithPositions}</span>{" "}
+              <span className="font-medium text-text-primary">{summary.agentsWithPositions}</span>{" "}
               agent{summary.agentsWithPositions !== 1 ? "s" : ""} holding positions
             </span>
           )}
           {summary.agentsWithPositions > 0 && summary.agentsThatTraded > 0 && (
-            <span className="text-muted">·</span>
+            <span className="text-text-tertiary">·</span>
           )}
           {summary.agentsThatTraded > 0 && (
             <span>
-              <span className="font-medium text-primary">{summary.agentsThatTraded}</span>{" "}
+              <span className="font-medium text-text-primary">{summary.agentsThatTraded}</span>{" "}
               agent{summary.agentsThatTraded !== 1 ? "s" : ""} traded
             </span>
           )}
           {summary.totalTrades > 0 && (
             <>
-              <span className="text-muted">·</span>
+              <span className="text-text-tertiary">·</span>
               <span
                 className={cn(
                   "font-mono font-medium tabular-nums",
-                  summary.totalPnl >= 0 ? "text-bullish" : "text-bearish"
+                  summary.totalPnl >= 0 ? "text-data-profit" : "text-data-loss"
                 )}
               >
                 {formatPnl(summary.totalPnl)}
               </span>
               <span>total PnL</span>
-              <span className="text-muted">·</span>
+              <span className="text-text-tertiary">·</span>
               <span>
-                <span className="font-medium text-primary">{(summary.winRate * 100).toFixed(0)}%</span> win rate
+                <span className="font-medium text-text-primary">{(summary.winRate * 100).toFixed(0)}%</span> win rate
               </span>
             </>
           )}
@@ -153,7 +153,7 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
           {/* Open Positions */}
           {positions.length > 0 && (
             <div>
-              <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
+              <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-text-tertiary">
                 Open Positions ({positions.length})
               </h4>
               <div className="space-y-1">
@@ -164,7 +164,7 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
                   >
                     <Link
                       href={`/agents/${pos.agentId}`}
-                      className="min-w-[140px] truncate font-medium text-primary hover:underline"
+                      className="min-w-[140px] truncate font-medium text-text-primary hover:underline"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {pos.agentDisplayName}
@@ -174,22 +174,22 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
                       className={cn(
                         "text-xs uppercase",
                         pos.direction === "long"
-                          ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
-                          : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"
+                          ? "bg-terminal-amber-muted text-data-profit hover:bg-terminal-amber-muted"
+                          : "bg-terminal-amber-muted text-data-loss hover:bg-terminal-amber-muted"
                       )}
                     >
                       {pos.direction}
                     </Badge>
-                    <span className="font-mono tabular-nums text-secondary">
+                    <span className="font-mono tabular-nums text-text-secondary">
                       {formatPrice(pos.entryPrice)}
                     </span>
-                    <span className="font-mono tabular-nums text-secondary">
+                    <span className="font-mono tabular-nums text-text-secondary">
                       {pos.positionSize.toFixed(4)}
                     </span>
                     <span
                       className={cn(
                         "font-mono font-medium tabular-nums",
-                        pos.unrealizedPnl >= 0 ? "text-bullish" : "text-bearish"
+                        pos.unrealizedPnl >= 0 ? "text-data-profit" : "text-data-loss"
                       )}
                     >
                       {formatPnl(pos.unrealizedPnl)}
@@ -203,7 +203,7 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
           {/* Recent Trades */}
           {trades.length > 0 && (
             <div>
-              <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
+              <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-text-tertiary">
                 Recent Trades ({trades.length})
               </h4>
               <div className="space-y-1">
@@ -214,7 +214,7 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
                   >
                     <Link
                       href={`/agents/${trade.agentId}`}
-                      className="min-w-[140px] truncate font-medium text-primary hover:underline"
+                      className="min-w-[140px] truncate font-medium text-text-primary hover:underline"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {trade.agentDisplayName}
@@ -224,8 +224,8 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
                       className={cn(
                         "text-xs uppercase",
                         trade.direction === "long"
-                          ? "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]"
-                          : "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]"
+                          ? "bg-terminal-amber-muted text-data-profit hover:bg-terminal-amber-muted"
+                          : "bg-terminal-amber-muted text-data-loss hover:bg-terminal-amber-muted"
                       )}
                     >
                       {trade.direction}
@@ -233,12 +233,12 @@ export function SymbolAgentSummary({ symbol, className }: SymbolAgentSummaryProp
                     <span
                       className={cn(
                         "font-mono font-medium tabular-nums",
-                        trade.pnl >= 0 ? "text-bullish" : "text-bearish"
+                        trade.pnl >= 0 ? "text-data-profit" : "text-data-loss"
                       )}
                     >
                       {formatPnl(trade.pnl)}
                     </span>
-                    <span className="text-muted">
+                    <span className="text-text-tertiary">
                       {formatDate(trade.closedAt)}
                     </span>
                   </div>

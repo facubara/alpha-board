@@ -16,9 +16,9 @@ function timeAgo(dateStr: string): string {
 }
 
 const PRIORITY_STYLES: Record<string, string> = {
-  high: "bg-[var(--bearish-subtle)] text-bearish",
-  medium: "bg-[var(--warning)]/10 text-[var(--warning)]",
-  low: "bg-[var(--bg-muted)] text-muted",
+  high: "bg-terminal-amber-muted text-data-loss",
+  medium: "bg-terminal-amber-muted text-terminal-amber",
+  low: "bg-void-muted text-text-tertiary",
 };
 
 export function AnalysisHistory({ analyses }: { analyses: AgentAnalysis[] }) {
@@ -31,7 +31,7 @@ export function AnalysisHistory({ analyses }: { analyses: AgentAnalysis[] }) {
         return (
           <div
             key={analysis.id}
-            className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]"
+            className="rounded-none border border-void-border bg-void-surface"
           >
             {/* Header — clickable */}
             <button
@@ -40,18 +40,18 @@ export function AnalysisHistory({ analyses }: { analyses: AgentAnalysis[] }) {
             >
               <ChevronRight
                 className={cn(
-                  "h-4 w-4 shrink-0 text-muted transition-transform",
+                  "h-4 w-4 shrink-0 text-text-tertiary transition-transform",
                   expanded && "rotate-90"
                 )}
               />
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-primary">{analysis.summary}</p>
-                <p className="mt-0.5 text-xs text-muted">
+                <p className="text-sm font-medium text-text-primary">{analysis.summary}</p>
+                <p className="mt-0.5 text-xs text-text-tertiary">
                   {analysis.analysisType.replace(/_/g, " ")} &middot; {timeAgo(analysis.createdAt)}
                 </p>
               </div>
               {analysis.recommendations.length > 0 && (
-                <span className="shrink-0 rounded bg-[var(--bg-muted)] px-1.5 py-0.5 text-xs text-muted">
+                <span className="shrink-0 rounded-none bg-void-muted px-1.5 py-0.5 text-xs text-text-tertiary">
                   {analysis.recommendations.length} rec
                 </span>
               )}
@@ -59,11 +59,11 @@ export function AnalysisHistory({ analyses }: { analyses: AgentAnalysis[] }) {
 
             {/* Expanded content */}
             {expanded && (
-              <div className="border-t border-[var(--border-default)] px-4 py-3 space-y-4">
+              <div className="border-t border-void-border px-4 py-3 space-y-4">
                 {/* Full analysis */}
                 <div>
-                  <h4 className="text-xs font-medium text-muted uppercase mb-1">Full Analysis</h4>
-                  <p className="text-sm text-secondary whitespace-pre-wrap">
+                  <h4 className="text-xs font-medium text-text-tertiary uppercase mb-1">Full Analysis</h4>
+                  <p className="text-sm text-text-secondary whitespace-pre-wrap">
                     {analysis.fullAnalysis}
                   </p>
                 </div>
@@ -71,25 +71,25 @@ export function AnalysisHistory({ analyses }: { analyses: AgentAnalysis[] }) {
                 {/* Recommendations */}
                 {analysis.recommendations.length > 0 && (
                   <div>
-                    <h4 className="text-xs font-medium text-muted uppercase mb-2">Recommendations</h4>
+                    <h4 className="text-xs font-medium text-text-tertiary uppercase mb-2">Recommendations</h4>
                     <div className="space-y-2">
                       {analysis.recommendations.map((rec, i) => (
                         <div
                           key={i}
-                          className="flex items-start gap-2 rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-2"
+                          className="flex items-start gap-2 rounded-none border border-void-border bg-void px-3 py-2"
                         >
                           <span
                             className={cn(
-                              "mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-xs font-medium",
+                              "mt-0.5 shrink-0 rounded-none px-1.5 py-0.5 text-xs font-medium",
                               PRIORITY_STYLES[rec.priority] || PRIORITY_STYLES.low
                             )}
                           >
                             {rec.priority}
                           </span>
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-primary">{rec.action}</p>
+                            <p className="text-sm font-medium text-text-primary">{rec.action}</p>
                             {rec.details && (
-                              <p className="mt-0.5 text-xs text-muted">{rec.details}</p>
+                              <p className="mt-0.5 text-xs text-text-tertiary">{rec.details}</p>
                             )}
                           </div>
                         </div>
@@ -101,12 +101,12 @@ export function AnalysisHistory({ analyses }: { analyses: AgentAnalysis[] }) {
                 {/* Metrics snapshot */}
                 {Object.keys(analysis.metricsSnapshot).length > 0 && (
                   <div>
-                    <h4 className="text-xs font-medium text-muted uppercase mb-1">Metrics at Review</h4>
+                    <h4 className="text-xs font-medium text-text-tertiary uppercase mb-1">Metrics at Review</h4>
                     <div className="flex flex-wrap gap-3">
                       {Object.entries(analysis.metricsSnapshot).map(([key, value]) => (
                         <div key={key} className="text-xs">
-                          <span className="text-muted">{key.replace(/_/g, " ")}:</span>{" "}
-                          <span className="font-mono text-secondary">
+                          <span className="text-text-tertiary">{key.replace(/_/g, " ")}:</span>{" "}
+                          <span className="font-mono text-text-secondary">
                             {typeof value === "number" ? value.toFixed(2) : String(value)}
                           </span>
                         </div>

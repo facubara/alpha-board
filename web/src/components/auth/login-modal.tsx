@@ -48,11 +48,11 @@ export function LoginModal({ onLogin, onClose }: LoginModalProps) {
       }}
       onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
     >
-      <div className="w-full max-w-sm rounded-lg border border-[var(--border-default)] bg-[var(--bg-base)] p-6 shadow-lg">
-        <h2 className="mb-1 text-sm font-semibold text-primary">
+      <div className="w-full max-w-sm rounded-none border border-void-border bg-void p-6">
+        <h2 className="mb-1 text-sm font-semibold text-text-primary">
           Authentication Required
         </h2>
-        <p className="mb-4 text-xs text-secondary">
+        <p className="mb-4 text-xs text-text-secondary">
           Enter the admin password to perform this action.
         </p>
 
@@ -63,25 +63,25 @@ export function LoginModal({ onLogin, onClose }: LoginModalProps) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="border-[var(--border-default)] bg-[var(--bg-surface)] font-mono text-sm text-primary"
+            className="border-void-border bg-void-surface font-mono text-sm text-text-primary"
           />
 
           {error && (
-            <p className="text-xs text-bearish">{error}</p>
+            <p className="text-xs text-data-loss">{error}</p>
           )}
 
           <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md px-3 py-1.5 text-sm font-medium text-secondary transition-colors-fast hover:text-primary"
+              className="rounded-none px-3 py-1.5 text-sm font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={!password || loading}
-              className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-1.5 text-sm font-medium text-primary transition-colors-fast hover:bg-[var(--bg-elevated)] disabled:opacity-50"
+              className="rounded-none border border-void-border bg-void-surface px-3 py-1.5 text-sm font-medium text-text-primary transition-colors-fast hover:bg-void-muted disabled:opacity-50"
             >
               {loading ? "Verifying..." : "Login"}
             </button>

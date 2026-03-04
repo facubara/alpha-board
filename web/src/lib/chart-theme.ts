@@ -8,34 +8,34 @@ import type { CSSProperties } from "react";
 export const AXIS_TICK_STYLE = {
   fontFamily: "var(--font-mono, monospace)",
   fontSize: 10,
-  fill: "var(--text-muted)",
+  fill: "#52525B",
 };
 
 export const GRID_PROPS = {
   strokeDasharray: "3 3",
-  stroke: "var(--border-subtle)",
+  stroke: "#27272A",
   vertical: false,
 } as const;
 
 export const TOOLTIP_STYLE = {
   contentStyle: {
-    backgroundColor: "var(--bg-elevated)",
-    border: "1px solid var(--border-default)",
-    borderRadius: 6,
+    backgroundColor: "#121212",
+    border: "1px solid #27272A",
+    borderRadius: 0,
     fontFamily: "var(--font-mono, monospace)",
     fontSize: 11,
-    color: "var(--text-secondary)",
+    color: "#A1A1AA",
     padding: "6px 10px",
   } satisfies CSSProperties,
-  cursor: { stroke: "var(--border-subtle)", strokeDasharray: "3 3" },
-  itemStyle: { color: "var(--text-secondary)", padding: 0 } satisfies CSSProperties,
-  labelStyle: { color: "var(--text-muted)", marginBottom: 2, fontSize: 10 } satisfies CSSProperties,
+  cursor: { stroke: "#27272A", strokeDasharray: "3 3" },
+  itemStyle: { color: "#A1A1AA", padding: 0 } satisfies CSSProperties,
+  labelStyle: { color: "#52525B", marginBottom: 2, fontSize: 10 } satisfies CSSProperties,
 };
 
 export const CHART_COLORS = {
-  bullish: "var(--bullish-strong)",
-  bearish: "var(--bearish-strong)",
-  amber: "#F59E0B",
+  bullish: "#10B981",
+  bearish: "#F43F5E",
+  amber: "#FFB000",
 } as const;
 
 /** Format number as $X,XXX */

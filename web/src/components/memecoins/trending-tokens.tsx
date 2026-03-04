@@ -14,10 +14,10 @@ import { MEMECOIN_CATEGORY_LABELS, TRACKER_REFRESH_INTERVALS } from "@/lib/types
 import { HolderSparkline } from "./holder-sparkline";
 
 const CATEGORY_BADGE_COLORS: Record<MemecoinCategory, string> = {
-  caller: "bg-[var(--accent-orange-subtle)] text-[var(--accent-orange)] border-[var(--accent-orange-subtle)]",
-  influencer: "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)] border-[var(--accent-purple-subtle)]",
-  degen: "bg-[var(--bearish-subtle)] text-bearish border-[var(--bearish-subtle)]",
-  news: "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)] border-[var(--accent-yellow-subtle)]",
+  caller: "bg-terminal-amber-muted text-terminal-amber border-terminal-amber/20",
+  influencer: "bg-terminal-amber-muted text-terminal-amber border-terminal-amber/20",
+  degen: "bg-terminal-amber-muted text-data-loss border-void-border",
+  news: "bg-terminal-amber-muted text-terminal-amber border-terminal-amber/20",
 };
 
 interface TrendingTokensProps {
@@ -132,20 +132,20 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
       {/* Add Token Bar */}
       <form
         onSubmit={handleAddToken}
-        className="flex items-center gap-2 rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2"
+        className="flex items-center gap-2 rounded-none border border-void-border bg-void-surface px-3 py-2"
       >
-        <Plus className="h-4 w-4 text-muted shrink-0" />
+        <Plus className="h-4 w-4 text-text-tertiary shrink-0" />
         <input
           type="text"
           value={mintInput}
           onChange={(e) => setMintInput(e.target.value)}
           placeholder="Paste mint address to track..."
-          className="flex-1 bg-transparent text-xs text-primary placeholder:text-muted outline-none min-w-0"
+          className="flex-1 bg-transparent text-xs text-text-primary placeholder:text-text-tertiary outline-none min-w-0"
         />
         <select
           value={intervalInput}
           onChange={(e) => setIntervalInput(Number(e.target.value))}
-          className="rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)] px-1.5 py-0.5 text-xs text-secondary outline-none"
+          className="rounded bg-void-muted border border-void-border px-1.5 py-0.5 text-xs text-text-secondary outline-none"
         >
           {TRACKER_REFRESH_INTERVALS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -156,35 +156,35 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
         <button
           type="submit"
           disabled={adding || !mintInput.trim()}
-          className="rounded bg-[var(--primary)] px-2.5 py-1 text-xs font-medium text-white disabled:opacity-50"
+          className="rounded bg-terminal-amber px-2.5 py-1 text-xs font-medium text-void disabled:opacity-50"
         >
           {adding ? "..." : "Add"}
         </button>
         {addError && (
-          <span className="text-xs text-bearish shrink-0">{addError}</span>
+          <span className="text-xs text-data-loss shrink-0">{addError}</span>
         )}
       </form>
 
       {/* Token Table */}
       {localTokens.length === 0 ? (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-8 text-center text-sm text-muted">
+        <div className="rounded-none border border-void-border bg-void-surface px-4 py-8 text-center text-sm text-text-tertiary">
           No tokens tracked yet. Add a mint address above or wait for Twitter discovery.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-md border border-[var(--border-default)]">
+        <div className="overflow-x-auto rounded-none border border-void-border">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[var(--border-default)] bg-[var(--bg-surface)]">
-                <th className="px-3 py-2 text-left text-xs font-medium text-muted w-8">#</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-muted">Token</th>
-                <th className="px-3 py-2 text-right text-xs font-medium text-muted">Mentions</th>
-                <th className="px-3 py-2 text-right text-xs font-medium text-muted">Price</th>
-                <th className="px-3 py-2 text-right text-xs font-medium text-muted">Market Cap</th>
-                <th className="px-3 py-2 text-right text-xs font-medium text-muted">Holders</th>
-                <th className="hidden md:table-cell px-3 py-2 text-right text-xs font-medium text-muted">Vol 24h</th>
-                <th className="px-3 py-2 text-center text-xs font-medium text-muted">Source</th>
-                <th className="hidden md:table-cell px-3 py-2 text-center text-xs font-medium text-muted">Interval</th>
-                <th className="px-3 py-2 text-xs font-medium text-muted w-16"></th>
+              <tr className="border-b border-void-border bg-void-surface">
+                <th className="px-3 py-2 text-left text-xs font-medium text-text-tertiary w-8">#</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-text-tertiary">Token</th>
+                <th className="px-3 py-2 text-right text-xs font-medium text-text-tertiary">Mentions</th>
+                <th className="px-3 py-2 text-right text-xs font-medium text-text-tertiary">Price</th>
+                <th className="px-3 py-2 text-right text-xs font-medium text-text-tertiary">Market Cap</th>
+                <th className="px-3 py-2 text-right text-xs font-medium text-text-tertiary">Holders</th>
+                <th className="hidden md:table-cell px-3 py-2 text-right text-xs font-medium text-text-tertiary">Vol 24h</th>
+                <th className="px-3 py-2 text-center text-xs font-medium text-text-tertiary">Source</th>
+                <th className="hidden md:table-cell px-3 py-2 text-center text-xs font-medium text-text-tertiary">Interval</th>
+                <th className="px-3 py-2 text-xs font-medium text-text-tertiary w-16"></th>
               </tr>
             </thead>
             <tbody>
@@ -192,44 +192,44 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                 <tr
                   key={token.tokenMint}
                   onClick={() => handleTokenClick(token)}
-                  className={`border-b border-[var(--border-default)] hover:bg-[var(--bg-elevated)] ${token.mentionCount > 0 ? "cursor-pointer" : ""}`}
+                  className={`border-b border-void-border hover:bg-void-muted ${token.mentionCount > 0 ? "cursor-pointer" : ""}`}
                 >
-                  <td className="px-3 py-2 text-muted">
+                  <td className="px-3 py-2 text-text-tertiary">
                     {token.rank > 0 ? token.rank : i + 1}
                   </td>
                   <td className="px-3 py-2">
-                    <span className="font-mono text-xs font-semibold text-primary">
+                    <span className="font-mono text-xs font-semibold text-text-primary">
                       ${token.tokenSymbol}
                     </span>
                   </td>
                   <td className="px-3 py-2 text-right">
                     {token.mentionCount > 0 ? (
-                      <span className="inline-flex items-center rounded-full bg-[var(--primary)]/15 px-2 py-0.5 text-xs font-medium text-[var(--primary)]">
+                      <span className="inline-flex items-center rounded-full bg-terminal-amber-muted px-2 py-0.5 text-xs font-medium text-terminal-amber">
                         {token.mentionCount}
                       </span>
                     ) : (
-                      <span className="text-xs text-muted">—</span>
+                      <span className="text-xs text-text-tertiary">—</span>
                     )}
                   </td>
-                  <td className="px-3 py-2 text-right text-secondary font-mono text-xs">
+                  <td className="px-3 py-2 text-right text-text-secondary font-mono text-xs">
                     {token.priceUsd != null ? `$${formatPrice(token.priceUsd)}` : "—"}
                   </td>
-                  <td className="px-3 py-2 text-right text-secondary text-xs">
+                  <td className="px-3 py-2 text-right text-text-secondary text-xs">
                     {token.marketCapUsd != null ? formatMcap(token.marketCapUsd) : "—"}
                   </td>
                   <td className="px-3 py-2 text-right">
                     <div className="flex items-center justify-end gap-1.5">
                       {token.latestHolders != null ? (
-                        <span className="text-xs text-secondary tabular-nums">
+                        <span className="text-xs text-text-secondary tabular-nums">
                           {token.latestHolders.toLocaleString()}
                         </span>
                       ) : (
-                        <span className="text-xs text-muted">—</span>
+                        <span className="text-xs text-text-tertiary">—</span>
                       )}
                       <HolderSparkline snapshots={token.snapshots} />
                     </div>
                   </td>
-                  <td className="hidden md:table-cell px-3 py-2 text-right text-secondary text-xs">
+                  <td className="hidden md:table-cell px-3 py-2 text-right text-text-secondary text-xs">
                     {token.latestVolume24hUsd != null ? formatMcap(token.latestVolume24hUsd) : "—"}
                   </td>
                   <td className="px-3 py-2 text-center">
@@ -242,7 +242,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                         onChange={(e) =>
                           handleIntervalChange(token.tokenMint, Number(e.target.value))
                         }
-                        className="rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)] px-1 py-0.5 text-xs text-secondary outline-none"
+                        className="rounded bg-void-muted border border-void-border px-1 py-0.5 text-xs text-text-secondary outline-none"
                       >
                         {TRACKER_REFRESH_INTERVALS.map((opt) => (
                           <option key={opt.value} value={opt.value}>
@@ -251,7 +251,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                         ))}
                       </select>
                     ) : (
-                      <span className="text-xs text-muted">—</span>
+                      <span className="text-xs text-text-tertiary">—</span>
                     )}
                   </td>
                   <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
@@ -260,7 +260,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                         href={token.birdeyeUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-muted hover:text-primary transition-colors-fast"
+                        className="text-text-tertiary hover:text-text-primary transition-colors-fast"
                         title="View on Birdeye"
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
@@ -268,7 +268,7 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
                       {token.trackerId != null && (
                         <button
                           onClick={() => handleDelete(token.tokenMint)}
-                          className="text-muted hover:text-bearish transition-colors-fast"
+                          className="text-text-tertiary hover:text-data-loss transition-colors-fast"
                           title="Remove token"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -291,59 +291,59 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
           onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
           onKeyDown={(e) => { if (e.key === "Escape") closeModal(); }}
         >
-          <div className="w-full max-w-2xl max-h-[80vh] overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-base)] shadow-lg flex flex-col">
+          <div className="w-full max-w-2xl max-h-[80vh] overflow-hidden rounded-none border border-void-border bg-void flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-[var(--border-default)] px-4 py-3">
+            <div className="flex items-center justify-between border-b border-void-border px-4 py-3">
               <div className="flex items-center gap-3">
-                <span className="font-mono text-sm font-semibold text-primary">${selectedToken.tokenSymbol}</span>
+                <span className="font-mono text-sm font-semibold text-text-primary">${selectedToken.tokenSymbol}</span>
                 {selectedToken.priceUsd != null && (
-                  <span className="text-xs text-secondary font-mono">${formatPrice(selectedToken.priceUsd)}</span>
+                  <span className="text-xs text-text-secondary font-mono">${formatPrice(selectedToken.priceUsd)}</span>
                 )}
                 {selectedToken.marketCapUsd != null && (
-                  <span className="text-xs text-muted">MCap {formatMcap(selectedToken.marketCapUsd)}</span>
+                  <span className="text-xs text-text-tertiary">MCap {formatMcap(selectedToken.marketCapUsd)}</span>
                 )}
                 {selectedToken.liquidityUsd != null && (
-                  <span className="text-xs text-muted">Liq {formatMcap(selectedToken.liquidityUsd)}</span>
+                  <span className="text-xs text-text-tertiary">Liq {formatMcap(selectedToken.liquidityUsd)}</span>
                 )}
                 <a
                   href={selectedToken.birdeyeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-primary transition-colors-fast"
+                  className="text-text-tertiary hover:text-text-primary transition-colors-fast"
                   title="View on Birdeye"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               </div>
-              <button onClick={closeModal} className="text-muted hover:text-primary text-lg leading-none">&times;</button>
+              <button onClick={closeModal} className="text-text-tertiary hover:text-text-primary text-lg leading-none">&times;</button>
             </div>
             {/* Body */}
             <div className="overflow-y-auto p-4">
-              <h4 className="mb-2 text-xs font-medium text-secondary">
+              <h4 className="mb-2 text-xs font-medium text-text-secondary">
                 Mentions ({mentions.length})
               </h4>
               {loadingMentions ? (
-                <p className="text-xs text-muted py-4 text-center">Loading...</p>
+                <p className="text-xs text-text-tertiary py-4 text-center">Loading...</p>
               ) : mentions.length === 0 ? (
-                <p className="text-xs text-muted py-4 text-center">No mentions found.</p>
+                <p className="text-xs text-text-tertiary py-4 text-center">No mentions found.</p>
               ) : (
                 <div className="space-y-2">
                   {mentions.map((mention) => (
                     <div
                       key={mention.tweetId}
-                      className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-3"
+                      className="rounded-none border border-void-border bg-void-surface p-3"
                     >
                       <div className="mb-1 flex items-center gap-2">
-                        <span className="text-xs font-medium text-primary">@{mention.accountHandle}</span>
+                        <span className="text-xs font-medium text-text-primary">@{mention.accountHandle}</span>
                         <span className={`rounded-full border px-1.5 py-0.5 text-xs font-medium ${CATEGORY_BADGE_COLORS[mention.accountCategory]}`}>
                           {MEMECOIN_CATEGORY_LABELS[mention.accountCategory]}
                         </span>
-                        {mention.isVip && <Star className="h-3 w-3 fill-[var(--accent-yellow)] text-[var(--accent-yellow)]" />}
-                        <span className="ml-auto text-xs text-muted">
+                        {mention.isVip && <Star className="h-3 w-3 fill-terminal-amber text-terminal-amber" />}
+                        <span className="ml-auto text-xs text-text-tertiary">
                           {new Date(mention.createdAt).toLocaleString()}
                         </span>
                       </div>
-                      <p className="text-xs text-secondary line-clamp-3">{mention.tweetText}</p>
+                      <p className="text-xs text-text-secondary line-clamp-3">{mention.tweetText}</p>
                     </div>
                   ))}
                 </div>
@@ -357,18 +357,18 @@ export function TrendingTokens({ tokens }: TrendingTokensProps) {
 }
 
 function SourceBadge({ source }: { source: "twitter" | "manual" | null }) {
-  if (!source) return <span className="text-xs text-muted">—</span>;
+  if (!source) return <span className="text-xs text-text-tertiary">—</span>;
 
   if (source === "twitter") {
     return (
-      <span className="inline-flex items-center rounded-full bg-[var(--accent-blue-subtle)] border border-[var(--accent-blue-subtle)] px-1.5 py-0.5 text-xs font-medium text-[var(--accent-blue)]">
+      <span className="inline-flex items-center rounded-full bg-void-muted border border-void-border px-1.5 py-0.5 text-xs font-medium text-text-secondary">
         Twitter
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center rounded-full bg-[var(--accent-zinc-subtle)] border border-[var(--accent-zinc-subtle)] px-1.5 py-0.5 text-xs font-medium text-secondary">
+    <span className="inline-flex items-center rounded-full bg-void-muted border border-void-border px-1.5 py-0.5 text-xs font-medium text-text-secondary">
       Manual
     </span>
   );

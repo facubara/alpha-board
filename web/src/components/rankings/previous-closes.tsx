@@ -27,9 +27,9 @@ interface PreviousClosesProps {
 }
 
 function getScoreColor(score: number): string {
-  if (score < 0.4) return "text-bearish";
-  if (score > 0.6) return "text-bullish";
-  return "text-muted";
+  if (score < 0.4) return "text-data-loss";
+  if (score > 0.6) return "text-data-profit";
+  return "text-text-tertiary";
 }
 
 function formatUtcTime(iso: string): string {
@@ -74,14 +74,14 @@ function CloseRow({ close }: { close: PreviousClose }) {
         {close.priceChangePct != null ? (
           <span
             className={
-              close.priceChangePct >= 0 ? "text-bullish" : "text-bearish"
+              close.priceChangePct >= 0 ? "text-data-profit" : "text-data-loss"
             }
           >
             {close.priceChangePct >= 0 ? "+" : ""}
             {close.priceChangePct.toFixed(2)}%
           </span>
         ) : (
-          <span className="text-muted">—</span>
+          <span className="text-text-tertiary">—</span>
         )}
       </span>
 
@@ -91,9 +91,9 @@ function CloseRow({ close }: { close: PreviousClose }) {
       </span>
 
       {/* Timestamp */}
-      <span className="shrink-0 font-mono text-muted">
+      <span className="shrink-0 font-mono text-text-tertiary">
         {formatUtcTime(close.computedAt)}{" "}
-        <span className="hidden sm:inline text-secondary">
+        <span className="hidden sm:inline text-text-secondary">
           ({formatRelativeTime(close.computedAt)})
         </span>
       </span>
@@ -156,17 +156,17 @@ export function PreviousCloses({
       <div className="flex items-center justify-between gap-2">
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 text-left text-xs text-secondary hover:text-primary"
+          className="flex items-center gap-1 text-left text-xs text-text-secondary hover:text-text-primary"
         >
           <ChevronDown
             className={cn(
-              "h-3.5 w-3.5 shrink-0 text-muted transition-transform duration-150",
+              "h-3.5 w-3.5 shrink-0 text-text-tertiary transition-transform duration-150",
               !expanded && "-rotate-90"
             )}
           />
           <span>
             Previous Closes{" "}
-            <span className="text-muted">({count})</span>
+            <span className="text-text-tertiary">({count})</span>
           </span>
         </button>
 
@@ -178,10 +178,10 @@ export function PreviousCloses({
                 key={c}
                 onClick={() => setCount(c)}
                 className={cn(
-                  "rounded px-1.5 py-0.5 font-mono text-xs transition-colors",
+                  "rounded-none px-1.5 py-0.5 font-mono text-xs transition-colors",
                   c === count
-                    ? "bg-[var(--bg-surface)] text-primary ring-1 ring-[var(--border-strong)]"
-                    : "text-muted hover:text-secondary"
+                    ? "bg-void-surface text-text-primary ring-1 ring-void-border"
+                    : "text-text-tertiary hover:text-text-secondary"
                 )}
               >
                 {c}
@@ -199,17 +199,17 @@ export function PreviousCloses({
               {Array.from({ length: 3 }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-4 animate-pulse rounded bg-[var(--bg-muted)]"
+                  className="h-4 animate-pulse rounded-none bg-void-muted"
                   style={{ width: `${60 + i * 10}%` }}
                 />
               ))}
             </div>
           ) : error ? (
-            <p className="py-1 text-xs text-muted">
+            <p className="py-1 text-xs text-text-tertiary">
               Failed to load previous closes
             </p>
           ) : data && data.closes.length === 0 ? (
-            <p className="py-1 text-xs text-muted">
+            <p className="py-1 text-xs text-text-tertiary">
               No previous closes available for {symbol}
             </p>
           ) : data ? (

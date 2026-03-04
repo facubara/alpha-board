@@ -86,9 +86,9 @@ export function ComparisonMetrics({ agents, colorMap }: ComparisonMetricsProps) 
         return (
           <div
             key={metric.label}
-            className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3"
+            className="rounded-none border border-void-border bg-void-surface p-3"
           >
-            <p className="text-xs font-medium text-secondary">{metric.label}</p>
+            <p className="text-xs font-medium text-text-secondary">{metric.label}</p>
             <div className="mt-2 space-y-1.5">
               {agents.map((agent) => {
                 const value = metric.getValue(agent);
@@ -99,7 +99,7 @@ export function ComparisonMetrics({ agents, colorMap }: ComparisonMetricsProps) 
                     key={agent.id}
                     className="flex items-center justify-between gap-2"
                   >
-                    <span className="flex items-center gap-1.5 text-xs text-secondary">
+                    <span className="flex items-center gap-1.5 text-xs text-text-secondary">
                       <span
                         className="inline-block h-2 w-2 rounded-full"
                         style={{ backgroundColor: colorMap[agent.id] }}
@@ -111,8 +111,8 @@ export function ComparisonMetrics({ agents, colorMap }: ComparisonMetricsProps) 
                     <span
                       className={`font-mono text-xs tabular-nums ${
                         isBest
-                          ? "font-bold text-bullish"
-                          : "text-primary"
+                          ? "font-bold text-data-profit"
+                          : "text-text-primary"
                       }`}
                     >
                       {metric.format(value)}

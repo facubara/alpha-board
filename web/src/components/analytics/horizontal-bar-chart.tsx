@@ -26,9 +26,9 @@ export function HorizontalBarChart({
   if (items.length === 0) {
     return (
       <div
-        className={`flex h-20 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+        className={`flex h-20 items-center justify-center rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
       >
-        <p className="text-xs text-muted">No data</p>
+        <p className="text-xs text-text-tertiary">No data</p>
       </div>
     );
   }
@@ -46,11 +46,11 @@ export function HorizontalBarChart({
 
   return (
     <div
-      className={`overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] ${className ?? ""}`}
+      className={`overflow-hidden rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
       role="img"
       aria-label={ariaLabel}
     >
-      <div className="divide-y divide-[var(--border-subtle)]">
+      <div className="divide-y divide-void-border">
         {items.map((item) => {
           const pct = (Math.abs(item.value) / maxAbs) * 100;
           const isPositive = item.value >= 0;
@@ -62,9 +62,9 @@ export function HorizontalBarChart({
             >
               {/* Label column */}
               <div className="w-28 shrink-0 text-right sm:w-36">
-                <p className="truncate text-xs text-secondary">{item.label}</p>
+                <p className="truncate text-xs text-text-secondary">{item.label}</p>
                 {item.sublabel && (
-                  <p className="truncate font-mono text-xs text-muted">
+                  <p className="truncate font-mono text-xs text-text-tertiary">
                     {item.sublabel}
                   </p>
                 )}
@@ -78,8 +78,8 @@ export function HorizontalBarChart({
                   <div
                     className={`${
                       isPositive
-                        ? "rounded-r-sm bg-[var(--bullish-strong)]"
-                        : "rounded-l-sm bg-[var(--bearish-strong)]"
+                        ? "rounded-r-sm bg-[#10B981]"
+                        : "rounded-l-sm bg-[#F43F5E]"
                     }`}
                     style={{ width: `${pct}%`, opacity: 0.7 }}
                   />
@@ -90,20 +90,20 @@ export function HorizontalBarChart({
                   <div className="flex h-4 flex-1 justify-end">
                     {!isPositive && (
                       <div
-                        className="rounded-l-sm bg-[var(--bearish-strong)]"
+                        className="rounded-l-sm bg-[#F43F5E]"
                         style={{ width: `${pct}%`, opacity: 0.7 }}
                       />
                     )}
                   </div>
 
                   {/* Center divider */}
-                  <div className="mx-px h-5 w-px shrink-0 bg-[var(--border-subtle)]" />
+                  <div className="mx-px h-5 w-px shrink-0 bg-void-border" />
 
                   {/* Positive half */}
                   <div className="flex h-4 flex-1">
                     {isPositive && (
                       <div
-                        className="rounded-r-sm bg-[var(--bullish-strong)]"
+                        className="rounded-r-sm bg-[#10B981]"
                         style={{ width: `${pct}%`, opacity: 0.7 }}
                       />
                     )}
@@ -116,8 +116,8 @@ export function HorizontalBarChart({
                 <span
                   className={`font-mono text-xs ${
                     isPositive
-                      ? "text-[var(--bullish-strong)]"
-                      : "text-[var(--bearish-strong)]"
+                      ? "text-[#10B981]"
+                      : "text-[#F43F5E]"
                   }`}
                 >
                   {formatValue(item.value)}

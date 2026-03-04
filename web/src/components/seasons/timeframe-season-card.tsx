@@ -34,43 +34,43 @@ interface Props {
 export function TimeframeSeasonCard({ season, isSelected, onClick }: Props) {
   const progressColor =
     season.progressPct > 90
-      ? "bg-bearish"
+      ? "bg-terminal-amber-muted"
       : season.progressPct > 70
         ? "bg-yellow-500"
-        : "bg-bullish";
+        : "bg-terminal-amber-muted";
 
   const pnlColor =
     season.topAgent && season.topAgent.pnl !== null
       ? season.topAgent.pnl >= 0
-        ? "text-bullish"
-        : "text-bearish"
-      : "text-muted";
+        ? "text-data-profit"
+        : "text-data-loss"
+      : "text-text-tertiary";
 
   return (
     <button
       onClick={onClick}
-      className={`w-full rounded-lg border p-4 text-left transition-colors-fast hover:border-[var(--border-hover)] ${
+      className={`w-full rounded-none border p-4 text-left transition-colors-fast hover:border-terminal-amber ${
         isSelected
-          ? "border-[var(--border-hover)] bg-[var(--bg-elevated)]"
-          : "border-[var(--border-default)] bg-[var(--bg-surface)]"
+          ? "border-terminal-amber bg-void-muted"
+          : "border-void-border bg-void-surface"
       }`}
     >
       <div className="flex items-center justify-between">
         <div>
-          <span className="font-mono text-lg font-bold text-primary">
+          <span className="font-mono text-lg font-bold text-text-primary">
             {season.timeframe.toUpperCase()}
           </span>
-          <span className="ml-2 text-sm text-secondary">
+          <span className="ml-2 text-sm text-text-secondary">
             Season {season.currentSeason}
           </span>
         </div>
-        <span className="text-xs text-muted">
+        <span className="text-xs text-text-tertiary">
           {DURATION_LABELS[season.timeframe]}
         </span>
       </div>
 
       {/* Progress bar */}
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[var(--bg-base)]">
+      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-void">
         <div
           className={`h-full rounded-full transition-all ${progressColor}`}
           style={{ width: `${season.progressPct}%` }}
@@ -78,22 +78,22 @@ export function TimeframeSeasonCard({ season, isSelected, onClick }: Props) {
       </div>
 
       <div className="mt-2 flex items-center justify-between text-xs">
-        <span className="text-secondary">
+        <span className="text-text-secondary">
           {season.progressPct.toFixed(1)}% complete
         </span>
-        <span className="text-muted">
+        <span className="text-text-tertiary">
           {formatDaysRemaining(season.daysRemaining)}
         </span>
       </div>
 
       {/* Stats row */}
       <div className="mt-3 flex items-center gap-4 text-xs">
-        <span className="text-secondary">
-          <span className="font-medium text-primary">{season.tradeCount}</span>{" "}
+        <span className="text-text-secondary">
+          <span className="font-medium text-text-primary">{season.tradeCount}</span>{" "}
           trades
         </span>
-        <span className="text-secondary">
-          <span className="font-medium text-primary">{season.agentCount}</span>{" "}
+        <span className="text-text-secondary">
+          <span className="font-medium text-text-primary">{season.agentCount}</span>{" "}
           agents
         </span>
       </div>
@@ -101,7 +101,7 @@ export function TimeframeSeasonCard({ season, isSelected, onClick }: Props) {
       {/* Top agent */}
       {season.topAgent && (
         <div className="mt-2 flex items-center justify-between text-xs">
-          <span className="truncate text-muted">
+          <span className="truncate text-text-tertiary">
             {season.topAgent.displayName}
           </span>
           <span className={`font-mono font-medium ${pnlColor}`}>

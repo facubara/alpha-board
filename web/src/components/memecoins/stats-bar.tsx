@@ -14,12 +14,12 @@ function StatValue({ value, subtitle }: { value: number; subtitle?: string }) {
   if (value === 0) {
     return (
       <div>
-        <div className="mt-1 text-lg font-semibold text-primary">&mdash;</div>
-        {subtitle && <div className="text-xs text-muted">{subtitle}</div>}
+        <div className="mt-1 text-lg font-semibold text-text-primary">&mdash;</div>
+        {subtitle && <div className="text-xs text-text-tertiary">{subtitle}</div>}
       </div>
     );
   }
-  return <div className="mt-1 text-lg font-semibold text-primary">{value}</div>;
+  return <div className="mt-1 text-lg font-semibold text-text-primary">{value}</div>;
 }
 
 export function StatsBar({ stats }: StatsBarProps) {
@@ -37,31 +37,31 @@ export function StatsBar({ stats }: StatsBarProps) {
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-      <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
-        <div className="text-xs text-muted">Wallets Tracked</div>
+      <div className="rounded-none border border-void-border bg-void-surface px-4 py-3">
+        <div className="text-xs text-text-tertiary">Wallets Tracked</div>
         <StatValue value={stats.walletsTracked} subtitle="No wallets yet" />
       </div>
-      <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
-        <div className="text-xs text-muted">Avg Hit Rate</div>
+      <div className="rounded-none border border-void-border bg-void-surface px-4 py-3">
+        <div className="text-xs text-text-tertiary">Avg Hit Rate</div>
         <StatValue value={stats.avgHitRate} subtitle="Collecting data" />
       </div>
-      <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
-        <div className="text-xs text-muted">Tweets Today</div>
+      <div className="rounded-none border border-void-border bg-void-surface px-4 py-3">
+        <div className="text-xs text-text-tertiary">Tweets Today</div>
         <StatValue value={stats.tweetsToday} subtitle="Feed paused" />
       </div>
-      <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
-        <div className="text-xs text-muted">Token Matches</div>
+      <div className="rounded-none border border-void-border bg-void-surface px-4 py-3">
+        <div className="text-xs text-text-tertiary">Token Matches</div>
         <StatValue value={stats.tokenMatchesToday} subtitle="Awaiting signals" />
       </div>
-      <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
-        <div className="text-xs text-muted">Live Feed</div>
+      <div className="rounded-none border border-void-border bg-void-surface px-4 py-3">
+        <div className="text-xs text-text-tertiary">Live Feed</div>
         <div className="mt-1 flex items-center gap-2">
           <span
             className={`inline-block h-2.5 w-2.5 rounded-full ${
-              isConnected ? "bg-[var(--status-connected)]" : "bg-[var(--status-disconnected)]"
+              isConnected ? "bg-[#10B981]" : "bg-[#52525B]"
             }`}
           />
-          <span className="text-sm text-secondary">
+          <span className="text-sm text-text-secondary">
             {isConnected ? "Connected" : "Offline"}
           </span>
         </div>

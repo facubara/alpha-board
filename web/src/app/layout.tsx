@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { HeaderAuth } from "@/components/auth/header-auth";
-import { LogoSwitcher } from "@/components/logo-switcher";
+import { TerminalLogo } from "@/components/terminal";
 import { NavLinks } from "@/components/nav-links";
 import { TradeNotificationWrapper, SidebarToggleButton, TradeSidebar, TradeToast } from "@/components/trades";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -24,13 +24,6 @@ export const metadata: Metadata = {
   description: "Crypto market rankings and AI trading agents",
 };
 
-/**
- * Root layout with header navigation.
- * Per DESIGN_SYSTEM.md:
- * - Header: sticky, 56px height
- * - Content: centered, max-width 1200px
- * - Dark-only theme (no class toggle needed)
- */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,11 +32,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-[var(--bg-base)] font-sans text-[var(--text-primary)] antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-dot-matrix font-sans text-text-primary antialiased`}
       >
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded focus:bg-[var(--bg-elevated)] focus:px-4 focus:py-2 focus:text-sm focus:text-primary"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-none focus:bg-void-surface focus:px-4 focus:py-2 focus:text-sm focus:text-text-primary"
         >
           Skip to content
         </a>
@@ -51,10 +44,10 @@ export default function RootLayout({
         <TradeNotificationWrapper>
         <TooltipProvider>
           {/* Header */}
-          <header className="sticky top-0 z-50 h-14 border-b border-[var(--border-default)] bg-[var(--bg-base)]">
-            <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between px-4 sm:px-8">
+          <header className="sticky top-0 z-50 h-14 border-b border-void-border bg-void">
+            <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between px-4 sm:px-8">
               {/* Logo */}
-              <LogoSwitcher />
+              <TerminalLogo />
 
               {/* Navigation */}
               <div className="flex items-center gap-1">
@@ -66,7 +59,7 @@ export default function RootLayout({
           </header>
 
           {/* Main content */}
-          <main id="main-content" className="mx-auto max-w-[1200px] px-4 py-6 sm:px-8">
+          <main id="main-content" className="mx-auto max-w-[1400px] px-4 py-6 sm:px-8">
             {children}
           </main>
 

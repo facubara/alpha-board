@@ -23,23 +23,23 @@ export function ServiceRow({ service, history }: ServiceRowProps) {
   const dotClass = STATUS_DOT[service.status] ?? "bg-[#525252]";
 
   return (
-    <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-3">
+    <div className="rounded-none border border-void-border bg-void-surface px-4 py-3">
       {/* Top line: status dot + name + latency + uptime */}
       <div className="flex items-center gap-3">
         <span
           className={`h-2.5 w-2.5 shrink-0 rounded-full ${dotClass}`}
           title={service.status}
         />
-        <span className="min-w-0 flex-1 truncate text-sm font-medium text-primary">
+        <span className="min-w-0 flex-1 truncate text-sm font-medium text-text-primary">
           {service.name}
         </span>
         {service.latency_ms != null && (
-          <span className="shrink-0 text-xs text-muted">
+          <span className="shrink-0 text-xs text-text-tertiary">
             {service.latency_ms}ms
           </span>
         )}
         {history?.uptime_90d != null && (
-          <span className="shrink-0 text-xs font-medium text-secondary">
+          <span className="shrink-0 text-xs font-medium text-text-secondary">
             {history.uptime_90d.toFixed(2)}%
           </span>
         )}

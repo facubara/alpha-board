@@ -22,10 +22,10 @@ import {
 import { MemecoinCallHistoryModal } from "./memecoin-call-history-modal";
 
 const CATEGORY_BADGE_COLORS: Record<MemecoinCategory, string> = {
-  caller: "bg-[var(--accent-orange-subtle)] text-[var(--accent-orange)] border-[var(--accent-orange-subtle)]",
-  influencer: "bg-[var(--accent-purple-subtle)] text-[var(--accent-purple)] border-[var(--accent-purple-subtle)]",
-  degen: "bg-[var(--bearish-subtle)] text-bearish border-[var(--bearish-subtle)]",
-  news: "bg-[var(--accent-yellow-subtle)] text-[var(--accent-yellow)] border-[var(--accent-yellow-subtle)]",
+  caller: "bg-terminal-amber-muted text-terminal-amber border-terminal-amber/20",
+  influencer: "bg-terminal-amber-muted text-terminal-amber border-terminal-amber/20",
+  degen: "bg-terminal-amber-muted text-data-loss border-void-border",
+  news: "bg-terminal-amber-muted text-terminal-amber border-terminal-amber/20",
 };
 
 type SortField = "handle" | "category" | "followers" | "tweets" | "bio";
@@ -333,14 +333,14 @@ export function MemecoinAccountManager({
       <div className="flex items-center justify-between">
         <button
           onClick={() => dispatch({ type: "SET_EXPANDED", value: !state.expanded })}
-          className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-secondary transition-colors"
+          className="flex items-center gap-1.5 text-sm font-medium text-text-primary hover:text-text-secondary transition-colors"
         >
           {state.expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           Tracked Accounts ({state.accounts.length})
         </button>
         <button
           onClick={() => { dispatch({ type: "SET_SHOW_FORM", value: !state.showForm }); if (!state.expanded) dispatch({ type: "SET_EXPANDED", value: true }); }}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
+          className="flex items-center gap-1 rounded-none px-2 py-1 text-xs text-text-secondary transition-colors-fast hover:bg-void-muted hover:text-text-primary"
         >
           <Plus className="h-3 w-3" />
           Add Account
@@ -350,39 +350,39 @@ export function MemecoinAccountManager({
       {/* Search */}
       {state.expanded && state.accounts.length > 0 && (
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
           <input
             type="text"
             placeholder="Search accounts..."
             value={state.search}
             onChange={(e) => dispatch({ type: "SET_SEARCH", value: e.target.value })}
-            className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] py-1.5 pl-8 pr-3 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none sm:w-64"
+            className="w-full rounded-none border border-void-border bg-void py-1.5 pl-8 pr-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none sm:w-64"
           />
         </div>
       )}
 
       {/* Add form */}
       {state.showForm && (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 space-y-2">
+        <div className="rounded-none border border-void-border bg-void-surface p-3 space-y-2">
           <div className="flex gap-2">
             <input
               type="text"
               placeholder="@handle"
               value={state.handle}
               onChange={(e) => dispatch({ type: "SET_HANDLE", value: e.target.value })}
-              className="flex-1 rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none"
+              className="flex-1 rounded-none border border-void-border bg-void px-2 py-1 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none"
             />
             <input
               type="text"
               placeholder="Display Name (optional)"
               value={state.displayName}
               onChange={(e) => dispatch({ type: "SET_DISPLAY_NAME", value: e.target.value })}
-              className="flex-1 rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none"
+              className="flex-1 rounded-none border border-void-border bg-void px-2 py-1 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none"
             />
             <select
               value={state.category}
               onChange={(e) => dispatch({ type: "SET_CATEGORY", value: e.target.value as MemecoinCategory })}
-              className="rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary focus:border-[var(--primary)] focus:outline-none"
+              className="rounded border border-void-border bg-void px-2 py-1 text-sm text-text-primary focus:border-void-border focus:outline-none"
             >
               {MEMECOIN_CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -390,7 +390,7 @@ export function MemecoinAccountManager({
                 </option>
               ))}
             </select>
-            <label className="flex items-center gap-1 text-xs text-secondary cursor-pointer">
+            <label className="flex items-center gap-1 text-xs text-text-secondary cursor-pointer">
               <input
                 type="checkbox"
                 checked={state.isVip}
@@ -402,71 +402,71 @@ export function MemecoinAccountManager({
             <button
               onClick={handleAdd}
               disabled={!state.handle.trim()}
-              className="rounded bg-[var(--primary)] px-3 py-1 text-sm font-medium text-white disabled:opacity-50"
+              className="rounded bg-terminal-amber px-3 py-1 text-sm font-medium text-void disabled:opacity-50"
             >
               Add
             </button>
           </div>
-          {state.error && <p className="text-xs text-bearish">{state.error}</p>}
+          {state.error && <p className="text-xs text-data-loss">{state.error}</p>}
         </div>
       )}
 
       {/* Account table (collapsible) */}
       {state.expanded && (
         state.accounts.length === 0 ? (
-          <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-6 text-center text-sm text-muted">
+          <div className="rounded-none border border-void-border bg-void-surface px-4 py-6 text-center text-sm text-text-tertiary">
             No memecoin accounts tracked yet.
           </div>
         ) : (
-          <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)]">
+          <div className="rounded-none border border-void-border bg-void-surface">
             <Table>
               <TableHeader>
-                <TableRow className="border-[var(--border-default)]">
+                <TableRow className="border-void-border">
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "handle" })}
                   >
                     Handle <SortIcon field="handle" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "category" })}
                   >
                     Category <SortIcon field="category" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary text-right"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "followers" })}
                   >
                     Followers <SortIcon field="followers" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary text-right"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary text-right"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "tweets" })}
                   >
                     Tweets <SortIcon field="tweets" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer select-none text-xs text-muted hover:text-primary"
+                    className="cursor-pointer select-none text-xs text-text-tertiary hover:text-text-primary"
                     onClick={() => dispatch({ type: "TOGGLE_SORT", field: "bio" })}
                   >
                     Bio <SortIcon field="bio" sortField={state.sortField} sortDirection={state.sortDirection} />
                   </TableHead>
-                  <TableHead className="text-xs text-muted w-20" />
+                  <TableHead className="text-xs text-text-tertiary w-20" />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginated.map((account) => (
                   <TableRow
                     key={account.id}
-                    className="group cursor-pointer border-[var(--border-subtle)] hover:bg-[var(--bg-elevated)]"
+                    className="group cursor-pointer border-void-border hover:bg-void-muted"
                     onClick={() => handleAccountClick(account)}
                   >
-                    <TableCell className="text-sm text-primary font-medium">
+                    <TableCell className="text-sm text-text-primary font-medium">
                       <span className="flex items-center gap-1.5">
                         @{account.handle}
                         {account.isVip && (
-                          <Star className="h-3 w-3 fill-[var(--accent-yellow)] text-[var(--accent-yellow)]" />
+                          <Star className="h-3 w-3 fill-terminal-amber text-terminal-amber" />
                         )}
                       </span>
                     </TableCell>
@@ -479,13 +479,13 @@ export function MemecoinAccountManager({
                         {MEMECOIN_CATEGORY_LABELS[account.category]}
                       </span>
                     </TableCell>
-                    <TableCell className="text-right text-xs text-secondary font-mono">
+                    <TableCell className="text-right text-xs text-text-secondary font-mono">
                       {formatFollowers(account.followersCount)}
                     </TableCell>
-                    <TableCell className="text-right text-xs text-secondary">
+                    <TableCell className="text-right text-xs text-text-secondary">
                       {account.tweetCount ?? 0}
                     </TableCell>
-                    <TableCell className="text-xs text-muted max-w-[200px] truncate" title={account.bio ?? ""}>
+                    <TableCell className="text-xs text-text-tertiary max-w-[200px] truncate" title={account.bio ?? ""}>
                       {account.bio ? (account.bio.length > 60 ? account.bio.slice(0, 60) + "..." : account.bio) : "—"}
                     </TableCell>
                     <TableCell>
@@ -494,8 +494,8 @@ export function MemecoinAccountManager({
                           onClick={() => handleToggleVip(account.id)}
                           className={`transition-colors ${
                             account.isVip
-                              ? "text-[var(--accent-yellow)] hover:text-[var(--accent-yellow)]"
-                              : "text-muted opacity-0 group-hover:opacity-100 hover:text-[var(--accent-yellow)]"
+                              ? "text-terminal-amber hover:text-terminal-amber"
+                              : "text-text-tertiary opacity-0 group-hover:opacity-100 hover:text-terminal-amber"
                           }`}
                           title={account.isVip ? "Remove VIP" : "Set as VIP"}
                         >
@@ -505,13 +505,13 @@ export function MemecoinAccountManager({
                           <span className="flex items-center gap-1 text-xs">
                             <button
                               onClick={() => { handleDelete(account.id); dispatch({ type: "SET_DELETING_ID", value: null }); }}
-                              className="font-medium text-bearish hover:text-bearish"
+                              className="font-medium text-data-loss hover:text-data-loss"
                             >
                               Yes
                             </button>
                             <button
                               onClick={() => dispatch({ type: "SET_DELETING_ID", value: null })}
-                              className="font-medium text-muted hover:text-primary"
+                              className="font-medium text-text-tertiary hover:text-text-primary"
                             >
                               No
                             </button>
@@ -519,7 +519,7 @@ export function MemecoinAccountManager({
                         ) : (
                           <button
                             onClick={() => dispatch({ type: "SET_DELETING_ID", value: account.id })}
-                            className="text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-bearish"
+                            className="text-text-tertiary opacity-0 transition-opacity group-hover:opacity-100 hover:text-data-loss"
                             title="Remove account"
                           >
                             <Trash2 className="h-3 w-3" />
@@ -532,20 +532,20 @@ export function MemecoinAccountManager({
               </TableBody>
             </Table>
             {/* Pagination */}
-            <div className="flex items-center justify-between border-t border-[var(--border-default)] px-3 py-2">
-              <div className="flex items-center gap-1.5 text-xs text-muted">
+            <div className="flex items-center justify-between border-t border-void-border px-3 py-2">
+              <div className="flex items-center gap-1.5 text-xs text-text-tertiary">
                 <span>Show</span>
                 {[10, 25, 50].map((size) => (
                   <button
                     key={size}
                     onClick={() => dispatch({ type: "SET_PAGE_SIZE", value: size })}
-                    className={`rounded px-1.5 py-0.5 ${state.pageSize === size ? "bg-[var(--bg-elevated)] text-primary font-medium" : "hover:text-primary"}`}
+                    className={`rounded px-1.5 py-0.5 ${state.pageSize === size ? "bg-void-muted text-text-primary font-medium" : "hover:text-text-primary"}`}
                   >
                     {size}
                   </button>
                 ))}
               </div>
-              <div className="flex items-center gap-2 text-xs text-muted">
+              <div className="flex items-center gap-2 text-xs text-text-tertiary">
                 <span>
                   {state.page * state.pageSize + 1}–{Math.min((state.page + 1) * state.pageSize, sorted.length)} of {sorted.length}
                   {state.search.trim() && ` (${state.accounts.length} total)`}
@@ -553,14 +553,14 @@ export function MemecoinAccountManager({
                 <button
                   onClick={() => dispatch({ type: "SET_PAGE", value: Math.max(0, state.page - 1) })}
                   disabled={state.page === 0}
-                  className="rounded p-0.5 hover:text-primary disabled:opacity-30"
+                  className="rounded p-0.5 hover:text-text-primary disabled:opacity-30"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => dispatch({ type: "SET_PAGE", value: Math.min(totalPages - 1, state.page + 1) })}
                   disabled={state.page >= totalPages - 1}
-                  className="rounded p-0.5 hover:text-primary disabled:opacity-30"
+                  className="rounded p-0.5 hover:text-text-primary disabled:opacity-30"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>

@@ -233,7 +233,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
 
           {/* Search input */}
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary" />
             <Input
               type="text"
               placeholder="Search..."
@@ -247,7 +247,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
         <div className="flex items-center gap-3">
           <CandleCountdown timeframe={timeframe} />
           {computedAt && (
-            <span className="font-mono text-xs text-muted">
+            <span className="font-mono text-xs text-text-tertiary">
               Updated {formatRelativeTime(computedAt)}
             </span>
           )}
@@ -256,7 +256,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
 
       {/* Results count when filtering */}
       {search.trim() && (
-        <p className="text-xs text-secondary">
+        <p className="text-xs text-text-secondary">
           {filteredAndSorted.length} of {snapshots.length} symbols
         </p>
       )}
@@ -268,46 +268,46 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
         aria-labelledby={`tab-${timeframe}`}
       >
         {loadingTf && snapshots.length === 0 ? (
-          <div className="overflow-hidden rounded-lg border border-[var(--border-default)]">
+          <div className="overflow-hidden rounded-none border border-void-border">
             {/* Skeleton header */}
-            <div className="flex h-10 items-center gap-4 bg-[var(--bg-surface)] px-4">
-              <div className="h-3 w-8 rounded bg-[var(--bg-muted)] skeleton" />
-              <div className="h-3 w-20 rounded bg-[var(--bg-muted)] skeleton" />
-              <div className="h-3 w-24 rounded bg-[var(--bg-muted)] skeleton" />
-              <div className="h-3 w-12 rounded bg-[var(--bg-muted)] skeleton" />
+            <div className="flex h-10 items-center gap-4 bg-void-surface px-4">
+              <div className="h-3 w-8 rounded-none bg-void-muted skeleton" />
+              <div className="h-3 w-20 rounded-none bg-void-muted skeleton" />
+              <div className="h-3 w-24 rounded-none bg-void-muted skeleton" />
+              <div className="h-3 w-12 rounded-none bg-void-muted skeleton" />
             </div>
             {/* Skeleton rows */}
             {Array.from({ length: 12 }).map((_, i) => (
               <div
                 key={i}
-                className="flex h-10 items-center gap-4 border-t border-[var(--border-subtle)] px-4"
+                className="flex h-10 items-center gap-4 border-t border-void-border px-4"
               >
-                <div className="h-3 w-6 rounded bg-[var(--bg-muted)] skeleton" />
-                <div className="h-3 w-24 rounded bg-[var(--bg-muted)] skeleton" />
-                <div className="h-1.5 w-24 rounded-full bg-[var(--bg-muted)] skeleton" />
-                <div className="h-3 w-10 rounded bg-[var(--bg-muted)] skeleton" />
+                <div className="h-3 w-6 rounded-none bg-void-muted skeleton" />
+                <div className="h-3 w-24 rounded-none bg-void-muted skeleton" />
+                <div className="h-1.5 w-24 rounded-none bg-void-muted skeleton" />
+                <div className="h-3 w-10 rounded-none bg-void-muted skeleton" />
               </div>
             ))}
           </div>
         ) : snapshots.length === 0 ? (
-          <div className="flex h-64 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-            <p className="text-secondary">
+          <div className="flex h-64 items-center justify-center rounded-none border border-void-border bg-void-surface">
+            <p className="text-text-secondary">
               No rankings data available for {timeframe}
             </p>
           </div>
         ) : filteredAndSorted.length === 0 ? (
-          <div className="flex h-64 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-            <p className="text-secondary">
+          <div className="flex h-64 items-center justify-center rounded-none border border-void-border bg-void-surface">
+            <p className="text-text-secondary">
               No symbols match &quot;{search}&quot;
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
+          <div className="overflow-x-auto rounded-none border border-void-border">
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
+                <TableRow className="border-b border-void-border bg-void-surface hover:bg-void-surface">
                   <TableHead
-                    className="w-12 cursor-pointer select-none pr-2 text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                    className="w-12 cursor-pointer select-none pr-2 text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
                     tabIndex={0}
                     role="button"
                     onClick={() => handleSort("rank")}
@@ -316,7 +316,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
                     #<SortIndicator field="rank" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="w-28 cursor-pointer select-none text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                    className="w-28 cursor-pointer select-none text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
                     tabIndex={0}
                     role="button"
                     onClick={() => handleSort("symbol")}
@@ -325,7 +325,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
                     Symbol<SortIndicator field="symbol" sortField={sortField} sortDirection={sortDirection} />
                   </TableHead>
                   <TableHead
-                    className="w-44 cursor-pointer select-none text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                    className="w-44 cursor-pointer select-none text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
                     tabIndex={0}
                     role="button"
                     onClick={() => handleSort("score")}
@@ -336,7 +336,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
-                    className="w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary"
+                    className="w-20 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary"
                     tabIndex={0}
                     role="button"
                     onClick={() => handleSort("confidence")}
@@ -347,7 +347,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
-                    className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
+                    className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary md:table-cell"
                     tabIndex={0}
                     role="button"
                     onClick={() => handleSort("priceChange")}
@@ -358,7 +358,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
-                    className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                    className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary lg:table-cell"
                     tabIndex={0}
                     role="button"
                     onClick={() => handleSort("priceChangeAbs")}
@@ -369,7 +369,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
-                    className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary md:table-cell"
+                    className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary md:table-cell"
                     tabIndex={0}
                     role="button"
                     onClick={() => handleSort("volumeChange")}
@@ -380,7 +380,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
-                    className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                    className="hidden w-24 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary lg:table-cell"
                     tabIndex={0}
                     role="button"
                     onClick={() => handleSort("volumeChangeAbs")}
@@ -391,7 +391,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
                     </InfoTooltip>
                   </TableHead>
                   <TableHead
-                    className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-secondary transition-colors-fast hover:text-primary lg:table-cell"
+                    className="hidden w-20 cursor-pointer select-none text-right text-xs font-medium text-text-secondary transition-colors-fast hover:text-text-primary lg:table-cell"
                     tabIndex={0}
                     role="button"
                     onClick={() => handleSort("fundingRate")}
@@ -401,7 +401,7 @@ export function RankingsTable({ data, initialTimeframe, initialData, className }
                       <span className="cursor-pointer">Funding<SortIndicator field="fundingRate" sortField={sortField} sortDirection={sortDirection} /></span>
                     </InfoTooltip>
                   </TableHead>
-                  <TableHead className="hidden text-xs font-medium text-secondary xl:table-cell">
+                  <TableHead className="hidden text-xs font-medium text-text-secondary xl:table-cell">
                     <InfoTooltip content={COLUMN_TOOLTIPS.highlights!} side="bottom">
                       <span>Highlights</span>
                     </InfoTooltip>

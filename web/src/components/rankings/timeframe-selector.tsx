@@ -4,14 +4,7 @@
  * TimeframeSelector Component
  *
  * Tab-style selector for switching between timeframes.
- * Per DESIGN_SYSTEM.md:
- * - Container: Inline flex, gap: 4px
- * - Button padding: 8px 12px
- * - Font: text-sm, weight 500, mono
- * - Default: bg transparent, text text-secondary
- * - Hover: bg bg-elevated, text text-primary
- * - Selected: bg bg-surface, border border-strong, text text-primary
- * - Border radius: 6px
+ * Terminal aesthetic: sharp edges, no rounded corners, amber accent.
  */
 
 import { cn } from "@/lib/utils";
@@ -45,10 +38,10 @@ export function TimeframeSelector({
             aria-controls={`rankings-panel-${tf}`}
             onClick={() => onSelect(tf)}
             className={cn(
-              "rounded-md px-3 py-2 font-mono text-sm font-medium transition-colors-fast",
+              "rounded-none px-3 py-2 font-mono text-sm font-medium transition-colors-fast",
               isSelected
-                ? "border border-[var(--border-strong)] bg-[var(--bg-surface)] text-[var(--text-primary)]"
-                : "border border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)]"
+                ? "border border-void-border bg-void-surface text-text-primary"
+                : "border border-transparent text-text-secondary hover:bg-void-muted hover:text-text-primary"
             )}
           >
             {tf}

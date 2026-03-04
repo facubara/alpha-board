@@ -2,13 +2,7 @@
  * HighlightChip Component
  *
  * Small badges showing key signals.
- * Per DESIGN_SYSTEM.md:
- * - Bullish: bg bullish-subtle, text bullish-strong
- * - Bearish: bg bearish-subtle, text bearish-strong
- * - Neutral: bg bg-muted, text text-secondary
- * - Padding: 4px 8px
- * - Font: text-xs, weight 500
- * - Border radius: 4px
+ * Terminal aesthetic: sharp edges, no rounded corners, muted background with semantic text color.
  */
 
 import { cn } from "@/lib/utils";
@@ -51,16 +45,17 @@ const HIGHLIGHT_TOOLTIPS: Record<string, string> = {
 
 /**
  * Get styling classes based on sentiment.
+ * Terminal aesthetic: muted bg for all, semantic text color only.
  */
 function getSentimentStyles(sentiment: HighlightSentiment): string {
   switch (sentiment) {
     case "bullish":
-      return "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)]";
+      return "bg-terminal-amber-muted text-data-profit";
     case "bearish":
-      return "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)]";
+      return "bg-terminal-amber-muted text-data-loss";
     case "neutral":
     default:
-      return "bg-[var(--bg-muted)] text-[var(--text-secondary)]";
+      return "bg-void-muted text-text-secondary";
   }
 }
 
@@ -70,7 +65,7 @@ export function HighlightChip({ highlight, className }: { highlight: Highlight; 
   const chip = (
     <span
       className={cn(
-        "inline-flex items-center rounded px-2 py-1 text-xs font-medium",
+        "inline-flex items-center rounded-none px-2 py-1 text-xs font-medium",
         tooltip && "cursor-help",
         getSentimentStyles(highlight.sentiment),
         className

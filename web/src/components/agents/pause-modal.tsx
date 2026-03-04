@@ -226,15 +226,15 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 shadow-xl">
+      <div className="relative w-full max-w-md rounded-none border border-void-border bg-void-surface p-6">
         {/* Header */}
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="font-mono text-sm font-semibold text-primary">
+          <h2 className="font-mono text-sm font-semibold text-text-primary">
             Pause All LLM Agents
           </h2>
           <button
             onClick={handleCancel}
-            className="text-muted transition-colors hover:text-primary"
+            className="text-text-tertiary transition-colors hover:text-text-primary"
           >
             <X className="h-4 w-4" />
           </button>
@@ -243,7 +243,7 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         {/* Loading state */}
         {state.status === "loading" && (
           <div className="flex items-center gap-2 py-8">
-            <span className="font-mono text-sm text-secondary animate-pulse">
+            <span className="font-mono text-sm text-text-secondary animate-pulse">
               Loading agents...
             </span>
           </div>
@@ -252,12 +252,12 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         {/* Empty state */}
         {state.status === "empty" && (
           <div className="py-8 text-center">
-            <p className="font-mono text-sm text-secondary">
+            <p className="font-mono text-sm text-text-secondary">
               No active LLM agents to pause
             </p>
             <button
               onClick={onClose}
-              className="mt-4 rounded-md border border-[var(--border-default)] px-4 py-1.5 font-mono text-xs font-medium text-secondary transition-colors hover:bg-[var(--bg-elevated)] hover:text-primary"
+              className="mt-4 rounded-none border border-void-border px-4 py-1.5 font-mono text-xs font-medium text-text-secondary transition-colors hover:bg-void-muted hover:text-text-primary"
             >
               Close
             </button>
@@ -267,22 +267,22 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         {/* Resume prompt */}
         {state.status === "resume_prompt" && state.savedProgress && (
           <div className="space-y-4 py-4">
-            <p className="font-mono text-sm text-secondary">
+            <p className="font-mono text-sm text-text-secondary">
               Previous pause stopped at{" "}
-              <span className="text-primary">
+              <span className="text-text-primary">
                 {state.savedProgress.lastPausedIndex + 1}/{state.agents.length}
               </span>
             </p>
             <div className="flex items-center gap-3">
               <button
                 onClick={handleResume}
-                className="rounded-md border border-[var(--border-strong)] bg-[var(--bg-elevated)] px-4 py-1.5 font-mono text-xs font-medium text-primary transition-colors hover:bg-[var(--bg-surface)]"
+                className="rounded-none border border-void-border bg-void-muted px-4 py-1.5 font-mono text-xs font-medium text-text-primary transition-colors hover:bg-void-surface"
               >
                 Resume from {state.savedProgress.lastPausedIndex + 2}
               </button>
               <button
                 onClick={handleStartFresh}
-                className="rounded-md border border-[var(--border-default)] px-4 py-1.5 font-mono text-xs font-medium text-secondary transition-colors hover:bg-[var(--bg-elevated)] hover:text-primary"
+                className="rounded-none border border-void-border px-4 py-1.5 font-mono text-xs font-medium text-text-secondary transition-colors hover:bg-void-muted hover:text-text-primary"
               >
                 Start fresh
               </button>
@@ -294,38 +294,38 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         {state.status === "pausing" && (
           <div className="space-y-4 py-4">
             <div className="space-y-1">
-              <p className="font-mono text-sm text-secondary">
-                <span className="text-primary">
+              <p className="font-mono text-sm text-text-secondary">
+                <span className="text-text-primary">
                   {SPINNER_FRAMES[state.spinnerFrame]}
                 </span>{" "}
                 stopping{" "}
-                <span className="text-primary">
+                <span className="text-text-primary">
                   {state.currentIndex + 1}
                 </span>{" "}
                 of{" "}
-                <span className="text-primary">{state.agents.length}</span>
+                <span className="text-text-primary">{state.agents.length}</span>
               </p>
               {state.agents[state.currentIndex] && (
-                <p className="font-mono text-xs text-muted">
+                <p className="font-mono text-xs text-text-tertiary">
                   current: {state.agents[state.currentIndex].name}
                 </p>
               )}
             </div>
 
             {/* Progress bar */}
-            <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--bg-elevated)]">
+            <div className="h-2 w-full overflow-hidden rounded-none bg-void-muted">
               <div
-                className="h-full rounded-full bg-[var(--bearish-strong)] transition-all duration-150"
+                className="h-full rounded-none bg-data-loss transition-all duration-150"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="font-mono text-xs text-muted text-right">
+            <p className="font-mono text-xs text-text-tertiary text-right">
               {Math.round(progress)}%
             </p>
 
             <button
               onClick={handleCancel}
-              className="rounded-md border border-[var(--border-default)] px-4 py-1.5 font-mono text-xs font-medium text-secondary transition-colors hover:bg-[var(--bg-elevated)] hover:text-primary"
+              className="rounded-none border border-void-border px-4 py-1.5 font-mono text-xs font-medium text-text-secondary transition-colors hover:bg-void-muted hover:text-text-primary"
             >
               Cancel
             </button>
@@ -335,12 +335,12 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
         {/* Done state */}
         {state.status === "done" && (
           <div className="space-y-4 py-4">
-            <p className="font-mono text-sm text-primary">
+            <p className="font-mono text-sm text-text-primary">
               All {state.pausedCount} agents paused
             </p>
             <button
               onClick={handleDone}
-              className="rounded-md border border-[var(--border-strong)] bg-[var(--bg-elevated)] px-4 py-1.5 font-mono text-xs font-medium text-primary transition-colors hover:bg-[var(--bg-surface)]"
+              className="rounded-none border border-void-border bg-void-muted px-4 py-1.5 font-mono text-xs font-medium text-text-primary transition-colors hover:bg-void-surface"
             >
               Done
             </button>
@@ -352,28 +352,28 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
           <div className="space-y-4 py-4">
             {state.failedAgent ? (
               <>
-                <p className="font-mono text-sm text-bearish">
+                <p className="font-mono text-sm text-data-loss">
                   Failed at agent {state.currentIndex + 1} of {state.agents.length}
                 </p>
-                <p className="font-mono text-xs text-muted">
+                <p className="font-mono text-xs text-text-tertiary">
                   {state.failedAgent.name}
                 </p>
-                <p className="font-mono text-xs text-secondary">
+                <p className="font-mono text-xs text-text-secondary">
                   {state.pausedCount} agent{state.pausedCount !== 1 ? "s" : ""} paused
                   successfully
                 </p>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleResumeFromError}
-                    className="rounded-md border border-[var(--border-strong)] bg-[var(--bg-elevated)] px-4 py-1.5 font-mono text-xs font-medium text-primary transition-colors hover:bg-[var(--bg-surface)]"
+                    className="rounded-none border border-void-border bg-void-muted px-4 py-1.5 font-mono text-xs font-medium text-text-primary transition-colors hover:bg-void-surface"
                   >
                     Resume
                   </button>
                   <button
                     onClick={onClose}
                     className={cn(
-                      "rounded-md border border-[var(--border-default)] px-4 py-1.5 font-mono text-xs font-medium text-secondary transition-colors",
-                      "hover:bg-[var(--bg-elevated)] hover:text-primary"
+                      "rounded-none border border-void-border px-4 py-1.5 font-mono text-xs font-medium text-text-secondary transition-colors",
+                      "hover:bg-void-muted hover:text-text-primary"
                     )}
                   >
                     Close
@@ -382,12 +382,12 @@ export function PauseModal({ open, onClose, onComplete }: PauseModalProps) {
               </>
             ) : (
               <>
-                <p className="font-mono text-sm text-bearish">
+                <p className="font-mono text-sm text-data-loss">
                   Failed to load agents
                 </p>
                 <button
                   onClick={onClose}
-                  className="rounded-md border border-[var(--border-default)] px-4 py-1.5 font-mono text-xs font-medium text-secondary transition-colors hover:bg-[var(--bg-elevated)] hover:text-primary"
+                  className="rounded-none border border-void-border px-4 py-1.5 font-mono text-xs font-medium text-text-secondary transition-colors hover:bg-void-muted hover:text-text-primary"
                 >
                   Close
                 </button>

@@ -114,21 +114,21 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
     <div className="space-y-3">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <span className="text-sm text-secondary">
+        <span className="text-sm text-text-secondary">
           {wallets.length} wallets tracked
         </span>
         <div className="flex items-center gap-2">
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary disabled:opacity-50"
+            className="flex items-center gap-1 rounded-none px-2 py-1 text-xs text-text-secondary transition-colors-fast hover:bg-void-muted hover:text-text-primary disabled:opacity-50"
           >
             <RefreshCw className={`h-3 w-3 ${refreshing ? "animate-spin" : ""}`} />
             Refresh
           </button>
           <button
             onClick={() => setShowAddForm((v) => !v)}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-secondary transition-colors-fast hover:bg-[var(--bg-elevated)] hover:text-primary"
+            className="flex items-center gap-1 rounded-none px-2 py-1 text-xs text-text-secondary transition-colors-fast hover:bg-void-muted hover:text-text-primary"
           >
             <Plus className="h-3 w-3" />
             Add
@@ -139,69 +139,69 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
       {/* Search */}
       {wallets.length > 0 && (
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
           <input
             type="text"
             placeholder="Search wallets..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded border border-[var(--border-default)] bg-[var(--bg-base)] py-1.5 pl-8 pr-3 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none sm:w-64"
+            className="w-full rounded-none border border-void-border bg-void py-1.5 pl-8 pr-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none sm:w-64"
           />
         </div>
       )}
 
       {/* Add form */}
       {showAddForm && (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] p-3 space-y-2">
+        <div className="rounded-none border border-void-border bg-void-surface p-3 space-y-2">
           <div className="flex gap-2">
             <input
               type="text"
               placeholder="Wallet address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="flex-1 rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none font-mono"
+              className="flex-1 rounded-none border border-void-border bg-void px-2 py-1 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none font-mono"
             />
             <input
               type="text"
               placeholder="Label (optional)"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
-              className="w-40 rounded border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1 text-sm text-primary placeholder:text-muted focus:border-[var(--primary)] focus:outline-none"
+              className="w-40 rounded-none border border-void-border bg-void px-2 py-1 text-sm text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none"
             />
             <button
               onClick={handleAdd}
               disabled={!address.trim()}
-              className="rounded bg-[var(--primary)] px-3 py-1 text-sm font-medium text-white disabled:opacity-50"
+              className="rounded bg-terminal-amber px-3 py-1 text-sm font-medium text-void disabled:opacity-50"
             >
               Add
             </button>
           </div>
-          {error && <p className="text-xs text-bearish">{error}</p>}
+          {error && <p className="text-xs text-data-loss">{error}</p>}
         </div>
       )}
 
       {/* Table */}
       {wallets.length === 0 ? (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-8 text-center text-sm text-muted">
+        <div className="rounded-none border border-void-border bg-void-surface px-4 py-8 text-center text-sm text-text-tertiary">
           No wallets tracked yet. Add wallets or trigger a discovery refresh.
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-md border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-6 text-center text-sm text-muted">
+        <div className="rounded-none border border-void-border bg-void-surface px-4 py-6 text-center text-sm text-text-tertiary">
           No wallets match &ldquo;{search}&rdquo;
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-md border border-[var(--border-default)]">
+        <div className="overflow-x-auto rounded-none border border-void-border">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[var(--border-default)] bg-[var(--bg-surface)]">
-                <th className="px-3 py-2 text-left text-xs font-medium text-muted w-8">#</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-muted">Address</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-muted">Label</th>
-                <th className="px-3 py-2 text-right text-xs font-medium text-muted">Score</th>
-                <th className="px-3 py-2 text-right text-xs font-medium text-muted">Hits</th>
-                <th className="px-3 py-2 text-right text-xs font-medium text-muted">Avg Rank</th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-muted">Source</th>
-                <th className="px-3 py-2 text-xs font-medium text-muted w-8"></th>
+              <tr className="border-b border-void-border bg-void-surface">
+                <th className="px-3 py-2 text-left text-xs font-medium text-text-tertiary w-8">#</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-text-tertiary">Address</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-text-tertiary">Label</th>
+                <th className="px-3 py-2 text-right text-xs font-medium text-text-tertiary">Score</th>
+                <th className="px-3 py-2 text-right text-xs font-medium text-text-tertiary">Hits</th>
+                <th className="px-3 py-2 text-right text-xs font-medium text-text-tertiary">Avg Rank</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-text-tertiary">Source</th>
+                <th className="px-3 py-2 text-xs font-medium text-text-tertiary w-8"></th>
               </tr>
             </thead>
             <tbody>
@@ -209,47 +209,47 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
                 <>
                   <tr
                     key={wallet.id}
-                    className="border-b border-[var(--border-default)] hover:bg-[var(--bg-elevated)] cursor-pointer"
+                    className="border-b border-void-border hover:bg-void-muted cursor-pointer"
                     onClick={() =>
                       setExpandedId(expandedId === wallet.id ? null : wallet.id)
                     }
                   >
-                    <td className="px-3 py-2 text-muted">{i + 1}</td>
+                    <td className="px-3 py-2 text-text-tertiary">{i + 1}</td>
                     <td className="px-3 py-2">
-                      <span className="font-mono text-primary">
+                      <span className="font-mono text-text-primary">
                         {truncateAddress(wallet.address)}
                       </span>
                     </td>
-                    <td className="px-3 py-2 text-secondary">
+                    <td className="px-3 py-2 text-text-secondary">
                       {wallet.label || "—"}
                     </td>
-                    <td className="px-3 py-2 text-right font-semibold text-primary">
+                    <td className="px-3 py-2 text-right font-semibold text-text-primary">
                       {wallet.score.toFixed(1)}
                     </td>
-                    <td className="px-3 py-2 text-right text-secondary">
+                    <td className="px-3 py-2 text-right text-text-secondary">
                       {wallet.hitCount}
                     </td>
-                    <td className="px-3 py-2 text-right text-secondary">
+                    <td className="px-3 py-2 text-right text-text-secondary">
                       {wallet.avgEntryRank ?? "—"}
                     </td>
                     <td className="px-3 py-2">
-                      <span className="rounded-full bg-[var(--bg-elevated)] px-2 py-0.5 text-xs font-medium text-secondary">
+                      <span className="rounded-full bg-void-muted px-2 py-0.5 text-xs font-medium text-text-secondary">
                         {wallet.source}
                       </span>
                     </td>
                     <td className="px-3 py-2">
                       <div className="flex items-center gap-1">
                         {expandedId === wallet.id ? (
-                          <ChevronDown className="h-3 w-3 text-muted" />
+                          <ChevronDown className="h-3 w-3 text-text-tertiary" />
                         ) : (
-                          <ChevronRight className="h-3 w-3 text-muted" />
+                          <ChevronRight className="h-3 w-3 text-text-tertiary" />
                         )}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDelete(wallet.address);
                           }}
-                          className="text-muted hover:text-bearish"
+                          className="text-text-tertiary hover:text-data-loss"
                           title="Remove wallet"
                         >
                           <Trash2 className="h-3 w-3" />
@@ -261,32 +261,32 @@ export function WalletLeaderboard({ initialWallets }: WalletLeaderboardProps) {
                     <tr key={`${wallet.id}-expanded`}>
                       <td
                         colSpan={8}
-                        className="bg-[var(--bg-elevated)] px-4 py-3"
+                        className="bg-void-muted px-4 py-3"
                       >
-                        <div className="text-xs text-muted mb-2">
+                        <div className="text-xs text-text-tertiary mb-2">
                           Early on {wallet.tokensSummary.length} tokens:
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {wallet.tokensSummary.map((token, j) => (
                             <div
                               key={j}
-                              className="rounded border border-[var(--border-default)] bg-[var(--bg-surface)] px-2 py-1"
+                              className="rounded border border-void-border bg-void-surface px-2 py-1"
                             >
-                              <span className="font-mono text-xs font-medium text-primary">
+                              <span className="font-mono text-xs font-medium text-text-primary">
                                 ${token.symbol}
                               </span>
-                              <span className="ml-2 text-xs text-muted">
+                              <span className="ml-2 text-xs text-text-tertiary">
                                 #{token.entry_rank}
                               </span>
                               {token.peak_mcap != null && (
-                                <span className="ml-2 text-xs text-secondary">
+                                <span className="ml-2 text-xs text-text-secondary">
                                   {formatMcap(token.peak_mcap)}
                                 </span>
                               )}
                             </div>
                           ))}
                         </div>
-                        <div className="mt-2 text-xs text-muted font-mono break-all">
+                        <div className="mt-2 text-xs text-text-tertiary font-mono break-all">
                           {wallet.address}
                         </div>
                       </td>

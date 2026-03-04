@@ -85,17 +85,17 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
     <div className="space-y-6">
       {/* Save bar */}
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-secondary">Agent Configuration</h3>
+        <h3 className="text-sm font-medium text-text-secondary">Agent Configuration</h3>
         <div className="flex items-center gap-2">
-          {saved && <span className="text-xs text-bullish">Saved</span>}
+          {saved && <span className="text-xs text-data-profit">Saved</span>}
           <button
             onClick={handleSave}
             disabled={!isDirty || saving}
             className={cn(
-              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors-fast",
+              "rounded-none px-3 py-1.5 text-sm font-medium transition-colors-fast",
               isDirty
-                ? "bg-[var(--bg-surface)] text-primary hover:bg-[var(--bg-elevated)]"
-                : "cursor-not-allowed text-muted",
+                ? "bg-void-surface text-text-primary hover:bg-void-muted"
+                : "cursor-not-allowed text-text-tertiary",
               saving && "opacity-50"
             )}
           >
@@ -106,7 +106,7 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
 
       {/* Model selectors */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-secondary">Model Assignments</h3>
+        <h3 className="text-sm font-medium text-text-secondary">Model Assignments</h3>
 
         <div className="grid gap-4 sm:grid-cols-3">
           <ModelSelect
@@ -132,45 +132,45 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
 
       {/* Token usage breakdown */}
       <div>
-        <h3 className="mb-2 text-sm font-medium text-secondary">
+        <h3 className="mb-2 text-sm font-medium text-text-secondary">
           Token Usage
-          <span className="ml-2 font-mono text-xs text-muted">
+          <span className="ml-2 font-mono text-xs text-text-tertiary">
             Total: ${totalCost.toFixed(4)}
           </span>
         </h3>
 
         {tokenUsage.length === 0 ? (
-          <div className="flex h-20 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-            <p className="text-xs text-muted">No token usage recorded</p>
+          <div className="flex h-20 items-center justify-center rounded-none border border-void-border bg-void-surface">
+            <p className="text-xs text-text-tertiary">No token usage recorded</p>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
+          <div className="overflow-x-auto rounded-none border border-void-border">
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
-                  <TableHead className="text-xs font-medium text-secondary">Model</TableHead>
-                  <TableHead className="text-xs font-medium text-secondary">Task</TableHead>
-                  <TableHead className="text-right text-xs font-medium text-secondary">Input</TableHead>
-                  <TableHead className="text-right text-xs font-medium text-secondary">Output</TableHead>
-                  <TableHead className="text-right text-xs font-medium text-secondary">Cost</TableHead>
+                <TableRow className="border-b border-void-border bg-void-surface hover:bg-void-surface">
+                  <TableHead className="text-xs font-medium text-text-secondary">Model</TableHead>
+                  <TableHead className="text-xs font-medium text-text-secondary">Task</TableHead>
+                  <TableHead className="text-right text-xs font-medium text-text-secondary">Input</TableHead>
+                  <TableHead className="text-right text-xs font-medium text-text-secondary">Output</TableHead>
+                  <TableHead className="text-right text-xs font-medium text-text-secondary">Cost</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {tokenUsage.map((u) => (
-                  <TableRow key={`${u.model}-${u.taskType}`} className="h-10 hover:bg-[var(--bg-elevated)]">
-                    <TableCell className="font-mono text-sm text-primary">
+                  <TableRow key={`${u.model}-${u.taskType}`} className="h-10 hover:bg-void-muted">
+                    <TableCell className="font-mono text-sm text-text-primary">
                       {modelLabel(u.model)}
                     </TableCell>
-                    <TableCell className="text-sm capitalize text-secondary">
+                    <TableCell className="text-sm capitalize text-text-secondary">
                       {u.taskType}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                    <TableCell className="text-right font-mono text-sm tabular-nums text-text-secondary">
                       {u.inputTokens.toLocaleString()}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+                    <TableCell className="text-right font-mono text-sm tabular-nums text-text-secondary">
                       {u.outputTokens.toLocaleString()}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-sm tabular-nums text-muted">
+                    <TableCell className="text-right font-mono text-sm tabular-nums text-text-tertiary">
                       ${u.estimatedCostUsd.toFixed(4)}
                     </TableCell>
                   </TableRow>
@@ -196,13 +196,13 @@ function ModelSelect({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-3">
-      <label className="block text-sm font-medium text-primary">{label}</label>
-      <p className="mb-2 text-xs text-muted">{description}</p>
+    <div className="rounded-none border border-void-border bg-void-surface p-3">
+      <label className="block text-sm font-medium text-text-primary">{label}</label>
+      <p className="mb-2 text-xs text-text-tertiary">{description}</p>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 font-mono text-xs text-primary outline-none focus:border-[var(--border-strong)]"
+        className="w-full rounded-none border border-void-border bg-void px-2 py-1.5 font-mono text-xs text-text-primary outline-none focus:border-void-border"
       >
         {AVAILABLE_MODELS.map((m) => (
           <option key={m} value={m}>

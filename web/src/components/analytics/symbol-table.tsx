@@ -64,64 +64,64 @@ export function SymbolTable({ data }: SymbolTableProps) {
 
   if (data.length === 0) {
     return (
-      <div className="flex h-20 items-center justify-center rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
-        <p className="text-xs text-muted">No symbol data</p>
+      <div className="flex h-20 items-center justify-center rounded-none border border-void-border bg-void-surface">
+        <p className="text-xs text-text-tertiary">No symbol data</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-[var(--border-default)]">
+    <div className="overflow-x-auto rounded-none border border-void-border">
       <Table>
         <TableHeader>
-          <TableRow className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)]">
+          <TableRow className="border-b border-void-border bg-void-surface hover:bg-void-surface">
             <TableHead
-              className="cursor-pointer text-xs font-medium text-secondary"
+              className="cursor-pointer text-xs font-medium text-text-secondary"
               onClick={() => handleSort("symbol")}
             >
               Symbol{arrow("symbol")}
             </TableHead>
             <TableHead
-              className="cursor-pointer text-right text-xs font-medium text-secondary"
+              className="cursor-pointer text-right text-xs font-medium text-text-secondary"
               onClick={() => handleSort("tradeCount")}
             >
               Trades{arrow("tradeCount")}
             </TableHead>
             <TableHead
-              className="cursor-pointer text-right text-xs font-medium text-secondary"
+              className="cursor-pointer text-right text-xs font-medium text-text-secondary"
               onClick={() => handleSort("winRate")}
             >
               Win%{arrow("winRate")}
             </TableHead>
             <TableHead
-              className="cursor-pointer text-right text-xs font-medium text-secondary"
+              className="cursor-pointer text-right text-xs font-medium text-text-secondary"
               onClick={() => handleSort("totalPnl")}
             >
               Total PnL{arrow("totalPnl")}
             </TableHead>
             <TableHead
-              className="cursor-pointer text-right text-xs font-medium text-secondary"
+              className="cursor-pointer text-right text-xs font-medium text-text-secondary"
               onClick={() => handleSort("avgPnl")}
             >
               Avg PnL{arrow("avgPnl")}
             </TableHead>
             <TableHead
-              className="cursor-pointer text-right text-xs font-medium text-secondary"
+              className="cursor-pointer text-right text-xs font-medium text-text-secondary"
               onClick={() => handleSort("profitFactor")}
             >
               PF{arrow("profitFactor")}
             </TableHead>
             <TableHead
-              className="cursor-pointer text-right text-xs font-medium text-secondary"
+              className="cursor-pointer text-right text-xs font-medium text-text-secondary"
               onClick={() => handleSort("avgDurationMinutes")}
             >
               Avg Duration{arrow("avgDurationMinutes")}
             </TableHead>
-            <TableHead className="text-right text-xs font-medium text-secondary">
+            <TableHead className="text-right text-xs font-medium text-text-secondary">
               L/S
             </TableHead>
             <TableHead
-              className="cursor-pointer text-right text-xs font-medium text-secondary"
+              className="cursor-pointer text-right text-xs font-medium text-text-secondary"
               onClick={() => handleSort("totalFees")}
             >
               Fees{arrow("totalFees")}
@@ -130,22 +130,22 @@ export function SymbolTable({ data }: SymbolTableProps) {
         </TableHeader>
         <TableBody>
           {paginatedRows.map((s) => (
-            <TableRow key={s.symbol} className="h-10 hover:bg-[var(--bg-elevated)]">
-              <TableCell className="font-mono text-sm font-semibold text-primary">
+            <TableRow key={s.symbol} className="h-10 hover:bg-void-muted">
+              <TableCell className="font-mono text-sm font-semibold text-text-primary">
                 {s.symbol}
               </TableCell>
-              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+              <TableCell className="text-right font-mono text-sm tabular-nums text-text-secondary">
                 {s.tradeCount}
               </TableCell>
-              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+              <TableCell className="text-right font-mono text-sm tabular-nums text-text-secondary">
                 {(s.winRate * 100).toFixed(1)}%
               </TableCell>
               <TableCell
                 className={cn(
                   "text-right font-mono text-sm font-semibold tabular-nums",
-                  s.totalPnl > 0 && "text-bullish",
-                  s.totalPnl < 0 && "text-bearish",
-                  s.totalPnl === 0 && "text-secondary"
+                  s.totalPnl > 0 && "text-data-profit",
+                  s.totalPnl < 0 && "text-data-loss",
+                  s.totalPnl === 0 && "text-text-secondary"
                 )}
               >
                 {s.totalPnl >= 0 ? "+" : ""}${s.totalPnl.toFixed(2)}
@@ -153,23 +153,23 @@ export function SymbolTable({ data }: SymbolTableProps) {
               <TableCell
                 className={cn(
                   "text-right font-mono text-sm tabular-nums",
-                  s.avgPnl > 0 && "text-bullish",
-                  s.avgPnl < 0 && "text-bearish",
-                  s.avgPnl === 0 && "text-secondary"
+                  s.avgPnl > 0 && "text-data-profit",
+                  s.avgPnl < 0 && "text-data-loss",
+                  s.avgPnl === 0 && "text-text-secondary"
                 )}
               >
                 {s.avgPnl >= 0 ? "+" : ""}${s.avgPnl.toFixed(2)}
               </TableCell>
-              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+              <TableCell className="text-right font-mono text-sm tabular-nums text-text-secondary">
                 {formatProfitFactor(s.grossWins, s.grossLosses)}
               </TableCell>
-              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+              <TableCell className="text-right font-mono text-sm tabular-nums text-text-secondary">
                 {formatDuration(s.avgDurationMinutes)}
               </TableCell>
-              <TableCell className="text-right font-mono text-sm tabular-nums text-secondary">
+              <TableCell className="text-right font-mono text-sm tabular-nums text-text-secondary">
                 {s.longCount}L / {s.shortCount}S
               </TableCell>
-              <TableCell className="text-right font-mono text-sm tabular-nums text-muted">
+              <TableCell className="text-right font-mono text-sm tabular-nums text-text-tertiary">
                 ${s.totalFees.toFixed(2)}
               </TableCell>
             </TableRow>

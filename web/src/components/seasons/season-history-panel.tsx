@@ -45,10 +45,10 @@ export function SeasonHistoryPanel({ timeframe }: Props) {
 
   if (loading) {
     return (
-      <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6">
+      <div className="rounded-none border border-void-border bg-void-surface p-6">
         <div className="animate-pulse space-y-3">
-          <div className="h-4 w-48 rounded bg-[var(--bg-elevated)]" />
-          <div className="h-32 rounded bg-[var(--bg-elevated)]" />
+          <div className="h-4 w-48 rounded-none bg-void-muted" />
+          <div className="h-32 rounded-none bg-void-muted" />
         </div>
       </div>
     );
@@ -56,7 +56,7 @@ export function SeasonHistoryPanel({ timeframe }: Props) {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 text-sm text-bearish">
+      <div className="rounded-none border border-void-border bg-void-surface p-6 text-sm text-data-loss">
         Failed to load history: {error}
       </div>
     );
@@ -64,7 +64,7 @@ export function SeasonHistoryPanel({ timeframe }: Props) {
 
   if (!data || data.history.length === 0) {
     return (
-      <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-6 text-sm text-muted">
+      <div className="rounded-none border border-void-border bg-void-surface p-6 text-sm text-text-tertiary">
         No completed seasons yet for {timeframe.toUpperCase()}.
       </div>
     );
@@ -75,13 +75,13 @@ export function SeasonHistoryPanel({ timeframe }: Props) {
       {data.history.map((entry: SeasonHistoryEntry) => (
         <div
           key={entry.season}
-          className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4"
+          className="rounded-none border border-void-border bg-void-surface p-4"
         >
           <div className="mb-3 flex items-center justify-between">
-            <h4 className="text-sm font-medium text-primary">
+            <h4 className="text-sm font-medium text-text-primary">
               Season {entry.season}
             </h4>
-            <span className="text-xs text-muted">
+            <span className="text-xs text-text-tertiary">
               {new Date(entry.createdAt).toLocaleDateString()}
             </span>
           </div>
@@ -89,7 +89,7 @@ export function SeasonHistoryPanel({ timeframe }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-[var(--border-default)] text-left text-muted">
+                <tr className="border-b border-void-border text-left text-text-tertiary">
                   <th className="pb-2 pr-4 font-medium">Agent</th>
                   <th className="pb-2 pr-4 text-right font-medium">Equity</th>
                   <th className="pb-2 pr-4 text-right font-medium">PnL</th>
@@ -102,30 +102,30 @@ export function SeasonHistoryPanel({ timeframe }: Props) {
                 {entry.agents.map((agent) => (
                   <tr
                     key={agent.agentId}
-                    className="border-b border-[var(--border-subtle)] last:border-0"
+                    className="border-b border-void-border last:border-0"
                   >
-                    <td className="py-1.5 pr-4 text-secondary">
+                    <td className="py-1.5 pr-4 text-text-secondary">
                       {agent.displayName}
                     </td>
-                    <td className="py-1.5 pr-4 text-right font-mono text-primary">
+                    <td className="py-1.5 pr-4 text-right font-mono text-text-primary">
                       ${agent.totalEquity.toFixed(2)}
                     </td>
                     <td
                       className={`py-1.5 pr-4 text-right font-mono ${
                         agent.totalRealizedPnl >= 0
-                          ? "text-bullish"
-                          : "text-bearish"
+                          ? "text-data-profit"
+                          : "text-data-loss"
                       }`}
                     >
                       {formatPnl(agent.totalRealizedPnl)}
                     </td>
-                    <td className="py-1.5 pr-4 text-right text-secondary">
+                    <td className="py-1.5 pr-4 text-right text-text-secondary">
                       {agent.tradeCount}
                     </td>
-                    <td className="py-1.5 pr-4 text-right text-secondary">
+                    <td className="py-1.5 pr-4 text-right text-text-secondary">
                       {agent.winRate.toFixed(1)}%
                     </td>
-                    <td className="py-1.5 text-right font-mono text-muted">
+                    <td className="py-1.5 text-right font-mono text-text-tertiary">
                       ${agent.peakEquity.toFixed(2)}
                     </td>
                   </tr>

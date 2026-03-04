@@ -65,25 +65,19 @@ export function ProcessingDashboard({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold text-primary">Manual Processing</h1>
-          <p className="mt-1 text-sm text-secondary">
-            Run LLM analysis tasks using Claude Code.{" "}
-            <span className="font-mono text-xs text-muted">
-              {totalPending} total pending
-            </span>
-          </p>
-        </div>
+      {/* Controls */}
+      <div className="flex items-center justify-between gap-4">
+        <span className="font-mono text-xs text-text-tertiary">
+          {totalPending} total pending
+        </span>
         <button
           onClick={() => setShowRunAll((v) => !v)}
           disabled={totalPending === 0}
           className={cn(
-            "shrink-0 rounded-md px-3 py-1.5 text-sm font-medium transition-colors-fast",
+            "shrink-0 rounded-none px-3 py-1.5 text-sm font-medium transition-colors-fast",
             totalPending > 0
-              ? "bg-[var(--bg-elevated)] text-primary hover:bg-[var(--bg-muted)]"
-              : "cursor-not-allowed bg-[var(--bg-muted)] text-muted"
+              ? "bg-void-muted text-text-primary hover:bg-void-muted"
+              : "cursor-not-allowed bg-void-muted text-text-tertiary"
           )}
         >
           Run All
@@ -92,23 +86,23 @@ export function ProcessingDashboard({
 
       {/* Run All panel */}
       {showRunAll && pendingTasks.length > 0 && (
-        <div className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4">
-          <p className="text-xs font-medium text-secondary">
+        <div className="rounded-none border border-void-border bg-void-surface p-4">
+          <p className="text-xs font-medium text-text-secondary">
             Tell Claude Code to run each of these:
           </p>
           <div className="mt-3 space-y-2">
             {pendingTasks.map((task) => (
               <div
                 key={task.taskType}
-                className="flex items-start gap-3 rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-3 py-2 text-xs"
+                className="flex items-start gap-3 rounded-none border border-void-border bg-void px-3 py-2 text-xs"
               >
-                <span className="shrink-0 font-medium text-muted">
+                <span className="shrink-0 font-medium text-text-tertiary">
                   {TASK_LABELS[task.taskType] || task.taskType}
                 </span>
-                <span className="font-medium text-primary">
+                <span className="font-medium text-text-primary">
                   &ldquo;{TASK_COMMANDS[task.taskType]}&rdquo;
                 </span>
-                <span className="ml-auto shrink-0 font-mono text-muted">
+                <span className="ml-auto shrink-0 font-mono text-text-tertiary">
                   {task.pendingCount} pending
                 </span>
               </div>
@@ -126,7 +120,7 @@ export function ProcessingDashboard({
 
       {/* Run history */}
       <div className="space-y-3">
-        <h2 className="text-sm font-medium text-secondary">Recent Runs</h2>
+        <h2 className="text-sm font-medium text-text-secondary">Recent Runs</h2>
         <RunHistoryTable runs={runHistory} />
       </div>
     </div>

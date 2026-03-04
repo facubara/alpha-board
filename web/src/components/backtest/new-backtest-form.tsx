@@ -2,7 +2,7 @@
 
 import { useTransition, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { launchBacktest } from "@/app/backtest/actions";
+import { launchBacktest } from "@/app/lab/backtest/actions";
 import { useAuth } from "@/components/auth/auth-provider";
 import { STRATEGY_ARCHETYPES, STRATEGY_ARCHETYPE_LABELS, TIMEFRAMES } from "@/lib/types";
 
@@ -58,21 +58,21 @@ export function NewBacktestForm() {
   return (
     <form
       action={handleSubmit}
-      className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] p-4"
+      className="rounded-none border border-void-border bg-void-surface p-4"
     >
-      <h2 className="mb-3 text-sm font-semibold text-primary">
+      <h2 className="mb-3 text-sm font-semibold text-text-primary">
         New Backtest
       </h2>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {/* Strategy */}
         <div>
-          <label htmlFor="backtest-strategy" className="mb-1 block text-xs text-muted">Strategy</label>
+          <label htmlFor="backtest-strategy" className="mb-1 block text-xs text-text-tertiary">Strategy</label>
           <select
             id="backtest-strategy"
             name="strategy"
             required
-            className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 text-sm text-primary"
+            className="w-full rounded-none border border-void-border bg-void px-2 py-1.5 text-sm text-text-primary"
           >
             {STRATEGY_ARCHETYPES.map((s) => (
               <option key={s} value={s}>
@@ -84,13 +84,13 @@ export function NewBacktestForm() {
 
         {/* Timeframe */}
         <div>
-          <label htmlFor="backtest-timeframe" className="mb-1 block text-xs text-muted">Timeframe</label>
+          <label htmlFor="backtest-timeframe" className="mb-1 block text-xs text-text-tertiary">Timeframe</label>
           <select
             id="backtest-timeframe"
             name="timeframe"
             required
             defaultValue="1h"
-            className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 text-sm text-primary"
+            className="w-full rounded-none border border-void-border bg-void px-2 py-1.5 text-sm text-text-primary"
           >
             {TIMEFRAMES.map((tf) => (
               <option key={tf} value={tf}>
@@ -102,12 +102,12 @@ export function NewBacktestForm() {
 
         {/* Symbol */}
         <div>
-          <label htmlFor="backtest-symbol" className="mb-1 block text-xs text-muted">Symbol</label>
+          <label htmlFor="backtest-symbol" className="mb-1 block text-xs text-text-tertiary">Symbol</label>
           <select
             id="backtest-symbol"
             name="symbol"
             required
-            className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 text-sm text-primary"
+            className="w-full rounded-none border border-void-border bg-void px-2 py-1.5 text-sm text-text-primary"
           >
             {POPULAR_SYMBOLS.map((s) => (
               <option key={s} value={s}>
@@ -119,7 +119,7 @@ export function NewBacktestForm() {
 
         {/* Start Date */}
         <div>
-          <label htmlFor="backtest-start-date" className="mb-1 block text-xs text-muted">Start Date</label>
+          <label htmlFor="backtest-start-date" className="mb-1 block text-xs text-text-tertiary">Start Date</label>
           <input
             id="backtest-start-date"
             type="date"
@@ -127,13 +127,13 @@ export function NewBacktestForm() {
             required
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 text-sm text-primary"
+            className="w-full rounded-none border border-void-border bg-void px-2 py-1.5 text-sm text-text-primary"
           />
         </div>
 
         {/* End Date */}
         <div>
-          <label htmlFor="backtest-end-date" className="mb-1 block text-xs text-muted">End Date</label>
+          <label htmlFor="backtest-end-date" className="mb-1 block text-xs text-text-tertiary">End Date</label>
           <input
             id="backtest-end-date"
             type="date"
@@ -141,7 +141,7 @@ export function NewBacktestForm() {
             required
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="w-full rounded-md border border-[var(--border-default)] bg-[var(--bg-base)] px-2 py-1.5 text-sm text-primary"
+            className="w-full rounded-none border border-void-border bg-void px-2 py-1.5 text-sm text-text-primary"
           />
         </div>
 
@@ -150,7 +150,7 @@ export function NewBacktestForm() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full rounded-md bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-white transition-colors-fast hover:opacity-90 disabled:opacity-50"
+            className="w-full rounded-none bg-terminal-amber px-3 py-1.5 text-sm font-medium text-void transition-colors-fast hover:opacity-90 disabled:opacity-50"
           >
             {isPending ? "Launching..." : "Run Backtest"}
           </button>
@@ -158,10 +158,10 @@ export function NewBacktestForm() {
       </div>
 
       {error && (
-        <p className="mt-2 text-xs text-[var(--bearish-strong)]">{error}</p>
+        <p className="mt-2 text-xs text-[#F43F5E]">{error}</p>
       )}
       {success && (
-        <p className="mt-2 text-xs text-[var(--bullish-strong)]">{success}</p>
+        <p className="mt-2 text-xs text-[#10B981]">{success}</p>
       )}
     </form>
   );

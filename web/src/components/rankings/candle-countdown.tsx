@@ -59,9 +59,9 @@ export function CandleCountdown({ timeframe }: CandleCountdownProps) {
   if (remaining === null) return null;
 
   return (
-    <span className="font-mono text-xs text-secondary">
+    <span className="font-mono text-xs text-text-secondary">
       Next close{" "}
-      <span className="text-primary">{formatCountdown(remaining)}</span>
+      <span className="text-text-primary">{formatCountdown(remaining)}</span>
     </span>
   );
 }

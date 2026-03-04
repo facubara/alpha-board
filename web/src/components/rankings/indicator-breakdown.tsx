@@ -2,12 +2,7 @@
  * IndicatorBreakdown Component
  *
  * Expandable section showing per-indicator signal breakdown.
- * Per DESIGN_SYSTEM.md:
- * - Shows mini score bar per indicator
- * - Signal value displayed as +0.XX or -0.XX
- * - Sentiment badge (bullish/neutral/bearish)
- * - Description text in text-muted
- * - Responsive grid layout
+ * Terminal aesthetic: sharp edges, no rounded corners, semantic colors for data only.
  */
 
 import { cn } from "@/lib/utils";
@@ -26,9 +21,9 @@ interface IndicatorBreakdownProps {
 const INDICATOR_TOOLTIPS: Record<string, string> = {
   ema: "Exponential Moving Average — compares short and long-term EMAs to gauge trend direction and momentum.",
   macd: "Moving Average Convergence Divergence — measures the relationship between two EMAs to identify momentum shifts.",
-  rsi: "Relative Strength Index — oscillator (0–100) measuring speed and magnitude of price changes. >70 = overbought, <30 = oversold.",
+  rsi: "Relative Strength Index — oscillator (0-100) measuring speed and magnitude of price changes. >70 = overbought, <30 = oversold.",
   bollinger_bands:
-    "Bollinger Bands — volatility indicator using a moving average ± 2 standard deviations. Squeezes often precede breakouts.",
+    "Bollinger Bands — volatility indicator using a moving average +/- 2 standard deviations. Squeezes often precede breakouts.",
   volume: "Volume Analysis — compares current volume to recent averages to detect unusual buying or selling activity.",
   trend: "Trend Strength — evaluates the directional consistency of price movement across multiple timeframes.",
   stochastic:
@@ -45,32 +40,33 @@ const INDICATOR_TOOLTIPS: Record<string, string> = {
  * Get fill color class based on signal value (-1 to +1).
  */
 function getSignalColor(signal: number): string {
-  if (signal < -0.2) return "bg-[var(--bearish-strong)]";
-  if (signal > 0.2) return "bg-[var(--bullish-strong)]";
-  return "bg-[var(--text-muted)]";
+  if (signal < -0.2) return "bg-data-loss";
+  if (signal > 0.2) return "bg-data-profit";
+  return "bg-terminal-amber";
 }
 
 /**
  * Get text color class based on signal value.
  */
 function getSignalTextColor(signal: number): string {
-  if (signal < -0.2) return "text-bearish";
-  if (signal > 0.2) return "text-bullish";
-  return "text-muted";
+  if (signal < -0.2) return "text-data-loss";
+  if (signal > 0.2) return "text-data-profit";
+  return "text-text-tertiary";
 }
 
 /**
  * Get badge styling based on label.
+ * Terminal aesthetic: muted bg with semantic text color.
  */
 function getBadgeStyles(label: "bullish" | "bearish" | "neutral"): string {
   switch (label) {
     case "bullish":
-      return "bg-[var(--bullish-subtle)] text-[var(--bullish-strong)] hover:bg-[var(--bullish-subtle)]";
+      return "bg-terminal-amber-muted text-data-profit hover:bg-terminal-amber-muted";
     case "bearish":
-      return "bg-[var(--bearish-subtle)] text-[var(--bearish-strong)] hover:bg-[var(--bearish-subtle)]";
+      return "bg-terminal-amber-muted text-data-loss hover:bg-terminal-amber-muted";
     case "neutral":
     default:
-      return "bg-[var(--bg-muted)] text-[var(--text-secondary)] hover:bg-[var(--bg-muted)]";
+      return "bg-void-muted text-text-secondary hover:bg-void-muted";
   }
 }
 
@@ -88,7 +84,7 @@ export function IndicatorBreakdown({
 }: IndicatorBreakdownProps) {
   if (!signals || signals.length === 0) {
     return (
-      <div className={cn("py-3 text-sm text-muted", className)}>
+      <div className={cn("py-3 text-sm text-text-tertiary", className)}>
         No indicator data available
       </div>
     );
@@ -106,10 +102,10 @@ export function IndicatorBreakdown({
           >
             {/* Indicator name */}
             <div className="flex items-center justify-between sm:block">
-              <span className="flex items-center truncate text-secondary">
+              <span className="flex items-center truncate text-text-secondary">
                 {tooltip ? (
                   <InfoTooltip content={tooltip} side="right">
-                    <span className="cursor-help border-b border-dotted border-[var(--border-subtle)]">
+                    <span className="cursor-help border-b border-dotted border-void-border">
                       {indicator.displayName}
                     </span>
                   </InfoTooltip>
@@ -131,15 +127,15 @@ export function IndicatorBreakdown({
 
             {/* Mini score bar (signal normalized for display) */}
             <div className="hidden items-center gap-2 sm:flex">
-              <div className="relative h-1 w-16 overflow-hidden rounded-full bg-[var(--bg-muted)]">
+              <div className="relative h-1 w-16 overflow-hidden rounded-none bg-void-muted">
                 {/* Center line at 50% representing 0 */}
-                <div className="absolute left-1/2 top-0 h-full w-px bg-[var(--border-default)]" />
+                <div className="absolute left-1/2 top-0 h-full w-px bg-void-border" />
 
                 {/* Fill from center based on signal direction */}
                 {indicator.signal >= 0 ? (
                   <div
                     className={cn(
-                      "absolute top-0 h-full rounded-r-full",
+                      "absolute top-0 h-full",
                       getSignalColor(indicator.signal)
                     )}
                     style={{
@@ -150,7 +146,7 @@ export function IndicatorBreakdown({
                 ) : (
                   <div
                     className={cn(
-                      "absolute top-0 h-full rounded-l-full",
+                      "absolute top-0 h-full",
                       getSignalColor(indicator.signal)
                     )}
                     style={{
@@ -184,18 +180,18 @@ export function IndicatorBreakdown({
             </Badge>
 
             {/* Description */}
-            <span className="truncate text-xs text-muted">
+            <span className="truncate text-xs text-text-tertiary">
               {indicator.description}
             </span>
 
             {/* Mobile: show bar and value */}
             <div className="flex items-center gap-3 sm:hidden">
-              <div className="relative h-1 w-20 overflow-hidden rounded-full bg-[var(--bg-muted)]">
-                <div className="absolute left-1/2 top-0 h-full w-px bg-[var(--border-default)]" />
+              <div className="relative h-1 w-20 overflow-hidden rounded-none bg-void-muted">
+                <div className="absolute left-1/2 top-0 h-full w-px bg-void-border" />
                 {indicator.signal >= 0 ? (
                   <div
                     className={cn(
-                      "absolute top-0 h-full rounded-r-full",
+                      "absolute top-0 h-full",
                       getSignalColor(indicator.signal)
                     )}
                     style={{
@@ -206,7 +202,7 @@ export function IndicatorBreakdown({
                 ) : (
                   <div
                     className={cn(
-                      "absolute top-0 h-full rounded-l-full",
+                      "absolute top-0 h-full",
                       getSignalColor(indicator.signal)
                     )}
                     style={{

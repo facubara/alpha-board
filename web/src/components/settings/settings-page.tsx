@@ -57,7 +57,7 @@ export function SettingsPage({ sections: initial, costs }: SettingsPageProps) {
     <div className="space-y-6">
       {/* LLM Sections */}
       <div>
-        <h2 className="mb-3 text-sm font-medium text-secondary">
+        <h2 className="mb-3 text-sm font-medium text-text-secondary">
           LLM Sections
         </h2>
         <div className="space-y-2">

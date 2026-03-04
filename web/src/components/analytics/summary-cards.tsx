@@ -30,19 +30,19 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
     {
       label: "Active Agents",
       value: String(summary.activeAgents),
-      color: "text-primary",
+      color: "text-text-primary",
       size: "text-lg" as const,
     },
     {
       label: "Total Trades",
       value: String(summary.totalTrades),
-      color: "text-primary",
+      color: "text-text-primary",
       size: "text-lg" as const,
     },
     {
       label: "Win Rate",
       value: summary.totalTrades > 0 ? `${(winRate * 100).toFixed(1)}%` : "—",
-      color: "text-primary",
+      color: "text-text-primary",
       size: "text-lg" as const,
     },
     {
@@ -52,10 +52,10 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
         : "—",
       color:
         avgPnlPerTrade > 0
-          ? "text-bullish"
+          ? "text-data-profit"
           : avgPnlPerTrade < 0
-            ? "text-bearish"
-            : "text-secondary",
+            ? "text-data-loss"
+            : "text-text-secondary",
       size: "text-base" as const,
     },
     {
@@ -63,10 +63,10 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
       value: formatProfitFactor(summary.grossWins, summary.grossLosses),
       color:
         profitFactor > 1
-          ? "text-bullish"
+          ? "text-data-profit"
           : profitFactor < 1 && profitFactor > 0
-            ? "text-bearish"
-            : "text-secondary",
+            ? "text-data-loss"
+            : "text-text-secondary",
       size: "text-base" as const,
     },
     {
@@ -75,7 +75,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
         summary.maxDrawdownPct < 0
           ? `${summary.maxDrawdownPct.toFixed(2)}%`
           : "0.00%",
-      color: summary.maxDrawdownPct < 0 ? "text-bearish" : "text-secondary",
+      color: summary.maxDrawdownPct < 0 ? "text-data-loss" : "text-text-secondary",
       size: "text-base" as const,
     },
   ];
@@ -85,9 +85,9 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
       {metrics.map((m) => (
         <div
           key={m.label}
-          className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] px-3 py-2"
+          className="rounded-none border border-void-border bg-void-surface px-3 py-2"
         >
-          <p className="text-xs text-muted">{m.label}</p>
+          <p className="text-xs text-text-tertiary">{m.label}</p>
           <p
             className={cn(
               "font-mono font-semibold",

@@ -12,17 +12,17 @@ const TASK_LABELS: Record<string, string> = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
-  running: "bg-[var(--accent-teal)]/10 text-[var(--accent-teal)]",
-  paused: "bg-[var(--warning)]/10 text-[var(--warning)]",
-  completed: "bg-[var(--bullish-subtle)] text-bullish",
-  failed: "bg-[var(--bearish-subtle)] text-bearish",
+  running: "bg-void-muted text-text-secondary",
+  paused: "bg-terminal-amber-muted text-terminal-amber",
+  completed: "bg-terminal-amber-muted text-data-profit",
+  failed: "bg-terminal-amber-muted text-data-loss",
 };
 
 const BAR_COLORS: Record<string, string> = {
-  running: "bg-[var(--accent-teal)]",
-  paused: "bg-[var(--warning)]",
-  completed: "bg-bullish",
-  failed: "bg-bearish",
+  running: "bg-text-secondary",
+  paused: "bg-terminal-amber",
+  completed: "bg-terminal-amber-muted",
+  failed: "bg-terminal-amber-muted",
 };
 
 function timeAgo(dateStr: string): string {
@@ -38,15 +38,15 @@ function timeAgo(dateStr: string): string {
 export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
   if (runs.length === 0) {
     return (
-      <p className="text-sm text-muted">No processing runs yet.</p>
+      <p className="text-sm text-text-tertiary">No processing runs yet.</p>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)]">
+    <div className="overflow-x-auto rounded-none border border-void-border bg-void-surface">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-[var(--border-default)] text-left text-xs text-muted">
+          <tr className="border-b border-void-border text-left text-xs text-text-tertiary">
             <th className="px-4 py-2 font-medium">Task</th>
             <th className="px-4 py-2 font-medium">Status</th>
             <th className="px-4 py-2 font-medium text-right">Progress</th>
@@ -58,15 +58,15 @@ export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
           {runs.map((run) => (
             <tr
               key={run.id}
-              className="border-b border-[var(--border-default)] last:border-b-0"
+              className="border-b border-void-border last:border-b-0"
             >
-              <td className="px-4 py-2 font-medium text-primary">
+              <td className="px-4 py-2 font-medium text-text-primary">
                 {TASK_LABELS[run.taskType] || run.taskType}
               </td>
               <td className="px-4 py-2">
                 <span
                   className={cn(
-                    "inline-flex rounded px-1.5 py-0.5 text-xs font-medium",
+                    "inline-flex rounded-none px-1.5 py-0.5 text-xs font-medium",
                     STATUS_STYLES[run.status]
                   )}
                 >
@@ -76,7 +76,7 @@ export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
               <td className="px-4 py-2 text-right">
                 <div className="flex items-center justify-end gap-2">
                   {run.totalItems > 0 && (
-                    <div className="h-1 w-16 overflow-hidden rounded-full bg-[var(--bg-muted)]">
+                    <div className="h-1 w-16 overflow-hidden rounded-full bg-void-muted">
                       <div
                         className={cn("h-full rounded-full", BAR_COLORS[run.status])}
                         style={{
@@ -85,7 +85,7 @@ export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
                       />
                     </div>
                   )}
-                  <span className="font-mono text-xs text-secondary">
+                  <span className="font-mono text-xs text-text-secondary">
                     {run.processedItems}/{run.totalItems}
                   </span>
                 </div>
@@ -93,12 +93,12 @@ export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
               <td
                 className={cn(
                   "px-4 py-2 text-right font-mono text-xs",
-                  run.errorCount > 0 ? "text-bearish" : "text-muted"
+                  run.errorCount > 0 ? "text-data-loss" : "text-text-tertiary"
                 )}
               >
                 {run.errorCount}
               </td>
-              <td className="px-4 py-2 text-right text-xs text-muted">
+              <td className="px-4 py-2 text-right text-xs text-text-tertiary">
                 {timeAgo(run.startedAt)}
               </td>
             </tr>
