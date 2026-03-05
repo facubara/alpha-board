@@ -318,6 +318,7 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
         sourceFilter={filters.source}
         symbolSearch={filters.symbolSearch}
         compareMode={compareMode}
+        dataReady={agentsData.length > 0}
         onTimeframeChange={(v) => dispatch({ type: "SET_TIMEFRAME", value: v })}
         onArchetypeChange={(v) => dispatch({ type: "SET_ARCHETYPE", value: v })}
         onEngineChange={(v) => dispatch({ type: "SET_ENGINE", value: v })}

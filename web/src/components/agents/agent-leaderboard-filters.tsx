@@ -65,6 +65,7 @@ interface AgentLeaderboardFiltersProps {
   sourceFilter: AgentSource | "all";
   symbolSearch: string;
   compareMode: boolean;
+  dataReady?: boolean;
   onTimeframeChange: (v: AgentTimeframe | "all") => void;
   onArchetypeChange: (v: StrategyArchetype | "all") => void;
   onEngineChange: (v: AgentEngine | "all") => void;
@@ -81,6 +82,7 @@ export function AgentLeaderboardFilters({
   sourceFilter,
   symbolSearch,
   compareMode,
+  dataReady = true,
   onTimeframeChange,
   onArchetypeChange,
   onEngineChange,
@@ -204,11 +206,14 @@ export function AgentLeaderboardFilters({
         <div className="flex items-center gap-2">
           <button
             onClick={onToggleCompare}
+            disabled={!dataReady}
             className={cn(
               "flex items-center gap-1.5 rounded-none border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
-              compareMode
-                ? "border-terminal-amber text-terminal-amber"
-                : "border-void-border text-text-secondary hover:text-terminal-amber hover:border-terminal-amber"
+              !dataReady
+                ? "opacity-50 pointer-events-none border-void-border text-text-secondary"
+                : compareMode
+                  ? "border-terminal-amber text-terminal-amber"
+                  : "border-void-border text-text-secondary hover:text-terminal-amber hover:border-terminal-amber"
             )}
           >
             <GitCompareArrows className="h-3.5 w-3.5" />
@@ -216,9 +221,12 @@ export function AgentLeaderboardFilters({
           </button>
           <button
             onClick={onPauseAllLlm}
+            disabled={!dataReady}
             className={cn(
               "flex items-center gap-1.5 rounded-none border border-void-border px-2.5 py-1.5 font-mono text-xs font-medium transition-colors-fast",
-              "text-data-loss hover:bg-terminal-amber-muted"
+              !dataReady
+                ? "opacity-50 pointer-events-none"
+                : "text-data-loss hover:bg-terminal-amber-muted"
             )}
           >
             <PauseCircle className="h-3.5 w-3.5" />

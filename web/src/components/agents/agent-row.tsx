@@ -11,7 +11,7 @@
  * - Semantic colors for PnL (data-profit/data-loss)
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 // Pause/Play icons replaced with terminal-style text buttons
 
 const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
@@ -79,7 +79,7 @@ function getHealthStatus(
   return { color: "bg-text-tertiary", label: `Inactive ${Math.round(ageMinutes)}m ago` };
 }
 
-export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }: AgentRowProps) {
+export const AgentRow = memo(function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }: AgentRowProps) {
   const [status, setStatus] = useState(agent.status);
   const [toggling, setToggling] = useState(false);
   const [spinnerFrame, setSpinnerFrame] = useState(0);
@@ -277,4 +277,16 @@ export function AgentRow({ agent, showCheckbox, selected, onSelect, upnlValue }:
       </TableCell>
     </TableRow>
   );
-}
+}, (prev, next) => {
+  return (
+    prev.agent.id === next.agent.id &&
+    prev.agent.status === next.agent.status &&
+    prev.agent.totalRealizedPnl === next.agent.totalRealizedPnl &&
+    prev.agent.tradeCount === next.agent.tradeCount &&
+    prev.agent.openPositions === next.agent.openPositions &&
+    prev.agent.lastCycleAt === next.agent.lastCycleAt &&
+    prev.upnlValue === next.upnlValue &&
+    prev.showCheckbox === next.showCheckbox &&
+    prev.selected === next.selected
+  );
+});
