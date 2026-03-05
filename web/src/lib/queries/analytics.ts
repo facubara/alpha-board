@@ -20,6 +20,7 @@ import type {
   ArchetypeCost,
   AgentDrawdown,
   DirectionStats,
+  AllAnalyticsResponse,
 } from "@/lib/types";
 
 /**
@@ -127,5 +128,14 @@ export function getDirectionStats(): Promise<DirectionStats[]> {
 export function getAgentDrawdowns(): Promise<AgentDrawdown[]> {
   return cached("analytics:drawdowns", 120, async () => {
     return workerGet<AgentDrawdown[]>("/analytics/drawdowns");
+  });
+}
+
+/**
+ * All analytics data in a single request (consolidated endpoint).
+ */
+export function getAllAnalytics(): Promise<AllAnalyticsResponse> {
+  return cached("analytics:all", 120, async () => {
+    return workerGet<AllAnalyticsResponse>("/analytics/all");
   });
 }

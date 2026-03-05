@@ -546,6 +546,21 @@ export interface DirectionStats {
   avgDurationMinutes: number;
 }
 
+export interface AllAnalyticsResponse {
+  summary: AnalyticsSummary;
+  archetypeStats: ArchetypeStats[];
+  sourceStats: SourceStats[];
+  timeframeStats: TimeframeStats[];
+  dailyPnl: DailyPnl[];
+  dailyArchetypePnl: DailyArchetypePnl[];
+  symbolStats: SymbolStats[];
+  dailyTokenCost: DailyTokenCost[];
+  modelCosts: ModelCostBreakdown[];
+  archetypeCosts: ArchetypeCost[];
+  directionStats: DirectionStats[];
+  agentDrawdowns: AgentDrawdown[];
+}
+
 // =============================================================================
 // Twitter Types
 // =============================================================================

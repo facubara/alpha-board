@@ -335,7 +335,11 @@ class AgentTrade(Base):
     symbol: Mapped["Symbol"] = relationship(back_populates="trades")
     memory: Mapped["AgentMemory"] = relationship(back_populates="trade", uselist=False)
 
-    __table_args__ = (Index("idx_agent_trades_agent_time", "agent_id", closed_at.desc()),)
+    __table_args__ = (
+        Index("idx_agent_trades_agent_time", "agent_id", closed_at.desc()),
+        Index("idx_agent_trades_closed_at", closed_at.desc()),
+        Index("idx_agent_trades_symbol", "symbol_id"),
+    )
 
 
 class AgentSeasonSnapshot(Base):
@@ -487,6 +491,7 @@ class AgentTokenUsage(Base):
             "agent_id", "model", "task_type", "date", name="uq_agent_token_usage_agent_model_task_date"
         ),
         Index("idx_agent_token_usage_agent_date", "agent_id", date.desc()),
+        Index("idx_agent_token_usage_date", date.desc()),
     )
 
 

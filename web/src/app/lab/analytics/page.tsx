@@ -1,58 +1,19 @@
 /**
  * Analytics Page — Fleet-wide performance dashboard.
  *
- * Server component with ISR 60s. Fetches all analytics data in parallel
- * and passes to the client-side tabbed dashboard.
+ * Server component with ISR 120s. Fetches all analytics data in a single
+ * consolidated request via /analytics/all.
  */
 
 import Link from "next/link";
 import { PageHeader } from "@/components/terminal";
-import {
-  getAnalyticsSummary,
-  getArchetypeStats,
-  getSourceStats,
-  getTimeframeStats,
-  getDailyPnl,
-  getDailyArchetypePnl,
-  getSymbolStats,
-  getDailyTokenCost,
-  getModelCostBreakdown,
-  getArchetypeCost,
-  getAgentDrawdowns,
-  getDirectionStats,
-} from "@/lib/queries/analytics";
+import { getAllAnalytics } from "@/lib/queries/analytics";
 import { AnalyticsDashboard } from "@/components/analytics/analytics-dashboard";
 
 export const revalidate = 120;
 
 export default async function AnalyticsPage() {
-  const [
-    summary,
-    archetypeStats,
-    sourceStats,
-    timeframeStats,
-    dailyPnl,
-    dailyArchetypePnl,
-    symbolStats,
-    dailyTokenCost,
-    modelCosts,
-    archetypeCosts,
-    agentDrawdowns,
-    directionStats,
-  ] = await Promise.all([
-    getAnalyticsSummary(),
-    getArchetypeStats(),
-    getSourceStats(),
-    getTimeframeStats(),
-    getDailyPnl(),
-    getDailyArchetypePnl(),
-    getSymbolStats(),
-    getDailyTokenCost(),
-    getModelCostBreakdown(),
-    getArchetypeCost(),
-    getAgentDrawdowns(),
-    getDirectionStats(),
-  ]);
+  const data = await getAllAnalytics();
 
   return (
     <div className="space-y-6">
@@ -74,18 +35,18 @@ export default async function AnalyticsPage() {
       {/* Dashboard */}
       <div className="border-t border-void-border pt-6">
       <AnalyticsDashboard
-        summary={summary}
-        archetypeStats={archetypeStats}
-        sourceStats={sourceStats}
-        timeframeStats={timeframeStats}
-        dailyPnl={dailyPnl}
-        dailyArchetypePnl={dailyArchetypePnl}
-        symbolStats={symbolStats}
-        dailyTokenCost={dailyTokenCost}
-        modelCosts={modelCosts}
-        archetypeCosts={archetypeCosts}
-        agentDrawdowns={agentDrawdowns}
-        directionStats={directionStats}
+        summary={data.summary}
+        archetypeStats={data.archetypeStats}
+        sourceStats={data.sourceStats}
+        timeframeStats={data.timeframeStats}
+        dailyPnl={data.dailyPnl}
+        dailyArchetypePnl={data.dailyArchetypePnl}
+        symbolStats={data.symbolStats}
+        dailyTokenCost={data.dailyTokenCost}
+        modelCosts={data.modelCosts}
+        archetypeCosts={data.archetypeCosts}
+        agentDrawdowns={data.agentDrawdowns}
+        directionStats={data.directionStats}
       />
       </div>
     </div>
