@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     const hasAuth = request.cookies.get(AUTH_STATUS_COOKIE)?.value === "1"
       || !!request.cookies.get(AUTH_COOKIE_NAME)?.value;
     if (hasAuth) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return NextResponse.redirect(new URL("/terminal", request.url));
     }
     return NextResponse.next();
   }

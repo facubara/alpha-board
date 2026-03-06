@@ -55,8 +55,11 @@ function SortIndicator({ field, sortField, sortDirection }: { field: SortField; 
   );
 }
 
+type StatusFilter = "all" | "active" | "paused" | "discarded";
+
 interface AgentLeaderboardProps {
   agents?: AgentLeaderboardRow[];
+  discardedAgents?: AgentLeaderboardRow[];
   className?: string;
 }
 
@@ -67,6 +70,7 @@ interface AgentSSEEvent {
 
 // ─── Filter reducer ───
 interface FilterState {
+  status: StatusFilter;
   timeframe: AgentTimeframe | "all";
   archetype: StrategyArchetype | "all";
   engine: AgentEngine | "all";
@@ -77,6 +81,7 @@ interface FilterState {
 }
 
 type FilterAction =
+  | { type: "SET_STATUS"; value: StatusFilter }
   | { type: "SET_TIMEFRAME"; value: AgentTimeframe | "all" }
   | { type: "SET_ARCHETYPE"; value: StrategyArchetype | "all" }
   | { type: "SET_ENGINE"; value: AgentEngine | "all" }
@@ -86,6 +91,8 @@ type FilterAction =
 
 function filterReducer(state: FilterState, action: FilterAction): FilterState {
   switch (action.type) {
+    case "SET_STATUS":
+      return { ...state, status: action.value };
     case "SET_TIMEFRAME":
       return { ...state, timeframe: action.value };
     case "SET_ARCHETYPE":
@@ -110,7 +117,7 @@ function filterReducer(state: FilterState, action: FilterAction): FilterState {
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL;
 
-export function AgentLeaderboard({ agents: initialAgents, className }: AgentLeaderboardProps) {
+export function AgentLeaderboard({ agents: initialAgents, discardedAgents: initialDiscarded, className }: AgentLeaderboardProps) {
   const router = useRouter();
 
   // ─── Client-side data fetch when no initial data provided ───
@@ -138,6 +145,26 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
   }, [initialAgents]);
 
   const agents = initialAgents ?? fetchedAgents ?? [];
+
+  // ─── Client-side fetch for discarded agents ───
+  const [fetchedDiscarded, setFetchedDiscarded] = useState<AgentLeaderboardRow[] | null>(null);
+
+  useEffect(() => {
+    if (initialDiscarded) return;
+    let cancelled = false;
+    fetch(`${WORKER_URL}/agents/discarded`)
+      .then((res) => {
+        if (!res.ok) throw new Error("fetch failed");
+        return res.json();
+      })
+      .then((data: AgentLeaderboardRow[]) => {
+        if (!cancelled) setFetchedDiscarded(data);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [initialDiscarded]);
+
+  const discardedAgents = initialDiscarded ?? fetchedDiscarded ?? [];
 
   // Compare mode state
   const [compareMode, setCompareMode] = useState(false);
@@ -204,6 +231,7 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
 
   // ─── Filters via reducer ───
   const [filters, dispatch] = useReducer(filterReducer, {
+    status: "active",
     timeframe: "all",
     archetype: "all",
     engine: "all",
@@ -231,7 +259,7 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
   }, [filters.symbolSearch, symbolActivity, symbolLoading]);
 
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(25);
+  const [pageSize, setPageSize] = useState(10);
 
   const [pauseModalOpen, setPauseModalOpen] = useState(false);
   const { requireAuth } = useAuth();
@@ -247,7 +275,18 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
   }, [router]);
 
   const filtered = useMemo(() => {
-    let result = [...agentsData];
+    let result: AgentLeaderboardRow[];
+    if (filters.status === "discarded") {
+      result = [...discardedAgents];
+    } else if (filters.status === "paused") {
+      result = agentsData.filter((a) => a.status === "paused");
+    } else if (filters.status === "active") {
+      result = agentsData.filter((a) => a.status === "active");
+    } else {
+      // "all" — combine but deduplicate by id (active/paused take priority)
+      const activeIds = new Set(agentsData.map((a) => a.id));
+      result = [...agentsData, ...discardedAgents.filter((a) => !activeIds.has(a.id))];
+    }
 
     if (filters.timeframe !== "all") {
       result = result.filter((a) => a.timeframe === filters.timeframe);
@@ -291,11 +330,11 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
     });
 
     return result;
-  }, [agentsData, filters.timeframe, filters.archetype, filters.engine, filters.source, symbolAgentIds, filters.sortField, filters.sortDirection]);
+  }, [agentsData, discardedAgents, filters.status, filters.timeframe, filters.archetype, filters.engine, filters.source, symbolAgentIds, filters.sortField, filters.sortDirection]);
 
   // Reset page on filter/sort changes
   useEffect(() => { setPage(0); }, [
-    filters.timeframe, filters.archetype, filters.engine, filters.source,
+    filters.status, filters.timeframe, filters.archetype, filters.engine, filters.source,
     filters.sortField, filters.sortDirection, symbolAgentIds,
   ]);
 
@@ -312,6 +351,8 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
     <div className={cn("space-y-4", className)}>
       {/* Filters */}
       <AgentLeaderboardFilters
+        statusFilter={filters.status}
+        discardedCount={discardedAgents.length}
         timeframeFilter={filters.timeframe}
         archetypeFilter={filters.archetype}
         engineFilter={filters.engine}
@@ -319,6 +360,7 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
         symbolSearch={filters.symbolSearch}
         compareMode={compareMode}
         dataReady={agentsData.length > 0}
+        onStatusChange={(v) => dispatch({ type: "SET_STATUS", value: v })}
         onTimeframeChange={(v) => dispatch({ type: "SET_TIMEFRAME", value: v })}
         onArchetypeChange={(v) => dispatch({ type: "SET_ARCHETYPE", value: v })}
         onEngineChange={(v) => dispatch({ type: "SET_ENGINE", value: v })}
@@ -329,9 +371,9 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
       />
 
       {/* Results count */}
-      {(filters.timeframe !== "all" || filters.archetype !== "all" || filters.engine !== "all" || filters.source !== "all" || symbolAgentIds !== null) && (
+      {(filters.status !== "all" || filters.timeframe !== "all" || filters.archetype !== "all" || filters.engine !== "all" || filters.source !== "all" || symbolAgentIds !== null) && (
         <p className="text-xs text-text-secondary">
-          {filtered.length} of {agentsData.length} agents
+          {filtered.length} of {agentsData.length + discardedAgents.length} agents
         </p>
       )}
 
@@ -499,7 +541,7 @@ export function AgentLeaderboard({ agents: initialAgents, className }: AgentLead
           page={page}
           pageSize={pageSize}
           totalItems={filtered.length}
-          pageSizeOptions={[25, 50, 100]}
+          pageSizeOptions={[10, 25, 50, 100]}
           onPageChange={setPage}
           onPageSizeChange={setPageSize}
         />

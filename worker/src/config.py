@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     exchange_encryption_key: str = ""
 
     # CORS
-    cors_origins: str = "https://alpha-board.com,https://www.alpha-board.com,http://localhost:3000"
+    cors_origins: str = "https://alpha-board.com,https://www.alpha-board.com,http://localhost:3000,http://localhost:3333"
 
     # SSE
     sse_agent_broadcast_seconds: int = 30

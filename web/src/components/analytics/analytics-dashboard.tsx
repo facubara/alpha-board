@@ -56,7 +56,7 @@ interface AnalyticsDashboardProps {
 }
 
 const tabTriggerClass =
-  "rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary";
+  "rounded-none border-b-2 border-transparent px-4 py-2 font-mono text-xs uppercase tracking-widest text-text-secondary hover:text-text-primary data-[state=active]:border-terminal-amber data-[state=active]:text-terminal-amber";
 
 function pfLabel(grossWins: number, grossLosses: number): string {
   return `PF ${formatProfitFactor(grossWins, grossLosses)}`;
@@ -77,13 +77,13 @@ function FilterButtons<T extends string>({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-1">
-      <span className="mr-1 text-xs text-text-tertiary">{label}:</span>
+      <span className="mr-2 font-mono text-[10px] text-text-tertiary uppercase tracking-wider">{label}:</span>
       <button
         onClick={() => onSelect("all")}
-        className={`rounded-none px-2.5 py-1 text-xs font-medium transition-colors ${
+        className={`font-mono text-xs transition-colors px-2 pb-1 ${
           selected === "all"
-            ? "bg-text-primary text-void ring-1 ring-text-primary ring-offset-1 ring-offset-void"
-            : "bg-void-muted text-text-secondary hover:bg-void-muted hover:text-text-primary"
+            ? "text-terminal-amber border-b border-terminal-amber"
+            : "text-text-tertiary hover:text-text-primary"
         }`}
       >
         All
@@ -92,10 +92,10 @@ function FilterButtons<T extends string>({
         <button
           key={opt}
           onClick={() => onSelect(opt)}
-          className={`rounded-none px-2.5 py-1 text-xs font-medium transition-colors ${
+          className={`font-mono text-xs transition-colors px-2 pb-1 ${
             selected === opt
-              ? "bg-text-primary text-void ring-1 ring-text-primary ring-offset-1 ring-offset-void"
-              : "bg-void-muted text-text-secondary hover:bg-void-muted hover:text-text-primary"
+              ? "text-terminal-amber border-b border-terminal-amber"
+              : "text-text-tertiary hover:text-text-primary"
           }`}
         >
           {labels[opt]}
@@ -153,7 +153,7 @@ export function AnalyticsDashboard({
         <SummaryCards summary={summary} />
 
         <div>
-          <h3 className="mb-2 text-sm font-medium text-text-secondary">
+          <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
             Cumulative PnL (90 days)
           </h3>
           <CumulativePnlChart data={dailyPnl} />
@@ -161,7 +161,7 @@ export function AnalyticsDashboard({
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div>
-            <h3 className="mb-2 text-sm font-medium text-text-secondary">
+            <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
               Avg PnL by Archetype
             </h3>
             <HorizontalBarChart
@@ -173,7 +173,7 @@ export function AnalyticsDashboard({
             />
           </div>
           <div>
-            <h3 className="mb-2 text-sm font-medium text-text-secondary">
+            <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
               Avg PnL by Timeframe
             </h3>
             <HorizontalBarChart
@@ -187,7 +187,7 @@ export function AnalyticsDashboard({
         </div>
 
         <div>
-          <h3 className="mb-2 text-sm font-medium text-text-secondary">
+          <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
             Avg PnL by Source Type
           </h3>
           <HorizontalBarChart
@@ -220,7 +220,7 @@ export function AnalyticsDashboard({
         </div>
 
         <div>
-          <h3 className="mb-2 text-sm font-medium text-text-secondary">
+          <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
             Cumulative PnL by Archetype
           </h3>
           <ArchetypeCurvesChart data={dailyArchetypePnl} />
@@ -228,7 +228,7 @@ export function AnalyticsDashboard({
 
         {directionStats.length > 0 && (
           <div>
-            <h3 className="mb-2 text-sm font-medium text-text-secondary">
+            <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
               Long vs Short
             </h3>
             <HorizontalBarChart
@@ -242,7 +242,7 @@ export function AnalyticsDashboard({
         )}
 
         <div>
-          <h3 className="mb-2 text-sm font-medium text-text-secondary">
+          <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
             Agents in Drawdown ({filteredDrawdowns.length})
           </h3>
           <DrawdownTable data={filteredDrawdowns} />
@@ -252,7 +252,7 @@ export function AnalyticsDashboard({
       {/* Symbols Tab */}
       <TabsContent value="symbols" className="space-y-6 pt-4">
         <div>
-          <h3 className="mb-2 text-sm font-medium text-text-secondary">
+          <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
             Top Symbols by Trade Count
           </h3>
           <SymbolTable data={symbolStats} />

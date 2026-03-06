@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import type { ProcessingRun } from "@/lib/types";
+import { DottedProgress } from "@/components/terminal";
 
 const TASK_LABELS: Record<string, string> = {
   tweet_sentiment: "Tweets",
@@ -11,18 +11,11 @@ const TASK_LABELS: Record<string, string> = {
   post_mortem: "Post-Mortem",
 };
 
-const STATUS_STYLES: Record<string, string> = {
-  running: "bg-void-muted text-text-secondary",
-  paused: "bg-terminal-amber-muted text-terminal-amber",
-  completed: "bg-terminal-amber-muted text-data-profit",
-  failed: "bg-terminal-amber-muted text-data-loss",
-};
-
-const BAR_COLORS: Record<string, string> = {
-  running: "bg-text-secondary",
-  paused: "bg-terminal-amber",
-  completed: "bg-terminal-amber-muted",
-  failed: "bg-terminal-amber-muted",
+const BADGE_STYLES: Record<string, string> = {
+  running: "text-text-secondary border-void-border",
+  paused: "text-terminal-amber border-terminal-amber/30 bg-terminal-amber/10",
+  completed: "text-data-profit border-data-profit/30 bg-data-profit/10",
+  failed: "text-data-loss border-data-loss/30 bg-data-loss/10",
 };
 
 function timeAgo(dateStr: string): string {
@@ -38,7 +31,7 @@ function timeAgo(dateStr: string): string {
 export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
   if (runs.length === 0) {
     return (
-      <p className="text-sm text-text-tertiary">No processing runs yet.</p>
+      <p className="font-mono text-sm text-text-tertiary">No processing runs yet.</p>
     );
   }
 
@@ -46,7 +39,7 @@ export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
     <div className="overflow-x-auto rounded-none border border-void-border bg-void-surface">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-void-border text-left text-xs text-text-tertiary">
+          <tr className="border-b border-void-border text-left font-mono text-xs text-text-tertiary uppercase tracking-wider">
             <th className="px-4 py-2 font-medium">Task</th>
             <th className="px-4 py-2 font-medium">Status</th>
             <th className="px-4 py-2 font-medium text-right">Progress</th>
@@ -60,15 +53,14 @@ export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
               key={run.id}
               className="border-b border-void-border last:border-b-0"
             >
-              <td className="px-4 py-2 font-medium text-text-primary">
+              <td className="px-4 py-2 font-mono font-medium text-text-primary">
                 {TASK_LABELS[run.taskType] || run.taskType}
               </td>
               <td className="px-4 py-2">
                 <span
-                  className={cn(
-                    "inline-flex rounded-none px-1.5 py-0.5 text-xs font-medium",
-                    STATUS_STYLES[run.status]
-                  )}
+                  className={`inline-flex font-mono text-[10px] uppercase tracking-wider px-1.5 py-0.5 border ${
+                    BADGE_STYLES[run.status] ?? BADGE_STYLES.running
+                  }`}
                 >
                   {run.status}
                 </span>
@@ -76,13 +68,8 @@ export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
               <td className="px-4 py-2 text-right">
                 <div className="flex items-center justify-end gap-2">
                   {run.totalItems > 0 && (
-                    <div className="h-1 w-16 overflow-hidden rounded-full bg-void-muted">
-                      <div
-                        className={cn("h-full rounded-full", BAR_COLORS[run.status])}
-                        style={{
-                          width: `${Math.round((run.processedItems / run.totalItems) * 100)}%`,
-                        }}
-                      />
+                    <div className="w-16">
+                      <DottedProgress progress={Math.round((run.processedItems / run.totalItems) * 100)} />
                     </div>
                   )}
                   <span className="font-mono text-xs text-text-secondary">
@@ -91,14 +78,13 @@ export function RunHistoryTable({ runs }: { runs: ProcessingRun[] }) {
                 </div>
               </td>
               <td
-                className={cn(
-                  "px-4 py-2 text-right font-mono text-xs",
+                className={`px-4 py-2 text-right font-mono text-xs ${
                   run.errorCount > 0 ? "text-data-loss" : "text-text-tertiary"
-                )}
+                }`}
               >
                 {run.errorCount}
               </td>
-              <td className="px-4 py-2 text-right text-xs text-text-tertiary">
+              <td className="px-4 py-2 text-right font-mono text-xs text-text-tertiary">
                 {timeAgo(run.startedAt)}
               </td>
             </tr>

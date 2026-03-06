@@ -109,3 +109,109 @@ When a season ends, follow this process:
 - Commit messages follow conventional commits (`feat:`, `fix:`, `chore:`, etc.)
 - Worker timeframes: 15m, 30m, 1h, 4h, 1d
 - Agent engines: `rule` (deterministic Python) and `llm` (Claude API)
+
+---
+
+## Design Philosophy: "High-Fidelity Terminal"
+The UI must look like a proprietary Bloomberg Terminal or a secure server command line. It is **NOT** a friendly Web2 SaaS. It is a precision instrument for financial execution.
+*   **Vibe:** Mathematical, raw, dense, data-heavy, brutalist.
+*   **Shapes:** Hardware-like. Everything is perfectly square (`rounded-none`). Absolutely no `rounded-lg` or `rounded-full` (except for literal dot-matrix dots).
+*   **Shadows:** NONE. No drop shadows. UI depth is created entirely through 1px borders (`border-void-border`).
+
+---
+
+## UI Strict Rules (Never Do This)
+
+⚠️ **NEVER USE NATIVE SCROLLBARS.**
+If a container requires scrolling (`overflow-y-auto`), you MUST apply the `.terminal-scroll` custom class to hide default chunky browser scrollbars. 
+
+⚠️ **NEVER USE BLOG-STYLE LAYOUTS.**
+Do not constrain page content to the center of the screen using `max-w-2xl`, `max-w-3xl`, or `max-w-4xl`. This is a trading dashboard. Use full-width layouts: `w-full max-w-[1800px] mx-auto px-4`.
+
+⚠️ **NEVER USE SOLID PROGRESS BARS.**
+Do not use `bg-gray-800` solid divs for progress. Always use the custom `<DottedProgress>` component.
+
+⚠️ **NEVER USE GENERIC FONTS FOR DATA/HEADERS.**
+Do not use `font-sans` for page headers, table data, or numbers. If it is a number, a ticker, a timestamp, or a primary layout header (e.g., `>_ TERMINAL`), it MUST be `font-mono`.
+
+⚠️ **NEVER USE DEFAULT NEON COLORS.**
+Do not use default Tailwind `text-red-500` or `text-green-500`. Only use our custom `text-data-profit` and `text-data-loss` variables.
+
+---
+
+## Typography System
+
+We use a strict two-font system to balance terminal aesthetics with readability.
+
+*   **`font-mono` (Geist Mono / JetBrains):** 
+    *   **Use for:** All numbers, PnL, Tickers, Timestamps, Table Data, Page Headers (e.g., `>_ SEASONS`), Buttons, and exact AI outputs.
+    *   **Styling:** Often paired with `uppercase tracking-widest text-xs` for labels/headers.
+*   **`font-sans` (Geist Sans / Inter):**
+    *   **Use for:** Only for long-form reading paragraphs, marketing copy, or secondary description text where monospace would cause eye strain.
+
+---
+
+## Color System Reference
+
+Always use these custom Tailwind variables defined in our `tailwind.config.js`:
+
+*   **Backgrounds:** 
+    *   `bg-void` (#0A0A0A) - The absolute background.
+    *   `bg-void-surface` (#121212) - The background for all cards, tables, and panels.
+*   **Borders:** 
+    *   `border-void-border` (#27272A) - Used for ALL structural lines and dividers.
+*   **Text:** 
+    *   `text-text-primary` (#E4E4E7) - Primary data and headers. (Never use pure #FFF).
+    *   `text-text-secondary` (#A1A1AA) - Standard labels.
+    *   `text-text-tertiary` (#52525B) - Muted/inactive elements.
+*   **Accents & Data:**
+    *   `text-terminal-amber` (#FFB000) - Primary Brand Color, CTAs, Active States.
+    *   `text-data-profit` (#10B981) - Positive PnL, Longs, Success states.
+    *   `text-data-loss` (#F43F5E) - Negative PnL, Shorts, Error states.
+
+---
+
+## Custom Component Library
+
+When building UI, check if one of these custom components should be used instead of raw HTML:
+
+1.  **`<DottedAvatar agentId="..." />`**
+    *   *Use:* Always use this next to an Agent's name. Never use plain text or image avatars.
+2.  **`<DottedProgress progress={50} />`**
+    *   *Use:* For any percentage, season progress, or loading bar.
+3.  **`<DottedLoader />`**
+    *   *Use:* Instead of spinning circles or `[ \ ]` text for processing/running states.
+4.  **`<InteractiveGrid>` vs `.bg-dot-matrix`**
+    *   *Use:* `InteractiveGrid` is ONLY for the unauthenticated Landing Page. Authenticated app layouts strictly use the static `.bg-dot-matrix` class on the root body.
+
+---
+
+## Global CSS Utilities
+
+Ensure you are using the custom scrollbar utility for any scrolling panels:
+
+```css
+@layer utilities {
+  .terminal-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .terminal-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .terminal-scroll::-webkit-scrollbar-thumb {
+    background-color: #27272A;
+    border-radius: 0px;
+  }
+  .terminal-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: #52525B;
+  }
+  /* Hide scrollbar entirely for absolute clean looks when needed */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

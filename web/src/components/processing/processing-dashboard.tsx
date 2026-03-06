@@ -74,13 +74,13 @@ export function ProcessingDashboard({
           onClick={() => setShowRunAll((v) => !v)}
           disabled={totalPending === 0}
           className={cn(
-            "shrink-0 rounded-none px-3 py-1.5 text-sm font-medium transition-colors-fast",
+            "shrink-0 font-mono text-xs uppercase tracking-widest border transition-colors px-4 py-1",
             totalPending > 0
-              ? "bg-void-muted text-text-primary hover:bg-void-muted"
-              : "cursor-not-allowed bg-void-muted text-text-tertiary"
+              ? "border-terminal-amber text-terminal-amber hover:bg-terminal-amber hover:text-void"
+              : "cursor-not-allowed border-void-border text-text-tertiary"
           )}
         >
-          Run All
+          [ EXECUTE ALL ]
         </button>
       </div>
 
@@ -120,7 +120,7 @@ export function ProcessingDashboard({
 
       {/* Run history */}
       <div className="space-y-3">
-        <h2 className="text-sm font-medium text-text-secondary">Recent Runs</h2>
+        <h2 className="font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">Recent Runs</h2>
         <RunHistoryTable runs={runHistory} />
       </div>
     </div>

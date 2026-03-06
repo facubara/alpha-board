@@ -62,20 +62,20 @@ export function PromptEditor({ agentId, activePrompt }: PromptEditorProps) {
         </div>
         <div className="flex items-center gap-2">
           {saved && (
-            <span className="text-xs text-data-profit">Saved</span>
+            <span className="font-mono text-xs text-data-profit">Saved</span>
           )}
           <button
             onClick={handleSave}
             disabled={!isDirty || saving}
             className={cn(
-              "rounded-none px-3 py-1.5 text-sm font-medium transition-colors-fast",
+              "border px-4 py-1 font-mono text-xs transition-colors",
               isDirty
-                ? "bg-void-surface text-text-primary hover:bg-void-muted"
-                : "cursor-not-allowed text-text-tertiary",
+                ? "border-void-border text-text-primary hover:border-terminal-amber hover:text-terminal-amber"
+                : "cursor-not-allowed border-void-border/50 text-text-tertiary",
               saving && "opacity-50"
             )}
           >
-            {saving ? "Saving..." : "Save"}
+            {saving ? "[ SAVING... ]" : "[ SAVE PROMPT ]"}
           </button>
         </div>
       </div>
@@ -83,7 +83,7 @@ export function PromptEditor({ agentId, activePrompt }: PromptEditorProps) {
       <Textarea
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="min-h-[400px] resize-y font-mono text-xs leading-relaxed"
+        className="min-h-[400px] resize-y rounded-none border-void-border bg-void font-mono text-xs leading-relaxed text-text-secondary focus:border-void-border terminal-scroll"
         placeholder="Enter strategy prompt..."
       />
     </div>

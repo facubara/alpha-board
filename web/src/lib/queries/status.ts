@@ -20,7 +20,7 @@ export async function getStatusData(): Promise<StatusData> {
         active_incidents: ServiceIncident[];
       }>("/status/services"),
       workerGet<{ services: ServiceHistory[] }>("/status/history?days=90"),
-      workerGet<ServiceIncident[]>("/status/incidents?days=14"),
+      workerGet<ServiceIncident[]>("/status/incidents?days=3"),
     ]);
 
     return {

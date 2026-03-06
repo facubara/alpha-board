@@ -3,7 +3,7 @@
 /**
  * HorizontalBarChart — Reusable horizontal bar chart.
  * Positive bars green (right), negative red (left).
- * HTML/CSS layout for proper mobile text scaling.
+ * Uses muted bar fills with borders to reduce visual fatigue.
  */
 
 interface BarItem {
@@ -28,7 +28,7 @@ export function HorizontalBarChart({
       <div
         className={`flex h-20 items-center justify-center rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
       >
-        <p className="text-xs text-text-tertiary">No data</p>
+        <p className="font-mono text-xs text-text-tertiary">No data</p>
       </div>
     );
   }
@@ -38,7 +38,6 @@ export function HorizontalBarChart({
   const allNegative = items.every((i) => i.value < 0);
   const allSameSign = allPositive || allNegative;
 
-  // Build aria summary
   const summaryParts = items.map(
     (item) => `${item.label}: ${formatValue(item.value)}`
   );
@@ -55,6 +54,10 @@ export function HorizontalBarChart({
           const pct = (Math.abs(item.value) / maxAbs) * 100;
           const isPositive = item.value >= 0;
 
+          const barClass = isPositive
+            ? "bg-data-profit/20 border border-data-profit/40"
+            : "bg-data-loss/20 border border-data-loss/40";
+
           return (
             <div
               key={item.label}
@@ -62,9 +65,9 @@ export function HorizontalBarChart({
             >
               {/* Label column */}
               <div className="w-28 shrink-0 text-right sm:w-36">
-                <p className="truncate text-xs text-text-secondary">{item.label}</p>
+                <p className="truncate font-mono text-xs text-text-secondary">{item.label}</p>
                 {item.sublabel && (
-                  <p className="truncate font-mono text-xs text-text-tertiary">
+                  <p className="truncate font-mono text-[10px] text-text-tertiary">
                     {item.sublabel}
                   </p>
                 )}
@@ -76,12 +79,8 @@ export function HorizontalBarChart({
                   className={`flex h-4 min-w-0 flex-1 ${allNegative ? "justify-end" : ""}`}
                 >
                   <div
-                    className={`${
-                      isPositive
-                        ? "rounded-r-sm bg-[#10B981]"
-                        : "rounded-l-sm bg-[#F43F5E]"
-                    }`}
-                    style={{ width: `${pct}%`, opacity: 0.7 }}
+                    className={barClass}
+                    style={{ width: `${pct}%` }}
                   />
                 </div>
               ) : (
@@ -90,8 +89,8 @@ export function HorizontalBarChart({
                   <div className="flex h-4 flex-1 justify-end">
                     {!isPositive && (
                       <div
-                        className="rounded-l-sm bg-[#F43F5E]"
-                        style={{ width: `${pct}%`, opacity: 0.7 }}
+                        className={barClass}
+                        style={{ width: `${pct}%` }}
                       />
                     )}
                   </div>
@@ -103,8 +102,8 @@ export function HorizontalBarChart({
                   <div className="flex h-4 flex-1">
                     {isPositive && (
                       <div
-                        className="rounded-r-sm bg-[#10B981]"
-                        style={{ width: `${pct}%`, opacity: 0.7 }}
+                        className={barClass}
+                        style={{ width: `${pct}%` }}
                       />
                     )}
                   </div>
@@ -115,9 +114,7 @@ export function HorizontalBarChart({
               <div className="w-20 shrink-0 text-right sm:w-24">
                 <span
                   className={`font-mono text-xs ${
-                    isPositive
-                      ? "text-[#10B981]"
-                      : "text-[#F43F5E]"
+                    isPositive ? "text-data-profit" : "text-data-loss"
                   }`}
                 >
                   {formatValue(item.value)}

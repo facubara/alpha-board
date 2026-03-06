@@ -2,7 +2,8 @@
 
 /**
  * ArchetypeCurvesChart — Multi-line chart showing cumulative PnL per archetype.
- * Data is pivoted from per-archetype arrays to per-day objects for Recharts.
+ * Uses a muted monochromatic zinc palette to avoid rainbow "spaghetti chart" effect.
+ * The hovered line gets highlighted via Recharts activeDot.
  */
 
 import { useMemo } from "react";
@@ -26,19 +27,20 @@ import {
   formatDateTick,
 } from "@/lib/chart-theme";
 
+// Monochromatic terminal palette — muted zinc/slate tones to avoid neon rainbow
 const ARCHETYPE_COLORS: Partial<Record<StrategyArchetype, string>> = {
-  momentum: "#3B82F6",
-  mean_reversion: "#A855F7",
-  breakout: "#F59E0B",
-  swing: "#06B6D4",
-  tweet_momentum: "#2DD4BF",
-  tweet_contrarian: "#5EEAD4",
-  tweet_narrative: "#14B8A6",
-  tweet_insider: "#0D9488",
-  hybrid_momentum: "#C084FC",
-  hybrid_mean_reversion: "#A78BFA",
-  hybrid_breakout: "#8B5CF6",
-  hybrid_swing: "#7C3AED",
+  momentum: "#FFB000",        // terminal-amber (primary)
+  mean_reversion: "#A1A1AA",  // zinc-400
+  breakout: "#D4D4D8",        // zinc-300
+  swing: "#71717A",           // zinc-500
+  tweet_momentum: "#E4C78A",  // warm muted amber
+  tweet_contrarian: "#8B8B95", // muted slate
+  tweet_narrative: "#9CA3AF",  // gray-400
+  tweet_insider: "#52525B",   // zinc-600
+  hybrid_momentum: "#D9A44D", // warm gold
+  hybrid_mean_reversion: "#6B7280", // gray-500
+  hybrid_breakout: "#B0A080", // muted sand
+  hybrid_swing: "#4B5563",    // gray-600
 };
 
 const ARCHETYPE_LABELS: Partial<Record<StrategyArchetype, string>> = {
@@ -94,7 +96,7 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
       <div
         className={`flex h-48 items-center justify-center rounded-none border border-void-border bg-void-surface ${className ?? ""}`}
       >
-        <p className="text-xs text-text-tertiary">Not enough data for chart</p>
+        <p className="font-mono text-xs text-text-tertiary">Not enough data for chart</p>
       </div>
     );
   }
@@ -136,7 +138,7 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
           <Legend
             iconType="plainline"
             iconSize={10}
-            wrapperStyle={{ fontSize: 11, paddingTop: 4 }}
+            wrapperStyle={{ fontSize: 10, paddingTop: 4, fontFamily: "var(--font-geist-mono), monospace" }}
             formatter={(value: string) =>
               ARCHETYPE_LABELS[value as StrategyArchetype] ?? value
             }
@@ -146,10 +148,10 @@ export function ArchetypeCurvesChart({ data, className }: ArchetypeCurvesChartPr
               key={arch}
               type="linear"
               dataKey={arch}
-              stroke={ARCHETYPE_COLORS[arch] ?? "#888"}
-              strokeWidth={1.5}
+              stroke={ARCHETYPE_COLORS[arch] ?? "#52525B"}
+              strokeWidth={1.2}
               dot={false}
-              activeDot={{ r: 3 }}
+              activeDot={{ r: 4, stroke: "#FFB000", strokeWidth: 2, fill: "#FFB000" }}
             />
           ))}
         </LineChart>

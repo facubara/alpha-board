@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -26,10 +27,13 @@ function getCookie(name: string): string | null {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    if (typeof document === "undefined") return false;
-    return getCookie("auth_status") === "1";
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    if (getCookie("auth_status") === "1") {
+      setIsAuthenticated(true);
+    }
+  }, []);
   const [showModal, setShowModal] = useState(false);
   const pendingCallback = useRef<(() => void) | null>(null);
 

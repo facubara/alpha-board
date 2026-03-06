@@ -58,7 +58,7 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 pt-2">
-            <Link href="/dashboard">
+            <Link href="/terminal">
               <TerminalButton variant="primary">Launch Terminal</TerminalButton>
             </Link>
             <Link href="/agents">

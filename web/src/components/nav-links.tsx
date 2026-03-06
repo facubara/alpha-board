@@ -13,7 +13,7 @@ import { Menu, X } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Terminal" },
+  { href: "/terminal", label: "Terminal" },
   { href: "/agents", label: "Agents" },
   { href: "/radar", label: "Radar" },
   { href: "/lab", label: "Laboratory" },

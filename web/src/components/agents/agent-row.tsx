@@ -256,12 +256,12 @@ export const AgentRow = memo(function AgentRow({ agent, showCheckbox, selected, 
           onClick={handleToggle}
           disabled={toggling}
           className={cn(
-            "rounded-none border px-3 py-1 font-mono text-xs transition-colors-fast",
+            "rounded-none px-2 py-1 font-mono text-xs transition-colors",
             toggling
-              ? "border-void-border text-text-tertiary"
+              ? "text-text-tertiary"
               : isPaused
-                ? "border-void-border text-text-secondary hover:text-data-profit hover:border-data-profit"
-                : "border-void-border text-text-secondary hover:text-terminal-amber hover:border-terminal-amber"
+                ? "text-terminal-amber hover:bg-terminal-amber hover:text-void"
+                : "text-text-secondary hover:text-text-primary"
           )}
           title={toggling ? "Updating..." : isPaused ? "Deploy agent" : "Pause agent"}
           aria-label={toggling ? "Updating..." : isPaused ? "Deploy agent" : "Pause agent"}

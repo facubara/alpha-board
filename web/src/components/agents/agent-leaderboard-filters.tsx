@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, X, PauseCircle, GitCompareArrows } from "lucide-react";
+import { X, PauseCircle, GitCompareArrows } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type {
   AgentEngine,
@@ -58,7 +58,11 @@ function FilterGroup({
   );
 }
 
+type StatusFilter = "all" | "active" | "paused" | "discarded";
+
 interface AgentLeaderboardFiltersProps {
+  statusFilter: StatusFilter;
+  discardedCount: number;
   timeframeFilter: AgentTimeframe | "all";
   archetypeFilter: StrategyArchetype | "all";
   engineFilter: AgentEngine | "all";
@@ -66,6 +70,7 @@ interface AgentLeaderboardFiltersProps {
   symbolSearch: string;
   compareMode: boolean;
   dataReady?: boolean;
+  onStatusChange: (v: StatusFilter) => void;
   onTimeframeChange: (v: AgentTimeframe | "all") => void;
   onArchetypeChange: (v: StrategyArchetype | "all") => void;
   onEngineChange: (v: AgentEngine | "all") => void;
@@ -76,6 +81,8 @@ interface AgentLeaderboardFiltersProps {
 }
 
 export function AgentLeaderboardFilters({
+  statusFilter,
+  discardedCount,
   timeframeFilter,
   archetypeFilter,
   engineFilter,
@@ -83,6 +90,7 @@ export function AgentLeaderboardFilters({
   symbolSearch,
   compareMode,
   dataReady = true,
+  onStatusChange,
   onTimeframeChange,
   onArchetypeChange,
   onEngineChange,
@@ -95,6 +103,36 @@ export function AgentLeaderboardFilters({
     <div className="rounded-none border border-void-border bg-void-surface p-3 space-y-3">
       {/* Filter rows */}
       <div className="flex flex-wrap items-center gap-4">
+        {/* Status filter */}
+        <FilterGroup label="Status">
+          <FilterButton
+            active={statusFilter === "all"}
+            onClick={() => onStatusChange("all")}
+          >
+            All
+          </FilterButton>
+          <FilterButton
+            active={statusFilter === "active"}
+            onClick={() => onStatusChange("active")}
+          >
+            Active
+          </FilterButton>
+          <FilterButton
+            active={statusFilter === "paused"}
+            onClick={() => onStatusChange("paused")}
+          >
+            Paused
+          </FilterButton>
+          <FilterButton
+            active={statusFilter === "discarded"}
+            onClick={() => onStatusChange("discarded")}
+          >
+            Discarded{discardedCount > 0 ? ` (${discardedCount})` : ""}
+          </FilterButton>
+        </FilterGroup>
+
+        <div className="hidden h-5 w-px bg-void-border sm:block" />
+
         {/* Timeframe filter */}
         <FilterGroup label="Timeframe">
           <FilterButton
@@ -180,23 +218,25 @@ export function AgentLeaderboardFilters({
         <div className="hidden h-5 w-px bg-void-border sm:block" />
 
         {/* Symbol search */}
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
-          <input
-            type="text"
-            value={symbolSearch}
-            onChange={(e) => onSymbolSearchChange(e.target.value)}
-            placeholder="Search symbol..."
-            className="h-7 w-44 rounded-none border border-void-border bg-void pl-8 pr-8 font-mono text-xs text-text-primary placeholder:text-text-tertiary focus:border-void-border focus:outline-none"
-          />
-          {symbolSearch && (
-            <button
-              onClick={() => onSymbolSearchChange("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          )}
+        <div className="flex items-center gap-1">
+          <span className="font-mono text-xs text-text-tertiary">&gt;_</span>
+          <div className="relative">
+            <input
+              type="text"
+              value={symbolSearch}
+              onChange={(e) => onSymbolSearchChange(e.target.value)}
+              placeholder="Search symbol..."
+              className="h-7 w-48 bg-transparent border-b border-void-border text-text-primary font-mono text-xs focus:outline-none focus:border-terminal-amber px-2 py-1 placeholder:text-text-tertiary transition-colors-fast"
+            />
+            {symbolSearch && (
+              <button
+                onClick={() => onSymbolSearchChange("")}
+                className="absolute right-1 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Spacer */}

@@ -1,11 +1,8 @@
 import { Suspense } from "react";
 import { AgentLeaderboard } from "@/components/agents";
-import { DiscardedAgents } from "@/components/agents/discarded-agents";
 import { FleetLessons } from "@/components/agents/fleet-lessons";
-import { getAgentLeaderboard } from "@/lib/queries/agents";
-import { getDiscardedAgents } from "@/lib/queries/agents";
+import { getAgentLeaderboard, getDiscardedAgents } from "@/lib/queries/agents";
 import { getFleetLessons } from "@/lib/queries/lessons";
-import { PageHeader } from "@/components/terminal";
 import {
   Table,
   TableBody,
@@ -30,16 +27,11 @@ async function AgentsContent() {
   return (
     <>
       {/* Leaderboard — server data hydrates instantly, client revalidates */}
-      <AgentLeaderboard agents={agents} />
+      <AgentLeaderboard agents={agents} discardedAgents={discarded} />
 
       {/* Fleet lessons */}
       <div className="border-t border-void-border pt-6">
         <FleetLessons lessons={lessons} />
-      </div>
-
-      {/* Discarded agents */}
-      <div className="border-t border-void-border pt-6">
-        <DiscardedAgents agents={discarded} />
       </div>
     </>
   );
@@ -105,11 +97,12 @@ export default function AgentsPage() {
   return (
     <div className="space-y-6">
       {/* Page header */}
-      <PageHeader
-        title="Agent Arena"
-        badge="v2"
-        subtitle="AI trading agents competing in simulated markets · 5 seasons active"
-      />
+      <div>
+        <h1 className="font-mono text-xl text-text-primary uppercase tracking-widest border-b border-void-border pb-2 mb-4">
+          &gt;_ AGENT ARENA <span className="text-terminal-amber text-xs ml-2 border border-terminal-amber px-1">[ V2 ]</span>
+        </h1>
+        <p className="font-mono text-xs text-text-secondary uppercase">AI trading agents competing in simulated markets · 5 seasons active</p>
+      </div>
 
       {/* Disclaimer */}
       <div className="rounded-none border border-void-border bg-void-surface px-3 py-2 text-xs text-text-tertiary">

@@ -143,6 +143,7 @@ async def get_incidents(days: int = Query(default=30, ge=1, le=180)):
             select(ServiceIncident)
             .where(ServiceIncident.started_at >= cutoff)
             .order_by(ServiceIncident.started_at.desc())
+            .limit(200)
         )
         incidents = result.scalars().all()
 

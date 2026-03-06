@@ -202,7 +202,7 @@ function DecisionCard({
             <span>Prompt v{decision.promptVersion}</span>
           </div>
           {/* Full reasoning */}
-          <div className="max-h-96 overflow-y-auto rounded-none border border-void-border bg-void p-3">
+          <div className="max-h-96 overflow-y-auto terminal-scroll rounded-none border border-void-border bg-void p-3">
             <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-text-secondary">
               {decision.reasoningFull}
             </pre>

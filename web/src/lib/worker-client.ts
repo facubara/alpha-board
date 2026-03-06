@@ -21,7 +21,7 @@ async function workerFetch<T>(
   path: string,
   options: RequestInit & { timeoutMs?: number } = {}
 ): Promise<T> {
-  const { timeoutMs = 15_000, ...fetchOptions } = options;
+  const { timeoutMs = 60_000, ...fetchOptions } = options;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -29,7 +29,7 @@ async function workerFetch<T>(
     const res = await fetch(`${WORKER_URL}${path}`, {
       ...fetchOptions,
       signal: controller.signal,
-      next: { revalidate: 0 },
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
         ...fetchOptions.headers,

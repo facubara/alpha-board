@@ -12,23 +12,18 @@ interface BacktestListProps {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  pending:
-    "bg-void-muted text-terminal-amber border-terminal-amber/20",
-  running:
-    "bg-void-muted text-text-secondary border-void-border",
-  completed:
-    "bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20",
-  failed:
-    "bg-[#F43F5E]/10 text-[#F43F5E] border-[#F43F5E]/20",
-  cancelled:
-    "bg-void-muted text-text-tertiary border-text-tertiary/20",
+  pending: "text-terminal-amber border-terminal-amber/30 bg-terminal-amber/10",
+  running: "text-text-secondary border-void-border",
+  completed: "text-data-profit border-data-profit/30 bg-data-profit/10",
+  failed: "text-data-loss border-data-loss/30 bg-data-loss/10",
+  cancelled: "text-text-tertiary border-text-tertiary/20",
 };
 
 function StatusBadge({ status }: { status: string }) {
   const style = STATUS_STYLES[status] ?? STATUS_STYLES.pending;
   return (
     <span
-      className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-medium ${style}`}
+      className={`inline-flex font-mono text-[10px] uppercase tracking-wider border px-1.5 py-0.5 ${style}`}
     >
       {status}
     </span>
@@ -76,7 +71,7 @@ export function BacktestList({ runs }: BacktestListProps) {
     <div className="overflow-x-auto rounded-none border border-void-border bg-void-surface">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-void-border text-left text-xs text-text-tertiary">
+          <tr className="border-b border-void-border text-left font-mono text-xs text-text-tertiary uppercase tracking-wider">
             <th className="px-3 py-2 font-medium">#</th>
             <th className="px-3 py-2 font-medium">Strategy</th>
             <th className="px-3 py-2 font-medium">Symbol</th>
@@ -127,8 +122,8 @@ export function BacktestList({ runs }: BacktestListProps) {
                 <td
                   className={`px-3 py-2 text-right font-mono ${
                     run.totalPnl != null && run.totalPnl >= 0
-                      ? "text-[#10B981]"
-                      : "text-[#F43F5E]"
+                      ? "text-data-profit"
+                      : "text-data-loss"
                   }`}
                 >
                   {formatPnl(run.totalPnl)}
@@ -152,7 +147,7 @@ export function BacktestList({ runs }: BacktestListProps) {
                     <button
                       onClick={() => handleCancel(run.id)}
                       disabled={cancellingId === run.id}
-                      className="rounded-none p-1 text-text-tertiary transition-colors-fast hover:bg-void-muted hover:text-[#F43F5E] disabled:opacity-50"
+                      className="rounded-none p-1 text-text-tertiary transition-colors-fast hover:bg-void-muted hover:text-data-loss disabled:opacity-50"
                       title="Cancel backtest"
                     >
                       {cancellingId === run.id ? (

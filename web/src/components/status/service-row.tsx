@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ServiceRow — Single service with status dot, name, latency,
+ * ServiceRow — Single service with glowing status dot, name, latency,
  * 90-day heatmap, and uptime percentage.
  */
 
@@ -9,9 +9,9 @@ import type { ServiceCurrent, ServiceHistory, ServiceStatus } from "@/lib/types"
 import { UptimeHeatmap } from "./uptime-heatmap";
 
 const STATUS_DOT: Record<ServiceStatus, string> = {
-  operational: "bg-[#22C55E]",
-  degraded: "bg-[#FBBF24]",
-  down: "bg-[#EF4444]",
+  operational: "bg-data-profit shadow-[0_0_4px_rgba(16,185,129,0.4)]",
+  degraded: "bg-terminal-amber shadow-[0_0_4px_rgba(255,176,0,0.4)]",
+  down: "bg-data-loss animate-pulse shadow-[0_0_6px_rgba(244,63,94,0.6)]",
 };
 
 interface ServiceRowProps {
@@ -20,26 +20,26 @@ interface ServiceRowProps {
 }
 
 export function ServiceRow({ service, history }: ServiceRowProps) {
-  const dotClass = STATUS_DOT[service.status] ?? "bg-[#525252]";
+  const dotClass = STATUS_DOT[service.status] ?? "bg-text-tertiary";
 
   return (
-    <div className="rounded-none border border-void-border bg-void-surface px-4 py-3">
+    <div className="border-b border-void-border bg-void-surface px-4 py-3 last:border-b-0">
       {/* Top line: status dot + name + latency + uptime */}
       <div className="flex items-center gap-3">
         <span
-          className={`h-2.5 w-2.5 shrink-0 rounded-full ${dotClass}`}
+          className={`h-1.5 w-1.5 shrink-0 rounded-full ${dotClass}`}
           title={service.status}
         />
-        <span className="min-w-0 flex-1 truncate text-sm font-medium text-text-primary">
+        <span className="min-w-0 flex-1 truncate font-mono text-sm text-text-primary">
           {service.name}
         </span>
         {service.latency_ms != null && (
-          <span className="shrink-0 text-xs text-text-tertiary">
+          <span className="shrink-0 font-mono text-xs text-text-secondary">
             {service.latency_ms}ms
           </span>
         )}
         {history?.uptime_90d != null && (
-          <span className="shrink-0 text-xs font-medium text-text-secondary">
+          <span className="shrink-0 font-mono text-xs text-text-secondary">
             {history.uptime_90d.toFixed(2)}%
           </span>
         )}

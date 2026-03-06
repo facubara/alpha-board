@@ -26,13 +26,18 @@ import type {
   AgentTokenUsageSummary,
   AgentAnalysis,
 } from "@/lib/types";
+import { DottedAvatar } from "@/components/terminal";
 import { AgentOverview } from "./agent-overview";
 import { TradeHistory } from "./trade-history";
 import { ReasoningLog } from "./reasoning-log";
 import { PromptEditor } from "./prompt-editor";
 import { PromptHistory } from "./prompt-history";
 import { ModelConfig } from "./model-config";
-import { AgentChart } from "./agent-chart";
+import dynamic from "next/dynamic";
+const AgentChart = dynamic(
+  () => import("./agent-chart").then((m) => ({ default: m.AgentChart })),
+  { ssr: false }
+);
 import { AnalysisHistory } from "./analysis-history";
 
 const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
@@ -77,97 +82,122 @@ export function AgentDetail({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                "inline-flex shrink-0 items-center rounded-none px-1.5 py-0.5 font-mono text-xs font-bold",
-                agent.engine === "rule"
-                  ? "bg-terminal-amber-muted text-data-profit"
-                  : "bg-void-muted text-text-secondary"
-              )}
-            >
-              {agent.engine === "rule" ? "RULE" : "LLM"}
-            </span>
-            <span
-              className={cn(
-                "inline-flex shrink-0 items-center rounded-none px-1.5 py-0.5 font-mono text-xs font-bold",
-                agent.source === "tweet"
-                  ? "bg-void-muted text-text-secondary"
-                  : agent.source === "hybrid"
-                    ? "bg-void-muted text-text-secondary"
-                    : "bg-void-muted text-text-tertiary"
-              )}
-            >
-              {AGENT_SOURCE_LABELS[agent.source]}
-            </span>
-            <h1 className="text-xl font-semibold text-text-primary">
-              {agent.displayName}
-            </h1>
-          </div>
-          <div className="mt-1 flex items-center gap-2">
-            <span className="rounded-none bg-void-muted px-2 py-0.5 text-xs font-medium text-text-secondary">
-              {STRATEGY_ARCHETYPE_LABELS[agent.strategyArchetype]}
-            </span>
-            <span className="font-mono text-xs text-text-tertiary">
-              {AGENT_TIMEFRAME_LABELS[agent.timeframe]}
-            </span>
-            <span
-              className={cn(
-                "rounded-none px-1.5 py-0.5 text-xs font-medium",
-                agent.status === "active"
-                  ? "bg-terminal-amber-muted text-data-profit"
-                  : "bg-void-muted text-text-tertiary"
-              )}
-            >
-              {agent.status}
-            </span>
-            {agent.uuid && (
-              <span className="font-mono text-xs text-text-tertiary" title={agent.uuid}>
-                {agent.uuid.slice(0, 8)}
+        <div className="flex items-start gap-3">
+          <DottedAvatar
+            agentId={String(agent.id)}
+            gridSize={6}
+            status={agent.status === "active" ? "idle" : "error"}
+          />
+          <div>
+            <div className="flex items-center gap-2">
+              <span
+                className={cn(
+                  "inline-flex shrink-0 items-center rounded-none px-1.5 py-0.5 font-mono text-xs font-bold",
+                  agent.engine === "rule"
+                    ? "bg-terminal-amber-muted text-data-profit"
+                    : "bg-void-muted text-text-secondary"
+                )}
+              >
+                {agent.engine === "rule" ? "RULE" : "LLM"}
               </span>
-            )}
+              <span
+                className={cn(
+                  "inline-flex shrink-0 items-center rounded-none px-1.5 py-0.5 font-mono text-xs font-bold",
+                  agent.source === "tweet"
+                    ? "bg-void-muted text-text-secondary"
+                    : agent.source === "hybrid"
+                      ? "bg-void-muted text-text-secondary"
+                      : "bg-void-muted text-text-tertiary"
+                )}
+              >
+                {AGENT_SOURCE_LABELS[agent.source]}
+              </span>
+              <h1 className="font-mono text-xl font-semibold text-text-primary">
+                {agent.displayName}
+              </h1>
+            </div>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="rounded-none bg-void-muted px-2 py-0.5 font-mono text-xs font-medium text-text-secondary">
+                {STRATEGY_ARCHETYPE_LABELS[agent.strategyArchetype]}
+              </span>
+              <span className="font-mono text-xs text-text-tertiary">
+                {AGENT_TIMEFRAME_LABELS[agent.timeframe]}
+              </span>
+              <span
+                className={cn(
+                  "rounded-none px-1.5 py-0.5 font-mono text-xs font-medium uppercase",
+                  agent.status === "active"
+                    ? "bg-terminal-amber-muted text-data-profit"
+                    : "bg-void-muted text-text-tertiary"
+                )}
+              >
+                {agent.status}
+              </span>
+              {agent.uuid && (
+                <span className="font-mono text-xs text-text-tertiary" title={agent.uuid}>
+                  {agent.uuid.slice(0, 8)}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Quick stats */}
-        <div className="flex gap-4">
-          <div className="text-right">
-            <p className="text-xs text-text-tertiary">Equity</p>
-            <p className="font-mono text-sm font-semibold text-text-primary">
-              ${displayEquity.toFixed(2)}
-            </p>
+        {/* Quick stats + CTA */}
+        <div className="flex items-start gap-6">
+          <div className="flex gap-4">
+            <div className="text-right">
+              <p className="font-mono text-xs uppercase tracking-widest text-text-tertiary">Equity</p>
+              <p className="font-mono text-sm font-semibold text-text-primary">
+                ${displayEquity.toFixed(2)}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="font-mono text-xs uppercase tracking-widest text-text-tertiary">Realized</p>
+              <p
+                className={cn(
+                  "font-mono text-sm font-semibold",
+                  agent.totalRealizedPnl > 0 && "text-data-profit",
+                  agent.totalRealizedPnl < 0 && "text-data-loss",
+                  agent.totalRealizedPnl === 0 && "text-text-secondary"
+                )}
+              >
+                {agent.totalRealizedPnl >= 0 ? "+" : ""}
+                {agent.totalRealizedPnl.toFixed(2)}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="font-mono text-xs uppercase tracking-widest text-text-tertiary">Unrealized</p>
+              <p
+                className={cn(
+                  "font-mono text-sm font-semibold",
+                  !isLive && "text-text-tertiary",
+                  isLive && displayUpnl > 0 && "text-data-profit",
+                  isLive && displayUpnl < 0 && "text-data-loss",
+                  isLive && displayUpnl === 0 && "text-text-secondary"
+                )}
+              >
+                {isLive
+                  ? `${displayUpnl >= 0 ? "+" : ""}${displayUpnl.toFixed(2)}`
+                  : SPINNER_FRAMES[0]}
+              </p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-xs text-text-tertiary">Realized</p>
-            <p
-              className={cn(
-                "font-mono text-sm font-semibold",
-                agent.totalRealizedPnl > 0 && "text-data-profit",
-                agent.totalRealizedPnl < 0 && "text-data-loss",
-                agent.totalRealizedPnl === 0 && "text-text-secondary"
-              )}
-            >
-              {agent.totalRealizedPnl >= 0 ? "+" : ""}
-              {agent.totalRealizedPnl.toFixed(2)}
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-text-tertiary">Unrealized</p>
-            <p
-              className={cn(
-                "font-mono text-sm font-semibold",
-                !isLive && "text-text-tertiary",
-                isLive && displayUpnl > 0 && "text-data-profit",
-                isLive && displayUpnl < 0 && "text-data-loss",
-                isLive && displayUpnl === 0 && "text-text-secondary"
-              )}
-            >
-              {isLive
-                ? `${displayUpnl >= 0 ? "+" : ""}${displayUpnl.toFixed(2)}`
-                : SPINNER_FRAMES[0]}
-            </p>
-          </div>
+
+          {/* Primary CTA */}
+          {agent.status === "active" ? (
+            <div className="flex gap-2">
+              <button className="border border-void-border px-4 py-2 font-mono text-xs uppercase tracking-widest text-text-primary transition-colors hover:border-terminal-amber hover:text-terminal-amber">
+                [ PAUSE ]
+              </button>
+              <button className="border border-data-loss/30 px-4 py-2 font-mono text-xs uppercase tracking-widest text-data-loss transition-colors hover:border-data-loss hover:bg-data-loss/10">
+                [ TERMINATE ]
+              </button>
+            </div>
+          ) : agent.status === "discarded" ? null : (
+            <button className="bg-terminal-amber px-6 py-2 font-mono text-sm font-semibold text-void transition-colors hover:bg-yellow-400">
+              [ DEPLOY AGENT ]
+            </button>
+          )}
         </div>
       </div>
 
@@ -181,44 +211,44 @@ export function AgentDetail({
         <TabsList className="border-b border-void-border bg-transparent p-0">
           <TabsTrigger
             value="overview"
-            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary"
+            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-terminal-amber data-[state=active]:text-terminal-amber"
           >
             Overview
           </TabsTrigger>
           <TabsTrigger
             value="trades"
-            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary"
+            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-terminal-amber data-[state=active]:text-terminal-amber"
           >
             Trades ({trades.length})
           </TabsTrigger>
           <TabsTrigger
             value="reasoning"
-            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary"
+            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-terminal-amber data-[state=active]:text-terminal-amber"
           >
             Reasoning ({decisions.length})
           </TabsTrigger>
           <TabsTrigger
             value="chart"
-            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary"
+            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-terminal-amber data-[state=active]:text-terminal-amber"
           >
             Chart
           </TabsTrigger>
           <TabsTrigger
             value="prompt"
-            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary"
+            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-terminal-amber data-[state=active]:text-terminal-amber"
           >
             {agent.engine === "rule" ? "Rules" : "Prompt"}
           </TabsTrigger>
           <TabsTrigger
             value="config"
-            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary"
+            className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-terminal-amber data-[state=active]:text-terminal-amber"
           >
             Config
           </TabsTrigger>
           {analysisHistory.length > 0 && (
             <TabsTrigger
               value="analysis"
-              className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-text-primary data-[state=active]:text-text-primary"
+              className="rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium text-text-secondary data-[state=active]:border-terminal-amber data-[state=active]:text-terminal-amber"
             >
               Analysis ({analysisHistory.length})
             </TabsTrigger>

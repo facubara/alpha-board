@@ -36,26 +36,30 @@ export function UpdatesList({ entries }: { entries: ChangelogEntry[] }) {
     <div className="space-y-8">
       {groups.map((group) => (
         <section key={group.label}>
-          <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-text-tertiary">
+          <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-text-tertiary">
             {group.label}
           </h2>
-          <div className="space-y-3">
+          <div>
             {group.entries.map((entry) => (
               <div
                 key={entry.date + entry.title}
-                className="rounded-none border border-void-border bg-void-surface px-4 py-3"
+                className="flex border-b border-void-border py-3 first:pt-0 last:border-b-0"
               >
-                <div className="flex items-baseline gap-3">
-                  <span className="shrink-0 font-mono text-xs text-text-tertiary">
-                    {formatDate(entry.date)}
-                  </span>
-                  <span className="text-sm font-medium text-text-primary">
+                {/* Date column — fixed width, right-aligned with vertical rule */}
+                <div className="w-28 shrink-0 border-r border-void-border pr-4 text-right font-mono text-xs text-text-tertiary">
+                  {formatDate(entry.date)}
+                </div>
+
+                {/* Content column */}
+                <div className="flex-1 pl-4">
+                  <span className="font-mono text-sm uppercase tracking-widest text-text-primary">
                     {entry.title}
                   </span>
+                  <p className="mt-1 text-sm leading-relaxed text-text-secondary">
+                    <span className="text-text-tertiary">{">"} </span>
+                    {entry.description}
+                  </p>
                 </div>
-                <p className="mt-1 text-sm leading-relaxed text-text-tertiary">
-                  {entry.description}
-                </p>
               </div>
             ))}
           </div>

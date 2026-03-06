@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { ProcessingTaskSummary } from "@/lib/types";
+import { DottedProgress } from "@/components/terminal";
 
 const TASK_LABELS: Record<string, string> = {
   tweet_sentiment: "Tweet Sentiment",
@@ -35,13 +36,6 @@ const STATUS_STYLES: Record<string, string> = {
   paused: "text-terminal-amber",
   completed: "text-data-profit",
   failed: "text-data-loss",
-};
-
-const BAR_COLORS: Record<string, string> = {
-  running: "bg-text-secondary",
-  paused: "bg-terminal-amber",
-  completed: "bg-terminal-amber-muted",
-  failed: "bg-terminal-amber-muted",
 };
 
 const STATUS_ICONS: Record<string, string> = {
@@ -88,18 +82,8 @@ export function TaskCard({ task }: { task: ProcessingTaskSummary }) {
       )}
       {/* Progress bar */}
       {task.lastRun && task.lastRun.totalItems > 0 && (
-        <div className="mt-2 flex items-center gap-2">
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-void-muted">
-            <div
-              className={cn("h-full rounded-full transition-all", BAR_COLORS[task.lastRun.status])}
-              style={{
-                width: `${Math.round((task.lastRun.processedItems / task.lastRun.totalItems) * 100)}%`,
-              }}
-            />
-          </div>
-          <span className="text-[10px] font-medium text-text-tertiary">
-            {Math.round((task.lastRun.processedItems / task.lastRun.totalItems) * 100)}%
-          </span>
+        <div className="mt-2">
+          <DottedProgress progress={Math.round((task.lastRun.processedItems / task.lastRun.totalItems) * 100)} />
         </div>
       )}
 
@@ -112,13 +96,13 @@ export function TaskCard({ task }: { task: ProcessingTaskSummary }) {
         onClick={() => setShowCommand((v) => !v)}
         disabled={task.pendingCount === 0}
         className={cn(
-          "mt-4 w-full rounded-none px-3 py-1.5 text-sm font-medium transition-colors-fast",
+          "mt-4 w-full font-mono text-xs uppercase tracking-widest border transition-colors px-4 py-1.5",
           task.pendingCount > 0
-            ? "bg-void-muted text-text-primary hover:bg-void-muted"
-            : "cursor-not-allowed bg-void-muted text-text-tertiary"
+            ? "border-void-border text-text-secondary hover:text-terminal-amber hover:border-terminal-amber"
+            : "cursor-not-allowed border-void-border text-text-tertiary"
         )}
       >
-        Run
+        [ EXECUTE ]
       </button>
 
       {/* Command instructions */}

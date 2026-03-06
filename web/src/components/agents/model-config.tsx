@@ -87,19 +87,19 @@ export function ModelConfig({ agent, tokenUsage }: ModelConfigProps) {
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-text-secondary">Agent Configuration</h3>
         <div className="flex items-center gap-2">
-          {saved && <span className="text-xs text-data-profit">Saved</span>}
+          {saved && <span className="font-mono text-xs text-data-profit">Saved</span>}
           <button
             onClick={handleSave}
             disabled={!isDirty || saving}
             className={cn(
-              "rounded-none px-3 py-1.5 text-sm font-medium transition-colors-fast",
+              "border px-4 py-1 font-mono text-xs transition-colors",
               isDirty
-                ? "bg-void-surface text-text-primary hover:bg-void-muted"
-                : "cursor-not-allowed text-text-tertiary",
+                ? "border-void-border text-text-primary hover:border-terminal-amber hover:text-terminal-amber"
+                : "cursor-not-allowed border-void-border/50 text-text-tertiary",
               saving && "opacity-50"
             )}
           >
-            {saving ? "Saving..." : "Save"}
+            {saving ? "[ SAVING... ]" : "[ SAVE CONFIG ]"}
           </button>
         </div>
       </div>

@@ -141,10 +141,10 @@ function TradeRow({
         <TableCell className="hidden md:table-cell">
           <span
             className={cn(
-              "rounded-none px-1.5 py-0.5 text-xs font-medium",
-              trade.exitReason === "stop_loss" && "bg-terminal-amber-muted text-data-loss",
-              trade.exitReason === "take_profit" && "bg-terminal-amber-muted text-data-profit",
-              trade.exitReason === "agent_decision" && "bg-void-muted text-text-secondary"
+              "rounded-none border px-1.5 py-0.5 font-mono text-xs font-medium",
+              trade.exitReason === "stop_loss" && "border-data-loss/30 bg-data-loss/10 text-data-loss",
+              trade.exitReason === "take_profit" && "border-data-profit/30 bg-data-profit/10 text-data-profit",
+              trade.exitReason === "agent_decision" && "border-void-border bg-void-muted text-text-secondary"
             )}
           >
             {exitLabel}

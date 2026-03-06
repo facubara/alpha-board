@@ -2,31 +2,33 @@
 
 /**
  * StatusBanner — Overall system status indicator.
+ * Terminal-style: 1px border, 10% opacity bg, monospace uppercase.
  */
 
 import type { ServiceStatus } from "@/lib/types";
+import { DottedLoader } from "@/components/terminal";
 
 const STATUS_CONFIG: Record<
   ServiceStatus,
-  { label: string; bg: string; border: string; dot: string }
+  { label: string; border: string; text: string; loaderColor: string }
 > = {
   operational: {
     label: "All Systems Operational",
-    bg: "bg-[#166534]/20",
-    border: "border-[#166534]",
-    dot: "bg-[#22C55E]",
+    border: "border-data-profit",
+    text: "text-data-profit",
+    loaderColor: "bg-data-profit",
   },
   degraded: {
     label: "Partial System Degradation",
-    bg: "bg-[#92400E]/20",
-    border: "border-[#92400E]",
-    dot: "bg-[#FBBF24]",
+    border: "border-terminal-amber",
+    text: "text-terminal-amber",
+    loaderColor: "bg-terminal-amber",
   },
   down: {
     label: "Service Disruption",
-    bg: "bg-[#991B1B]/20",
-    border: "border-[#991B1B]",
-    dot: "bg-[#EF4444]",
+    border: "border-data-loss",
+    text: "text-data-loss",
+    loaderColor: "bg-data-loss",
   },
 };
 
@@ -39,10 +41,13 @@ export function StatusBanner({ overall }: StatusBannerProps) {
 
   return (
     <div
-      className={`flex items-center gap-3 rounded-none border px-4 py-3 ${config.bg} ${config.border}`}
+      className={`flex items-center gap-3 border ${config.border} ${config.text} bg-current/10 p-4`}
+      style={{ backgroundColor: `color-mix(in srgb, currentColor 10%, transparent)` }}
     >
-      <span className={`h-3 w-3 shrink-0 rounded-full ${config.dot}`} />
-      <span className="text-sm font-medium text-text-primary">{config.label}</span>
+      <DottedLoader color={config.loaderColor} />
+      <span className="font-mono text-sm uppercase tracking-widest">
+        {config.label}
+      </span>
     </div>
   );
 }

@@ -25,7 +25,7 @@ export function TablePagination({
   const end = Math.min((page + 1) * pageSize, totalItems);
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 px-1 py-2 text-xs text-text-secondary">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-void-border pt-4 mt-4 text-xs font-mono text-text-secondary">
       {/* Left: Showing X–Y of Z */}
       <span className="font-mono tabular-nums">
         Showing {start}–{end} of {totalItems}
@@ -55,18 +55,18 @@ export function TablePagination({
           <button
             onClick={() => onPageChange(page - 1)}
             disabled={page === 0}
-            className="rounded-none p-1 transition-colors hover:bg-void-muted disabled:opacity-30 disabled:pointer-events-none"
+            className="rounded-none p-1 transition-colors hover:text-terminal-amber cursor-pointer disabled:opacity-30 disabled:pointer-events-none disabled:cursor-default"
             aria-label="Previous page"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
           </button>
-          <span className="min-w-[3rem] text-center font-mono tabular-nums">
+          <span className="min-w-[3rem] text-center tabular-nums">
             {totalPages === 0 ? "0 / 0" : `${page + 1} / ${totalPages}`}
           </span>
           <button
             onClick={() => onPageChange(page + 1)}
             disabled={page >= totalPages - 1}
-            className="rounded-none p-1 transition-colors hover:bg-void-muted disabled:opacity-30 disabled:pointer-events-none"
+            className="rounded-none p-1 transition-colors hover:text-terminal-amber cursor-pointer disabled:opacity-30 disabled:pointer-events-none disabled:cursor-default"
             aria-label="Next page"
           >
             <ChevronRight className="h-3.5 w-3.5" />

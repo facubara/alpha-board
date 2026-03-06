@@ -34,7 +34,7 @@ export function CostBreakdownTable({
     <div className="space-y-6">
       {/* By Model & Task */}
       <div>
-        <h3 className="mb-2 text-sm font-medium text-text-secondary">
+        <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
           By Model & Task
         </h3>
         {modelCosts.length === 0 ? (
@@ -60,7 +60,7 @@ export function CostBreakdownTable({
                       {m.model}
                     </TableCell>
                     <TableCell>
-                      <span className="rounded bg-void-muted px-2 py-0.5 text-xs font-medium text-text-secondary">
+                      <span className="font-mono text-[10px] uppercase tracking-wider border border-void-border px-1.5 py-0.5 text-text-secondary">
                         {m.taskType}
                       </span>
                     </TableCell>
@@ -83,7 +83,7 @@ export function CostBreakdownTable({
 
       {/* By Archetype */}
       <div>
-        <h3 className="mb-2 text-sm font-medium text-text-secondary">
+        <h3 className="mb-2 font-mono text-xs font-medium text-text-tertiary uppercase tracking-widest">
           By Archetype
         </h3>
         {archetypeCosts.length === 0 ? (
@@ -109,7 +109,7 @@ export function CostBreakdownTable({
                   return (
                     <TableRow key={a.archetype} className="h-10 hover:bg-void-muted">
                       <TableCell>
-                        <span className="rounded bg-void-muted px-2 py-0.5 text-xs font-medium text-text-secondary">
+                        <span className="font-mono text-[10px] uppercase tracking-wider border border-void-border px-1.5 py-0.5 text-text-secondary">
                           {STRATEGY_ARCHETYPE_LABELS[a.archetype]}
                         </span>
                       </TableCell>
